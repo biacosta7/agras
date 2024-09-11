@@ -17,11 +17,11 @@ Bem-vindo ao Agras! Este projeto foi desenvolvido para auxiliar famílias que pr
 A agricultura familiar é essencial para o sustento de muitas famílias ao redor do mundo, e ter uma ferramenta para gerenciar esse processo de forma organizada pode fazer toda a diferença. Este sistema foi criado para otimizar o controle de plantações, organizar atividades diárias, e monitorar o desempenho da produção, proporcionando um apoio digital para agricultores familiares.
 
 ## 🛠️ Funcionalidades
-**Cadastro de Plantas:** Adicionar e gerenciar informações sobre as culturas plantadas.  
-**Ciclo de Produção:** Acompanhar o ciclo de vida das plantas, desde o plantio até a colheita.  
-**Agenda de Atividades:** Registrar e organizar as atividades agrícolas como irrigação, adubação e colheita.  
-**Estoque e Produção:** Gerenciar o estoque de insumos e monitorar a produção agrícola.  
-**Relatórios:** Gerar relatórios detalhados sobre o desempenho das culturas e o histórico de produção.  
+**🌾 Cadastro de Plantas:** Adicionar e gerenciar informações sobre as culturas plantadas.  
+**📅 Ciclo de Produção:** Acompanhar o ciclo de vida das plantas, desde o plantio até a colheita.  
+**📋 Agenda de Atividades:** Registrar e organizar as atividades agrícolas como irrigação, adubação e colheita.  
+**📊 Estoque e Produção:** Gerenciar o estoque de insumos e monitorar a produção agrícola.  
+**📦 Relatórios:** Gerar relatórios detalhados sobre o desempenho das culturas e o histórico de produção.  
 
 ## 🧷 Links
 #### [Figma - Agras](URL FIGMA)
