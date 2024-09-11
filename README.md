@@ -24,9 +24,17 @@ A agricultura familiar é essencial para o sustento de muitas famílias ao redor
 - **📦 Relatórios:** Gerar relatórios detalhados sobre o desempenho das culturas e o histórico de produção.  
 
 ## 🧷 Links
-<img src="https://img.shields.io/badge/FIGMA-2E8B57?style=for-the-badge&logo=figma&logoColor=white" height="30px"/>
-<img src="https://img.shields.io/badge/JIRA-2E8B57?style=for-the-badge&logo=jira&logoColor=white" height="30px"/>
-<img src="https://img.shields.io/badge/GOOGLE SITES-2E8B57?style=for-the-badge&logo=google&logoColor=white" height="30px"/>
+<a href="https://sites.google.com/cesar.school/grupo-5-projetos-2/in%C3%ADcio">
+    <img src="https://img.shields.io/badge/GOOGLE SITES-2E8B57?style=for-the-badge&logo=google&logoColor=white" height="30px"/>
+</a>
+<a href="URL">
+  <img src="https://img.shields.io/badge/FIGMA-2E8B57?style=for-the-badge&logo=figma&logoColor=white" height="30px"/>
+</a>
+
+<a href="URL">
+  <img src="https://img.shields.io/badge/JIRA-2E8B57?style=for-the-badge&logo=jira&logoColor=white" height="30px"/>
+</a>
+
 
 ## 💻 Tecnologias Utilizadas
 - **Backend:** Django (Python) 🐍
