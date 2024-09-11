@@ -1,4 +1,4 @@
-<h1 align="center"> 🌱Aegro </h1>
+<h1 align="center"> 🌱Agras </h1>
 
 ## Bem vindo(a) ao Agras
 Bem-vindo ao Agras! Este projeto foi desenvolvido para auxiliar famílias que praticam agricultura familiar no acompanhamento das suas plantações e no planejamento das atividades agrícolas.
@@ -24,9 +24,9 @@ A agricultura familiar é essencial para o sustento de muitas famílias ao redor
 - **📦 Relatórios:** Gerar relatórios detalhados sobre o desempenho das culturas e o histórico de produção.  
 
 ## 🧷 Links
-<img src="https://img.shields.io/badge/FIGMA-008000?style=for-the-badge&logo=figma&logoColor=white" height="30px"/>
-<img src="https://img.shields.io/badge/JIRA-008000?style=for-the-badge&logo=jira&logoColor=white" height="30px"/>
-<img src="https://img.shields.io/badge/GOOLE SITES-008000?style=for-the-badge&logo=google&logoColor=white" height="30px"/>
+<img src="https://img.shields.io/badge/FIGMA-2E8B57?style=for-the-badge&logo=figma&logoColor=white" height="30px"/>
+<img src="https://img.shields.io/badge/JIRA-2E8B57?style=for-the-badge&logo=jira&logoColor=white" height="30px"/>
+<img src="https://img.shields.io/badge/GOOGLE SITES-2E8B57?style=for-the-badge&logo=google&logoColor=white" height="30px"/>
 
 ## 💻 Tecnologias Utilizadas
 - **Backend:** Django (Python) 🐍
