@@ -103,7 +103,6 @@ python manage.py runserver
 
 ## 🚀 Como Usar
 - Acesso ao Painel: Navegue até `http://localhost:8000` para acessar a plataforma.
-- Administração: Acesse `http://localhost:8000/admin` para gerenciar cursos e usuários.
 
 ## 🤝 Colaboradores
 <table>
