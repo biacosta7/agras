@@ -24,21 +24,9 @@ A agricultura familiar é essencial para o sustento de muitas famílias ao redor
 **📦 Relatórios:** Gerar relatórios detalhados sobre o desempenho das culturas e o histórico de produção.  
 
 ## 🧷 Links
-#### [Figma - Agras](URL FIGMA)
-
-#### [Quadro do Jira](URL JIRA)
-
-#### [Site do Projeto](URL GOOGLE SITES OU GITHUB)
-
-# Entrega 01
-## [Screencast (YOUTUBE)](URL DO YOUTUBE)
-
-[![Clique para assistir o vídeo (abrirá em uma nova aba)](IMAGEM PARA ACESSAR O SCREENCAST)](URL DO YOUTUBE)
-
-## [Quadro&BackLog (JIRA)](URL JIRA)
-
-[![Clique para ver o quadro do jira (abrirá em uma nova aba)](IMAGEM DO QUADRO JIRA)](URL PRO QUADRO DO JIRA)
-[![Clique para ver o backlog do jira (abrirá em uma nova aba)](IMAGEM BACKLOG JIRA)](URL BACKLOG JIRA)
+<img src="https://img.shields.io/badge/FIGMA-008000?style=for-the-badge&logo=figma&logoColor=white" height="30px"/>
+<img src="https://img.shields.io/badge/JIRA-008000?style=for-the-badge&logo=jira&logoColor=white" height="30px"/>
+<img src="https://img.shields.io/badge/GOOLE SITES-008000?style=for-the-badge&logo=google&logoColor=white" height="30px"/>
 
 ## 💻 Tecnologias Utilizadas
 - **Backend:** Django (Python) 🐍
