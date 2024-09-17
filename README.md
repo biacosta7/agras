@@ -24,7 +24,7 @@ A agricultura familiar é essencial para o sustento de muitas famílias ao redor
 - **📦 Relatórios:** Gerar relatórios detalhados sobre o desempenho das culturas e o histórico de produção.  
 
 ## 🧷 Links
-<a href="https://sites.google.com/cesar.school/grupo-5-projetos-2/in%C3%ADcio" target='_blank'>
+<a href="https://sites.google.com/cesar.school/grupo-5-projetos-2/in%C3%ADcio">
     <img src="https://img.shields.io/badge/GOOGLE SITES-2E8B57?style=for-the-badge&logo=google&logoColor=white" height="30px"/>
 </a>
 <a href="URL DO FIGMA">
