@@ -26,10 +26,10 @@ A agricultura familiar é essencial para o sustento de muitas famílias ao redor
 ## 🧷 Links
 <a href="https://sites.google.com/cesar.school/grupo-5-projetos-2/in%C3%ADcio">
     <img src="https://img.shields.io/badge/GOOGLE SITES-2E8B57?style=for-the-badge&logo=google&logoColor=white" height="30px"/></a>
-<a href="URL DO FIGMA">
+<a href="https://www.figma.com/design/wqEwDyRuQGX0MaPecGGU4n/Untitled?node-id=0-1&t=wYhB3IAeSWCCwKws-1">
   <img src="https://img.shields.io/badge/FIGMA-2E8B57?style=for-the-badge&logo=figma&logoColor=white" height="30px"/></a>
-<a href="URL DO JIRA">
-  <img src="https://img.shields.io/badge/JIRA-2E8B57?style=for-the-badge&logo=jira&logoColor=white" height="30px"/></a>
+<a href="URL DO CLICKUP">
+  <img src="https://img.shields.io/badge/ClickUp-2E8B57?style=for-the-badge&logo=clickup&logoColor=white" height="30px"/></a>
 <a href="URL DO YOUTUBE">
   <img src="https://img.shields.io/badge/YOUTUBE-2E8B57?style=for-the-badge&logo=youtube&logoColor=white" height="30px"/></a>
 
