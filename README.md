@@ -1,6 +1,6 @@
 <h1 align="center"> 🌱AGRAS </h1>
 
-## Bem vindo(a) ao Agras
+## Bem vindo(a) ao **AGRAS**
 Bem-vindo ao Agras! Este projeto foi desenvolvido para auxiliar famílias que praticam agricultura familiar no acompanhamento das suas plantações e no planejamento das atividades agrícolas.
 
 ## 🧑‍🌾 Sobre o Projeto  
@@ -36,28 +36,26 @@ A agricultura familiar é essencial para o sustento de muitas famílias ao redor
 ## 💻 Tecnologias Utilizadas
 - **Backend:** Django (Python) 🐍
 - **Banco de Dados:** PostgreSQL 🐘
-- Frontend: HTML, CSS, JavaScript 🌐
-- Docker 🐳
+- **Frontend:** HTML, CSS, JavaScript 🌐
 
 ## ⚙️ Pré-requisitos
-Python 3.8+  
+Python 3.12+  
 PostgreSQL  
-Git  
-Docker
+Git
 
 ## 🛠️ Instalação
 
 ### 1. Clone o repositório
 
 ```bash
-git clone https://github.com/seu-usuario/agras.git
+git clone https://github.com/biacosta7/agras.git
 cd agras
 ```
 
 ### 2. Crie e ative um ambiente virtual
 
 ```bash
-python3 -m venv venv
+python -m venv venv
 source venv/bin/activate  # Linux/MacOS
 ou
 venv\Scripts\activate  # Windows
