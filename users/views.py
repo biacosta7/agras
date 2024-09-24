@@ -8,7 +8,7 @@ from django.contrib import messages
 
 def create_user(request):
     if request.method == "GET":
-        return render(request, 'criar_usuario.html')
+        return render(request, 'cadastro.html')
     else:
         username = request.POST.get('username')
         email = request.POST.get('email')
@@ -19,7 +19,7 @@ def create_user(request):
 
         if User.objects.filter(username=username).exists():
             messages.error(request, 'Esse usuário já existe.')
-            return redirect('criar_usuario')
+            return redirect('cadastro.html')
 
         user = User.objects.create_user(
             username=username,
