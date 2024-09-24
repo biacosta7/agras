@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página de Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-300 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-10 rounded-xl shadow-lg w-full max-w-sm">
+        <div class="flex justify-center mb-6">
+            <!-- Logo -->
+            <img src="https://cdn.discordapp.com/attachments/1225636504869671093/1288213854181916722/image.png?ex=66f45e24&is=66f30ca4&hm=2d15154bd066d7f89be48743176771dad0c4a00b12503c102b3b3843f2de0855&" alt="Logo" class="h-16 w-16">
+        </div>
+        <form action="{% url 'login' %}" method="POST" class="space-y-4">
+            {% csrf_token %}
+            <!-- Campo Username -->
+            <div>
+                <label for="username" class="block text-sm font-medium text-gray-600">Username</label>
+                <input type="text" name="username" id="username" class="mt-1 block w-full rounded-full bg-gray-200 border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm px-4 py-2" required>
+            </div>
+
+            <!-- Campo Senha -->
+            <div>
+                <label for="senha" class="block text-sm font-medium text-gray-600">Senha</label>
+                <input type="password" name="senha" id="senha" class="mt-1 block w-full rounded-full bg-gray-200 border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm px-4 py-2" required>
+            </div>
+
+            <!-- Botão Entrar -->
+            <div class="pt-4">
+                <button type="submit" class="w-full bg-green-500 text-white font-bold py-3 rounded-full shadow-lg hover:bg-green-600 transition duration-300">
+                    ENTRAR
+                </button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
