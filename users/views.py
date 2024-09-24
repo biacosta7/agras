@@ -15,7 +15,6 @@ def create_user(request):
         senha = request.POST.get('senha')
         cidade = request.POST.get('cidade')
         estado = request.POST.get('estado')
-        cep = request.POST.get('cep')
         data_nascimento = request.POST.get('data_nascimento')
 
         if User.objects.filter(username=username).exists():
@@ -28,7 +27,6 @@ def create_user(request):
             password=senha,
             cidade=cidade,
             estado=estado,
-            cep=cep,
             data_nascimento=data_nascimento
         )
         user.save()
@@ -59,7 +57,6 @@ def edit_user(request, user_id):
         user.email = request.POST.get('email')
         user.cidade = request.POST.get('cidade')
         user.estado = request.POST.get('estado')
-        user.cep = request.POST.get('cep')
         user.data_nascimento = request.POST.get('data_nascimento')
         user.save()
 
