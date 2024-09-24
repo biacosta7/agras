@@ -19,7 +19,7 @@ def create_user(request):
 
         if User.objects.filter(username=username).exists():
             messages.error(request, 'Esse usuário já existe.')
-            return redirect('cadastro.html')
+            return redirect('create_user')
 
         user = User.objects.create_user(
             username=username,
