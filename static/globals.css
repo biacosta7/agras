@@ -1,0 +1,10 @@
+
+.swal2-confirm {
+    background-color: #8ABF17; 
+    color: white; 
+    border: none; 
+}
+
+.swal2-confirm:hover {
+    background-color: #699114; 
+}
