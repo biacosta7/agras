@@ -1,38 +1,37 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página de Login</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>AGRAS - LOGIN</title>
 </head>
 <body class="bg-gray-300 flex items-center justify-center min-h-screen">
-    <div class="bg-white p-10 rounded-xl shadow-lg w-full max-w-sm">
-        <div class="flex justify-center mb-6">
-            <!-- Logo -->
-            <img src="https://cdn.discordapp.com/attachments/1225636504869671093/1288213854181916722/image.png?ex=66f45e24&is=66f30ca4&hm=2d15154bd066d7f89be48743176771dad0c4a00b12503c102b3b3843f2de0855&" alt="Logo" class="h-16 w-16">
-        </div>
-        <form action="{% url 'login' %}" method="POST" class="space-y-4">
-            {% csrf_token %}
-            <!-- Campo Username -->
-            <div>
-                <label for="username" class="block text-sm font-medium text-gray-600">Username</label>
-                <input type="text" name="username" id="username" class="mt-1 block w-full rounded-full bg-gray-200 border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm px-4 py-2" required>
-            </div>
-
-            <!-- Campo Senha -->
-            <div>
-                <label for="senha" class="block text-sm font-medium text-gray-600">Senha</label>
-                <input type="password" name="senha" id="senha" class="mt-1 block w-full rounded-full bg-gray-200 border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm px-4 py-2" required>
-            </div>
-
-            <!-- Botão Entrar -->
-            <div class="pt-4">
-                <button type="submit" class="w-full bg-green-500 text-white font-bold py-3 rounded-full shadow-lg hover:bg-green-600 transition duration-300">
-                    ENTRAR
+    <div class="w-[440px] h-[550px] rounded-2xl bg-white">
+        <div class="flex flex-col items-center justify-center mt-4">
+            <img src="{% static 'assets/logo-green.png' %}" alt="Logo" class="w-36 mt-4" />
+            <form action="{% url 'login' %}" method="POST" class="mt-[50px]">
+                {% csrf_token %}
+                <div>
+                    <label for="username" class="block text-black text-sm font-normal mb-[2px]">Email</label>
+                    <input type="text" name="username" id="username" class="w-[310px] px-3 py-2 border rounded-[13px] bg-[#e6e6e6] focus:outline-none focus:ring-2 focus:ring-[#8ABF17] text-black" required>
+                </div>
+                <div class="mt-5">
+                    <label for="senha" class="block text-black text-sm font-normal mb-[2px]">Senha</label>
+                    <input type="password" name="senha" id="senha" class="w-[310px] px-3 py-2 border rounded-[13px] bg-[#e6e6e6] focus:outline-none focus:ring-2 focus:ring-[#8ABF17] text-black" required>
+                </div>
+                <button type="submit" class="w-[310px] mt-6 px-3 py-2 relative inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-white transition duration-300 ease-out border-2 border-[#8ABF17] rounded-[13px] shadow-md group">
+                    <span class="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-[#8ABF17] group-hover:translate-x-0 ease">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </span>
+                    <span class="absolute flex items-center justify-center w-full h-full text-[#8ABF17] text-xl font-bold uppercase transition-all duration-300 transform group-hover:translate-x-full ease">Entrar</span>
+                    <span class="relative invisible">Entrar</span>
                 </button>
-            </div>
-        </form>
+            </form>
+            <p class="mt-2 text-sm">Não possui conta? <a href="{% url 'cadastro' %}" class="cursor-pointer underline text-[#8ABF17]">Cadastre-se</a></p>
+        </div>
     </div>
 </body>
+<script src="https://cdn.tailwindcss.com"></script>
 </html>
