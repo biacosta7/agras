@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Lista de Produtos</h2>
+  <ul>
+    {% for instance in object_list %}
+      <li>{{ instance.id }} - {{ instance.nome }} - {{ instance.quantidade }}</li>
+    {% endfor %}
+  </ul>
+{% endblock %}
