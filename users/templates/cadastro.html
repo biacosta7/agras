@@ -15,8 +15,8 @@
         <form action="{% url 'cadastro' %}" method="POST" class="space-y-4">{% csrf_token %}
             <!-- Campo Nome -->
             <div>
-                <label for="nome" class="block text-sm font-medium text-gray-700">Nome</label>
-                <input type="text" name="nome" id="nome" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm" required>
+                <label for="username" class="block text-sm font-medium text-gray-700">Nome</label>
+                <input type="text" name="username" id="username" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm" required>
             </div>
 
             <!-- Campo Email -->
@@ -39,8 +39,8 @@
 
             <!-- Campo Senha -->
             <div>
-                <label for="senha" class="block text-sm font-medium text-gray-700">Senha</label>
-                <input type="password" name="senha" id="senha" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm" required>
+                <label for="password" class="block text-sm font-medium text-gray-700">Senha</label>
+                <input type="password" name="senha" id="password" autocomplete="current-password" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm" required>
             </div>
 
             <!-- Campo Confirmar Senha -->
