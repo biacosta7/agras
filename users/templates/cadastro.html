@@ -1,17 +1,14 @@
+{% extends 'base.html' %}
 {% load static %}
+{% block title %}AGRAS - LOGIN{% endblock %} 
 
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AGRAS - Cadastro</title>
-</head>
-<body class="bg-gray-300 flex items-center justify-center min-h-screen">
+{% block content %}
+<div class="bg-gray-300 flex items-center justify-center min-h-screen">
     <div class="w-[600px] h-[785px] rounded-2xl bg-white">
         <div class="flex flex-col items-center justify-center mt-4">
             <img src="{% static 'assets/logo-green.png' %}" alt="Logo" class="w-36 mt-4 mb-5" />
             <form action="{% url 'login' %}" method="POST" class="mt-[20px]">
+                {% csrf_token %}
                 <div>
                     <label for="nome" class="block text-black text-sm font-normal mb-[2px]">Nome</label>
                     <input type="text" name="nome" id="nome" class="w-[440px] px-3 py-2 border rounded-[13px] bg-[#e6e6e6] focus:outline-none focus:ring-2 focus:ring-[#8ABF17] text-black" required>
@@ -67,6 +64,5 @@
             <p class="mt-2 text-sm">Já possui conta? <a href="{% url 'login' %}" class="cursor-pointer underline text-[#8ABF17]">Fazer Login</a></p>
         </div>
     </div>
-</body>
-<script src="https://cdn.tailwindcss.com"></script>
-</html>
+</div>
+{% endblock %}
