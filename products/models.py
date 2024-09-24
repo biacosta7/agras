@@ -1,40 +1,24 @@
 from django.db import models
-from django.urls import reverse
-
-# Create your models here.
-# nome /
-# especie /
-# canteiro (default=None)
-# data_plantio /
-# observacoes /
-# produtividade_esperada 
-# quantidade /
-# necessidade_manejo /
-# previsao_colheita
+#from seedbeds.models import Seedbed #Ver o nome da classe Seedbed
 
 class Product(models.Model):
     nome = models.CharField(max_length=100, blank=False)
     
     especie = models.CharField(max_length=100, blank=False)
     
-    #seedbeds = models.
-    #falta implementar seedbeds
+    #seedbeds = models.ForeignKey(Seedbed, on_delete=models.SET_NULL, null=True, related_name='seedbeds_products')
 
-    data_plantio = models.DateTimeField(auto_now_add=True)
+    #data_plantio = models.ForeignKey(Seedbed, on_delete=models.SET_NULL, null=True, related_name='data_plantio_products')
 
-    observacoes = models.TextField(null=True)
+    #observacoes = models.ForeignKey(Seedbed, on_delete=models.SET_NULL, null=True, related_name='observacoes_products')
 
-    necessidade_manejo = models.BooleanField() # null=True or defalut=True (checkbox)
-
-    # blank=False (means that the field is required) null=False (means that it can be empty in the database) 
+    #necessidade_manejo = models.BooleanField()
     
-    #produtividade_esperada = 
-    #formula desconhecida e :p
+    #produtividade_esperada = #formula desconhecida
 
-    quantidade = models.IntegerField(default = 1)
+    #quantidade = models.ForeignKey(Seedbed, on_delete=models.SET_NULL, null=True, related_name='quantidade_products')
 
-    #previsao_colheita = 
-    #formula desconhecida 2 e :p
+    #previsao_colheita = #formula desconhecida
 
     def get_absolute_url(self):
         return f"/products/{self.id}/"
