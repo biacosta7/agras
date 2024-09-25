@@ -10,12 +10,12 @@
             <form action="{% url 'login' %}" method="POST" class="mt-[50px]">
                 {% csrf_token %}
                 <div>
-                    <label for="username" class="block text-black text-sm font-normal mb-[2px]">Email</label>
+                    <label for="username" class="block text-black text-sm font-normal mb-[2px]">Usuário</label>
                     <input type="text" name="username" id="username" class="w-[310px] px-3 py-2 border rounded-[13px] bg-[#e6e6e6] focus:outline-none focus:ring-2 focus:ring-[#8ABF17] text-black" required>
                 </div>
                 <div class="mt-5">
-                    <label for="senha" class="block text-black text-sm font-normal mb-[2px]">Senha</label>
-                    <input type="password" name="senha" id="senha" class="w-[310px] px-3 py-2 border rounded-[13px] bg-[#e6e6e6] focus:outline-none focus:ring-2 focus:ring-[#8ABF17] text-black" required>
+                    <label for="password" class="block text-black text-sm font-normal mb-[2px]">Senha</label>
+                    <input type="password" name="password" id="password" class="w-[310px] px-3 py-2 border rounded-[13px] bg-[#e6e6e6] focus:outline-none focus:ring-2 focus:ring-[#8ABF17] text-black" required>
                 </div>
                 <button type="submit" class="w-[310px] mt-6 px-3 py-2 relative inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-white transition duration-300 ease-out border-2 border-[#8ABF17] rounded-[13px] shadow-md group">
                     <span class="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-[#8ABF17] group-hover:translate-x-0 ease">
