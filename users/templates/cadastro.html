@@ -4,64 +4,89 @@
 
 {% block content %}
 <div class="bg-gray-300 flex items-center justify-center min-h-screen">
-    <div class="w-[600px] h-[785px] rounded-2xl bg-white">
-        <div class="flex flex-col items-center justify-center mt-4">
+    <div class="w-full max-w-[600px] mx-auto rounded-2xl bg-white p-6">
+        <div class="flex flex-col items-center justify-center">
+            <!-- Logo -->
             <img src="{% static 'assets/logo-green.png' %}" alt="Logo" class="w-36 mt-4 mb-5" />
-            <form action="{% url 'create_user' %}" method="POST" class="mt-[20px]">
+
+            <!-- Formulário de cadastro -->
+            <form action="{% url 'create_user' %}" method="POST" class="mt-6 w-full">
                 {% csrf_token %}
-                <div>
+
+                <!-- Campo Nome -->
+                <div class="mb-3">
                     <label for="first_name" class="block text-black text-sm font-normal mb-[2px]">Nome</label>
-                    <input type="text" name="first_name" id="first_name" class="w-[440px] px-3 py-2 border rounded-[13px] bg-[#e6e6e6] focus:outline-none focus:ring-2 focus:ring-[#8ABF17] text-black" required>
+                    <input type="text" name="first_name" id="first_name" class="w-full px-3 py-2 border rounded-[13px] bg-[#e6e6e6] focus:outline-none focus:ring-2 focus:ring-[#8ABF17] text-black" required>
                 </div>
-                <div class="mt-3">
+
+                <!-- Campo Usuário -->
+                <div class="mb-3">
                     <label for="username" class="block text-black text-sm font-normal mb-[2px]">Usuário</label>
-                    <input type="text" name="username" id="username" class="w-[440px] px-3 py-2 border rounded-[13px] bg-[#e6e6e6] focus:outline-none focus:ring-2 focus:ring-[#8ABF17] text-black" required>
+                    <input type="text" name="username" id="username" class="w-full px-3 py-2 border rounded-[13px] bg-[#e6e6e6] focus:outline-none focus:ring-2 focus:ring-[#8ABF17] text-black" required>
                 </div>
-                <div class="mt-3">
+
+                <!-- Campo Email -->
+                <div class="mb-3">
                     <label for="email" class="block text-black text-sm font-normal mb-[2px]">Email</label>
-                    <input type="email" name="email" id="email" class="w-[440px] px-3 py-2 border rounded-[13px] bg-[#e6e6e6] focus:outline-none focus:ring-2 focus:ring-[#8ABF17] text-black" required>
+                    <input type="email" name="email" id="email" class="w-full px-3 py-2 border rounded-[13px] bg-[#e6e6e6] focus:outline-none focus:ring-2 focus:ring-[#8ABF17] text-black" required>
                 </div>
-                <div class="flex space-x-4 mt-3">
+
+                <!-- Campos Estado e Cidade -->
+                <div class="grid grid-cols-1 md:grid-cols-2 md:gap-4 mb-3">
+                    <!-- Campo Estado -->
                     <div>
                         <label for="state" class="block text-black text-sm font-normal mb-[2px]">Estado</label>
-                        <select name="state" id="state" class="w-[210px] px-3 py-2 border rounded-[13px] bg-[#e6e6e6] focus:outline-none focus:ring-2 focus:ring-[#8ABF17] text-black" required>
+                        <select name="state" id="state" class="w-full px-3 py-2 border rounded-[13px] bg-[#e6e6e6] focus:outline-none focus:ring-2 focus:ring-[#8ABF17] text-black" required>
                             <option value="">Selecione um estado</option>
-                            <option value="PE">fazer um for com</option>
-                            <option value="PE">os dados</option>
-                            <option value="PE">do nosso</option>
-                            <option value="PE">banco de dados</option>
+                            <!-- Exemplo de opções (substitua pelo loop do seu banco de dados) -->
+                            <option value="PE">Pernambuco</option>
+                            <option value="SP">São Paulo</option>
+                            <option value="RJ">Rio de Janeiro</option>
+                            <!-- ... -->
                         </select>
                     </div>
-                    <div>
+                    <!-- Campo Cidade -->
+                    <div class="mt-3 md:mt-0">
                         <label for="city" class="block text-black text-sm font-normal mb-[2px]">Cidade</label>
-                        <select name="city" id="city" class="w-[210px] px-3 py-2 border rounded-[13px] bg-[#e6e6e6] focus:outline-none focus:ring-2 focus:ring-[#8ABF17] text-black" required>
-                            <option value="">Selecione um estado</option>
-                            <option value="PE">fazer um for com</option>
-                            <option value="PE">os dados</option>
-                            <option value="PE">do nosso</option>
-                            <option value="PE">banco de dados</option>
+                        <select name="city" id="city" class="w-full px-3 py-2 border rounded-[13px] bg-[#e6e6e6] focus:outline-none focus:ring-2 focus:ring-[#8ABF17] text-black" required>
+                            <option value="">Selecione uma cidade</option>
+                            <!-- Exemplo de opções (substitua pelo loop do seu banco de dados) -->
+                            <option value="Recife">Recife</option>
+                            <option value="Olinda">Olinda</option>
+                            <option value="Jaboatão">Jaboatão dos Guararapes</option>
+                            <!-- ... -->
                         </select>
                     </div>
                 </div>
-                <div class="mt-3">
+
+                <!-- Campo Senha -->
+                <div class="mb-3">
                     <label for="password" class="block text-black text-sm font-normal mb-[2px]">Senha</label>
-                    <input type="password" name="password" id="password" class="w-[440px] px-3 py-2 border rounded-[13px] bg-[#e6e6e6] focus:outline-none focus:ring-2 focus:ring-[#8ABF17] text-black" required>
+                    <input type="password" name="password" id="password" class="w-full px-3 py-2 border rounded-[13px] bg-[#e6e6e6] focus:outline-none focus:ring-2 focus:ring-[#8ABF17] text-black" required>
                 </div>
-                <div class="mt-3">
+
+                <!-- Campo Confirmar Senha -->
+                <div class="mb-3">
                     <label for="confirmar_senha" class="block text-black text-sm font-normal mb-[2px]">Confirmar Senha</label>
-                    <input type="password" name="confirmar_senha" id="confirmar_senha" class="w-[440px] px-3 py-2 border rounded-[13px] bg-[#e6e6e6] focus:outline-none focus:ring-2 focus:ring-[#8ABF17] text-black" required>
+                    <input type="password" name="confirmar_senha" id="confirmar_senha" class="w-full px-3 py-2 border rounded-[13px] bg-[#e6e6e6] focus:outline-none focus:ring-2 focus:ring-[#8ABF17] text-black" required>
                 </div>
-               <div class="flex justify-center items-center">
-                <button type="submit" class="w-[340px] mt-6 px-3 py-2 relative inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-white transition duration-300 ease-out border-2 border-[#8ABF17] rounded-[13px] shadow-md group">
-                    <span class="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-[#8ABF17] group-hover:translate-x-0 ease">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                    </span>
-                    <span class="absolute flex items-center justify-center w-full h-full text-[#8ABF17] text-xl font-bold uppercase transition-all duration-300 transform group-hover:translate-x-full ease">Cadastrar</span>
-                    <span class="relative invisible">Cadastrar</span>
-                </button>
-               </div>
+
+                <!-- Botão de Cadastro -->
+                <div class="flex justify-center items-center">
+                    <button type="submit" class="w-full px-3 py-2 max-w-md mt-6 relative inline-flex items-center justify-center overflow-hidden font-medium text-white transition duration-300 ease-out border-2 border-[#8ABF17] rounded-[13px] shadow-md group">
+                        <span class="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-[#8ABF17] group-hover:translate-x-0 ease">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                            </svg>
+                        </span>
+                        <span class="absolute flex items-center justify-center w-full h-full text-[#8ABF17] text-xl font-bold uppercase transition-all duration-300 transform group-hover:translate-x-full ease">Cadastrar</span>
+                        <span class="relative invisible">Cadastrar</span>
+                    </button>
+                </div>
             </form>
-            <p class="mt-2 text-sm">Já possui conta? <a href="{% url 'login' %}" class="cursor-pointer underline text-[#8ABF17]">Fazer Login</a></p>
+
+            <!-- Link para Login -->
+            <p class="mt-4 text-sm">Já possui conta? <a href="{% url 'login' %}" class="cursor-pointer underline text-[#8ABF17]">Fazer Login</a></p>
         </div>
     </div>
 </div>
