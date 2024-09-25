@@ -10,26 +10,24 @@ def create_user(request):
     if request.method == "GET":
         return render(request, 'cadastro.html')
     else:
-        name = request.POST.get('first_name')
+        first_name = request.POST.get('first_name')
         username = request.POST.get('username')
         email = request.POST.get('email')
         password = request.POST.get('password')
         city = request.POST.get('city')
         state = request.POST.get('state')
-        birthday = request.POST.get('birthday')
 
         if User.objects.filter(username=username).exists():
             messages.error(request, 'Esse usuário já existe.')
             return redirect('create_user')
 
         user = User.objects.create_user(
-            first_name=name,
+            first_name=first_name,
             username=username,
             email=email,
             password=password,
             city=city,
             state=state,
-            birthday=birthday
         )
         user.save()
         messages.success(request, 'Usuário cadastrado com sucesso.')
@@ -55,11 +53,11 @@ def edit_user(request, user_id):
     if request.method == "GET":
         return render(request, 'edit_user.html', {'user': user})
     else:
+        user.first_name = request.POST.get('firts_name')
         user.username = request.POST.get('username')
         user.email = request.POST.get('email')
-        user.cidade = request.POST.get('cidade')
-        user.estado = request.POST.get('estado')
-        user.data_nascimento = request.POST.get('data_nascimento')
+        user.city = request.POST.get('city')
+        user.state = request.POST.get('state')
         user.save()
 
         messages.success(request, 'Usuário editado com sucesso.')
