@@ -5,7 +5,6 @@ from django.contrib.auth.decorators import login_required
 from .models import User
 from django.contrib import messages
 
-
 def create_user(request):
     if request.method == "GET":
         return render(request, 'cadastro.html')
