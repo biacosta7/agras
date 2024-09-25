@@ -1,3 +1,5 @@
+{% load static %} <!-- Adicione esta linha para usar o CSS que está em static/css -->
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -10,11 +12,18 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
+    <header class="header">
+        <p class="brand">Meu Site</p>
+    </header>
+
     {% include 'common/messages.html' %} 
-    <div class="">
+    {% include 'common/nav.html' %} 
+
+    <div class="content">
         {% block content %}
-        
         {% endblock %}
     </div>
+
+    {% include 'common/footer.html' %}
 </body>
 </html>
