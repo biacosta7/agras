@@ -1,10 +1,28 @@
-<!-- Componente footer padrão -->
-<footer class="footer">
-    <nav class="navbar-footer">
-        <ul class="footer-links">
-            <p>&copy; 2024 Meu Site. Todos os direitos reservados.</p>
-            <li><a href="#">Link 1</a></li>
-            <li><a href="#">Link 2</a></li>
-        </ul>
-    </nav>
+{% load static %}
+<footer class="shadow bg-[#0D2601]">
+    <div class="w-full max-w-screen-xl mx-auto p-4 md:py-8">
+        <div class="sm:flex sm:items-center sm:justify-between">
+            <a href="https://flowbite.com/" class="flex items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse">
+                <img src="{% static 'assets/logo-green.png' %}" class="h-8" alt="Flowbite Logo" />
+                <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">AGRAS</span>
+            </a>
+            <ul class="flex flex-wrap items-center mb-6 text-sm font-medium text-gray-500 sm:mb-0 dark:text-gray-400">
+                <li>
+                    <a href="https://sites.google.com/cesar.school/agras/" target="_blank" class="hover:underline me-4 md:me-6">Sobre</a>
+                </li>
+                <li>
+                    <a href="https://sites.google.com/cesar.school/agras/sobre-n%C3%B3s" target="_blank" class="hover:underline me-4 md:me-6">Equipe</a>
+                </li>
+                <li>
+                    <a href="https://sites.google.com/cesar.school/agras" target="_blank" class="hover:underline me-4 md:me-6">Solução</a>
+                </li>
+                <li>
+                    <a href="#" class="hover:underline">Contato</a>
+                </li>
+            </ul>
+        </div>
+        <hr class="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
+        <span class="block text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2024 <a href="https://sites.google.com/cesar.school/agras/" target="_blank" class="hover:underline">AGRAS™</a>. Todos os Direitos Reservados.</span>
+    </div>
 </footer>
+
