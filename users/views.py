@@ -15,22 +15,27 @@ def create_user(request):
         password = request.POST.get('password')
         city = request.POST.get('city')
         state = request.POST.get('state')
+        confirm_password = request.POST.get('confirm_password')
 
         if User.objects.filter(username=username).exists():
             messages.error(request, 'Esse usuário já existe.')
             return redirect('create_user')
+        if password == confirm_password:
+            user = User.objects.create_user(
+                first_name=first_name,
+                username=username,
+                email=email,
+                password=password,
+                city=city,
+                state=state,
+            )
+            user.save()
+            messages.success(request, 'Usuário cadastrado com sucesso.')
+            return HttpResponse('cadastrado')
+        else:
+            messages.error(request, 'Senhas não coincidem.')
+            return redirect('create_user')
 
-        user = User.objects.create_user(
-            first_name=first_name,
-            username=username,
-            email=email,
-            password=password,
-            city=city,
-            state=state,
-        )
-        user.save()
-        messages.success(request, 'Usuário cadastrado com sucesso.')
-        return HttpResponse('cadastrado')
 
 @login_required
 def delete_user(request, user_id):
