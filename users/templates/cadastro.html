@@ -4,10 +4,10 @@
 {% block title %}AGRAS - CADASTRO{% endblock %}
 
 {% block content %}
-<div class="flex h-screen">
-    <div class="w-2/3 flex items-center justify-center bg-white p-6">
+<div class="flex flex-col lg:flex-row h-screen">
+    <div class="lg:w-2/3 flex items-center justify-center bg-white p-6">
         <div class="w-full max-w-md">
-            <div class="flex justify-center"> <!-- Adicionado para centralizar a logo -->
+            <div class="flex justify-center"> 
                 <img src="{% static 'assets/logo-green.png' %}" alt="Logo" class="w-36 mt-4 mb-5" />
             </div>
             <form action="{% url 'create_user' %}" method="POST" class="mt-6">
@@ -24,7 +24,7 @@
                     <label for="email" class="block text-black text-sm font-normal mb-[2px]">Email</label>
                     <input type="email" name="email" id="email" class="w-full px-3 py-2 border rounded-[13px] bg-[#e6e6e6] focus:outline-none focus:ring-2 focus:ring-[#8ABF17] text-black" required>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 md:gap-4 mb-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:gap-4 mb-3">
                     <div>
                         <label for="state" class="block text-black text-sm font-normal mb-[2px]">Estado</label>
                         <select name="state" id="state" class="w-full px-3 py-2 border rounded-[13px] bg-[#e6e6e6] focus:outline-none focus:ring-2 focus:ring-[#8ABF17] text-black" required>
@@ -34,7 +34,7 @@
                             <option value="RJ">Rio de Janeiro</option>
                         </select>
                     </div>
-                    <div class="mt-3 md:mt-0">
+                    <div class="mt-3 sm:mt-0">
                         <label for="city" class="block text-black text-sm font-normal mb-[2px]">Cidade</label>
                         <select name="city" id="city" class="w-full px-3 py-2 border rounded-[13px] bg-[#e6e6e6] focus:outline-none focus:ring-2 focus:ring-[#8ABF17] text-black" required>
                             <option value="">Selecione uma cidade</option>
@@ -66,10 +66,10 @@
             </form>
         </div>
     </div>
-    <div class="w-1/2 bg-cover bg-center bg-[#0D2601]">
-        <div class="flex items-center flex-col justify-center center h-screen">
-            <img src="{%static 'assets/tipo-branco.png' %}" alt="Tipografia" class="w-96">
-            <p class="mb-4 text-lg font-normal text-[#fafafa]">Soluções sustentáveis para otimizar a sua produção e garantir o futuro da agricultura.</p>
+    <div class="lg:w-1/2 bg-cover bg-center bg-[#0D2601]">
+        <div class="flex items-center flex-col justify-center h-screen">
+            <img src="{% static 'assets/tipo-branco.png' %}" alt="Tipografia" class="w-96 mb-4">
+            <p class="mb-4 text-lg font-normal text-[#fafafa] text-center">Soluções sustentáveis para otimizar a sua produção e garantir o futuro da agricultura.</p>
             <a href="{% url 'login' %}" class="w-[200px] px-3 py-2 mt-6 relative inline-flex items-center justify-center overflow-hidden font-medium text-white transition duration-300 ease-out border-2 border-[#8ABF17] rounded-[13px] shadow-md group">
                 <span class="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-[#8ABF17] group-hover:translate-x-0 ease">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -79,7 +79,7 @@
                 <span class="absolute flex items-center justify-center w-full h-full text-[#8ABF17] text-xl font-bold uppercase transition-all duration-300 transform group-hover:translate-x-full ease">Faça Login</span>
                 <span class="relative invisible">Faça Login</span>
             </a>
-            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
