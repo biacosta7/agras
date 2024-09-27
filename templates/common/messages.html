@@ -1,17 +1,18 @@
 {% if messages %}
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            {% for message in messages %}
-                Swal.fire({
-                    title: '{{ message.tags|title }}', 
-                    text: '{{ message }}',
-                    icon: '{{ message.tags }}',
-                    confirmButtonText: 'OK',
-                    customClass: {
-                        confirmButton: 'swal2-confirm swal2-green' 
-                    }
-                });
-            {% endfor %}
-        }); 
-    </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      {% for message in messages %}
+        var message_type = '{{ message.tags }}'; 
+        Swal.fire({
+          title: '{{ message }}',
+          text: 'Tente novamente',
+          icon: '{{ message.tags }}',
+          confirmButtonText: 'OK',
+          customClass: {
+            confirmButton: 'swal2-confirm swal2-green'
+          }
+        });
+      {% endfor %}
+    });
+  </script>
 {% endif %}
