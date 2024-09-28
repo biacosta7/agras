@@ -73,12 +73,19 @@ def login(request):
     else:
         username = request.POST.get('username')
         senha = request.POST.get('password')
+        remember_me = request.POST.get('remember')
 
         user = authenticate(username=username, password=senha)
 
         if user:
             login_django(request, user)
             messages.success(request, 'Autenticado com sucesso.')
+            
+            if remember_me: 
+                request.session.set_expiry(None)  
+            else:
+                request.session.set_expiry(0) 
+
             return HttpResponse('pagina de logado')
         else:
             messages.error(request, 'Usuário ou senha inválidos.')
