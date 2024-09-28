@@ -71,11 +71,18 @@ def login(request):
     if request.method == "GET":
         return render(request, 'login.html')
     else:
-        username = request.POST.get('username')
-        senha = request.POST.get('password')
+        login_input = request.POST.get('login_input')
+        password = request.POST.get('password')
         remember_me = request.POST.get('remember')
 
-        user = authenticate(username=username, password=senha)
+        user = authenticate(username=login_input, password=password)
+
+        if user is None:
+            try:
+                user = User.objects.get(email=login_input)
+                user = authenticate(username=user.username, password=password)
+            except User.DoesNotExist:
+                user = None
 
         if user:
             login_django(request, user)
