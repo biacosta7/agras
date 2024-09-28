@@ -3,46 +3,63 @@
 {% block title %}AGRAS - LOGIN{% endblock %} 
 
 {% block content %}
-<div class="flex flex-col lg:flex-row h-screen">
-    <div class="lg:w-2/3 flex items-center justify-center bg-white p-6">
-        <div class="w-full max-w-md">
-            <img src="{% static 'assets/logo-green.png' %}" alt="Logo" class="w-36 mt-4 mx-auto" />
+<div class="flex flex-col lg:flex-row h-screen bg-[#fafafa] font-poppins">
+    <div class="lg:w-1/2 flex justify-center bg-white h-screen p-6 lg:rounded-r-[160px] drop-shadow-lg">
+        <div class="w-full max-w-md mt-[110px]">
+            <img src="{% static 'assets/colorido-horizontal.png' %}" alt="Logo" class="max-w-[300px] mb-32 mx-auto" />
             <form action="{% url 'login' %}" method="POST" class="mt-8">
                 {% csrf_token %}
-                <div class="mb-5">
-                    <label for="username" class="block text-black text-sm font-normal mb-[2px]">Usuário</label>
-                    <input type="text" name="username" id="username" class="w-full px-3 py-2 border rounded-[13px] bg-[#e6e6e6] focus:outline-none focus:ring-2 focus:ring-[#8ABF17] text-black" required>
+                <div class="mb-7">
+                    <h1 class="font-bold text-[50px]">Entrar</h1>
+                    <p class="font-medium text-[18px]">Seja bem vindo(a) novamente!</p>
                 </div>
                 <div class="mb-5">
-                    <label for="password" class="block text-black text-sm font-normal mb-[2px]">Senha</label>
-                    <input type="password" name="password" id="password" class="w-full px-3 py-2 border rounded-[13px] bg-[#e6e6e6] focus:outline-none focus:ring-2 focus:ring-[#8ABF17] text-black" required>
+                    <input type="text" name="username" id="username" placeholder="Usuário" class="w-full px-1 py-2 border-b-2 border-[#8ABF17] focus:outline-none focus:ring-0 text-black placeholder-black" required>
                 </div>
-                <button type="submit" class="w-full px-3 py-2 mt-6 relative inline-flex items-center justify-center overflow-hidden font-medium text-white transition duration-300 ease-out border-2 border-[#8ABF17] rounded-[13px] shadow-md group">
-                    <span class="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-[#8ABF17] group-hover:translate-x-0 ease">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="mb-6 flex items-center justify-center text-center relative">
+                    <input type="password" name="password" id="password" placeholder="Senha" 
+                           class="w-full px-1 py-2 border-b-2 border-[#8ABF17] focus:outline-none focus:ring-0 text-black placeholder-black pr-10" 
+                           required>
+                    <img src="{% static 'assets/eye-slash-fill.svg' %}" class="absolute right-2 top-1/2 transform -translate-y-1/2 w-[24px] cursor-pointer" alt="Mostrar Senha" id="togglePassword">
+                </div>   
+                <div class="flex justify-between">
+                    <div>
+                        <input type="checkbox" id="remember" name="remember">
+                        <label for="remember">Lembrar-me</label>
+                    </div>
+                    <a href="" class="text-[16px] font-regular cursor-pointer text-[#8ABF17]">Esqueceu a senha?</a>
+                </div>             
+                <button type="submit" class="w-full px-3 py-2 mt-6 relative inline-flex items-center justify-center overflow-hidden font-medium text-white transition duration-300 ease-out bg-[#8ABF17] border-2 border-[#8ABF17] rounded-[12px] shadow-md group">
+                    <span class="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-white group-hover:translate-x-0 ease">
+                        <svg class="w-6 h-6 text-[#8ABF17]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
                         </svg>
                     </span>
-                    <span class="absolute flex items-center justify-center w-full h-full text-[#8ABF17] text-xl font-bold uppercase transition-all duration-300 transform group-hover:translate-x-full ease">Entrar</span>
+                    <span class="absolute flex items-center justify-center w-full h-full text-white text-[16px] font-medium transition-all duration-300 transform group-hover:translate-x-full ease">Entrar</span>
                     <span class="relative invisible">Entrar</span>
                 </button>
+                <p class="text-[16px] font-medium flex mt-2 items-center justify-center">Não tem uma conta? <a href="{% url 'create_user' %}" class="text-[#8ABF17] ml-1 underline">Cadastre-se</a></p>
             </form>
         </div>
     </div>
-    <div class="lg:w-1/2 bg-cover bg-center bg-[#0D2601]">
-        <div class="flex items-center flex-col justify-center h-screen">
-            <img src="{% static 'assets/tipo-branco.png' %}" alt="Tipografia" class="w-96 mb-4">
-            <p class="mb-4 text-lg font-normal text-[#fafafa] text-center">Soluções sustentáveis para otimizar a sua produção e garantir o futuro da agricultura.</p>
-            <a href="{% url 'create_user' %}" class="w-[200px] px-3 py-2 mt-6 relative inline-flex items-center justify-center overflow-hidden font-medium text-white transition duration-300 ease-out border-2 border-[#8ABF17] rounded-[13px] shadow-md group">
-                <span class="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-[#8ABF17] group-hover:translate-x-0 ease">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                    </svg>
-                </span>
-                <span class="absolute flex items-center justify-center w-full h-full text-[#8ABF17] text-xl font-bold uppercase transition-all duration-300 transform group-hover:translate-x-full ease">CADASTRE-SE</span>
-                <span class="relative invisible">Entrar</span>
-            </a>
-        </div>
+    <div class="lg:w-2/3 bg-cover bg-center bg-[#fafafa] lg:flex hidden items-center flex-col justify-center h-screen">
+        <img src="{% static 'assets/colhendo toranja.png' %}" alt="Tipografia" class="w-[600px] lg:max-w-[675px] mb-4">
     </div>
 </div>
+
+<script>
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+    
+    togglePassword.addEventListener('click', () => {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        
+        if (type === 'text') {
+            togglePassword.src = "{% static 'assets/eye-fill.svg' %}"; 
+        } else {
+            togglePassword.src = "{% static 'assets/eye-slash-fill.svg' %}"; 
+        }
+    });
+</script>
 {% endblock %}
