@@ -1,3 +1,66 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from .models import Community
+from users.models import User
 
-# Create your views here.
+@login_required
+def community_list(request):
+    communities = Community.objects.all()
+    return render(request, 'communities/community_list.html', {'communities': communities})
+
+@login_required
+def create_community(request):
+    if request.method == "POST":
+        name = request.POST.get('name')
+        description = request.POST.get('description')
+        creator = request.user
+
+        if Community.objects.filter(name=name).exists():
+            messages.error(request, 'Já existe uma comunidade com esse nome.')
+            return redirect('create_community')
+
+        community = Community.objects.create(
+            name=name,
+            description=description,
+            creator=creator
+        )
+
+        community.admins.add(creator)
+
+        members_ids = request.POST.getlist('members')
+        members = User.objects.filter(id__in=members_ids)
+        community.members.set(members)
+
+        messages.success(request, 'Comunidade cadastrada com sucesso.')
+        return redirect('community_list')
+
+    return render(request, 'communities/templates/create_community.html') 
+
+@login_required
+def update_community(request, pk):
+    community = get_object_or_404(Community, pk=pk)
+
+    if request.method == "POST":
+        name = request.POST.get('name')
+        description = request.POST.get('description')
+        
+        if Community.objects.filter(name=name).exclude(pk=pk).exists():
+            messages.error(request, 'Já existe uma comunidade com esse nome.')
+            return render(request, 'communities/templates/edit_community.html', {'community': community})
+
+        community.name = name
+        community.description = description
+        community.save()
+
+        messages.success(request, 'Comunidade editada com sucesso.')
+        return redirect('PARA ALGUM CANTO', pk=community.pk) 
+
+    return render(request, 'communities/templates/edit_community.html', {'community': community})
+
+@login_required
+def delete_community(request, pk):
+    community = get_object_or_404(Community, pk=pk)
+    community.delete()
+    messages.success(request, 'Comunidade deletada com sucesso.')
+    return redirect('')
