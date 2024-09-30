@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}AGRAS - Comunidades{% endblock %}
+
+{% block content %}
+<div class="container mx-auto p-5">
+    <h1 class="text-3xl font-bold mb-4">Comunidades</h1>
+    <a href="{% url 'create_community' %}" class="inline-block bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mb-4">
+        Criar nova comunidade
+    </a>
+
+    <!-- Botão de Logout -->
+    <form action="{% url 'logout' %}" method="post" class="inline">
+        {% csrf_token %}
+        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 mb-4">
+            Logout
+        </button>
+    </form>
+
+    <div class="bg-white shadow-md rounded-lg p-4">
+        <ul class="space-y-2">
+            {% for community in communities %}
+                <li class="flex justify-between items-center p-2 border-b">
+                    <span class="text-lg">{{ community.name }}</span>
+                    <div>
+                        <a href="{% url 'update_community' community.id %}" class="text-blue-500 hover:text-blue-700">Editar</a>
+                        <a href="{% url 'delete_community' community.id %}" class="text-red-500 hover:text-red-700 ml-4">Deletar</a>
+                    </div>
+                </li>
+            {% empty %}
+                <li class="text-gray-500">Nenhuma comunidade encontrada.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}
