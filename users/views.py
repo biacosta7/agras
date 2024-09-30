@@ -33,7 +33,7 @@ def create_user(request):
                 )
                 user.save()
                 messages.success(request, 'Usuário cadastrado com sucesso.')
-                return redirect('/')
+                return redirect('login')
             except IntegrityError:
                 messages.error(request, 'Já existe um usuário com este email. Tente novamente.')
                 return redirect('create_user')
@@ -115,7 +115,7 @@ def login(request):
             else:
                 request.session.set_expiry(0) 
 
-            return redirect('/')
+            return redirect('/comunidades/hub')
         else:
             messages.error(request, 'Usuário ou senha inválidos.')
             return redirect('login')
