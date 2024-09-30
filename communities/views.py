@@ -7,7 +7,7 @@ from users.models import User
 @login_required
 def community_list(request):
     communities = Community.objects.all()
-    return render(request, 'communities/community_list.html', {'communities': communities})
+    return render(request, 'hub.html', {'communities': communities})
 
 @login_required
 def create_community(request):
