@@ -18,7 +18,7 @@ def create_community(request):
 
         if Community.objects.filter(name=name).exists():
             messages.error(request, 'Já existe uma comunidade com esse nome.')
-            return redirect('create_community')
+            return redirect('community_hub')
 
         community = Community.objects.create(
             name=name,
@@ -33,13 +33,17 @@ def create_community(request):
         community.members.set(members)
 
         messages.success(request, 'Comunidade cadastrada com sucesso.')
-        return redirect('community_list')
+        return redirect('community_hub')
 
-    return render(request, 'communities/templates/create_community.html') 
+    return redirect('community_hub')
 
 @login_required
 def update_community(request, pk):
     community = get_object_or_404(Community, pk=pk)
+
+    if request.user != community.creator and not community.admins.filter(id=request.user.id).exists():
+        messages.error(request, 'Você não tem permissão para editar essa comunidade.')
+        return redirect('community_hub')
 
     if request.method == "POST":
         name = request.POST.get('name')
@@ -47,20 +51,25 @@ def update_community(request, pk):
         
         if Community.objects.filter(name=name).exclude(pk=pk).exists():
             messages.error(request, 'Já existe uma comunidade com esse nome.')
-            return render(request, 'communities/templates/edit_community.html', {'community': community})
+            return render(request, 'community_hub', {'community': community})
 
         community.name = name
         community.description = description
         community.save()
 
         messages.success(request, 'Comunidade editada com sucesso.')
-        return redirect('PARA ALGUM CANTO', pk=community.pk) 
+        return redirect('community_hub') 
 
-    return render(request, 'communities/templates/edit_community.html', {'community': community})
+    return render(request, 'community_hub', {'community': community})
 
 @login_required
 def delete_community(request, pk):
     community = get_object_or_404(Community, pk=pk)
+
+    if request.user != community.creator and not community.admins.filter(id=request.user.id).exists():
+        messages.error(request, 'Você não tem permissão para excluir essa comunidade.')
+        return redirect('community_hub')
+
     community.delete()
     messages.success(request, 'Comunidade deletada com sucesso.')
-    return redirect('')
+    return redirect('community_hub')
