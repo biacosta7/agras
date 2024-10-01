@@ -7,7 +7,7 @@ from django.contrib import messages
 
 def create_user(request):
     if request.method == "GET":
-        return render(request, 'cadastro.html')
+        return render(request, 'signup.html')
     else:
         first_name = request.POST.get('first_name')
         username = request.POST.get('username')
