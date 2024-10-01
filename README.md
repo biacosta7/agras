@@ -24,7 +24,7 @@ A agricultura familiar é essencial para o sustento de muitas famílias ao redor
 - **📦 Relatórios:** Gerar relatórios detalhados sobre o desempenho das culturas e o histórico de produção.  
 
 ## 🧷 Links
-<a href="https://sites.google.com/cesar.school/grupo-5-projetos-2/in%C3%ADcio">
+<a href="https://sites.google.com/cesar.school/agras">
     <img src="https://img.shields.io/badge/GOOGLE SITES-2E8B57?style=for-the-badge&logo=google&logoColor=white" height="30px"/></a>
 <a href="https://www.figma.com/design/wqEwDyRuQGX0MaPecGGU4n/Untitled?node-id=0-1&t=wYhB3IAeSWCCwKws-1">
   <img src="https://img.shields.io/badge/FIGMA-2E8B57?style=for-the-badge&logo=figma&logoColor=white" height="30px"/></a>
@@ -131,8 +131,8 @@ python manage.py runserver
       </a>
     </td>
      <td align="center">
-      <a href="#" title="defina o título do link">
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR65dbMui6whWaxsVpnyP_A1zY2IXODEzLVoA&s" width="100px;" alt="Foto do Vinicius Ventura"/><br>
+      <a href="https://github.com/vinivent" title="defina o título do link">
+        <img src="https://avatars.githubusercontent.com/u/99739118?v=4" width="100px;" alt="Foto do Vinicius Ventura"/><br>
         <sub>
           <b>Vinícius Ventura</b>
         </sub>
