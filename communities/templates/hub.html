@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}AGRAS - Comunidades{% endblock %}
+
+{% block content %}
+<div class="container mx-auto p-5">
+    <h1 class="text-3xl font-bold mb-4">Comunidades</h1>
+    <a href="#" class="inline-block bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mb-4" onclick="toggleModal()">
+        Criar nova comunidade
+    </a>
+
+    <!-- Botão de Logout -->
+    <form action="{% url 'logout' %}" method="post" class="inline">
+        {% csrf_token %}
+        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 mb-4">
+            Logout
+        </button>
+    </form>
+
+    <div class="bg-white shadow-md rounded-lg p-4">
+        <ul class="space-y-2">
+            {% for community in communities %}
+                <li class="flex justify-between items-center p-2 border-b">
+                    <span class="text-lg">{{ community.name }}</span>
+                    <span class="text-sm"> {{ community.description }}</span>
+                    <div>
+                        <a href="#" class="text-blue-500 hover:text-blue-700 edit-community" 
+                        data-id="{{ community.id }}"
+                        data-name="{{ community.name }}"
+                        data-description="{{ community.description }}">
+                        Editar
+                        </a>
+                        <a href="{% url 'delete_community' community.id %}" class="text-red-500 hover:text-red-700 ml-4">Deletar</a>
+                    </div>
+                </li>
+            {% empty %}
+                <li class="text-gray-500">Nenhuma comunidade encontrada.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="communityModal" class="fixed inset-0 flex items-center justify-center hidden bg-black bg-opacity-50">
+    <div class="bg-white rounded-lg p-6 w-96">
+        <h2 class="text-xl font-bold mb-4">Criar Comunidade</h2>
+        <form method="post" action="{% url 'create_community' %}">
+            {% csrf_token %}
+            <div class="mb-4">
+                <label for="name" class="block text-sm font-medium text-gray-700">Nome</label>
+                <input type="text" name="name" id="name" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500">
+            </div>
+            <div class="mb-4">
+                <label for="description" class="block text-sm font-medium text-gray-700">Descrição</label>
+                <textarea name="description" id="description" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500"></textarea>
+            </div>
+            <div class="flex justify-end">
+                <button type="button" class="mr-2 bg-gray-300 px-4 py-2 rounded" onclick="toggleModal()">Cancelar</button>
+                <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Criar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div id="editCommunityModal" class="fixed inset-0 flex items-center justify-center hidden bg-black bg-opacity-50">
+    <div class="bg-white rounded-lg p-6 w-96">
+        <h2 class="text-xl font-bold mb-4">Editar Comunidade</h2>
+        <form id="editCommunityForm" method="post" action="{% url 'update_community' 0 %}">
+            {% csrf_token %}
+            <input type="hidden" name="id" id="editCommunityId">
+            <div class="mb-4">
+                <label for="editName" class="block text-sm font-medium text-gray-700">Nome</label>
+                <input type="text" name="name" id="editName" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500">
+            </div>
+            <div class="mb-4">
+                <label for="editDescription" class="block text-sm font-medium text-gray-700">Descrição</label>
+                <textarea name="description" id="editDescription" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500"></textarea>
+            </div>
+            <div class="flex justify-end">
+                <button type="button" class="mr-2 bg-gray-300 px-4 py-2 rounded" onclick="toggleEditModal()">Cancelar</button>
+                <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Salvar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const editLinks = document.querySelectorAll('.edit-community');
+    
+    editLinks.forEach(link => {
+        link.addEventListener('click', function(event) {
+            event.preventDefault(); 
+            const communityId = this.dataset.id;
+            const communityName = this.dataset.name;
+            const communityDescription = this.dataset.description;
+
+            openEditModal(communityId, communityName, communityDescription);
+        });
+    });
+});
+
+function toggleModal() {
+    const modal = document.getElementById('communityModal');
+    modal.classList.toggle('hidden');
+}
+
+function toggleEditModal() {
+    const modal = document.getElementById('editCommunityModal');
+    modal.classList.toggle('hidden');
+}
+
+function openEditModal(communityId, communityName, communityDescription) {
+    document.getElementById('editCommunityId').value = communityId;
+    document.getElementById('editName').value = communityName;
+    document.getElementById('editDescription').value = communityDescription;
+
+    document.getElementById('editCommunityForm').action = `{% url 'update_community' 0 %}`.replace('0', communityId);
+    
+    toggleEditModal();
+
+}
+
+    </script>
+{% endblock %}
