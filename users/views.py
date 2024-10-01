@@ -1,3 +1,4 @@
+import re
 from django.db import IntegrityError
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login as login_django, logout as logout_django
@@ -17,10 +18,32 @@ def create_user(request):
         state = request.POST.get('state')
         confirm_password = request.POST.get('confirm_password')
 
+        valid_chars = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_")
+        if not set(username).issubset(valid_chars):
+            messages.error(request, 'O nome de usuário deve conter apenas letras, números ou underlines, sem espaços ou caracteres especiais')
+            return redirect('create_user')
+        
         if User.objects.filter(username=username).exists():
             messages.error(request, 'Esse usuário já existe.')
             return redirect('create_user')
+        
+        valid_name = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+        if not set(first_name).issubset(valid_name):
+            messages.error(request, 'O nome não deve conter números ou caracteres especiais')
+            return redirect('create_user')
+        
+        if ' ' in password:
+            messages.error(request, 'A senha não pode conter espaços.')
+            return redirect('create_user')
 
+        if password.isdigit():
+            messages.error(request, 'A senha não pode ser composta apenas por números.')
+            return redirect('create_user')
+
+        if '@' not in email or email.count('@') != 1:
+            messages.error(request, 'Por favor, insira um email válido')
+            return redirect('create_user')
+        
         if password == confirm_password:
             try:
                 user = User.objects.create_user(
@@ -53,6 +76,20 @@ def update_user(request, user_id):
         email = request.POST.get('email')
         city = request.POST.get('city')
         state = request.POST.get('state')
+
+        valid_chars = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_")
+        if not set(username).issubset(valid_chars):
+            messages.error(request, 'O nome de usuário deve conter apenas letras, números ou underlines, sem espaços ou caracteres especiais.')
+            return redirect('/')
+        
+        valid_name = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+        if not set(first_name).issubset(valid_name):
+            messages.error(request, 'O nome não deve conter números ou caracteres especiais')
+            return redirect('/')
+        
+        if '@' not in email or email.count('@') != 1:
+            messages.error(request, 'Por favor, insira um email válido')
+            return redirect('/')
 
         if User.objects.filter(username=username).exists():
             messages.error(request, 'Este usuário já está em uso.')
