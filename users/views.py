@@ -1,4 +1,3 @@
-import re
 from django.db import IntegrityError
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login as login_django, logout as logout_django
@@ -127,6 +126,8 @@ def get_all_users(request):
     return render(request, 'listar_usuarios.html', {'users': users})
 
 def login(request):
+    if request.user.is_authenticated:
+        return redirect('community_hub')
     if request.method == "GET":
         return render(request, 'login.html')
     else:
@@ -152,7 +153,7 @@ def login(request):
             else:
                 request.session.set_expiry(0) 
 
-            return redirect('/comunidades/hub')
+            return redirect('community_hub')
         else:
             messages.error(request, 'Usuário ou senha inválidos.')
             return redirect('login')
