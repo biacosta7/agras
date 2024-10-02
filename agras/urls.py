@@ -7,7 +7,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('comunidades/', include('communities.urls')),
     path('auth/', include('users.urls')),
-    path('', home_view, name='home')
+    path('', home_view, name='home'),
 	path('product/', include('products.urls')),
 	#path('products/create/', product_create_view, name='product-list'), 
     #path( 'products/<int:id>/', product_detail_view, name='product-detail'), 
