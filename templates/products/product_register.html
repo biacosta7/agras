@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Registrar Produto</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}  <!-- Renderiza o formulário automaticamente com parágrafos ao redor de cada campo -->
+
+        <button type="submit">Registrar Produto</button>
+    </form>
+
+    {% if form.errors %}
+        <div class="errors">
+            <p>Por favor, corrija os erros abaixo:</p>
+            <ul>
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+{% endblock %}

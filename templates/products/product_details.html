@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{{ object.nome }}</h1>
+
+    <p><strong>Data de Plantio:</strong> {{ object.data_plantio }}</p>
+
+    <p><strong>Espécie:</strong> {{ object.especie }}</p>
+
+    <p><strong>Quantidade:</strong> {{ object.quantidade }}</p>
+
+    <p><strong>Necessidade de Manejo:</strong> 
+        {% if object.necessidade_manejo %}
+            Sim
+        {% else %}
+            Não
+        {% endif %}
+    </p>
+
+    <p><strong>Observações:</strong> 
+        {% if object.observacoes %}
+            {{ object.observacoes }}
+        {% else %}
+            Sem observações.
+        {% endif %}
+    </p>
+
+    <!-- Você pode adicionar mais campos conforme necessário -->
+    
+{% endblock content %}
