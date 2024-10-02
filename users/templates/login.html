@@ -8,7 +8,7 @@
         <div class="w-full max-w-md text-center">
             <img src="{% static 'assets/colorido-horizontal.png' %}" alt="Logo" class="max-w-[300px] mb-14 mx-auto" />
            <div class="flex flex-col items-start">
-            <h1 class="font-bold text-[50px] mb-2">Entrar</h1>
+            <h1 class="font-bold text-[50px] mb-2">Login</h1>
             <p class="font-medium text-[18px] mb-8">Seja bem-vindo(a) novamente!</p>
            </div>
             <form action="{% url 'login' %}" method="POST" class="mt-8 w-full">
@@ -35,7 +35,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
                         </svg>
                     </span>
-                    <span class="absolute flex items-center justify-center w-full h-full text-white text-[16px] font-medium transition-all duration-300 transform group-hover:translate-x-full ease">Entrar</span>
+                    <span class="absolute flex items-center justify-center w-full h-full text-white text-[18px] font-medium transition-all duration-300 transform group-hover:translate-x-full ease">Entrar</span>
                     <span class="relative invisible">Entrar</span>
                 </button>
                 <p class="text-[16px] font-medium flex mt-2 items-center justify-center">Não tem uma conta? <a href="{% url 'create_user' %}" class="text-[#8ABF17] ml-1 underline">Cadastre-se</a></p>
