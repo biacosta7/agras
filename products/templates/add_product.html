@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}AGRAS - Adicionar Cultivo{% endblock %} 
+
+{% block content %}
+    <div class="container">
+        <header>
+            <img src="{% static 'assets/colorido-horizontal.png' %}" alt="Logo" class="max-w-[300px] mb-14 mx-auto" />
+        </header>
+        
+        <h1>Adicionar Cultivo ao {{canteiro.nome}}</h1>
+
+        <form action="{% url 'add-product' %}" method="POST"  class="mt-8 w-full">
+            {% csrf_token %}
+            <div class="input-group">
+                <label for="nome">Cultivo</label>
+                <select id="nome" name="nome" required>
+                    <option value="">Selecione o cultivo</option>
+                    {% for cultivo in typeproduct %}
+                        <option value="{{ cultivo.id }}">{{ cultivo.nome }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+                
+            <a href="{% url 'create-typeproduct' %}" class="add-button">+</a>
+
+            <div>
+                <label for="data_plantio">Data de Plantio</label>
+                <input type="date" id="data_plantio" name="data_plantio" required>
+            </div>
+
+            <div>
+                <label for="quantidade">Quantidade</label>
+                <input type="number" id="quantidade" name="quantidade" required min="1">
+            </div>
+
+            {% comment %} falta adicionar: autor e observações {% endcomment %}
+
+            <button type="submit">Cadastrar Produto</button>
+
+        </form>
+    </div>
+</body>
+</html>

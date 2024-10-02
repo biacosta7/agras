@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Cultivo</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'style_agendamentos.css' %}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="{% static 'assets/colorido-horizontal.png' %}" alt="Logo" class="max-w-[300px] mb-14 mx-auto" />
+        </header>
+        
+        <h1>Cadastrar cultivo</h1>
+        
+        <form method="POST">
+            {% csrf_token %}
+            <label for="nome">Nome do Cultivo:</label>
+            <input type="text" id="nome" name="nome" required>
+        
+            {% if error %}
+                <p style="color: red;">{{ error }}</p>
+            {% endif %}
+        
+            <button type="submit">Cadastrar</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,24 +1,21 @@
 from django.db import models
 #from seedbeds.models import Seedbed #Ver o nome da classe Seedbed
 
+class TypeProduct():
+    nome = "tomate"
+
 class Product(models.Model):
-    nome = models.CharField(max_length=100, blank=False)
+    nome = models.ForeignKey(TypeProduct, on_delete=models.CASCADE) #vira FK (id) de TypeProduct
     
-    especie = models.CharField(max_length=100, blank=False)
-    
-    #seedbeds = models.ForeignKey(Seedbed, on_delete=models.SET_NULL, null=True, related_name='seedbeds_products')
-
-    #data_plantio = models.ForeignKey(Seedbed, on_delete=models.SET_NULL, null=True, related_name='data_plantio_products')
-
-    #observacoes = models.ForeignKey(Seedbed, on_delete=models.SET_NULL, null=True, related_name='observacoes_products')
+    data_plantio = models.DateField()
 
     #necessidade_manejo = models.BooleanField()
     
     #produtividade_esperada = #formula desconhecida
 
-    #quantidade = models.ForeignKey(Seedbed, on_delete=models.SET_NULL, null=True, related_name='quantidade_products')
+    quantidade = models.IntegerField()
 
     #previsao_colheita = #formula desconhecida
 
     def get_absolute_url(self):
-        return f"/products/{self.id}/"
+        return f"/products/{self.id}/"  
