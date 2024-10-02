@@ -5,6 +5,10 @@ from .models import Community
 from users.models import User
 
 @login_required
+def home_view(request):
+    return redirect('community_hub')
+
+@login_required
 def community_list(request):
     communities = Community.objects.all()
     return render(request, 'hub.html', {'communities': communities})
