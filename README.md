@@ -116,7 +116,7 @@ python manage.py runserver
     </td>
     <td align="center">
       <a href="#" title="defina o título do link">
-        <img src="" width="100px;" alt="Foto da Aline Amancio"/><br>
+        <img src="https://avatars.githubusercontent.com/u/168862762?v=4" width="100px;" alt="Foto da Aline Amancio"/><br>
         <sub>
           <b>Aline Amancio</b>
         </sub>
