@@ -8,6 +8,9 @@ from users.models import User
 def home_view(request):
     return redirect('community_hub')
 
+def dashoboard_view(request):
+    return render(request, 'dashboard.html')
+
 @login_required
 def community_list(request):
     communities = Community.objects.all()

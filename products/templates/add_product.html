@@ -8,7 +8,7 @@
             <img src="{% static 'assets/colorido-horizontal.png' %}" alt="Logo" class="max-w-[300px] mb-14 mx-auto" />
         </header>
         
-        <h1>Adicionar Cultivo ao {{canteiro.nome}}</h1>
+        <h1>Adicionar Cultivo ao {{seedbed.nome}}</h1>
 
         <form action="{% url 'add-product' %}" method="POST"  class="mt-8 w-full">
             {% csrf_token %}
@@ -17,7 +17,7 @@
                 <select id="nome" name="nome" required>
                     <option value="">Selecione o cultivo</option>
                     {% for cultivo in typeproduct %}
-                        <option value="{{ cultivo.id }}">{{ cultivo.nome }}</option>
+                        <option value="{{ seedbed.id }}">{{ seedbed.nome }}</option>
                     {% endfor %}
                 </select>
             </div>

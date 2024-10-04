@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Editar Produto</h2>
+
+  <form method="POST" action="">
+    {% csrf_token %}
+    
+    <div class="form-group">
+      <label for="name">Nome do Produto:</label>
+      <input type="text" id="name" name="name" value="{{ product.nome_type_product }}" required>
+    </div>
+
+    <div class="form-group">
+      <label for="data_plantio">Data de Plantio:</label>
+      <input type="date" id="data_plantio" name="data_plantio" value="{{ product.data_plantio }}" required>
+    </div>
+
+    <div class="form-group">
+      <label for="quantidade">Quantidade:</label>
+      <input type="number" id="quantidade" name="quantidade" value="{{ product.quantidade }}" required min="1">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+    <a href="{% url 'products:product-list' %}" class="btn btn-secondary">Cancelar</a>
+  </form>
+
+{% endblock %}
