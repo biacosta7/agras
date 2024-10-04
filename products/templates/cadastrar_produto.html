@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Produto</title>
+</head>
+<body>
+    <h1>Cadastrar Produto no Canteiro: {{ seedbed.nome }}</h1>
+    <form action="{% url 'product:cadastrar_produto' seedbed.id %}" method="post">
+        {% csrf_token %}
+        <label for="tipo_nome">Selecione o Tipo de Produto:</label>
+        <select name="tipo_nome" id="tipo_nome" required>
+            <option value="" disabled selected>Escolha um tipo</option>
+            {% for tipo in tipos_produtos %}
+                <option value="{{ tipo.nome }}">{{ tipo.nome }}</option>
+            {% endfor %}
+        </select>
+        <br>
+
+        <label for="quantidade">Quantidade:</label>
+        <input type="number" name="quantidade" id="quantidade" required min="1" value="1">
+        <br>
+
+        <button type="submit">Cadastrar Produto</button>
+    </form>
+</body>
+</html>

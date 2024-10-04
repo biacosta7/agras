@@ -1,22 +1,14 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Produtos</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Produtos do Seedbed: {{ seedbed.nome }}</h1>  <!-- Exibe o nome do seedbed -->
+
     <ul>
-        <!-- Iteração de produtos usando apenas HTML -->
-        <!-- Esses itens devem ser renderizados dinamicamente na view -->
-        <!-- Substitua os valores por variáveis criadas na view -->
         {% for product in object_list %}
-            <li>
-                <a href="/products/{{ product.id }}">{{ product.nome }}</a>
-                <a href="/products/{{ product.id }}">{{ product.data_plantio }}</a>
-                <a href="/products/{{ product.id }}">{{ product.quantidade }}</a>
-            </li>
+            <li>{{ product.nome }}</li>  <!-- Exibe o nome de cada produto filtrado -->
+        {% empty %}
+            <p>Não há produtos cadastrados neste seedbed.</p>  <!-- Caso não haja produtos -->
         {% endfor %}
     </ul>
-</body>
-</html>
+    <a href="/products/create" class="btn btn-primary">Criar Novo Produto</a>
+{% endblock %}

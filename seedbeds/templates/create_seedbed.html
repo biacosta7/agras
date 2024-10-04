@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Canteiro</title>
+</head>
+<style>
+    body {
+        font-family: 'Poppins', sans-serif !important;
+    }
+    .button {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 10px;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        color: #fff;
+        background-color: #007BFF;
+        transition: background-color 0.3s;
+    }
+    .button:hover {
+        background-color: #0056b3;
+    }
+</style>
+<body>
+    <h1>Criar Canteiro</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" required>
+        <button type="submit" class="button" style='background-color: green; color: white;'>
+            <i class="fas fa-trash"></i> Criar
+        </button>
+    </form>
+</body>
+</html>

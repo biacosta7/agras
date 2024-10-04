@@ -8,14 +8,14 @@
 <body>
     <h1>{{ object.nome }}</h1>
 
-    <p><strong>Data de Plantio:</strong> {{ object.data_plantio }}</p>
+    <p><strong>Nome:</strong> {{ product.nome }}</p>
 
-    <p><strong>Espécie:</strong> {{ object.especie }}</p>
+    <p><strong>Data de Plantio::</strong> {{ product.data_plantio }}</p>
 
-    <p><strong>Quantidade:</strong> {{ object.quantidade }}</p>
+    <p><strong>Quantidade:</strong> {{ product.quantidade }}</p>
 
     <p><strong>Necessidade de Manejo:</strong> 
-        {% if object.necessidade_manejo %}
+        {% if product.necessidade_manejo %}
             Sim
         {% else %}
             Não
@@ -24,7 +24,7 @@
 
     <p><strong>Observações:</strong> 
         {% if object.observacoes %}
-            {{ object.observacoes }}
+            { product.observacoes }
         {% else %}
             Sem observações.
         {% endif %}

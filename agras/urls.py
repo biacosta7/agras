@@ -9,6 +9,8 @@ urlpatterns = [
     path('auth/', include('users.urls')),
     path('', home_view, name='home'),
 	path('product/', include('products.urls')),
+    path('canteiros/', include('seedbeds.urls')),
+
 	#path('products/create/', product_create_view, name='product-list'), 
     #path( 'products/<int:id>/', product_detail_view, name='product-detail'), 
 	#path ('products/<int:id>/update/', product_update_view, name= 'product-update'),

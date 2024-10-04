@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmar Deleção</title>
+</head>
+<body>
+    <h1>Confirmar Deleção</h1>
+    <p>Você tem certeza de que deseja deletar o canteiro "{{ seedbed.nome }}"?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Deletar</button>
+        <a href="{% url 'seedbeds:list-seedbeds' %}">Cancelar</a>
+    </form>
+</body>
+</html>
