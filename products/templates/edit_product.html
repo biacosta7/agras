@@ -8,7 +8,13 @@
     
     <div class="form-group">
       <label for="name">Nome do Produto:</label>
-      <input type="text" id="name" name="name" value="{{ product.nome_type_product }}" required>
+      <select id="name" name="nome" required>
+        {% for type_product in type_products %}
+          <option value="{{ type_product.nome }}" {% if type_product == product.nome %}selected{% endif %}>
+            {{ type_product.nome }}
+          </option>
+        {% endfor %}
+      </select>
     </div>
 
     <div class="form-group">
@@ -22,7 +28,7 @@
     </div>
 
     <button type="submit" class="btn btn-primary">Salvar Alterações</button>
-    <a href="{% url 'products:product-list' %}" class="btn btn-secondary">Cancelar</a>
+    <a href="{% url 'product:product-list' product.id %}" class="btn btn-secondary">Cancelar</a>
   </form>
 
 {% endblock %}

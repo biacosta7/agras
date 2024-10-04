@@ -30,6 +30,7 @@
     <ul>
         {% for product in object_list %}
             <li>{{ product.nome }}</li>  <!-- Exibe o nome de cada produto -->
+            <a href={% url 'product:product-update' seedbed.id product.id %} class="button" style="background-color: #007BFF; ">Editar</a>
         {% empty %}
             <p>Não há cultivos cadastrados neste canteiro.</p>  <!-- Caso não haja produtos -->
         {% endfor %}
