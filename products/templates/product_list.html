@@ -26,16 +26,18 @@
 </style>
 <body>
     <h1>Cultivos de {{ seedbed.nome }}</h1>  <!-- Exibe o nome do seedbed -->
-    <a href={% url 'product:create_product' seedbed.id %} class="button" style="background-color: #007BFF; ">Adicionar Cultivo</a>
+    <a href={% url 'product:create_product' seedbed.id %} class="button" style="background-color: #ff973b; ">Adicionar Cultivo</a>
+    <br>
+    <br>
     <ul>
         {% for product in object_list %}
-            <li>{{ product.nome }}</li>  <!-- Exibe o nome de cada produto -->
+            <li><strong>{{ product.nome }}</strong></li>  <!-- Exibe o nome de cada produto -->
             <a href={% url 'product:product-update' seedbed.id product.id %} class="button" style="background-color: #007BFF; ">Editar</a>
-            <a href={% url 'product:product-delete' seedbed.id product.id %} class="button" style="background-color: #007BFF; ">Deletar cultivo</a>
+            <a href={% url 'product:product-delete' seedbed.id product.id %} class="button" style="background-color: red; ">Deletar</a>
         {% empty %}
             <p>Não há cultivos cadastrados neste canteiro.</p>  <!-- Caso não haja produtos -->
         {% endfor %}
     </ul>
-    <a href={% url 'product:create_typeproduct' seedbed.id %} class="button" style="background-color: #007BFF;">Criar Novo Cultivo</a>
+    <a href={% url 'product:create_typeproduct' seedbed.id %} class="button" style="background-color: green;">Criar Novo Cultivo</a>
 </body>
 </html>
