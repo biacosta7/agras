@@ -33,17 +33,17 @@ def product_update_view(request, product_id):
     if request.method == "GET":
         return render(request, 'edit_product.html', {'product': product})
     else:
-        name = request.POST.get('name')
+        nome = request.POST.get('nome')
         data_plantio = request.POST.get('data_plantio')
         quantidade = request.POST.get('quantidade')
 		
-        product.name = name
+        product.nome = nome
         product.data_plantio = data_plantio
         product.quantidade = quantidade    
         product.save()
-        messages.success(request, 'Produto editado com sucesso.')
+        messages.success(request, 'Cultivo editado com sucesso.')
 
-        return redirect('products:product-list')
+        return redirect('product:product-list', product.id)
 
 def product_delete_view(request, product_id):
     product = get_object_or_404(Product, id=product_id)
