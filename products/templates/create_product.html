@@ -9,9 +9,9 @@
     <h1>Adicionar Cultivo no {{ seedbed.nome }}</h1>
     <form action="{% url 'product:create_product' seedbed.id %}" method="post">
         {% csrf_token %}
-        <label for="tipo_nome">Selecione o Tipo de Produto:</label>
+        <label for="tipo_nome">Selecione o cultivo:</label>
         <select name="tipo_nome" id="tipo_nome" required>
-            <option value="" disabled selected>Escolha um tipo</option>
+            <option value="" disabled selected>Escolha um cultivo</option>
             {% for tipo in tipos_produtos %}
                 <option value="{{ tipo.nome }}">{{ tipo.nome }}</option>
             {% endfor %}
