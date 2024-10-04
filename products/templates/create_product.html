@@ -5,6 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adicionar Cultivo</title>
 </head>
+<style>
+    body {
+        font-family: 'Poppins', sans-serif !important;
+    }
+    .button {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 10px;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        color: #fff;
+        background-color: #007BFF;
+        transition: background-color 0.3s;
+    }
+    .button:hover {
+        background-color: #0056b3;
+    }
+</style>
 <body>
     <h1>Adicionar Cultivo no {{ seedbed.nome }}</h1>
     {% if seedbed.id %}
@@ -20,6 +39,7 @@
                 <option value="{{ tipo.nome }}">{{ tipo.nome }}</option>
             {% endfor %}
         </select>
+        <a href="{% url 'product:create_typeproduct' seedbed.id %}" class="button">Criar Novo Cultivo</a>
         <br>
 
         <label for="quantidade">Quantidade:</label>
@@ -29,8 +49,10 @@
         <label for="data_plantio">Data de plantio:</label>
         <input type="date" id="data_plantio" name="data_plantio" value="{{ product.data_plantio }}"><br>
         <br>
+        <button type="submit" class="button" style='background-color: green; color: white;'>
+            <i class="fas fa-trash"></i> Adicionar Produto
+        </button>
 
-        <button type="submit">Adicionar Produto</button>
     </form>
 </body>
 </html>
