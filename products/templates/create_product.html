@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar Cultivo</title>
+</head>
+<body>
+    <h1>Adicionar Cultivo no {{ seedbed.nome }}</h1>
+    <form action="{% url 'product:create_product' seedbed.id %}" method="post">
+        {% csrf_token %}
+        <label for="tipo_nome">Selecione o Tipo de Produto:</label>
+        <select name="tipo_nome" id="tipo_nome" required>
+            <option value="" disabled selected>Escolha um tipo</option>
+            {% for tipo in tipos_produtos %}
+                <option value="{{ tipo.nome }}">{{ tipo.nome }}</option>
+            {% endfor %}
+        </select>
+        <br>
+
+        <label for="quantidade">Quantidade:</label>
+        <input type="number" name="quantidade" id="quantidade" required min="1" value="1">
+        <br>
+
+        <label for="data_plantio">Data de plantio:</label>
+        <input type="date" id="data_plantio" name="data_plantio" value="{{ product.data_plantio }}"><br>
+        <br>
+
+        <button type="submit">Adicionar Produto</button>
+    </form>
+</body>
+</html>

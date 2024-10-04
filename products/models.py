@@ -1,24 +1,22 @@
 from django.db import models
-#from seedbeds.models import Seedbed #Ver o nome da classe Seedbed
+from seedbeds.models import Seedbed
+
+class TypeProduct(models.Model):
+    nome = models.CharField(max_length=80, null=True, unique=True)
+
+    def __str__(self):
+        return self.nome
 
 class Product(models.Model):
-    nome = models.CharField(max_length=100, blank=False)
-    
-    especie = models.CharField(max_length=100, blank=False)
-    
-    #seedbeds = models.ForeignKey(Seedbed, on_delete=models.SET_NULL, null=True, related_name='seedbeds_products')
+    nome = models.ForeignKey(TypeProduct, on_delete=models.CASCADE, to_field='nome', null=True)
+    data_plantio = models.DateField(auto_now_add=True)
+    quantidade = models.IntegerField(default=1)
+    seedbed = models.ForeignKey(Seedbed, on_delete=models.CASCADE)  # Chave estrangeira para Seedbed
 
-    #data_plantio = models.ForeignKey(Seedbed, on_delete=models.SET_NULL, null=True, related_name='data_plantio_products')
-
-    #observacoes = models.ForeignKey(Seedbed, on_delete=models.SET_NULL, null=True, related_name='observacoes_products')
-
-    #necessidade_manejo = models.BooleanField()
-    
-    #produtividade_esperada = #formula desconhecida
-
-    #quantidade = models.ForeignKey(Seedbed, on_delete=models.SET_NULL, null=True, related_name='quantidade_products')
-
-    #previsao_colheita = #formula desconhecida
 
     def get_absolute_url(self):
         return f"/products/{self.id}/"
+
+    @property
+    def nome_type_product(self):
+        return self.nome.nome

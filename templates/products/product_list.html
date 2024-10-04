@@ -1,7 +1,22 @@
-<ul>
-  {% for product in object_list %}
-      <li>
-          <a href="{% url 'product:product-detail' product.id %}">{{ product.nome }}</a>
-      </li>
-  {% endfor %}
-</ul>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Produtos</title>
+</head>
+<body>
+    <ul>
+        <!-- Iteração de produtos usando apenas HTML -->
+        <!-- Esses itens devem ser renderizados dinamicamente na view -->
+        <!-- Substitua os valores por variáveis criadas na view -->
+        {% for product in object_list %}
+            <li>
+                <a href="/products/{{ product.id }}">{{ product.nome }}</a>
+                <a href="/products/{{ product.id }}">{{ product.data_plantio }}</a>
+                <a href="/products/{{ product.id }}">{{ product.quantidade }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
