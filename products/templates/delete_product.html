@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deletar Cultivo</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif !important;
+            text-align: center;
+            padding-top: 50px;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #fff;
+            transition: background-color 0.3s;
+        }
+        .button-confirm {
+            background-color: #dc3545; /* Vermelho para botão de exclusão */
+        }
+        .button-confirm:hover {
+            background-color: #c82333;
+        }
+        .button-cancel {
+            background-color: #6c757d; /* Cinza para botão de cancelar */
+        }
+        .button-cancel:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+    <h1>Tem certeza que deseja deletar o cultivo "{{ product.nome }}"?</h1>
+    <p>Essa ação não pode ser desfeita.</p>
+    
+    <!-- Botão para confirmar a exclusão -->
+    <form action="{% url 'product:product-delete' seedbed.id product.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="button button-confirm">Deletar</button>
+    </form>
+
+    <!-- Botão para cancelar e voltar à lista -->
+    <a href="{% url 'product:product-list' seedbed.id %}" class="button button-cancel">Cancelar</a>
+</body>
+</html>
