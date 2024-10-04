@@ -23,21 +23,59 @@
     .button:hover {
         background-color: #0056b3;
     }
+    .toggle-content {
+        display: none; /* Inicialmente oculta os detalhes */
+        padding-left: 20px; /* Indentação para detalhes */
+    }
+    
+    .toggle-icon {
+        cursor: pointer; /* Muda o cursor para indicar que é clicável */
+        margin-right: 5px; /* Espaço entre o ícone e o nome */
+    }
+    
+    .toggle-name {
+        font-weight: bold; /* Deixa o nome em negrito */
+    }
 </style>
 <body>
-    <h1>Cultivos de {{ seedbed.nome }}</h1>  <!-- Exibe o nome do seedbed -->
-    <a href={% url 'product:create_product' seedbed.id %} class="button" style="background-color: #ff973b; ">Adicionar Cultivo</a>
-    <br>
-    <br>
-    <ul>
-        {% for product in object_list %}
-            <li><strong>{{ product.nome }}</strong></li>  <!-- Exibe o nome de cada produto -->
-            <a href={% url 'product:product-update' seedbed.id product.id %} class="button" style="background-color: #007BFF; ">Editar</a>
-            <a href={% url 'product:product-delete' seedbed.id product.id %} class="button" style="background-color: red; ">Deletar</a>
-        {% empty %}
-            <p>Não há cultivos cadastrados neste canteiro.</p>  <!-- Caso não haja produtos -->
-        {% endfor %}
-    </ul>
-    <a href={% url 'product:create_typeproduct' seedbed.id %} class="button" style="background-color: green;">Criar Novo Cultivo</a>
+    <h1>Cultivos de {{ seedbed.nome }}</h1>
+    <a href="{% url 'product:create_product' seedbed.id %}" class="button" style="background-color: #ff973b;">Adicionar Cultivo</a>
+    <br><br>
+
+    {% for product in object_list %}
+        <div class="toggle-list">
+            <span class="toggle-icon">▶</span>
+            <span class="toggle-name"><strong>{{ product.nome }}</strong></span> <!-- Exibe o nome de cada produto -->
+            <ul class="toggle-content">
+                <li>Data de plantio: {{ product.data_plantio }}</li>
+                <li>Quantidade: {{ product.quantidade }}</li>
+            </ul>
+            <a href="{% url 'product:product-update' seedbed.id product.id %}" class="button" style="background-color: #007BFF;">Editar</a>
+            <a href="{% url 'product:product-delete' seedbed.id product.id %}" class="button" style="background-color: red;">Deletar</a>
+        </div>
+        <br><br>
+    {% empty %}
+        <p>Não há cultivos cadastrados neste canteiro.</p>  <!-- Caso não haja produtos -->
+    {% endfor %}
+    <a href="{% url 'product:create_typeproduct' seedbed.id %}" class="button" style="background-color: green;">Criar Novo Cultivo</a>
 </body>
+<script>
+    // Obtém todos os itens de toggle
+    const toggleItems = document.querySelectorAll('.toggle-list');
+
+    // Adiciona um evento de clique a cada item
+    toggleItems.forEach(item => {
+        const icon = item.querySelector('.toggle-icon'); // Seleciona o ícone
+        icon.addEventListener('click', () => {
+            const content = item.querySelector('.toggle-content'); // O conteúdo a ser alternado
+            if (content.style.display === 'block') {
+                content.style.display = 'none'; // Oculta se estiver visível
+                icon.textContent = '▶'; // Define o ícone pro lado
+            } else {
+                content.style.display = 'block'; // Exibe se estiver oculto
+                icon.textContent = '▼'; // Define o ícone pra cima
+            }
+        });
+    });
+</script>
 </html>
