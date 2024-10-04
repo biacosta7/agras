@@ -1,34 +1,64 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Cultivo</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif !important;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #fff;
+            background-color: #007BFF;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+          background-color: #0056b3;
+          cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h2>Editar Cultivo: {{ product.nome }}</h2>
 
-{% block content %}
-  <h2>Editar Produto</h2>
+    <form method="POST" action="">  
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="name">Nome do Produto:</label>
+            <select id="name" name="nome" required>
+                {% for type_product in type_products %}
+                    <option value="{{ type_product.nome }}" {% if type_product == product.nome %}selected{% endif %}>
+                        {{ type_product.nome }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
 
-  <form method="POST" action="">
-    {% csrf_token %}
-    
-    <div class="form-group">
-      <label for="name">Nome do Produto:</label>
-      <select id="name" name="nome" required>
-        {% for type_product in type_products %}
-          <option value="{{ type_product.nome }}" {% if type_product == product.nome %}selected{% endif %}>
-            {{ type_product.nome }}
-          </option>
-        {% endfor %}
-      </select>
-    </div>
+        <div class="form-group">
+          <label for="data_plantio">Data de Plantio:</label>
+          <input type="date" id="data_plantio" name="data_plantio" value="{{ product.data_plantio|date:'d/m/Y' }}" required>
+      </div>
 
-    <div class="form-group">
-      <label for="data_plantio">Data de Plantio:</label>
-      <input type="date" id="data_plantio" name="data_plantio" value="{{ product.data_plantio }}" required>
-    </div>
+        <div class="form-group">
+            <label for="quantidade">Quantidade:</label>
+            <input type="number" id="quantidade" name="quantidade" value="{{ product.quantidade }}" required min="1">
+        </div>
 
-    <div class="form-group">
-      <label for="quantidade">Quantidade:</label>
-      <input type="number" id="quantidade" name="quantidade" value="{{ product.quantidade }}" required min="1">
-    </div>
+        <button type="submit" class="button" style='background-color: green;'>
+            <i class="fas fa-save"></i> Salvar Alterações
+        </button>
 
-    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
-    <a href="{% url 'product:product-list' product.id %}" class="btn btn-secondary">Cancelar</a>
-  </form>
-
-{% endblock %}
+        <a href="{% url 'product:product-list' seedbed.id %}" class="button" style='background-color: red'>
+            <i class="fas fa-list"></i> Cancelar
+        </a>
+    </form>
+</body>
+</html>

@@ -30,18 +30,22 @@ def product_detail_view(request, id):
 def product_update_view(request, seedbed_id, product_id):
     seedbed = get_object_or_404(Seedbed, id=seedbed_id)
     product = get_object_or_404(Product, id=product_id)
-    type_products = TypeProduct.objects.all()  # Para listar os tipos de produtos no template
+    type_products = TypeProduct.objects.all()
 
     if request.method == "GET":
-        return render(request, 'edit_product.html', {'product': product, 'type_products': type_products})
-    
+        return render(request, 'edit_product.html', {
+            'product': product,
+            'type_products': type_products,
+            'seedbed': seedbed  # Passando seedbed no contexto
+        })
+
     else:
         nome = request.POST.get('nome')
         data_plantio = request.POST.get('data_plantio')
         quantidade = request.POST.get('quantidade')
 
         # Atualizando o produto com a nova informação
-        type_product = get_object_or_404(TypeProduct, nome=nome)  # Buscando o objeto TypeProduct correspondente
+        type_product = get_object_or_404(TypeProduct, nome=nome)
         product.nome = type_product
         product.data_plantio = data_plantio
         product.quantidade = quantidade    
