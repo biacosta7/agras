@@ -4,15 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastrar Cultivo</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'style_agendamentos.css' %}">
 </head>
+<style>
+    body {
+        font-family: 'Poppins', sans-serif !important;
+    }
+    .button {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 10px;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        color: #fff;
+        background-color: #007BFF;
+        transition: background-color 0.3s;
+    }
+    .button:hover {
+        background-color: #0056b3;
+    }
+</style>
 <body>
     <div class="container">
-        <header>
-            <img src="{% static 'assets/colorido-horizontal.png' %}" alt="Logo" class="max-w-[300px] mb-14 mx-auto" />
-        </header>
-        
         <h1>Cadastrar cultivo</h1>
         
         <form method="POST">
@@ -23,8 +36,9 @@
             {% if error %}
                 <p style="color: red;">{{ error }}</p>
             {% endif %}
-        
-            <button type="submit">Cadastrar</button>
+            <button type="submit" class="button" style='background-color: green; color: white;'>
+                <i class="fas fa-trash"></i> Cadastrar
+            </button>
         </form>
     </div>
 </body>

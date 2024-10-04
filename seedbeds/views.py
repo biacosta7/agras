@@ -6,7 +6,7 @@ from django.contrib import messages
 def list_seedbeds(request):
     # Obtém todos os canteiros
     canteiros = Seedbed.objects.all()  # Busca todos os canteiros
-    return render(request, 'list.html', {'canteiros': canteiros})
+    return render(request, 'list_seedbeds.html', {'canteiros': canteiros})
 
 def create_seedbed(request):
     if request.method == 'POST':

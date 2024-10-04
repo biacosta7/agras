@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 from seedbeds.models import Seedbed
 from django.http import HttpResponse
 
+#Combinar add_product com create_product_view (são a mesma coisa)
 
 def add_product(request, seedbed_id):
     seedbed = Seedbed.objects.get(id=seedbed_id)  # Busque a instância
@@ -53,12 +54,12 @@ def product_list_view(request, seedbed_id):
     
     # Filtra os produtos que pertencem ao canteiro
     queryset = Product.objects.filter(seedbed=seedbed)
-    
+
     context = {
         'object_list': queryset,
         'seedbed': seedbed  
     }
-    return render(request, "products/product_list.html", context)
+    return render(request, "product_list.html", context)
  
 
 def product_detail_view(request, id):
@@ -93,52 +94,49 @@ def product_delete_view(request, product_id):
     messages.success(request, 'Produto deletado com sucesso.')
     return redirect('get_all_users')
 
-def mostrar_formulario(request, seedbed_id):
+def create_product_view(request, seedbed_id):
     # Obtém o canteiro correspondente ao ID passado na URL
     seedbed = get_object_or_404(Seedbed, id=seedbed_id)
 
-    # Obtém todos os tipos de produtos
-    tipos_produtos = TypeProduct.objects.all()
-
-    # Renderiza o template com os dados
-    return render(request, 'cadastrar_produto.html', {'seedbed': seedbed, 'tipos_produtos': tipos_produtos})
-
-def cadastrar_produto(request, seedbed_id):
     # Verifica se a requisição é POST para criar um novo produto
     if request.method == 'POST':
         tipo_nome = request.POST.get('tipo_nome')
         quantidade = request.POST.get('quantidade')
-
-        # Obtém o canteiro correspondente ao ID passado na URL
-        seedbed = get_object_or_404(Seedbed, id=seedbed_id)
+        data_plantio = request.POST.get('data_plantio')
 
         # Obtém o tipo de produto correspondente ao nome
         tipo_produto = get_object_or_404(TypeProduct, nome=tipo_nome)
 
-        # Cria um novo produto
-        product = Product.objects.create(nome=tipo_produto, quantidade=int(quantidade))
-        product.save()
-        return HttpResponse(f'Produto {product.nome} cadastrado com sucesso no canteiro {seedbed.nome}.')
+        # Cria um novo produto, associando o seedbed
+        product = Product.objects.create(
+            nome=tipo_produto,
+            quantidade=int(quantidade),
+            seedbed=seedbed,  # Associando o produto ao canteiro aqui
+            data_plantio=data_plantio
+        )
 
-    return HttpResponse('Método não permitido. Por favor, use POST para cadastrar o produto.')
+        messages.success(request, f'Produto {product.nome_type_product} cadastrado com sucesso no canteiro {seedbed.nome}.')
+        return redirect('product:product-list', seedbed.id)  # Redireciona para a lista de produtos
 
-def cadastrar_produto(request, seedbed_id):
+    # Se não for uma requisição POST, renderiza o formulário
+    tipos_produtos = TypeProduct.objects.all()  # Obtém todos os tipos de produtos
+    return render(request, 'create_product.html', {'seedbed': seedbed, 'tipos_produtos': tipos_produtos})
+
+def create_typeproduct_view(request, seedbed_id):
+    # Obtém o canteiro correspondente ao ID passado na URL
+    seedbed = get_object_or_404(Seedbed, id=seedbed_id)
+
     # Verifica se a requisição é POST para criar um novo produto
     if request.method == 'POST':
-        tipo_nome = request.POST.get('tipo_nome')
-        quantidade = request.POST.get('quantidade')
+        nome = request.POST.get('nome')
 
-        # Obtém o canteiro correspondente ao ID passado na URL
-        seedbed = get_object_or_404(Seedbed, id=seedbed_id)
+        # Cria um novo produto, associando o seedbed
+        typeproduct = TypeProduct.objects.create(
+            nome=nome
+        )
 
-        # Obtém o tipo de produto correspondente ao nome
-        tipo_produto = get_object_or_404(TypeProduct, nome=tipo_nome)
+        messages.success(request, f'Novo cultivo {typeproduct.nome} criado com sucesso.')
+        return redirect('product:product-list', seedbed.id)  # Redireciona para a lista de produtos
 
-        # Cria um novo produto
-        product = Product.objects.create(nome=tipo_produto, quantidade=int(quantidade))
-        product.save()
-
-        messages.success(request, f'Produto {product.nome} cadastrado com sucesso no canteiro {seedbed.nome}.')
-        return redirect('product:product-list')  # Redireciona para a lista de produtos
-
-    return render(request, 'cadastrar_produto.html', {'seedbed': seedbed})  # Para GET
+    # Se não for uma requisição POST, renderiza o formulário
+    return render(request, 'create_typeproduct.html', {'seedbed': seedbed})

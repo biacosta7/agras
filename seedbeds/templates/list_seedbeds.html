@@ -40,7 +40,7 @@
     <h1>Canteiros</h1>
 
     {% for canteiro in canteiros %}
-        <h3>Canteiro: {{ canteiro.nome }}</h3>
+        <h3>{{ canteiro.nome }}</h3>
         
         <a href="{% url 'product:product-list' canteiro.id %}" class="button"><i class="fas fa-list"></i> Gerenciar cultivos</a>
         
