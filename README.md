@@ -99,16 +99,16 @@ python manage.py runserver
 <table>
   <tr>
     <td align="center">
-      <a href="#" title="defina o título do link">
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR65dbMui6whWaxsVpnyP_A1zY2IXODEzLVoA&s" width="100px;" alt="Foto do Adrian Michael"/><br>
+      <a href="https://github.com/AdrianMichael5" title="defina o título do link">
+        <img src="https://avatars.githubusercontent.com/u/144910632?v=4" width="100px;" alt="Foto do Adrian Michael"/><br>
         <sub>
           <b>Adrian Michael</b>
         </sub>
       </a>
     </td>
     <td align="center">
-      <a href="#" title="defina o título do link">
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR65dbMui6whWaxsVpnyP_A1zY2IXODEzLVoA&s" width="100px;" alt="Foto da Beatriz Costa"/><br>
+      <a href="https://github.com/biacosta7" title="defina o título do link">
+        <img src="https://avatars.githubusercontent.com/u/113059480?v=4" width="100px;" alt="Foto da Beatriz Costa"/><br>
         <sub>
           <b>Beatriz Costa</b>
         </sub>
@@ -116,15 +116,15 @@ python manage.py runserver
     </td>
     <td align="center">
       <a href="#" title="defina o título do link">
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR65dbMui6whWaxsVpnyP_A1zY2IXODEzLVoA&s" width="100px;" alt="Foto da Aline Amancio"/><br>
+        <img src="https://avatars.githubusercontent.com/u/168862762?v=4" width="100px;" alt="Foto da Aline Amancio"/><br>
         <sub>
           <b>Aline Amancio</b>
         </sub>
       </a>
     </td>
     <td align="center">
-      <a href="#" title="defina o título do link">
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR65dbMui6whWaxsVpnyP_A1zY2IXODEzLVoA&s" width="100px;" alt="Foto do William Souza"/><br>
+      <a href="https://github.com/william-mjsouza" title="defina o título do link">
+        <img src="https://avatars.githubusercontent.com/u/66651052?v=4" width="100px;" alt="Foto do William Souza"/><br>
         <sub>
           <b>William Souza</b>
         </sub>
@@ -139,8 +139,8 @@ python manage.py runserver
       </a>
     </td>
      <td align="center">
-      <a href="#" title="defina o título do link">
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR65dbMui6whWaxsVpnyP_A1zY2IXODEzLVoA&s" width="100px;" alt="Foto da Nina Franca"/><br>
+      <a href="https://github.com/ninahffbs" title="defina o título do link">
+        <img src="https://avatars.githubusercontent.com/u/168862762?v=4" width="100px;" alt="Foto da Nina Franca"/><br>
         <sub>
           <b>Nina França</b>
         </sub>
@@ -148,3 +148,7 @@ python manage.py runserver
     </td>
   </tr>
 </table>
+
+___
+
+![Alt](https://repobeats.axiom.co/api/embed/61eaafb2cc575131259cf8ec9139855670acc63a.svg "Repobeats analytics image")

@@ -27,14 +27,6 @@
 <body>
     <div class="container">
         <h1>Cadastrar cultivo</h1>
-        {% if messages %}
-            <ul>
-                {% for message in messages %}
-                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-        
         <form method="POST">
             {% csrf_token %}
             <label for="nome">Nome do Cultivo:</label>
