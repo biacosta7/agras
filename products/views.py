@@ -55,11 +55,14 @@ def product_update_view(request, seedbed_id, product_id):
 
         return redirect('product:product-list', seedbed.id)
 
-def product_delete_view(request, product_id):
+def product_delete_view(request, seedbed_id, product_id):
+    seedbed = get_object_or_404(Seedbed, id=seedbed_id)
     product = get_object_or_404(Product, id=product_id)
-    product.delete()
-    messages.success(request, 'Produto deletado com sucesso.')
-    return redirect('get_all_users')
+    if request.method == 'POST':
+        product.delete()
+        messages.success(request, 'Produto deletado com sucesso.')
+        return redirect('product:product-list', seedbed_id=seedbed.id)
+    return render(request, 'delete_product.html', {'product': product, 'seedbed': seedbed})
 
 def create_product_view(request, seedbed_id):
     # Obtém o canteiro correspondente ao ID passado na URL
@@ -83,7 +86,7 @@ def create_product_view(request, seedbed_id):
         if not quantidade:
             errors.append("O campo 'Quantidade' é obrigatório.")
         if errors:
-            return render(request, 'create_product.html', {'errors': errors})
+            return render(request, 'create_product.html', {'errors': errors, 'seedbed': seedbed, 'tipos_produtos': tipos_produtos})
         try:
             # Cria um novo produto, associando o seedbed
             product = Product.objects.create(
@@ -114,6 +117,10 @@ def create_typeproduct_view(request, seedbed_id):
     # Verifica se a requisição é POST para criar um novo produto
     if request.method == 'POST':
         nome = request.POST.get('nome').capitalize()
+        
+        if TypeProduct.objects.filter(nome=nome).exists():
+            messages.error(request, f'O cultivo {nome} já existe. Por favor, escolha um nome diferente.')
+            return render(request, 'create_typeproduct.html', {'seedbed': seedbed})
 
         # Cria um novo produto, associando o seedbed
         typeproduct = TypeProduct.objects.create(

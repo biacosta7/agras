@@ -7,7 +7,11 @@
 </head>
 <body>
     <h1>Adicionar Cultivo no {{ seedbed.nome }}</h1>
-    <form action="{% url 'product:create_product' seedbed.id %}" method="post">
+    {% if seedbed.id %}
+        <form action="{% url 'product:create_product' seedbed.id %}" method="post">
+    {% else %}
+        <p>Erro: Seedbed não está disponível.</p>
+    {% endif %}
         {% csrf_token %}
         <label for="tipo_nome">Selecione o cultivo:</label>
         <select name="tipo_nome" id="tipo_nome" required>
