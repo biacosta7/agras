@@ -1,0 +1,5 @@
+django==5.1
+python-dotenv
+psycopg2-binary
+gunicorn
+whitenoise
