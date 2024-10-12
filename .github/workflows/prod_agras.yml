@@ -1,6 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 # More info on Python, GitHub Actions, and Azure App Service: https://aka.ms/python-webapps-actions
+
 name: Build and deploy Python app to Azure Web App - agras
 
 on:
@@ -33,11 +34,12 @@ jobs:
         run: |
           cd ./
           rm db.sqlite3
+          rm .env
           cd ..
 
       - name: Zip artifact for deployment
         run: |
-          zip -r release.zip ./agras ./manage.py
+          zip -r release.zip ./agras ./manage.py ./.env ./db.sqlite3
 
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v4
@@ -65,12 +67,13 @@ jobs:
       - name: Unzip artifact for deployment
         run: unzip release.zip
 
+      
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_E6340B679B854EC7AC708D7F785F8C76 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_8B9EE436EB9D4DC5855EF19F1E6CB689 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_BC28E226172648CD8005CDF7EFC86E9C }}
 
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3
@@ -78,3 +81,4 @@ jobs:
         with:
           app-name: 'agras'
           slot-name: 'Production'
+          
