@@ -26,22 +26,31 @@ jobs:
         run: |
           python -m venv venv
           source venv/bin/activate
-          pip install -r ./requirements.txt
+      
+      - name: Install dependencies
+        run: pip install -r ./requirements.txt
         
       - name: Cleaning testing files
         run: |
+          cd project/
           rm db.sqlite3
           rm .env
+          cd ..
 
       - name: Zip artifact for deployment
         run: |
-          zip -r release.zip ./agras ./manage.py ./.env ./db.sqlite3
+          cd project/
+          zip release.zip ./* -r
+          cd ..
+          mv project/release.zip .
 
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v4
         with:
           name: python-app
-          path: release.zip
+          path: |
+            release.zip
+            !venv/
 
   deploy:
     runs-on: ubuntu-latest
@@ -61,6 +70,7 @@ jobs:
       - name: Unzip artifact for deployment
         run: unzip release.zip
 
+      
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -74,4 +84,3 @@ jobs:
         with:
           app-name: 'agras'
           slot-name: 'Production'
-          
