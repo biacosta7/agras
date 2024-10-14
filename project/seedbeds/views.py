@@ -14,13 +14,13 @@ def create_seedbed(request):
         nome = request.POST.get('nome')  # Obtém o nome do Seedbed a partir do request
         if nome:
             if Seedbed.objects.filter(nome=nome).exists():
-                return render(request, 'create_seedbed.html', {
-                    'error_message': 'Já existe um canteiro com esse nome.',
-                })
+                messages.error(request, 'Já existe um canteiro com esse nome. Por favor, tente novamente.')
+                return render(request, 'create_seedbed.html') 
             else:
                 Seedbed.objects.create(nome=nome)  
+                messages.success(request, 'Canteiro criado com sucesso!')
                 return redirect('seedbeds:list-seedbeds') 
-    return render(request, 'create_seedbed.html')  # Renderiza o formulário vazio se não for POST
+    return render(request, 'create_seedbed.html') # Renderiza o formulário vazio se não for POST
 
 def delete_seedbed(request, seedbed_id):
     seedbed = get_object_or_404(Seedbed, id=seedbed_id)  # Obtém o Seedbed com base no ID
