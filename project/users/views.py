@@ -17,7 +17,6 @@ def create_user(request):
         state = request.POST.get('state')
         confirm_password = request.POST.get('confirm_password')
 
-        # Dados do formulário para manter os campos preenchidos
         form_data = {
             'first_name': first_name,
             'username': username,
@@ -172,3 +171,40 @@ def logout(request):
     logout_django(request)
     messages.success(request, 'Desconectado com sucesso.')
     return redirect('login')
+
+def forgot_password(request):
+    if request.method == "GET":
+        return render(request, 'forgot_password.html')
+    else: 
+        login_input = request.POST.get('login_input')
+        new_password = request.POST.get('password')
+        confirm_new_password = request.POST.get('confirm_password')
+
+        form_login_input = {
+            'login_input': login_input
+        }
+
+        if new_password == confirm_new_password:
+            
+            if ' ' in new_password:
+                messages.error(request, 'A senha não pode conter espaços.')
+                return render(request, 'forgot_password.html', form_login_input)
+
+            if new_password.isdigit():
+                messages.error(request, 'A senha não pode ser composta apenas por números.')
+                return render(request, 'forgot_password.html', form_login_input)
+            
+            try:
+                user = User.objects.get(username=login_input) if User.objects.filter(username=login_input).exists() else User.objects.get(email=login_input)
+
+                user.set_password(new_password)
+                user.save()
+                messages.success(request, 'Senha redefinida com sucesso.')
+                return redirect('login')
+
+            except User.DoesNotExist:
+                messages.error(request, 'Usuário não encontrado.')
+                return redirect('forgot_password')
+        else:
+            messages.error(request, 'As senhas não coincidem.')
+            return redirect('forgot_password')
