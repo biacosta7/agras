@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Canteiros{% endblock %}
+{% load static %}
+{% block styles %}
+    h1{
+        font-weight: bold;
+    }
+    .button {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 10px;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        color: #fff;
+        background-color: #007BFF;
+        transition: background-color 0.3s;
+    }
+    .button:hover {
+        background-color: #0056b3;
+    }
+{% endblock %}
+{% block page_classes %}
+    bg-gray-300 h-screen p-4
+{% endblock %}
+{% block content %}
+    <h1 class="text-2xl">Canteiros</h1>
+    <br>
+    {% for canteiro in canteiros %}
+        <h3 class="text-lg font-semibold text-gray-800">{{ canteiro.nome }}</h3>
+        
+        <a href="{% url 'product:product-list' canteiro.id %}" class="button"><i class="fas fa-list"></i> Gerenciar cultivos</a>
+        
+        <form action="{% url 'seedbeds:delete-seedbed' canteiro.id %}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="button" style='background-color: red; color: white;'>
+                <i class="fas fa-trash"></i> Excluir canteiro
+            </button>
+        </form>
+
+    {% empty %}
+        <p>Não há canteiros cadastrados.</p>
+    {% endfor %}
+    <br>
+    <br>
+    <br>
+    <a href="{% url 'seedbeds:create-seedbeds' %}" class="button" style='background-color: #61aa75'><i class="fas fa-list" ></i> Criar novo canteiro</a>
+{% endblock content %}

@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="icon" href="{% static 'assets/logo-green.png' %}" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    {% block css %}
+        <link rel="stylesheet" href="{% static 'globals.css' %}">
+    {% endblock css %}
+
+    <title>AGRAS | {% block title %}{% endblock %}</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    {% include 'common/messages.html' %}
+
+    <div class="{% block page_classes %}bg-gray-300 h-screen{% endblock %}">
+        {% block content %}
+        {% endblock content %}
+    </div>
+</body>
+<style>
+    {% block styles %}
+        body {
+            font-family: 'Poppins', sans-serif !important;
+        }
+
+        input::placeholder {
+        font-weight: 500;
+        }
+
+        input[type="checkbox"] {
+        appearance: none; 
+        width: 13px; 
+        height: 13px;
+        border: 1px solid #ccc; 
+        border-radius: 3px; 
+        position: relative;
+        }
+
+        input[type="checkbox"]:checked {
+            background-color: #8ABF17;
+        }
+
+        input[type="checkbox"]:checked::after {
+            content: "✔";
+            position: absolute;
+            left: 1px;
+            top: -2px; 
+            color: white; 
+            font-size: 10px; 
+        }
+
+    {% endblock styles %}
+</style>
+
+<script>
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+
+    togglePassword.addEventListener('click', () => {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+    
+        togglePassword.src = type === 'text' 
+            ? "{% static 'assets/eye-fill.svg' %}" 
+            : "{% static 'assets/eye-slash-fill.svg' %}";
+});
+
+// Para o campo de confirmar senha
+const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+const confirmPasswordInput = document.getElementById('confirm_password');
+
+toggleConfirmPassword.addEventListener('click', () => {
+    const type = confirmPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    confirmPasswordInput.setAttribute('type', type);
+    
+    toggleConfirmPassword.src = type === 'text' 
+        ? "{% static 'assets/eye-fill.svg' %}" 
+        : "{% static 'assets/eye-slash-fill.svg' %}";
+});
+
+</script>
+</html>
