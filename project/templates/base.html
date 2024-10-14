@@ -1,5 +1,3 @@
-{% load static %}
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -8,50 +6,59 @@
     {% load static %}
     <link rel="icon" href="{% static 'assets/logo-green.png' %}" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'globals.css' %}">
-    <title>{% block title %}AGRAS{% endblock %}</title>
+    
+    {% block css %}
+        <link rel="stylesheet" href="{% static 'globals.css' %}">
+    {% endblock css %}
+
+    <title>AGRAS | {% block title %}{% endblock %}</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     {% include 'common/messages.html' %}
 
-    <div class="bg-gray-300 h-screen">
+    <div class="{% block page_classes %}bg-gray-300 h-screen{% endblock %}">
         {% block content %}
-        {% endblock %}
+        {% endblock content %}
     </div>
 </body>
 <style>
-    body {
-        font-family: 'Poppins', sans-serif !important;
-    }
+    {% block styles %}
+        body {
+            font-family: 'Poppins', sans-serif !important;
+        }
 
-    input::placeholder {
-    font-weight: 500;
-    }
+        input::placeholder {
+        font-weight: 500;
+        }
 
-    input[type="checkbox"] {
-    appearance: none; 
-    width: 13px; 
-    height: 13px;
-    border: 1px solid #ccc; 
-    border-radius: 3px; 
-    position: relative;
-}
+        input[type="checkbox"] {
+        appearance: none; 
+        width: 13px; 
+        height: 13px;
+        border: 1px solid #ccc; 
+        border-radius: 3px; 
+        position: relative;
+        }
 
-input[type="checkbox"]:checked {
-    background-color: #8ABF17;
-}
+        input[type="checkbox"]:checked {
+            background-color: #8ABF17;
+        }
 
-input[type="checkbox"]:checked::after {
-    content: "✔";
-    position: absolute;
-    left: 1px;
-    top: -2px; 
-    color: white; 
-    font-size: 10px; 
-}
+        input[type="checkbox"]:checked::after {
+            content: "✔";
+            position: absolute;
+            left: 1px;
+            top: -2px; 
+            color: white; 
+            font-size: 10px; 
+        }
+
+    {% endblock styles %}
 </style>
+
 <script>
     const togglePassword = document.getElementById('togglePassword');
     const passwordInput = document.getElementById('password');

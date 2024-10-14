@@ -1,26 +1,7 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Canteiros</title>
-</head>
-<style>
-    body {
-        font-family: 'Poppins', sans-serif !important;
-    }
-    .dashboard-container {
-        background-color: #fff;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        text-align: center;
-        margin: 20px auto;
-        max-width: 600px;
-    }
-    .dashboard-container h1 {
-        margin-bottom: 20px;
-    }
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Canteiros{% endblock %}
+{% block styles %}
     .button {
         display: inline-block;
         padding: 10px 20px;
@@ -35,12 +16,15 @@
     .button:hover {
         background-color: #0056b3;
     }
-</style>
-<body>
-    <h1>Canteiros</h1>
-
+{% endblock %}
+{% block page_classes %}
+    bg-gray-300 h-screen p-4
+{% endblock %}
+{% block content %}
+    <h1 class="text-2xl font-bold">Canteiros</h1>
+    <br>
     {% for canteiro in canteiros %}
-        <h3>{{ canteiro.nome }}</h3>
+        <h3 class="text-lg font-semibold text-gray-800">{{ canteiro.nome }}</h3>
         
         <a href="{% url 'product:product-list' canteiro.id %}" class="button"><i class="fas fa-list"></i> Gerenciar cultivos</a>
         
@@ -58,6 +42,4 @@
     <br>
     <br>
     <a href="{% url 'seedbeds:create-seedbeds' %}" class="button" style='background-color: #61aa75'><i class="fas fa-list" ></i> Criar novo canteiro</a>
-
-</body>
-</html>
+{% endblock content %}
