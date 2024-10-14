@@ -1,42 +1,31 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}AGRAS - Comunidades{% endblock %}
+{% block title %}Comunidades{% endblock %}
 
 {% block content %}
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agras - Comunidades</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-</head>
-<body class="bg-gray-100">
 
     <!-- Sidebar -->
     <div class="flex flex-col lg:flex-row">
-        <aside class="w-full lg:w-64 h-screen bg-green-500 text-white flex flex-col justify-between">
+        <aside class="w-full lg:w-64 h-screen bg-[#8ABF17] text-white flex flex-col justify-between">
             <div class="p-6">
-                <h1 class="text-3xl font-bold mb-4">AGRAS</h1>
+                <img src="{% static 'assets/branco-emcima.png' %}" alt="Logo" class="max-w-[110px] mb-14 mx-auto" />
                 <div class="flex items-center mb-6">
                     <img src="https://via.placeholder.com/50" alt="User" class="rounded-full w-12 h-12">
                     <div class="ml-4">
                         <p class="text-lg font-semibold">{{ request.user.username }}</p>
                     </div>
                 </div>
-                <nav class="mt-4">
-                    <ul>
-                        <!-- Outras opções do menu -->
-                    </ul>
-                </nav>
             </div>
             <div class="p-6">
                 <ul>
+                    <a class="flex items-center text-[14px] cursor-pointer mb-[15px]">
+                        <span class="material-icons">settings</span>
+                        <span class="ml-2">Configurações</span>
+                    </a>
                     <li class="mb-4">
                         <form action="{% url 'logout' %}" method="post">
                             {% csrf_token %}
-                            <button type="submit" class="flex items-center text-lg font-medium">
+                            <button type="submit" class="flex items-center text-[14px]">
                                 <span class="material-icons">logout</span>
                                 <span class="ml-2">Sair</span>
                             </button>
@@ -49,12 +38,12 @@
         <!-- Main content -->
         <div class="flex-1 p-6 lg:p-10">
             <header class="mb-6">
-                <h1 class="text-3xl lg:text-4xl font-bold">Comunidades</h1>
-                <p class="text-lg text-gray-600">Encontre, crie e gerencie seus plantios!</p>
+                <h1 class="text-3xl lg:text-[48px] font-bold">Comunidades</h1>
+                <p class="text-lg text-black font-medium">Encontre, crie e gerencie seus plantios!</p>
             </header>
 
             <!-- Botão para adicionar comunidade -->
-            <button id="addCommunityBtn" class="bg-green-500 text-white px-4 py-2 rounded-md mb-6" onclick="toggleModal('create')">
+            <button id="addCommunityBtn" class="bg-[#8ABF17] text-white px-4 py-2 rounded-md mb-6" onclick="toggleModal('create')">
                 Adicionar Comunidade
             </button>
 
@@ -66,15 +55,15 @@
                         {% csrf_token %}
                         <div class="mb-4">
                             <label for="name" class="block text-sm font-medium text-gray-700">Nome da Comunidade</label>
-                            <input type="text" name="name" id="name" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500">
+                            <input type="text" name="name" id="name" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17]">
                         </div>
                         <div class="mb-4">
                             <label for="description" class="block text-sm font-medium text-gray-700">Descrição</label>
-                            <textarea name="description" id="description" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500"></textarea>
+                            <textarea name="description" id="description" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17]"></textarea>
                         </div>
                         <div class="flex justify-end">
                             <button type="button" class="mr-2 bg-gray-300 text-gray-700 px-4 py-2 rounded" onclick="toggleModal('close')">Cancelar</button>
-                            <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Criar</button>
+                            <button type="submit" class="bg-[#8ABF17] text-white px-4 py-2 rounded">Criar</button>
                         </div>
                     </form>
                 </div>
@@ -89,15 +78,15 @@
                         <input type="hidden" name="id" id="editCommunityId">
                         <div class="mb-4">
                             <label for="editName" class="block text-sm font-medium text-gray-700">Nome da Comunidade</label>
-                            <input type="text" name="name" id="editName" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500">
+                            <input type="text" name="name" id="editName" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17]">
                         </div>
                         <div class="mb-4">
                             <label for="editDescription" class="block text-sm font-medium text-gray-700">Descrição</label>
-                            <textarea name="description" id="editDescription" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500"></textarea>
+                            <textarea name="description" id="editDescription" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17]"></textarea>
                         </div>
                         <div class="flex justify-end">
                             <button type="button" class="mr-2 bg-gray-300 text-gray-700 px-4 py-2 rounded" onclick="toggleModal('closeEdit')">Cancelar</button>
-                            <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Salvar</button>
+                            <button type="submit" class="bg-[#8ABF17] text-white px-4 py-2 rounded">Salvar</button>
                         </div>
                     </form>
                 </div>
@@ -107,12 +96,12 @@
             <div id="communitiesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {% for community in communities %}
                 <div class="bg-white shadow-md rounded-lg overflow-hidden flex flex-col h-full">
-                    <div class="flex-1 p-4 bg-green-500 text-center text-white">
+                    <div class="flex-1 p-4 bg-[#8ABF17] text-center text-white">
                         <h3 class="font-bold text-lg">{{ community.name }}</h3>
                         <p class="text-sm break-words">{{ community.description }}</p>
                     </div>
-                    <div class="p-4 bg-green-500 flex justify-between">
-                        <a href="{% url 'dashboard' %}?community_id={{ community.id }}" class="bg-white text-green-500 font-semibold px-6 py-2 rounded-md border-2 border-white">Entrar</a>
+                    <div class="p-4 bg-[#8ABF17] flex justify-between">
+                        <a href="{% url 'dashboard' %}?community_id={{ community.id }}" class="bg-white text-[#8ABF17] font-semibold px-6 py-2 rounded-md border-2 border-white">Entrar</a>
                         <form action="{% url 'delete_community' community.id %}" method="post" class="inline">
                             {% csrf_token %}
                             <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-md">Excluir</button>
@@ -158,7 +147,5 @@
             toggleModal('openEdit');
         }
     </script>
-
-</body>
 </html>
 {% endblock %}
