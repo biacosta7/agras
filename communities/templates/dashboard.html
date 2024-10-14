@@ -2,7 +2,14 @@
 
 {% block content %}
 <div class="dashboard-container">
-    <h1>Dashboard</h1>
+    {% if community %}
+        <h1>Dashboard da Comunidade: {{ community.name }}</h1>
+        <p>{{ community.description }}</p>
+    {% else %}
+        <h1>Dashboard</h1>
+        <p>Selecione uma comunidade para ver detalhes específicos.</p>
+    {% endif %}
+    
     <a href="{% url 'seedbeds:list-seedbeds' %}" class="button"><i class="fas fa-list"></i> Gerenciar Canteiros</a>
 </div>
 {% endblock %}
