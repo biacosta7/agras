@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Criar Canteiros{% endblock %}
+{% block styles %}
+    .button {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 10px;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        color: #fff;
+        background-color: #007BFF;
+        transition: background-color 0.3s;
+    }
+    .button:hover {
+        background-color: #0056b3;
+    }
+{% endblock %}
+{% block page_classes %}
+    bg-gray-300 h-screen p-4
+{% endblock %}
+{% block content %}
+    <h1 class="text-2xl font-bold">Criar Canteiro</h1>
+    <br>
+    <form method="post">
+        {% csrf_token %}
+        <label for="nome"class="text-lg font-semibold text-gray-800">Nome:</label>
+        <input type="text" id="nome" name="nome" required class="border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        <button type="submit" class="button" style='background-color: green; color: white;'>
+            <i class="fas fa-trash"></i> Criar
+        </button>
+    </form>
+{% endblock content %}
