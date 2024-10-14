@@ -26,6 +26,8 @@ def delete_seedbed(request, seedbed_id):
     seedbed = get_object_or_404(Seedbed, id=seedbed_id)  # Obtém o Seedbed com base no ID
     if request.method == 'POST':
         seedbed.delete()  # Deleta o Seedbed
+        messages.success(request, 'Canteiro deletado com sucesso!')
         return redirect('seedbeds:list-seedbeds')  # Redireciona para a lista de Seedbeds
+
 
     return render(request, 'confirm_delete.html', {'seedbed': seedbed})

@@ -31,7 +31,7 @@
         
         <a href="{% url 'product:product-list' canteiro.id %}" class="button"><i class="fas fa-list"></i> Gerenciar cultivos</a>
         
-        <form action="{% url 'seedbeds:delete-seedbed' canteiro.id %}" method="post" style="display:inline;">
+        <form action="{% url 'seedbeds:delete-seedbed' canteiro.id %}" method="get" style="display:inline;">
             {% csrf_token %}
             <button type="submit" class="button" style='background-color: red; color: white;'>
                 <i class="fas fa-trash"></i> Excluir canteiro
