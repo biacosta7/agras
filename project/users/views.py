@@ -17,32 +17,41 @@ def create_user(request):
         state = request.POST.get('state')
         confirm_password = request.POST.get('confirm_password')
 
+        # Dados do formulário para manter os campos preenchidos
+        form_data = {
+            'first_name': first_name,
+            'username': username,
+            'email': email,
+            'city': city,
+            'state': state,
+        }
+
         valid_chars = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_")
         if not set(username).issubset(valid_chars):
             messages.error(request, 'O nome de usuário deve conter apenas letras, números ou underlines, sem espaços ou caracteres especiais')
-            return redirect('create_user')
-        
+            return render(request, 'signup.html', form_data)
+
         if User.objects.filter(username=username).exists():
             messages.error(request, 'Esse usuário já existe.')
-            return redirect('create_user')
-        
+            return render(request, 'signup.html', form_data)
+
         valid_name = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
         if not set(first_name).issubset(valid_name):
             messages.error(request, 'O nome não deve conter números ou caracteres especiais')
-            return redirect('create_user')
-        
+            return render(request, 'signup.html', form_data)
+
         if ' ' in password:
             messages.error(request, 'A senha não pode conter espaços.')
-            return redirect('create_user')
+            return render(request, 'signup.html', form_data)
 
         if password.isdigit():
             messages.error(request, 'A senha não pode ser composta apenas por números.')
-            return redirect('create_user')
+            return render(request, 'signup.html', form_data)
 
         if '@' not in email or email.count('@') != 1:
             messages.error(request, 'Por favor, insira um email válido')
-            return redirect('create_user')
-        
+            return render(request, 'signup.html', form_data)
+
         if password == confirm_password:
             try:
                 user = User.objects.create_user(
@@ -58,10 +67,10 @@ def create_user(request):
                 return redirect('login')
             except IntegrityError:
                 messages.error(request, 'Já existe um usuário com este email. Tente novamente.')
-                return redirect('create_user')
+                return render(request, 'signup.html', form_data)
         else:
             messages.error(request, 'Senhas não coincidem.')
-            return redirect('create_user')
+            return render(request, 'signup.html', form_data)
         
 @login_required
 def update_user(request, user_id):
