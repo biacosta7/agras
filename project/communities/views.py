@@ -9,8 +9,8 @@ def home_view(request):
     return redirect('community_hub')
 
 @login_required
-def dashboard_view(request):
-    community_id = request.GET.get('community_id')  # Captura o ID da comunidade a partir da URL
+def dashboard_view(request, community_id):
+    #community_id = request.GET.get('community_id')  # Captura o ID da comunidade a partir da URL
     community = get_object_or_404(Community, id=community_id)
 
     # Verificação se o usuário é membro ou administrador da comunidade
@@ -19,12 +19,12 @@ def dashboard_view(request):
         return redirect('community_hub')
 
     # Recuperando os plantios e canteiros associados à comunidade
-    products = Product.objects.filter(community=community)
+    #products = Product.objects.filter(seedbed=seedbed) #ERRADÍSSIMO
     seedbeds = community.seedbeds.all()  # Certifique-se de que você está acessando os canteiros corretamente
 
     context = {
         'community': community,
-        'products': products,
+        #'products': products, 
         'seedbeds': seedbeds,
     }
 

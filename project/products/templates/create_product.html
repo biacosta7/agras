@@ -5,19 +5,19 @@
 {% block content %}
 <body class="font-sans bg-gray-100">
     <div class="container mx-auto p-6">
-        <h1 class="text-2xl font-bold mb-4">Adicionar Cultivo na Comunidade {{ community.name }}</h1>
+        <h1 class="text-2xl font-bold mb-4">Adicionar Cultivo no Canteiro {{ seedbed.nome }}</h1>
         
-        <form action="{% url 'product:create_product' community.id %}" method="post" class="bg-white p-6 rounded-lg shadow-md">
+        <form action="{% url 'product:create_product' community.id seedbed.id %}" method="post" class="bg-white p-6 rounded-lg shadow-md">
             {% csrf_token %}
             
             <label for="type_name" class="block text-gray-700">Selecione o cultivo:</label>
             <select name="type_name" id="type_name" required class="mt-2 block w-full p-2 border border-gray-300 rounded-md">
                 <option value="" disabled selected>Escolha um cultivo</option>
                 {% for tipo in tipos_produtos %}
-                    <option value="{{ tipo.name }}">{{ tipo.name }}</option>  <!-- Alterado para usar 'name' -->
+                    <option value="{{ tipo.nome }}">{{ tipo.nome }}</option>  <!-- Alterado para usar 'name' -->
                 {% endfor %}
             </select>
-            <a href="{% url 'product:create_typeproduct' community.id %}" class="button mt-2 inline-block text-blue-500">Criar Novo Cultivo</a>
+            <a href="{% url 'product:create_typeproduct' community.id seedbed.id %}" class="button mt-2 inline-block text-blue-500">Criar Novo Cultivo</a>
             <br>
 
             <label for="quantity" class="block text-gray-700 mt-4">Quantidade:</label>

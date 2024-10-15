@@ -25,12 +25,12 @@
     <br>
     <p>Você tem certeza de que deseja deletar o canteiro "{{ seedbed.nome }}"?</p>
 
-    <form action="{% url 'seedbeds:delete-seedbed' seedbed.id %}" method="post" >
+    <form action="{% url 'seedbeds:delete_seedbed' community.id seedbed.id %}" method="post" >
         {% csrf_token %}
         <button type="submit" class="button" style='background-color: red; color: white;'>
             <i class="fas fa-trash"></i> Sim, deletar
         </button>
-        <a href="{% url 'seedbeds:list-seedbeds' %}" class="button"><i class="fas fa-list"></i>Não, cancelar</a>
+        <a href="{% url 'seedbeds:list_seedbeds' community.id %}" class="button"><i class="fas fa-list"></i>Não, cancelar</a>
     </form>
 
 {% endblock %}

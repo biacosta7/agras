@@ -13,33 +13,23 @@
         <div class="mb-8">
             <h2 class="text-2xl font-semibold text-[#8ABF17] mb-4">Canteiros</h2>
 
-            <!-- Botão para criar canteiro -->
+            {% comment %} <!-- Botão para criar canteiro -->
             <button id="addSeedbedBtn" class="bg-[#8ABF17] text-white px-4 py-2 rounded-md mb-6" onclick="toggleSeedbedModal('create')">
                 Criar Canteiro
-            </button>
-
+            </button> {% endcomment %}
+            <a href="{% url 'seedbeds:list_seedbeds' community.id %}" 
+                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out">
+             <i class="fas fa-list mr-2"></i> Gerenciar Canteiros
+            </a>
             <!-- Modal para criar canteiro -->
             <div id="seedbedModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center">
                 <div class="bg-white p-8 rounded-lg w-96">
                     <h2 class="text-2xl font-bold mb-4">Criar Canteiro para {{ community.name }}</h2>
-                    <form id="seedbedForm" method="POST" action="{% url 'seedbeds:create_seedbed' %}">
+                    <form id="seedbedForm" method="POST" action="{% url 'seedbeds:create_seedbed' community.id %}">
                         {% csrf_token %}
                         <div class="mb-4">
-                            <label for="seedbedName" class="block text-sm font-medium text-gray-700">Nome do Canteiro</label>
-                            <input type="text" name="name" id="seedbedName" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17]">
-                        </div>
-    
-                        <div class="mb-4">
-                            <label for="seedbedProduct" class="block text-sm font-medium text-gray-700">Produto</label>
-                            <select name="product" id="seedbedProduct" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17]">
-                                {% if products %}
-                                    {% for product in products %}
-                                        <option value="{{ product.id }}">{{ product.nome }}</option>
-                                    {% endfor %}
-                                {% else %}
-                                <option disabled>Nenhum produto registrado.</option>
-                                {% endif %}
-                            </select>
+                            <label for="seedbed_name" class="block text-sm font-medium text-gray-700">Nome do Canteiro</label>
+                            <input type="text" name="seedbed_name" id="seedbed_name" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17]">
                         </div>
                         <div class="flex justify-end">
                             <button type="button" class="mr-2 bg-gray-300 text-gray-700 px-4 py-2 rounded" onclick="toggleSeedbedModal('close')">Cancelar</button>
@@ -58,7 +48,7 @@
             </ul>
         </div>
 
-        <!-- Seção de Produtos -->
+        {% comment %} Seção de Produtos
         <div>
             <h2 class="text-2xl font-semibold text-[#8ABF17] mb-4">Produtos</h2>
             
@@ -76,7 +66,7 @@
                     <li class="p-2 text-gray-500">Nenhum produto registrado.</li>
                 {% endfor %}
             </ul>
-        </div>
+        </div> {% endcomment %}
     </div>
 </div>
 

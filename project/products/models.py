@@ -5,7 +5,8 @@ from communities.models import Community
 class TypeProduct(models.Model):
     name = models.CharField(max_length=80, null=True)
     community = models.ForeignKey(Community, on_delete=models.CASCADE, related_name='type_products', null=True)
-
+    #ciclo de vida (quatidade em dias)
+    
     class Meta:
         unique_together = ('name', 'community')  # Garante que a combinação de nome e comunidade seja única
 
@@ -15,7 +16,8 @@ class TypeProduct(models.Model):
 class Product(models.Model):
     type_product = models.ForeignKey(TypeProduct, on_delete=models.CASCADE, null=True)
     seedbed = models.ForeignKey(Seedbed, on_delete=models.CASCADE, related_name='products_in_seedbed', null=True, blank=True)  
-    community = models.ForeignKey(Community, on_delete=models.CASCADE, related_name='products', null=True)
+    data_plantio = models.DateField(auto_now_add=True)
+    quantidade = models.IntegerField(default=1)
 
     def get_absolute_url(self):
         return f"/products/{self.id}/"

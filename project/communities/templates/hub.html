@@ -4,7 +4,6 @@
 
 {% block content %}
 
-    <!-- Sidebar -->
     <div class="flex flex-col lg:flex-row">
         <aside class="w-full lg:w-64 h-screen bg-[#8ABF17] text-white flex flex-col justify-between">
             <div class="p-6">
@@ -101,7 +100,7 @@
                         <p class="text-sm break-words">{{ community.description }}</p>
                     </div>
                     <div class="p-4 bg-[#8ABF17] flex justify-between">
-                        <a href="{% url 'dashboard' %}?community_id={{ community.id }}" class="bg-white text-[#8ABF17] font-semibold px-6 py-2 rounded-md border-2 border-white">Entrar</a>
+                        <a href="{% url 'dashboard' community.id %}" class="bg-white text-[#8ABF17] font-semibold px-6 py-2 rounded-md border-2 border-white">Entrar</a>
                         <form action="{% url 'delete_community' community.id %}" method="post" class="inline">
                             {% csrf_token %}
                             <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-md">Excluir</button>

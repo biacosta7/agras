@@ -5,28 +5,36 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
 @login_required
-def list_seedbeds(request):
-    community = get_object_or_404(Community, id=request.user.community.id)  
+def list_seedbeds(request, community_id):
+    community = get_object_or_404(Community, id=community_id)  
     canteiros = Seedbed.objects.filter(community=community)  
     return render(request, 'list_seedbeds.html', {'canteiros': canteiros, 'community': community})
 
 @login_required
-def create_seedbed(request):
+def create_seedbed(request, community_id):
     user = request.user
     communities = user.communities_members.all()  # Obtém todas as comunidades do usuário
 
+    # Obter a comunidade específica selecionada
+    community = get_object_or_404(Community, id=community_id)
+
     if request.method == 'POST':
-        # Supondo que você tenha um formulário que inclui a seleção da comunidade
-        community_id = request.POST.get('community')  # O ID da comunidade selecionada
-        community = Community.objects.get(id=community_id)
-
-        # Criação do canteiro
-        seedbed_name = request.POST.get('seedbed_name')
-        Seedbed.objects.create(name=seedbed_name, community=community)
-
-        return redirect('list-seedbeds')  # Redirecione para a lista de canteiros após a criação
-
-    return render(request, 'create_seedbed.html', {'communities': communities})
+        # Obter o nome do canteiro
+        seedbed_name = request.POST.get('seedbed_name')  # Certifique-se de que este campo está no formulário
+        
+        if seedbed_name:
+            # Criação do canteiro
+            Seedbed.objects.create(nome=seedbed_name, community=community)
+            messages.success(request, 'Canteiro criado com sucesso!')
+            return redirect('seedbeds:list_seedbeds', community_id=community.id)  # Redirecionar para a lista de canteiros da comunidade
+        else:
+            messages.error(request, 'Por favor, insira um nome válido para o canteiro.')
+    
+    context = {
+        'communities': communities,
+        'community': community,
+    }
+    return render(request, 'create_seedbed.html', context)
 
 @login_required
 def edit_seedbed(request, seedbed_id):
@@ -43,15 +51,26 @@ def edit_seedbed(request, seedbed_id):
                 seedbed.nome = nome  
                 seedbed.save()  
                 messages.success(request, 'Canteiro editado com sucesso!')
-                return redirect('list-seedbeds')  
+                return redirect('list_seedbeds')  
 
     return render(request, 'list_seedbeds.html', {'canteiros': Seedbed.objects.filter(community=community), 'community': community})  
 
 @login_required
-def delete_seedbed(request, seedbed_id):
-    seedbed = get_object_or_404(Seedbed, id=seedbed_id)  
+def delete_seedbed(request, community_id, seedbed_id):
+    # Buscando o canteiro e a comunidade correspondente
+    seedbed = get_object_or_404(Seedbed, id=seedbed_id, community_id=community_id)
+    community = get_object_or_404(Community, id=community_id)
+
     if request.method == 'POST':
-        seedbed.delete() 
+        seedbed.delete()  # Deletando o canteiro
         messages.success(request, 'Canteiro deletado com sucesso!')
-        return redirect('seedbeds:list-seedbeds') 
-    return render(request, 'list_seedbeds.html', {'canteiros': Seedbed.objects.filter(community=request.user.community), 'community': request.user.community}) 
+        # Redirecionando para a lista de canteiros, passando o ID da comunidade
+        return redirect('seedbeds:list_seedbeds', community_id=community_id)
+    
+    # Caso não seja POST, renderizar uma página de confirmação
+    context = {
+        'seedbed': seedbed,
+        'community': community,
+    }
+    
+    return render(request, 'confirm_delete.html', context)
