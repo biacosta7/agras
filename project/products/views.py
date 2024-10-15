@@ -158,7 +158,7 @@ def product_delete_view(request, community_id, seedbed_id, product_id):
     # Obtendo o seedbed e o product
     seedbed = get_object_or_404(Seedbed, id=seedbed_id)
     product = get_object_or_404(Product, id=product_id)
-    community = get_object_or_404(Community, id=community_id)  # Corrigido para buscar Community
+    community = get_object_or_404(Community, id=community_id)  
 
     # Verificar se o canteiro pertence à comunidade
     if product.seedbed.community != community:
@@ -169,21 +169,25 @@ def product_delete_view(request, community_id, seedbed_id, product_id):
         product.delete()
         messages.success(request, 'Produto deletado com sucesso.')
         return redirect('product:product_list', community_id=community.id, seedbed_id=seedbed.id)
+        
+    context={
+        'product': product, 
+        'seedbed': seedbed, 
+        'community': community
+    }
 
-    return render(request, 'delete_product.html', {'product': product, 'seedbed': seedbed, 'community': community})
+    return render(request, 'delete_product.html', context)
 
 
-def product_update_view(request, seedbed_id, product_id):
+def product_update_view(request, seedbed_id, product_id, community_id):
     seedbed = get_object_or_404(Seedbed, id=seedbed_id)
     product = get_object_or_404(Product, id=product_id)
-    type_products = TypeProduct.objects.all()
+    community = get_object_or_404(Community, id=community_id)
+
+    type_products = TypeProduct.objects.filter(community=community)
 
     if request.method == "GET":
-        return render(request, 'edit_product.html', {
-            'product': product,
-            'type_products': type_products,
-            'seedbed': seedbed  # Passando seedbed no contexto
-        })
+        return render(request, 'edit_product.html', {'product': product, 'type_products': type_products, 'seedbed': seedbed, 'community': community})
 
     else:
         nome = request.POST.get('nome')
@@ -191,12 +195,16 @@ def product_update_view(request, seedbed_id, product_id):
         quantidade = request.POST.get('quantidade')
 
         # Atualizando o produto com a nova informação
-        type_product = get_object_or_404(TypeProduct, nome=nome)
-        product.nome = type_product
+        try:
+            type_product = TypeProduct.objects.get(name=nome, community=community)   
+            product.type_product = type_product
+        except TypeProduct.DoesNotExistw:
+            messages.error(request, 'Tipo de produto não encontrado')
+            return redirect('product:product_update_view', seedbed_id, product_id, community_id)
         product.data_plantio = data_plantio
         product.quantidade = quantidade    
         product.save()
 
         messages.success(request, 'Cultivo editado com sucesso.')
 
-        return redirect('product:product-list', seedbed.id)
+        return redirect('product:product_list', community_id, seedbed.id)

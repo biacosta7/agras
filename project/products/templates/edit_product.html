@@ -35,11 +35,11 @@
             <label for="name">Nome do Produto:</label>
             <select id="name" name="nome" required>
                 {% for type_product in type_products %}
-                    <option value="{{ type_product.nome }}" {% if type_product == product.nome %}selected{% endif %}>
-                        {{ type_product.nome }}
+                    <option value="{{ type_product.name }}" {% if type_product == product.name %}selected{% endif %}>
+                        {{ type_product.name }}
                     </option>
                 {% endfor %}
-            </select>
+            </select>  
         </div>
 
         <div class="form-group">
@@ -56,7 +56,7 @@
             <i class="fas fa-save"></i> Salvar Alterações
         </button>
 
-        <a href="{% url 'product:product-list' community.id seedbed.id %}" class="button" style='background-color: red'>
+        <a href="{% url 'product:product_list' community.id seedbed.id %}" class="button" style='background-color: red'>
             <i class="fas fa-list"></i> Cancelar
         </a>
     </form>

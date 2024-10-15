@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from products.models import Product
 from .models import Community
-
+from .models import Seedbed
 @login_required
 def home_view(request):
     return redirect('community_hub')
@@ -12,7 +12,7 @@ def home_view(request):
 def dashboard_view(request, community_id):
     #community_id = request.GET.get('community_id')  # Captura o ID da comunidade a partir da URL
     community = get_object_or_404(Community, id=community_id)
-
+    
     # Verificação se o usuário é membro ou administrador da comunidade
     if request.user not in community.members.all() and request.user not in community.admins.all():
         messages.error(request, 'Você não tem permissão para acessar o dashboard desta comunidade.')
@@ -20,8 +20,8 @@ def dashboard_view(request, community_id):
 
     # Recuperando os plantios e canteiros associados à comunidade
     #products = Product.objects.filter(seedbed=seedbed) #ERRADÍSSIMO
-    seedbeds = community.seedbeds.all()  # Certifique-se de que você está acessando os canteiros corretamente
-
+    #seedbeds = community.seedbeds.all()  # Certifique-se de que você está acessando os canteiros corretamente
+    seedbeds = Seedbed.objects.filter(community=community)  
     context = {
         'community': community,
         #'products': products, 
