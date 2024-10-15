@@ -26,7 +26,7 @@
     {% for canteiro in canteiros %}
         <h3 class="text-lg font-semibold text-gray-800">{{ canteiro.nome }}</h3>
         
-        <a href="{% url 'product:product-list' canteiro.id %}" class="button"><i class="fas fa-list"></i> Gerenciar cultivos</a>
+        <a href="{% url 'product:product_list' community.id canteiro.id %}" class="button"><i class="fas fa-list"></i> Gerenciar cultivos</a>
         
         <form action="{% url 'seedbeds:delete_seedbed' community.id canteiro.id  %}" method="get" style="display:inline;">
             {% csrf_token %}

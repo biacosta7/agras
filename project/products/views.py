@@ -11,10 +11,18 @@ def create_product_view(request, seedbed_id, community_id):
     community = get_object_or_404(Community, id=community_id)
     seedbed = get_object_or_404(Seedbed, id=seedbed_id)
 
+    # Verificar se o canteiro pertence à comunidade
+    if seedbed.community != community:
+        messages.error(request, "Você não tem permissão para adicionar produtos a este canteiro.")
+        return redirect('dashboard', community.id)
+
+    # Filtrando tipos de produtos por comunidade
+    tipos_produtos = TypeProduct.objects.filter(community=community)
+
     if request.method == 'POST':
-        type_name = request.POST.get('tipo_nome')
-        quantity = request.POST.get('quantidade')
-        planting_date = request.POST.get('data_plantio')
+        type_name = request.POST.get('type_name')
+        quantity = request.POST.get('quantity')
+        planting_date = request.POST.get('planting_date')
 
         # Verificando se o tipo de produto existe na comunidade correta
         type_product = get_object_or_404(TypeProduct, name=type_name, community=community)
@@ -28,12 +36,15 @@ def create_product_view(request, seedbed_id, community_id):
             errors.append("O campo 'Data de plantio' é obrigatório.")
         if not quantity:
             errors.append("O campo 'Quantidade' é obrigatório.")
+        elif not quantity.isdigit():  # Verifica se a quantidade é um número
+            errors.append("O campo 'Quantidade' deve ser um número válido.")
         
         if errors:
             return render(request, 'create_product.html', {
                 'errors': errors,
                 'community': community,
-                'tipos_produtos': TypeProduct.objects.filter(community=community)  # Filtrando por comunidade
+                'tipos_produtos': tipos_produtos,  
+                'seedbed': seedbed,
             })
 
         try:
@@ -41,29 +52,24 @@ def create_product_view(request, seedbed_id, community_id):
             product = Product.objects.create(
                 type_product=type_product,
                 seedbed=seedbed, 
-                community=community,
-                quantity=int(quantity),
-                planting_date=planting_date
+                quantidade=int(quantity),
+                data_plantio=planting_date
             )
-            product.full_clean()  
-            product.save()
-            
-            messages.success(request, f'Produto {product.nome_type_product} cadastrado com sucesso no canteiro {seedbed.nome}.')
+            messages.success(request, f'Produto {product.type_product.name} cadastrado com sucesso no canteiro {seedbed.nome}.')
 
         except ValidationError as e:
             messages.error(request, f"Erro de validação: {e}")
 
-        return redirect('dashboard', community.id)
+        return redirect('product:product_list', community.id, seedbed.id)
     
-    context={
+    context = {
         'community': community, 
         'tipos_produtos': tipos_produtos,
         'seedbed': seedbed,
     }
 
-    # Filtrando tipos de produtos por comunidade
-    tipos_produtos = TypeProduct.objects.filter(community=community)
     return render(request, 'create_product.html', context)
+
 
 @login_required  
 def create_typeproduct_view(request, community_id):
@@ -83,21 +89,23 @@ def create_typeproduct_view(request, community_id):
         )
 
         messages.success(request, f'Novo cultivo {typeproduct.name} criado com sucesso na comunidade {community.name}.')
-        return redirect(f'/comunidades/dashboard/?community_id={community.id}')
+        return redirect(f'/comunidades/dashboard/{community.id}')
 
     return render(request, 'create_typeproduct.html', {'community': community})
 
 #---------------------------------------------DIVISAO-------------------------------------------------
-def product_list_view(request, seedbed_id):
+def product_list_view(request, seedbed_id, community_id):
     # Obtém o canteiro com base no ID passado na URL
     seedbed = get_object_or_404(Seedbed, id=seedbed_id)
-    
+    community = get_object_or_404(Community, id=community_id)
+
     # Filtra os produtos que pertencem ao canteiro
     queryset = Product.objects.filter(seedbed=seedbed)
 
     context = {
         'object_list': queryset,
-        'seedbed': seedbed  
+        'seedbed': seedbed,  
+        'community': community
     }
     return render(request, "product_list.html", context)
  
@@ -113,13 +121,19 @@ def product_detail_view(request, id):
 def product_update_view(request, seedbed_id, product_id):
     seedbed = get_object_or_404(Seedbed, id=seedbed_id)
     product = get_object_or_404(Product, id=product_id)
+
+    # Verificar se o canteiro pertence à comunidade
+    if product.seedbed.community != seedbed.community:
+        messages.error(request, "Você não tem permissão para editar este produto.")
+        return redirect('product:product-list', seedbed.id)
+
     type_products = TypeProduct.objects.all()
 
     if request.method == "GET":
         return render(request, 'edit_product.html', {
             'product': product,
             'type_products': type_products,
-            'seedbed': seedbed  # Passando seedbed no contexto
+            'seedbed': seedbed
         })
 
     else:
@@ -128,24 +142,36 @@ def product_update_view(request, seedbed_id, product_id):
         quantidade = request.POST.get('quantidade')
 
         # Atualizando o produto com a nova informação
-        type_product = get_object_or_404(TypeProduct, nome=nome)
-        product.nome = type_product
-        product.data_plantio = data_plantio
-        product.quantidade = quantidade    
+        type_product = get_object_or_404(TypeProduct, name=nome)
+        product.type_product = type_product  # Corrigido para usar `type_product`
+        product.planting_date = data_plantio
+        product.quantity = quantidade    
         product.save()
 
         messages.success(request, 'Cultivo editado com sucesso.')
 
         return redirect('product:product-list', seedbed.id)
 
-def product_delete_view(request, seedbed_id, product_id):
+
+@login_required
+def product_delete_view(request, community_id, seedbed_id, product_id):
+    # Obtendo o seedbed e o product
     seedbed = get_object_or_404(Seedbed, id=seedbed_id)
     product = get_object_or_404(Product, id=product_id)
+    community = get_object_or_404(Community, id=community_id)  # Corrigido para buscar Community
+
+    # Verificar se o canteiro pertence à comunidade
+    if product.seedbed.community != community:
+        messages.error(request, "Você não tem permissão para deletar este produto.")
+        return redirect('product:product_list', community_id=community.id, seedbed_id=seedbed.id)
+
     if request.method == 'POST':
         product.delete()
         messages.success(request, 'Produto deletado com sucesso.')
-        return redirect('product:product-list', seedbed_id=seedbed.id)
-    return render(request, 'delete_product.html', {'product': product, 'seedbed': seedbed})
+        return redirect('product:product_list', community_id=community.id, seedbed_id=seedbed.id)
+
+    return render(request, 'delete_product.html', {'product': product, 'seedbed': seedbed, 'community': community})
+
 
 def product_update_view(request, seedbed_id, product_id):
     seedbed = get_object_or_404(Seedbed, id=seedbed_id)
