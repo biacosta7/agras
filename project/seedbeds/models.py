@@ -1,10 +1,9 @@
 from django.db import models
 
-# Modelo Seedbed
-class Seedbed(models.Model):  # Certifique-se de herdar de models.Model
+class Seedbed(models.Model):
     nome = models.CharField(max_length=80, blank=False, null=False)
-    # profile_pic = models.ImageField(upload_to='perfil/', blank=True, null=True) VER COMO VAMOS ARMAZENAR IMAGENS NO DB (acredito que o SQLite não seja muito eficiente no 
-    
+    community = models.ForeignKey('communities.Community', on_delete=models.CASCADE, related_name='seedbeds_in_community', null=True, blank=True)
+    product = models.ForeignKey('products.Product', on_delete=models.SET_NULL, null=True, blank=True, related_name='seedbeds_in_product')  # Mudança para 'related_name'
+
     def __str__(self):
         return self.nome
-
