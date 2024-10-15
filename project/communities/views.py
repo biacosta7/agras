@@ -1,21 +1,34 @@
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.http import HttpResponse
+from products.models import Product
 from .models import Community
 
 @login_required
 def home_view(request):
     return redirect('community_hub')
 
+@login_required
 def dashboard_view(request):
     community_id = request.GET.get('community_id')  # Captura o ID da comunidade a partir da URL
-    if community_id:
-        community = get_object_or_404(Community, id=community_id)
-    else:
-        community = None
+    community = get_object_or_404(Community, id=community_id)
 
-    return render(request, 'dashboard.html', {'community': community})
+    # Verificação se o usuário é membro ou administrador da comunidade
+    if request.user not in community.members.all() and request.user not in community.admins.all():
+        messages.error(request, 'Você não tem permissão para acessar o dashboard desta comunidade.')
+        return redirect('community_hub')
+
+    # Recuperando os plantios e canteiros associados à comunidade
+    products = Product.objects.filter(community=community)
+    seedbeds = community.seedbeds.all()  # Certifique-se de que você está acessando os canteiros corretamente
+
+    context = {
+        'community': community,
+        'products': products,
+        'seedbeds': seedbeds,
+    }
+
+    return render(request, 'dashboard.html', context)
 
 @login_required
 def community_list(request):
