@@ -1,0 +1,124 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}{{ seedbed.nome }}{% endblock %}
+
+{% block styles %}
+    .button {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 10px;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        color: #fff;
+        background-color: #007BFF;
+        transition: background-color 0.3s;
+    }
+    .button:hover {
+        background-color: #0056b3;
+    }
+    .dropdown {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    .product-info {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+    .left-info {
+        max-width: 45%;
+    }
+    .right-info {
+        max-width: 45%;
+    }
+{% endblock %}
+
+{% block page_classes %}
+    bg-gray-300 h-screen p-4
+{% endblock %}
+
+{% block content %}
+<h1 class="text-xl font-semibold">Dashboard > Áreas > {{ area.name }} > {{ seedbed.nome }}</h1>
+<h2 class="text-4xl font-bold">{{ seedbed.nome }}</h2>
+
+<a href="{% url 'create_product' community.id area.pk seedbed.id %}" class="button">Adicionar novo cultivo</a>
+
+<div class="container mx-auto mt-5">
+    <!-- Listagem dos produtos da seedbed -->
+    <div class="inline-wrap">
+        <h3 class="text-2xl">Cultivos no canteiro</h3>
+        <ul class="list-disc list-inside">
+            {% for product in seedbed.products_in_seedbed.all %}
+                <li>{{ product.type_product.name }}</li>
+            {% empty %}
+                <li>Nenhum cultivo cadastrado</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Dropdown para selecionar produto -->
+    <div class="mt-6">
+        <label for="product-select">Selecione um cultivo:</label>
+        <select id="product-select" class="dropdown">
+            {% for product in seedbed.products_in_seedbed.all %}
+                <option value="{{ product.id }}">{{ product.type_product.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- Detalhes do produto selecionado -->
+    <div class="product-info">
+        <div class="left-info">
+            <h4>Informações de Plantio</h4>
+            <p>Data de plantio: <span id="planting-date">{{ selected_product.data_plantio }}</span></p>
+            <p>Estimativa de colheita: <span id="harvest-estimate">10/12/2024</span></p>
+            <p>
+                <a href="#" id="read-more" onclick="toggleToDo()">Ler mais</a>
+            </p>
+            <div id="to-do-list" style="display:none;">
+                <ul>
+                    <li>Rega</li>
+                    <li>Fertilização</li>
+                    <li>Controle de pragas</li>
+                </ul>
+            </div>
+        </div>
+    
+        <div class="right-info">
+            <h4>Produção e Comentários</h4>
+            <p>Quantidade: <span id="quantidade">{{ selected_product.quantidade }}</span></p>
+            <p>Produção esperada: 100kg</p>
+            <p>Comentários: Excelente desenvolvimento até agora!</p>
+            <form id="delete-product-form" method="POST" action="">
+                {% csrf_token %}
+                <button type="submit" class="button bg-red-600 hover:bg-red-700">Excluir Produto</button>
+            </form>
+        </div>
+    </div>
+    
+</div>
+
+<script>
+    document.getElementById('product-select').addEventListener('change', function() {
+        const selectedProductId = this.value;
+        const communityId = "{{ community.id }}";
+        const seedbedId = "{{ seedbed.id }}";
+        const deleteForm = document.getElementById('delete-product-form');
+
+        // Atualiza a ação do formulário para o produto selecionado
+        deleteForm.action = `/comunidades/comunidade/${communityId}/areas/${seedbedId}/produtos/deletar/${selectedProductId}/`;
+    });
+
+    function toggleToDo() {
+        var toDoList = document.getElementById('to-do-list');
+        toDoList.style.display = (toDoList.style.display === 'none') ? 'block' : 'none';
+    }
+
+    function confirmDelete() {
+        return confirm("Tem certeza que deseja excluir este produto?");
+    }
+</script>
+{% endblock content %}

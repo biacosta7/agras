@@ -1,6 +1,6 @@
 {% extends 'base.html' %} 
 {% load static %}  
-{% block title %}Criar Produto{% endblock %}
+{% block title %}Adicionar Cultivo{% endblock %}
 
 {% block content %}
 <body class="font-sans bg-gray-100">
@@ -17,7 +17,7 @@
                     <option value="{{ tipo.name }}">{{ tipo.name }}</option>  
                 {% endfor %}
             </select>
-            <a href="{% url 'product:create_typeproduct' community.id %}" class="button mt-2 inline-block text-blue-500">Criar Novo Cultivo</a>
+            <a href="{% url 'create_typeproduct' community.id area.id seedbed.id %}" class="button mt-2 inline-block text-blue-500">Criar Novo Cultivo</a>
             <br>
 
             <label for="quantity" class="block text-gray-700 mt-4">Quantidade:</label>

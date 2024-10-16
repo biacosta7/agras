@@ -30,8 +30,12 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
         
         {% for area in areas %}
+        
+
         <div class="bg-white border border-gray-300 rounded-md p-4 shadow-sm">
-            <h3 class="font-semibold">
+            <img src="{% static 'assets/canteiro-foto.jpg' %}" alt="Área de plantio" class="w-full h-auto">
+    
+            <h3 class="text-xl mt-3 font-semibold">
                 <a href="{% url 'area_detail' community.id area.id %}" class="text-blue-500 hover:underline">{{ area.name }}</a>
             </h3>
             <p>{{ area.description }}</p>

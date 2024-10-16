@@ -1,13 +1,15 @@
 {% extends 'base.html' %} 
 {% load static %}
+{% block title %}Criar Cultuvo{% endblock %}
 
 {% block content %}
 <body class="font-sans bg-gray-100">
     <div class="container mx-auto p-6">
         <h1 class="text-3xl font-bold mb-6">Cadastrar Cultivo</h1>
-        <form method="POST" action="{% url 'product:create_typeproduct' community.id %}" class="bg-white p-6 rounded-lg shadow-md">
+        <form method="POST" class="bg-white p-6 rounded-lg shadow-md">
             {% csrf_token %}
-            
+            <input type="hidden" name="area_id" value="{{ area_id }}">
+            <input type="hidden" name="seedbed_id" value="{{ seedbed_id }}">
             <label for="nome" class="block text-gray-700">Nome do Cultivo:</label>
             <input type="text" id="nome" name="nome" required 
                    class="mt-2 block w-full p-2 border border-gray-300 rounded-md">

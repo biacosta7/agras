@@ -50,8 +50,8 @@
                 <li>Data de plantio: {{ product.data_plantio }}</li>
                 <li>Quantidade: {{ product.quantidade }}</li>
             </ul>
-            <a href="{% url 'product-update' community.id seedbed.id product.id %}" class="button" style="background-color: #007BFF;">Editar</a>
-            <a href="{% url 'product-delete' community.id seedbed.id product.id %}" class="button" style="background-color: red;">Deletar</a>
+            <a href="{% url 'product_update' community.id seedbed.id area.id product.id %}" class="button" style="background-color: #007BFF;">Editar</a>
+            <a href="{% url 'product_delete' community.id seedbed.id area.id product.id %}" class="button" style="background-color: red;">Deletar</a>
         </div>
         <br><br>
     {% empty %}
