@@ -1,47 +1,49 @@
 {% extends "base.html" %}
+{% load static %}
 {% block title %}Criar Área{% endblock %}
 
-{% load static %}
 {% block content %}
-<div class="max-w-xl mx-auto p-6 bg-white shadow-lg rounded-lg">
-    <h2 class="text-2xl font-bold mb-6 text-gray-800">Criar Nova Área em {{ community.name }}</h2>
-    <form method="POST" class="space-y-4">
-        {% csrf_token %}
-        <div>
-            <label for="name" class="block text-sm font-medium text-gray-700">Nome:</label>
-            <input 
-                type="text" 
-                name="name" 
-                id="name" 
-                required 
-                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+<div class="flex justify-center items-center min-h-screen bg-gray-10">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h2 class="text-2xl font-bold mb-6 text-gray-800 text-center">Criar Nova Área em {{ community.name }}</h2>
+        <form method="POST" class="space-y-6">
+            {% csrf_token %}
+            <div>
+                <label for="name" class="block text-sm font-medium text-gray-700">Nome:</label>
+                <input 
+                    type="text" 
+                    name="name" 
+                    id="name" 
+                    required 
+                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500"
+                >
+            </div>
+            <div>
+                <label for="description" class="block text-sm font-medium text-gray-700">Descrição:</label>
+                <textarea 
+                    name="description" 
+                    id="description" 
+                    required 
+                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500"
+                ></textarea>
+            </div>
+            <div class="flex justify-end">
+                <button 
+                    type="submit" 
+                    class="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700"
+                >
+                    Criar Área
+                </button>
+            </div>
+        </form>
+        <div class="mt-4">
+            <a 
+                href="{% url 'area_manage' community.id %}" 
+                class="text-blue-500 hover:underline"
             >
+                Voltar para a lista
+            </a>
         </div>
-        <div>
-            <label for="description" class="block text-sm font-medium text-gray-700">Descrição:</label>
-            <textarea 
-                name="description" 
-                id="description" 
-                required 
-                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            ></textarea>
-        </div>
-        <div>
-            <button 
-                type="submit" 
-                class="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            >
-                Criar Área
-            </button>
-        </div>
-    </form>
-    <div class="mt-4">
-        <a 
-            href="{% url 'area_manage' community.id %}" 
-            class="text-indigo-600 hover:text-indigo-800 underline"
-        >
-            Voltar para a lista
-        </a>
     </div>
 </div>
 {% endblock %}
