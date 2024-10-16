@@ -1,59 +1,60 @@
 {% extends "base.html" %}
 {% load static %}
 {% block title %}Áreas{% endblock %}
-{% block styles %}
-    .button {
-        display: inline-block;
-        padding: 10px 20px;
-        margin: 10px;
-        border: none;
-        border-radius: 5px;
-        text-decoration: none;
-        color: #fff;
-        background-color: #007BFF;
-        transition: background-color 0.3s;
-    }
-    .button:hover {
-        background-color: #0056b3;
-    }
-{% endblock %}
-{% block page_classes %}
-    bg-gray-300 h-screen p-4
-{% endblock %}
+
 {% block content %}
-<h1 class="text-xl font-semibold">Dashboard ></h1>
-<h2 class="text-4xl font-bold">Área de Plantio </h2>
-
-<div class="container mx-auto mt-5">
-    <a href="{% url 'create_area' community.id %}" class="button">Criar nova Área</a>
+<!-- Sidebar -->
+<div class="px-8 py-10 mx-auto flex flex-row gap-x-8">
     
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
-        
-        {% for area in areas %}
-        
-
-        <div class="bg-white border border-gray-300 rounded-md p-4 shadow-sm">
-            <img src="{% static 'assets/canteiro-foto.jpg' %}" alt="Área de plantio" class="w-full h-auto">
-    
-            <h3 class="text-xl mt-3 font-semibold">
-                <a href="{% url 'area_detail' community.id area.id %}" class="text-blue-500 hover:underline">{{ area.name }}</a>
-            </h3>
-            <p>{{ area.description }}</p>
-            <a href="{% url 'update_area' community.id area.pk %}">Editar</a> | 
-            <a href="{% url 'delete_area' community.id area.pk %}">Deletar</a>
-
-            <!-- Listando os canteiros associados à área -->
-            <br>
-            <br>
-            <ul class="list-disc list-inside">
-                {% for seedbed in area.seedbeds.all %}  <!-- Usando related_name 'seedbeds' -->
-                    <li>{{ seedbed.nome }} ✦  ✦  ✦  ✦</li>
-                {% empty %}
-                    <li>Nenhum canteiro cadastrado</li>
-                {% endfor %}
-            </ul>
+    <div class="bg-[#8ABF17] flex flex-col items-center rounded-[20px] h-[850px] w-[220px]">
+        <a href="/"><img class="w-[146px] mt-12 mb-8" src="{% static 'assets/logo-branco-h.png' %}" alt="AGRAS"> </a>    
+        <div class="flex flex-col gap-y-12 flex-grow mt-12 flex flex-row justify-center">
+            <a href="/" class="text-[14px] font-normal text-white flex cursor-pointer"><span class="material-icons items-center mr-2">dashboard</span> Dashboard</a>
+            <a href="" class="text-[14px] font-normal text-white flex cursor-pointer"><span class="material-icons items-center mr-2">equalizer</span> Gerenciamento</a>
+            <a href="" class="text-[14px] font-normal text-white flex cursor-pointer"><span class="material-icons items-center mr-2">group</span> Time</a>
+            <a href="" class="text-[14px] font-normal text-white flex cursor-pointer"><span class="material-icons items-center mr-2">trending_up</span> Estatísticas</a>
+            <a href="" class="text-[14px] font-normal text-white flex cursor-pointer"><span class="material-icons items-center mr-2">settings</span> Configurações</a>
+            <form action="{% url 'logout' %}" class="text-[14px] font-normal text-white mt-auto mb-12 flex cursor-pointer" method="POST">
+                {% csrf_token %}
+                <button class="flex">
+                    <span class="material-icons items-center mr-2">logout</span>Sair</button>
+            </form>
         </div>
-        {% endfor %}
+    </div>
+
+
+    <!-- Main content -->
+    <div class="flex-1 p-6 lg:p-10">
+        <h1 class="text-xl font-semibold">Dashboard ></h1>
+        <h2 class="text-4xl font-bold">Área de Plantio </h2>
+
+        <div class="container mx-auto mt-5">
+            <a href="{% url 'create_area' community.id %}" class="bg-[#007BFF] text-white px-4 py-2 rounded-md">Criar nova Área</a>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+                {% for area in areas %}
+                <div class="bg-white border border-gray-300 rounded-md p-4 shadow-sm">
+                    <img src="{% static 'assets/canteiro-foto.jpg' %}" alt="Área de plantio" class="w-full h-auto">
+
+                    <h3 class="text-xl mt-3 font-semibold">
+                        <a href="{% url 'area_detail' community.id area.id %}" class="text-blue-500 hover:underline">{{ area.name }}</a>
+                    </h3>
+                    <p>{{ area.description }}</p>
+                    <a href="{% url 'update_area' community.id area.pk %}">Editar</a> | 
+                    <a href="{% url 'delete_area' community.id area.pk %}">Deletar</a>
+
+                    <br><br>
+                    <ul class="list-disc list-inside">
+                        {% for seedbed in area.seedbeds.all %}
+                            <li>{{ seedbed.nome }} ✦  ✦  ✦  ✦</li>
+                        {% empty %}
+                            <li>Nenhum canteiro cadastrado</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
