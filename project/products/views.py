@@ -5,15 +5,17 @@ from django.contrib import messages
 from django.core.exceptions import ValidationError
 from communities.models import Community
 from seedbeds.models import Seedbed
+from areas.models import Area
 
 @login_required  
-def create_product_view(request, seedbed_id, community_id):
+def create_product_view(request, seedbed_id, community_id, area_id):
     community = get_object_or_404(Community, id=community_id)
     seedbed = get_object_or_404(Seedbed, id=seedbed_id)
 
-    # Verificar se o canteiro pertence à comunidade
-    if seedbed.community != community:
-        messages.error(request, "Você não tem permissão para adicionar produtos a este canteiro.")
+    # Verificar se o canteiro pertence à área especificada
+    area = get_object_or_404(Area, id=area_id, community=community)
+    if seedbed.area != area:
+        messages.error(request, "Este canteiro não pertence à área especificada.")
         return redirect('dashboard', community.id)
 
     # Filtrando tipos de produtos por comunidade
@@ -60,7 +62,7 @@ def create_product_view(request, seedbed_id, community_id):
         except ValidationError as e:
             messages.error(request, f"Erro de validação: {e}")
 
-        return redirect('product:product_list', community.id, seedbed.id)
+        return redirect('product_list', community.id, seedbed.id)
     
     context = {
         'community': community, 
@@ -94,10 +96,11 @@ def create_typeproduct_view(request, community_id):
     return render(request, 'create_typeproduct.html', {'community': community})
 
 #---------------------------------------------DIVISAO-------------------------------------------------
-def product_list_view(request, seedbed_id, community_id):
+def product_list_view(request, seedbed_id, community_id, area_id):
     # Obtém o canteiro com base no ID passado na URL
     seedbed = get_object_or_404(Seedbed, id=seedbed_id)
     community = get_object_or_404(Community, id=community_id)
+    area = get_object_or_404(Area, id=area_id)  # Obtendo a área se necessário
 
     # Filtra os produtos que pertencem ao canteiro
     queryset = Product.objects.filter(seedbed=seedbed)
@@ -105,7 +108,8 @@ def product_list_view(request, seedbed_id, community_id):
     context = {
         'object_list': queryset,
         'seedbed': seedbed,  
-        'community': community
+        'community': community,
+        'area': area  # Se você precisar passar a área para o template
     }
     return render(request, "product_list.html", context)
  

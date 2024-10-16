@@ -2,6 +2,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.db import IntegrityError
 from .models import Area
 from communities.models import Community
+from seedbeds.models import Seedbed
+from products.models import Product, TypeProduct
 from django.contrib import messages
 
 # View para listar as áreas
@@ -80,3 +82,17 @@ def area_delete(request, community_id, pk):
         return redirect('area_manage', community_id=area.community.id)  # Redireciona para a lista de áreas da comunidade correspondente
 
     return render(request, 'area_delete.html', {'area': area})
+
+def area_detail(request, community_id, area_id):
+    community = get_object_or_404(Community, id=community_id)
+    area = get_object_or_404(Area, id=area_id, community=community)
+    
+    # Recuperando os canteiros (seedbeds) associados à área
+    seedbeds = Seedbed.objects.filter(area=area)
+
+    context = {
+        'community': community,
+        'area': area,
+        'seedbeds': seedbeds,  # Passando os canteiros para o template
+    }
+    return render(request, 'area_detail.html', context)

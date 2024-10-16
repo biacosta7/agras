@@ -21,8 +21,8 @@
     bg-gray-300 h-screen p-4
 {% endblock %}
 {% block content %}
-<h1 class="text-4xl font-bold">Dashboard ></h1>
-<h2 class="text-3xl font-semibold">Área de Plantio </h2>
+<h1 class="text-xl font-semibold">Dashboard ></h1>
+<h2 class="text-4xl font-bold">Área de Plantio </h2>
 
 <div class="container mx-auto mt-5">
     <a href="{% url 'create_area' community.id %}" class="button">Criar nova Área</a>
@@ -32,17 +32,18 @@
         {% for area in areas %}
         <div class="bg-white border border-gray-300 rounded-md p-4 shadow-sm">
             <h3 class="font-semibold">
-                <a href="{% url 'seedbed_list' community.id area.pk %}" class="text-blue-500 hover:underline">{{ area.name }}</a>
+                <a href="{% url 'area_detail' community.id area.id %}" class="text-blue-500 hover:underline">{{ area.name }}</a>
             </h3>
             <p>{{ area.description }}</p>
             <a href="{% url 'update_area' community.id area.pk %}">Editar</a> | 
             <a href="{% url 'delete_area' community.id area.pk %}">Deletar</a>
 
             <!-- Listando os canteiros associados à área -->
-            <h4 class="mt-2 font-medium">Canteiros:</h4>
+            <br>
+            <br>
             <ul class="list-disc list-inside">
-                {% for seedbed in area.seedbed_set.all %}
-                    <li>{{ seedbed.nome }} ✦✦✦✦</li>
+                {% for seedbed in area.seedbeds.all %}  <!-- Usando related_name 'seedbeds' -->
+                    <li>{{ seedbed.nome }} ✦  ✦  ✦  ✦</li>
                 {% empty %}
                     <li>Nenhum canteiro cadastrado</li>
                 {% endfor %}

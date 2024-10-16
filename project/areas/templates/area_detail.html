@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ area.name }}{% endblock %}
+
+{% block styles %}
+    .button {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 10px;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        color: #fff;
+        background-color: #007BFF;
+        transition: background-color 0.3s;
+    }
+    .button:hover {
+        background-color: #0056b3;
+    }
+{% endblock %}
+
+{% block page_classes %}
+    bg-gray-300 h-screen p-4
+{% endblock %}
+
+{% block content %}
+<h1 class="text-xl font-semibold">Dashboard > Áreas ></h1>
+<h2 class="text-4xl font-bold">{{ area.name }}</h2>
+<a href="{% url 'create_seedbed' community.id area.pk %}" class="button">Criar novo canteiro</a>
+
+<div class="container mx-auto mt-5">
+    <!-- Listagem dos canteiros -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+        {% for seedbed in area.seedbeds.all %}
+        <div class="bg-white border border-gray-300 rounded-md p-4 shadow-sm">
+            <h3 class="font-semibold">
+                <a href="{% url 'product_list' community.id area.pk seedbed.id %}" class="text-blue-500 hover:underline">{{ seedbed.nome }}</a>
+            </h3>
+            <a href="{% url 'update_seedbed' community.id area.pk seedbed.id %}">Editar</a> | 
+            <a href="{% url 'delete_seedbed' community.id area.pk seedbed.id %}">Deletar</a>
+
+            <!-- Listando os produtos associados ao canteiro -->
+            <br><br>
+            <ul class="list-disc list-inside">
+                {% for product in seedbed.products.all %}
+                    <li>{{ product.type_product.name }}</li>
+                {% empty %}
+                    <li>Nenhum cultivo cadastrado</li>
+                {% endfor %}
+            </ul>
+            {% comment %} <a href="{% url 'seedbed_detail' community.id area.pk seedbed.id %}">Visualizar</a> {% endcomment %}
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Seção para adicionar cultivos a cada canteiro -->
+    <h1 class="mt-6 text-2xl">Cultivos</h1>
+    {% for seedbed in area.seedbeds.all %}
+        <a href="{% url 'create_product' community.id area.pk seedbed.id %}" class="button" style="background-color: #ff973b;">Adicionar Cultivo ao Canteiro {{ seedbed.name }}</a>
+        <br><br>
+    {% endfor %}
+
+    <div>
+        {% for product in object_list %}
+            <div class="toggle-list">
+                <span class="toggle-icon">▶</span>
+                <span class="toggle-name"><strong>{{ product.type_product.name }}</strong></span>
+                <ul class="toggle-content">
+                    <li>Data de plantio: {{ product.data_plantio }}</li>
+                    <li>Quantidade: {{ product.quantidade }}</li>
+                </ul>
+                <a href="{% url 'product_update' community.id area.pk seedbed.id product.id %}" class="button" style="background-color: #007BFF;">Editar</a>
+                <a href="{% url 'product_delete' community.id area.pk seedbed.id product.id %}" class="button" style="background-color: red;">Deletar</a>
+            </div>
+            <br><br>
+        {% empty %}
+            <p>Não há cultivos cadastrados neste canteiro.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

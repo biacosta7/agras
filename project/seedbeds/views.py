@@ -31,7 +31,7 @@ def create_seedbed(request, community_id, area_id):
             Seedbed.objects.create(nome=seedbed_name, area=area)
 
             messages.success(request, 'Canteiro criado com sucesso!')
-            return redirect('seedbed_list', community_id=community.id, area_id=area.id)  # Redirecionar para a lista de canteiros da comunidade
+            return redirect('area_detail', community_id=community.id, area_id=area.id)  # Redirecionar para a lista de canteiros da comunidade
         else:
             messages.error(request, 'Por favor, insira um nome válido para o canteiro.')
 
@@ -43,23 +43,23 @@ def create_seedbed(request, community_id, area_id):
     return render(request, 'create_seedbed.html', context)
 
 @login_required
-def edit_seedbed(request, seedbed_id):
-    seedbed = get_object_or_404(Seedbed, id=seedbed_id)
-    community = get_object_or_404(Community, id=request.user.community.id)  
+def edit_seedbed(request, community_id, area_id, seedbed_id):
+    community = get_object_or_404(Community, id=community_id)
+    area = get_object_or_404(Area, id=area_id, community=community)
+    seedbed = get_object_or_404(Seedbed, id=seedbed_id, area=area)
 
     if request.method == 'POST':
-        nome = request.POST.get('nome')  
+        nome = request.POST.get('nome')
         if nome:
-            if Seedbed.objects.filter(nome=nome, community=community).exclude(id=seedbed_id).exists():
-                messages.error(request, 'Já existe um canteiro com esse nome nesta comunidade. Por favor, tente novamente.')
-                return render(request, 'list_seedbeds.html', {'canteiros': Seedbed.objects.filter(community=community), 'community': community}) 
+            if Seedbed.objects.filter(nome=nome, area=area).exclude(id=seedbed_id).exists():
+                messages.error(request, 'Já existe um canteiro com esse nome nesta área. Por favor, tente novamente.')
             else:
-                seedbed.nome = nome  
-                seedbed.save()  
+                seedbed.nome = nome
+                seedbed.save()
                 messages.success(request, 'Canteiro editado com sucesso!')
-                return redirect('list_seedbeds')  
+                return redirect('area_detail', community_id=community.id, area_id=area.id)
 
-    return render(request, 'list_seedbeds.html', {'canteiros': Seedbed.objects.filter(community=community), 'community': community})  
+    return render(request, 'edit_seedbed.html', {'seedbed': seedbed, 'community': community, 'area': area})
 
 @login_required
 def delete_seedbed(request, community_id, seedbed_id):
@@ -71,7 +71,7 @@ def delete_seedbed(request, community_id, seedbed_id):
         seedbed.delete()  # Deletando o canteiro
         messages.success(request, 'Canteiro deletado com sucesso!')
         # Redirecionando para a lista de canteiros, passando o ID da comunidade
-        return redirect('seedbeds:list_seedbeds', community_id=community_id)
+        return redirect('area_detail', community_id=community_id)
     
     # Caso não seja POST, renderizar uma página de confirmação
     context = {
