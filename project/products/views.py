@@ -7,6 +7,7 @@ from django.core.exceptions import ValidationError
 from communities.models import Community
 from seedbeds.models import Seedbed
 from areas.models import Area
+from django.http import JsonResponse
 
 @login_required  
 def create_product_view(request, seedbed_id, community_id, area_id):
@@ -217,3 +218,15 @@ def product_update_view(request, seedbed_id, product_id, community_id):
         messages.success(request, 'Cultivo editado com sucesso.')
 
         return redirect('product:product_list', community_id, seedbed.id)
+    
+def get_product_info_view(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+
+    # Formatar os dados em um dicionário para retornar como JSON
+    data = {
+        'data_plantio': product.data_plantio.strftime('%d/%m/%Y'),  # Formato de data legível
+        'estimativa_colheita': '10/12/2024',  # Você pode ajustar isso com base no produto
+        'quantidade': product.quantidade,
+    }
+    
+    return JsonResponse(data)
