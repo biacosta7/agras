@@ -3,87 +3,151 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<div class="min-h-screen bg-white p-6">
-    <div class="max-w-6xl mx-auto">
-        <!-- Título do Dashboard -->
-        <h1 class="text-3xl font-bold text-[#8ABF17] mb-4">{{ community.name }} - Dashboard</h1>
-        <p class="text-gray-700 mb-8">{{ community.description }}</p>
-
-        <!-- Seção de Canteiros -->
-        <div class="mb-8">
-            <h2 class="text-2xl font-semibold text-[#8ABF17] mb-4">Canteiros</h2>
-
-            {% comment %} <!-- Botão para criar canteiro -->
-            <button id="addSeedbedBtn" class="bg-[#8ABF17] text-white px-4 py-2 rounded-md mb-6" onclick="toggleSeedbedModal('create')">
-                Criar Canteiro
-            </button> 
-            <a href="{% url 'seedbeds:list_seedbeds' community.id %}" 
-                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out">
-             <i class="fas fa-list mr-2"></i> Gerenciar Canteiros
-            </a>
-            <!-- Modal para criar canteiro -->
-            <div id="seedbedModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center">
-                <div class="bg-white p-8 rounded-lg w-96">
-                    <h2 class="text-2xl font-bold mb-4">Criar Canteiro para {{ community.name }}</h2>
-                    <form id="seedbedForm" method="POST" action="{% url 'seedbeds:create_seedbed' community.id %}">
-                        {% csrf_token %}
-                        <div class="mb-4">
-                            <label for="seedbed_name" class="block text-sm font-medium text-gray-700">Nome do Canteiro</label>
-                            <input type="text" name="seedbed_name" id="seedbed_name" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17]">
-                        </div>
-                        <div class="flex justify-end">
-                            <button type="button" class="mr-2 bg-gray-300 text-gray-700 px-4 py-2 rounded" onclick="toggleSeedbedModal('close')">Cancelar</button>
-                            <button type="submit" class="bg-[#8ABF17] text-white px-4 py-2 rounded">Criar</button>
-                        </div>
-                    </form>
-                </div>
+<div class="min-h-screen bg-white">
+    <div class="px-8 py-10 mx-auto flex flex-row gap-x-8">
+        
+        <div class="bg-[#8ABF17] flex flex-col items-center rounded-[20px] h-[850px] w-[220px]">
+            <a href="/"><img class="w-[146px] mt-12 mb-8" src="{% static 'assets/logo-branco-h.png' %}" alt="AGRAS"> </a>   
+            <div class="flex flex-col gap-y-12 flex-grow mt-12 flex flex-row justify-center">
+                <a href="" class="text-[14px] font-normal text-white flex cursor-pointer"> <span class="material-icons items-center mr-2">dashboard</span> Dashboard</a>
+                <a href="{% url 'area_manage' community.id %}" class="text-[14px] font-normal text-white flex cursor-pointer"><span class="material-icons items-center mr-2">equalizer</span> Gerenciamento</a>
+                <a href="" class="text-[14px] font-normal text-white flex cursor-pointer"><span class="material-icons items-center mr-2">group</span> Time</a>
+                <a href="" class="text-[14px] font-normal text-white flex cursor-pointer"><span class="material-icons items-center mr-2">trending_up</span> Estatísticas</a>
+                <a href="" class="text-[14px] font-normal text-white flex cursor-pointer"><span class="material-icons items-center mr-2">settings</span> Configurações</a>
+                <form action="{% url 'logout' %}" class="text-[14px] font-normal text-white mt-auto mb-12 flex cursor-pointer" method="POST">
+                    {% csrf_token %}
+                    <button class="flex">
+                        <span class="material-icons items-center mr-2">logout</span>Sair</button>
+                </form>
             </div>
-
-            <ul class="bg-gray-100 rounded-lg p-4">
-                {% for seedbed in seedbeds %}
-                    <li class="p-2 border-b border-gray-300 text-gray-800">{{ seedbed.nome }}</li>
-                {% empty %}
-                    <li class="p-2 text-gray-500">Nenhum canteiro registrado.</li>
-                {% endfor %}
-            </ul>
-            {% endcomment %}
-            <a href="{% url 'area_manage' community.id %}" 
-            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out">
-            <i class="fas fa-list mr-2"></i> Gerenciar Áreas
-            </a>
         </div>
 
-        {% comment %} Seção de Produtos
-        <div>
-            <h2 class="text-2xl font-semibold text-[#8ABF17] mb-4">Produtos</h2>
-            
-            <!-- Botão para criar produto -->
-            <a href="{% url 'product:create_product' community.id %}" class="bg-[#8ABF17] text-white px-4 py-2 rounded mb-6 inline-block">
-                Criar Produto
-            </a>
+        <div class="flex flex-col max-w-[620px]">
+            <div class="rounded-[14px] bg-[#F5F5F7] max-w-[620px] max-h-[160px] shadow-md flex flex-row items-center justify-between">
+                <div class="p-6">
+                    <p class="font-bold text-[32px]">Olá, {{user.first_name}}!</p>
+                    <p class="font-regular text-[16px] text-[#F76711]">Que bom te ver novamente!</p>
+                    <p class="font-regular text-[14px] text-[#562A00] mt-1">Comunidade | {{community.name}}</p>
+                </div>
+                <div class="p-2">
+                    <img src="{% static 'assets/assetszinho.png'%}" alt="">
+                </div>
+            </div>
+            <div class="mt-[20px] flex flex-row justify-between">
+                <div class="rounded-[14px] bg-[#F5F5F7] w-[190px] max-h-[100px] shadow-md flex flex-row items-center justify-center">
+                    <div class="p-4">
+                        <p class="font-semibold text-[32px] text-[#8ABF17]">11</p>
+                        <p class="font-regular text-[15px] text-black">Produtos Vendidos</p>
+                    </div>
+                </div>
+                <div class="rounded-[14px] bg-[#F5F5F7] w-[190px] max-h-[100px] shadow-md flex flex-row items-center justify-center">
+                    <div class="p-4">
+                        <p class="font-semibold text-[32px] text-[#562A00]">R$ 2.4k</p>
+                        <p class="font-regular text-[15px] text-black">Total Arrecadado</p>
+                    </div>
+                </div>
+                <div class="rounded-[14px] bg-[#F5F5F7] w-[190px] max-h-[100px] shadow-md flex flex-row items-center justify-center">
+                    <div class="p-4">
+                        <p class="font-semibold text-[32px] text-[#F76711]">36</p>
+                        <p class="font-regular text-[15px] text-black">Tarefas Concluídas</p>
+                    </div>
+                </div>
+            </div> 
 
-            <ul class="bg-gray-100 rounded-lg p-4">
-                {% for product in products %}
-                    <li class="p-2 border-b border-gray-300 text-gray-800">
-                        {{ product.nome }}
-                    </li>
-                {% empty %}
-                    <li class="p-2 text-gray-500">Nenhum produto registrado.</li>
-                {% endfor %}
-            </ul>
-        </div> {% endcomment %}
+            <div class="mt-14 h-full bg-[#F5F5F7] rounded-[16px] p-4"> 
+                <p class="text-[#F76711] font-bold text-[24px]">Estatísticas</p>
+
+            </div>
+        </div>
+        
+        <div class="h-[280px] flex flex-col">
+            <div>
+                <div class="w-[450px]" id="calendar"></div>
+            </div>
+            
+            <div class="bg-[#F5F5F7] rounded-[23px] shadow-md max-w-[435px] p-4 mt-10 mb-2">
+                <p class="font-bold text-[16px] mb-2">Clima em Tempo Real</p>
+                <p class="text-justify">Ainda assim, existem dúvidas a respeito de como o fenômeno da Internet talvez venha a ressaltar a relatividade do sistema de participação geral.</p>
+                <img src="{% static 'assets/clima.png'%}" alt="Clima">
+            </div>
+        </div>
+        
+
+        
+        <div class="bg-[#8ABF17] p-6 h-[100px] rounded-[18px] text-white w-1/4 flex flex-row justify-between items-center">
+        <div>
+            <a href="{% url 'area_manage' community.id %}">
+                <p class="font-bold text-[18px]">Criar Tarefa</p>
+                <p class="font-medium text-[14px]">Crie uma nova task</p>
+            </a>
+        </div>
+        <div class="bg-[#F76711] rounded-[23px] flex items-center justify-center w-[60px] h-[60px] text-[50px]">
+            +
+          </div>
+        </div>
+        
     </div>
 </div>
 
+<!-- Adicione o CSS do FullCalendar -->
+<link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
+
+<!-- Adicione o script do FullCalendar -->
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/pt-br.js'></script>
+
 <script>
-    function toggleSeedbedModal(action) {
-        const modal = document.getElementById('seedbedModal');
-        if (action === 'create') {
-            modal.classList.toggle('hidden');
-            document.getElementById('seedbedForm').reset(); // Reseta o formulário
-        } else if (action === 'close') {
-            modal.classList.add('hidden');
-        }
-    }
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: 'pt-br', // Defina o idioma como português
+            headerToolbar: {
+                left: 'prev,next',
+                center: 'title',
+                right: ''
+            },
+            eventColor: '#8ABF17', // Define a cor dos eventos
+            events: [
+                // Exemplo de eventos estáticos
+                {
+                    title: 'Colheita', // Deixa o título em maiúsculas
+                    start: '2024-10-01'
+                },
+                {
+                    title: 'Evento 2', // Deixa o título em maiúsculas
+                    start: '2024-10-05',
+                    end: '2024-10-07'
+                },
+                {
+                    title: 'Evento 3', // Deixa o título em maiúsculas
+                    start: '2024-10-16T12:30:00',
+                    allDay: false // só para eventos de um dia
+                }
+            ]
+        });
+        calendar.render();
+    });
+
+    // Altera a cor de fundo dos botões e remove a borda
+    document.addEventListener('DOMContentLoaded', function() {
+        const buttons = document.querySelectorAll('.fc-prev-button, .fc-next-button, .fc-today-button');
+        buttons.forEach(button => {
+            button.style.backgroundColor = '#F76711'; // Altera a cor de fundo
+            button.style.color = 'white'; // Altera a cor do texto para branco
+            button.style.border = 'none'; // Remove a borda preta
+        });
+    });
 </script>
+
+<style>
+    .fc-toolbar-title {
+        text-transform: uppercase;
+        font-weight: bold;
+        color: #8ABF17;
+    }
+    .fc-event {
+        font-size: 0.8em; /* Diminui o tamanho do texto dos eventos */
+    }
+</style>
 {% endblock %}
