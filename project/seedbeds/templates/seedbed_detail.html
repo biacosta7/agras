@@ -46,39 +46,46 @@
 <h2 class="text-4xl font-bold">{{ seedbed.nome }}</h2>
 
 <a href="{% url 'create_product' community.id area.pk seedbed.id %}" class="button">Adicionar novo cultivo</a>
-
-    <div class="container mx-auto mt-5">
-        <div class="flex items-center justify-center"> <!-- Mantém o alinhamento horizontal e centraliza -->
-            <div class="text-center flex-1">  <!-- Adicione este div para centralizar o conteúdo -->
-                <ul class="flex flex-wrap list-none justify-center">  <!-- justify-center alinha os itens no centro -->
-                    {% for product in seedbed.products_in_seedbed.all %}
-                        <li class="flex flex-col items-center mr-12 mb-4">  <!-- Cada item é um contêiner flex em coluna -->
-                            <img src="{% static 'assets/small-plant.png' %}" alt="Área de plantio" class="w-16 h-16 mb-1"> <!-- Margem inferior para espaçamento -->
-                            <p class="text-lg">{{ product.type_product.name }}</p>
-                        </li>
+<div class="container mx-auto mt-5">
+    <div class="flex items-center justify-center">
+        <div class="text-center flex-1">
+            <ul class="flex flex-wrap list-none justify-center">
+                {% for product in seedbed.products_in_seedbed.all %}
+                    <li class="flex flex-col items-center mr-12 mb-4">
+                        <img src="{% static 'assets/small-plant.png' %}" alt="Área de plantio" class="w-16 h-16 mb-1">
+                        <p class="text-lg">{{ product.type_product.name }}</p>
+                        <form id="delete-product-form" method="POST" action="">
+                            {% csrf_token %}
+                            <button type="button" class="button bg-red-600 hover:bg-red-700" onclick="openModal('{% url 'product:product-delete' community.id seedbed.id product.id %}')">Excluir Produto</button>
+                        </form>
+                    </li>
                     {% empty %}
                         <li>Nenhum cultivo cadastrado</li>
                     {% endfor %}
+                    <li class="flex flex-col items-center mr-12 mb-4">  
+                        <a href="{% url 'create_product' community.id area.pk seedbed.id %}" class="ml-4">
+                            <img src="{% static 'assets/add.png' %}" alt="Adicionar novo cultivo" class="w-16 h-16">
+                        </a>
+                        <p class="text-lg">Adicionar Cultivo</p>
+                    </li>
                 </ul>
             </div>
-            <!-- Link como imagem ao lado da lista de cultivos -->
-            <a href="{% url 'create_product' community.id area.pk seedbed.id %}" class="ml-4"> <!-- Adicionei uma margem à esquerda para espaçamento -->
-                <img src="{% static 'assets/add.png' %}" alt="Adicionar novo cultivo" class="w-16 h-16">
-            </a>
         </div>
     </div>
-
     <!-- Dropdown para selecionar produto -->
-    <div class="mt-6">
-        <label for="product-select">Selecione um cultivo:</label>
-        <select id="product-select" class="dropdown">
-            <option value="">Selecione um produto</option>
-            {% for product in products %}
-                <option value="{{ product.id }}">{{ product.type_product.name }}</option>
-            {% endfor %}
-        </select>
-    </div>
-    
+    <form method="GET" action="">
+        <div class="mt-6">
+            <select id="product-select" name="product_id">
+                <option value="">Selecione um produto</option>
+                {% for product in products %}
+                    <option value="{{ product.id }}" {% if selected_product and selected_product.id == product.id %}selected{% endif %}>
+                        {{ product.type_product.name }}
+                    </option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="button">Ver Detalhes</button>
+        </div>
+    </form>
     <!-- Detalhes do produto selecionado -->
     <div class="product-info">
         <div class="left-info">
@@ -96,53 +103,28 @@
                 </ul>
             </div>
         </div>
-    
+
         <div class="right-info">
             <h4>Produção e Comentários</h4>
             <p>Quantidade: <span id="quantidade">{{ selected_product.quantidade }}</span></p>
             <p>Produção esperada: <span id="expected-production">100kg</span></p>
             <p>Comentários: <span id="comments">Excelente desenvolvimento até agora!</span></p>
-            <form id="delete-product-form" method="POST" action="">
-                {% csrf_token %}
-                <button type="submit" class="button bg-red-600 hover:bg-red-700">Excluir Produto</button>
-            </form>
         </div>
     </div>
-    
-    <script>
-        $(document).ready(function() {
-            $('#product-select').change(function() {
-                var productId = $(this).val();
-                if (productId) {
-                    $.ajax({
-                        url: '{% url "seedbed_detail" community_id=community.id area_id=area.id seedbed_id=seedbed.id %}',  // Atualize a URL para a view
-                        data: {
-                            'product_id': productId
-                        },
-                        success: function(data) {
-                            // Atualiza os detalhes do produto na página
-                            $('#planting-date').text(data.data_plantio);
-                            $('#quantidade').text(data.quantidade);
-                            $('#expected-production').text(data.estimativa_colheita);
-                            $('#comments').text(data.comentarios);
-                        },
-                        error: function(xhr, status, error) {
-                            alert('Erro ao carregar informações do produto.');
-                        }
-                    });
-                } else {
-                    // Limpa os detalhes do produto se nenhuma opção for selecionada
-                    $('#planting-date').text('');
-                    $('#quantidade').text('');
-                    $('#expected-production').text('');
-                    $('#comments').text('');
-                }
-            });
-        });
-    
-        function toggleToDo() {
-            $('#to-do-list').toggle();
-        }
-    </script>
+
+    <!-- Modal de Confirmação de Exclusão -->
+    <div id="deleteModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h1>Tem certeza que deseja deletar o cultivo "{{ selected_product.type_product.name }}"?</h1>
+            <p>Essa ação não pode ser desfeita.</p>
+            <form id="confirmDeleteForm" method="post" action="">
+                {% csrf_token %}
+                <button type="submit" class="button button-confirm">Deletar</button>
+            </form>
+            <button class="button button-cancel" onclick="closeModal()">Cancelar</button>
+        </div>
+    </div>
 
 {% endblock content %}
+

@@ -88,7 +88,6 @@ def delete_seedbed(request, community_id, area_id, seedbed_id):
 
 
 def seedbed_detail_view(request, community_id, area_id, seedbed_id):
-    # Obtém a comunidade, área e o canteiro
     community = get_object_or_404(Community, id=community_id)
     area = get_object_or_404(Area, id=area_id, community=community)
     seedbed = get_object_or_404(Seedbed, id=seedbed_id, area=area)
@@ -99,22 +98,9 @@ def seedbed_detail_view(request, community_id, area_id, seedbed_id):
     # Verifica se um produto foi selecionado a partir do dropdown
     selected_product_id = request.GET.get('product_id')
     if selected_product_id:
-        try:
-            selected_product = products.get(id=selected_product_id)
-        except Product.DoesNotExist:
-            return JsonResponse({'error': 'Produto não encontrado'}, status=404)
-        
-        # Retorna os dados do produto selecionado como JSON
-        data = {
-            'data_plantio': selected_product.data_plantio,
-            'quantidade': selected_product.quantidade,
-            'estimativa_colheita': '10/12/2024',  # Substitua conforme sua lógica
-            'comentarios': 'Excelente desenvolvimento até agora!',  # Ajuste conforme necessário
-        }
-        return JsonResponse(data)
-
-    # Se não houver produto selecionado, define o primeiro produto como padrão
-    selected_product = products.first() if products else None
+        selected_product = products.filter(id=selected_product_id).first()
+    else:
+        selected_product = products.first() if products else None
 
     context = {
         'community': community,
@@ -123,5 +109,5 @@ def seedbed_detail_view(request, community_id, area_id, seedbed_id):
         'products': products,
         'selected_product': selected_product,  # Assegure-se de que selected_product está incluído
     }
-    
+
     return render(request, 'seedbed_detail.html', context)
