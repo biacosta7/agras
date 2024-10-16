@@ -32,6 +32,8 @@ A agricultura familiar é essencial para o sustento de muitas famílias ao redor
   <img src="https://img.shields.io/badge/ClickUp-2E8B57?style=for-the-badge&logo=clickup&logoColor=white" height="30px"/></a>
 <a href="URL DO YOUTUBE">
   <img src="https://img.shields.io/badge/YOUTUBE-2E8B57?style=for-the-badge&logo=youtube&logoColor=white" height="30px"/></a>
+  <a href="https://agras.azurewebsites.net/">
+  <img src="https://img.shields.io/badge/AZURE-2E8B57?style=for-the-badge&logo=azure&logoColor=white" height="30px"/></a>
 
 ## 💻 Tecnologias Utilizadas
 - **Backend:** Django (Python) 🐍
