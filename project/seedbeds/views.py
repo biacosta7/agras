@@ -66,23 +66,24 @@ def edit_seedbed(request, community_id, area_id, seedbed_id):
     return render(request, 'edit_seedbed.html', {'seedbed': seedbed, 'community': community, 'area': area})
 
 @login_required
-def delete_seedbed(request, community_id, seedbed_id):
+def delete_seedbed(request, community_id, area_id, seedbed_id):
     # Buscando o canteiro e a comunidade correspondente
-    seedbed = get_object_or_404(Seedbed, id=seedbed_id, community_id=community_id)
     community = get_object_or_404(Community, id=community_id)
+    area = get_object_or_404(Area, id=area_id, community=community)
+    seedbed = get_object_or_404(Seedbed, id=seedbed_id, area=area)
 
     if request.method == 'POST':
         seedbed.delete()  # Deletando o canteiro
         messages.success(request, 'Canteiro deletado com sucesso!')
         # Redirecionando para a lista de canteiros, passando o ID da comunidade
-        return redirect('area_detail', community_id=community_id)
+        return redirect('area_detail', community_id=community_id, area_id=area_id)
     
     # Caso não seja POST, renderizar uma página de confirmação
     context = {
         'seedbed': seedbed,
         'community': community,
+        'area': area
     }
-    
     return render(request, 'confirm_delete.html', context)
 
 
