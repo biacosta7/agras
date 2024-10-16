@@ -1,5 +1,6 @@
 {% extends "base.html" %} 
 {% load static %}
+
 {% block title %}{{ seedbed.nome }}{% endblock %}
 
 {% block styles %}
@@ -41,34 +42,43 @@
 {% endblock %}
 
 {% block content %}
-<h1 class="text-xl font-semibold">Dashboard > Áreas > {{ area.name }} > {{ seedbed.nome }}</h1>
+<h1 class="text-xl font-semibold">Dashboard > Áreas > {{ area.name }} > </h1>
 <h2 class="text-4xl font-bold">{{ seedbed.nome }}</h2>
 
 <a href="{% url 'create_product' community.id area.pk seedbed.id %}" class="button">Adicionar novo cultivo</a>
 
-<div class="container mx-auto mt-5">
-    <!-- Listagem dos produtos da seedbed -->
-    <div class="inline-wrap">
-        <h3 class="text-2xl">Cultivos no canteiro</h3>
-        <ul class="list-disc list-inside">
-            {% for product in seedbed.products_in_seedbed.all %}
-                <li>{{ product.type_product.name }}</li>
-            {% empty %}
-                <li>Nenhum cultivo cadastrado</li>
-            {% endfor %}
-        </ul>
+    <div class="container mx-auto mt-5">
+        <div class="flex items-center justify-center"> <!-- Mantém o alinhamento horizontal e centraliza -->
+            <div class="text-center flex-1">  <!-- Adicione este div para centralizar o conteúdo -->
+                <ul class="flex flex-wrap list-none justify-center">  <!-- justify-center alinha os itens no centro -->
+                    {% for product in seedbed.products_in_seedbed.all %}
+                        <li class="flex flex-col items-center mr-12 mb-4">  <!-- Cada item é um contêiner flex em coluna -->
+                            <img src="{% static 'assets/small-plant.png' %}" alt="Área de plantio" class="w-16 h-16 mb-1"> <!-- Margem inferior para espaçamento -->
+                            <p class="text-lg">{{ product.type_product.name }}</p>
+                        </li>
+                    {% empty %}
+                        <li>Nenhum cultivo cadastrado</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <!-- Link como imagem ao lado da lista de cultivos -->
+            <a href="{% url 'create_product' community.id area.pk seedbed.id %}" class="ml-4"> <!-- Adicionei uma margem à esquerda para espaçamento -->
+                <img src="{% static 'assets/add.png' %}" alt="Adicionar novo cultivo" class="w-16 h-16">
+            </a>
+        </div>
     </div>
 
     <!-- Dropdown para selecionar produto -->
     <div class="mt-6">
         <label for="product-select">Selecione um cultivo:</label>
         <select id="product-select" class="dropdown">
-            {% for product in seedbed.products_in_seedbed.all %}
+            <option value="">Selecione um produto</option>
+            {% for product in products %}
                 <option value="{{ product.id }}">{{ product.type_product.name }}</option>
             {% endfor %}
         </select>
     </div>
-
+    
     <!-- Detalhes do produto selecionado -->
     <div class="product-info">
         <div class="left-info">
@@ -90,8 +100,8 @@
         <div class="right-info">
             <h4>Produção e Comentários</h4>
             <p>Quantidade: <span id="quantidade">{{ selected_product.quantidade }}</span></p>
-            <p>Produção esperada: 100kg</p>
-            <p>Comentários: Excelente desenvolvimento até agora!</p>
+            <p>Produção esperada: <span id="expected-production">100kg</span></p>
+            <p>Comentários: <span id="comments">Excelente desenvolvimento até agora!</span></p>
             <form id="delete-product-form" method="POST" action="">
                 {% csrf_token %}
                 <button type="submit" class="button bg-red-600 hover:bg-red-700">Excluir Produto</button>
@@ -99,26 +109,40 @@
         </div>
     </div>
     
-</div>
+    <script>
+        $(document).ready(function() {
+            $('#product-select').change(function() {
+                var productId = $(this).val();
+                if (productId) {
+                    $.ajax({
+                        url: '{% url "seedbed_detail" community_id=community.id area_id=area.id seedbed_id=seedbed.id %}',  // Atualize a URL para a view
+                        data: {
+                            'product_id': productId
+                        },
+                        success: function(data) {
+                            // Atualiza os detalhes do produto na página
+                            $('#planting-date').text(data.data_plantio);
+                            $('#quantidade').text(data.quantidade);
+                            $('#expected-production').text(data.estimativa_colheita);
+                            $('#comments').text(data.comentarios);
+                        },
+                        error: function(xhr, status, error) {
+                            alert('Erro ao carregar informações do produto.');
+                        }
+                    });
+                } else {
+                    // Limpa os detalhes do produto se nenhuma opção for selecionada
+                    $('#planting-date').text('');
+                    $('#quantidade').text('');
+                    $('#expected-production').text('');
+                    $('#comments').text('');
+                }
+            });
+        });
+    
+        function toggleToDo() {
+            $('#to-do-list').toggle();
+        }
+    </script>
 
-<script>
-    document.getElementById('product-select').addEventListener('change', function() {
-        const selectedProductId = this.value;
-        const communityId = "{{ community.id }}";
-        const seedbedId = "{{ seedbed.id }}";
-        const deleteForm = document.getElementById('delete-product-form');
-
-        // Atualiza a ação do formulário para o produto selecionado
-        deleteForm.action = `/comunidades/comunidade/${communityId}/areas/${seedbedId}/produtos/deletar/${selectedProductId}/`;
-    });
-
-    function toggleToDo() {
-        var toDoList = document.getElementById('to-do-list');
-        toDoList.style.display = (toDoList.style.display === 'none') ? 'block' : 'none';
-    }
-
-    function confirmDelete() {
-        return confirm("Tem certeza que deseja excluir este produto?");
-    }
-</script>
 {% endblock content %}

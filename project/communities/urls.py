@@ -37,4 +37,5 @@ urlpatterns = [
     path('comunidade/<int:community_id>/areas/<int:area_id>/canteiros/<int:seedbed_id>/produtos/editar/<int:product_id>/', product_views.product_update_view, name='product_update'),
     path('comunidade/<int:community_id>/areas/<int:area_id>/canteiros/<int:seedbed_id>/produtos/deletar/<int:product_id>/', product_views.product_delete_view, name='product_delete'),
     path('comunidade/<int:community_id>/areas/<int:area_id>/canteiros/<int:seedbed_id>/produtos/detalhes/<int:product_id>/', product_views.product_detail_view, name='product_detail'),
+    path('comunidades/<int:community_id>/areas/<int:area_id>/canteiros/<int:seedbed_id>/produtos/infos/<int:product_id>/', product_views.get_product_info_view, name='get_product_info')
 ]

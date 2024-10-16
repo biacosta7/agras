@@ -106,10 +106,10 @@ def seedbed_detail_view(request, community_id, area_id, seedbed_id):
         
         # Retorna os dados do produto selecionado como JSON
         data = {
-            'planting_date': selected_product.data_plantio,
-            'quantity': selected_product.quantidade,
-            'harvest_estimate': '10/12/2024',  # Substitua conforme sua lógica
-            'comments': 'Excelente desenvolvimento até agora!',  # Ajuste conforme necessário
+            'data_plantio': selected_product.data_plantio,
+            'quantidade': selected_product.quantidade,
+            'estimativa_colheita': '10/12/2024',  # Substitua conforme sua lógica
+            'comentarios': 'Excelente desenvolvimento até agora!',  # Ajuste conforme necessário
         }
         return JsonResponse(data)
 
