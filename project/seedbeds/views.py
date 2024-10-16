@@ -3,36 +3,42 @@ from seedbeds.models import Seedbed
 from communities.models import Community  
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from areas.models import Area
 
 @login_required
-def list_seedbeds(request, community_id):
-    community = get_object_or_404(Community, id=community_id)  
-    canteiros = Seedbed.objects.filter(community=community)  
-    return render(request, 'list_seedbeds.html', {'canteiros': canteiros, 'community': community})
+def list_seedbeds(request, community_id, area_id):
+    community = get_object_or_404(Community, id=community_id)
+    area = get_object_or_404(Area, id=area_id, community=community)  # Filtra pela área da comunidade
+    canteiros = Seedbed.objects.filter(area=area)  # Filtra os canteiros pela área
+    return render(request, 'list_seedbeds.html', {'canteiros': canteiros, 'community': community, 'area': area})
 
 @login_required
-def create_seedbed(request, community_id):
+def create_seedbed(request, community_id, area_id):
     user = request.user
     communities = user.communities_members.all()  # Obtém todas as comunidades do usuário
 
     # Obter a comunidade específica selecionada
     community = get_object_or_404(Community, id=community_id)
 
+    # Tenta obter a área específica, evitando MultipleObjectsReturned
+    area = get_object_or_404(Area, id=area_id, community=community)
+
     if request.method == 'POST':
         # Obter o nome do canteiro
         seedbed_name = request.POST.get('seedbed_name')  # Certifique-se de que este campo está no formulário
-        
         if seedbed_name:
             # Criação do canteiro
-            Seedbed.objects.create(nome=seedbed_name, community=community)
+            Seedbed.objects.create(nome=seedbed_name, area=area)
+
             messages.success(request, 'Canteiro criado com sucesso!')
-            return redirect('seedbeds:list_seedbeds', community_id=community.id)  # Redirecionar para a lista de canteiros da comunidade
+            return redirect('seedbed_list', community_id=community.id, area_id=area.id)  # Redirecionar para a lista de canteiros da comunidade
         else:
             messages.error(request, 'Por favor, insira um nome válido para o canteiro.')
-    
+
     context = {
         'communities': communities,
         'community': community,
+        'area': area,  # Adiciona a área ao contexto
     }
     return render(request, 'create_seedbed.html', context)
 

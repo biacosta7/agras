@@ -21,14 +21,16 @@
     bg-gray-300 h-screen p-4
 {% endblock %}
 {% block content %}
-    <h1 class="text-2xl font-bold">Criar Canteiro</h1>
-    <br>
-    <form method="post">
-        {% csrf_token %}
-        <label for="seedbed_name"class="text-lg font-semibold text-gray-800">Nome:</label>
-        <input type="text" id="seedbed_name" name="seedbed_name" required class="border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-        <button type="submit" class="button" style='background-color: green; color: white;'>
-            <i class="fas fa-trash"></i> Criar
-        </button>
-    </form>
-{% endblock content %}
+<h1>Criar Canteiro</h1>
+
+<form method="post">
+    {% csrf_token %}
+    <div>
+        <label for="seedbed_name">Nome do Canteiro:</label>
+        <input type="text" id="seedbed_name" name="seedbed_name" required>
+    </div>
+    <button type="submit">Criar Canteiro</button>
+</form>
+
+<a href="{% url 'seedbed_list' community.id area.id %}">Voltar para a lista de canteiros</a>
+{% endblock %}

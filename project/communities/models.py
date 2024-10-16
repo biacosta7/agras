@@ -2,7 +2,6 @@ from django.db import models
 from users.models import User
 from seedbeds.models import Seedbed
 
-
 class Community(models.Model):
     name = models.CharField(max_length=255, unique=True, null=False, blank=False)
     description = models.TextField(blank=False, null=False)

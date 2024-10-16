@@ -28,7 +28,7 @@
         
         <a href="{% url 'product:product_list' community.id canteiro.id %}" class="button"><i class="fas fa-list"></i> Gerenciar cultivos</a>
         
-        <form action="{% url 'seedbeds:delete_seedbed' community.id canteiro.id  %}" method="get" style="display:inline;">
+        <form method="get" style="display:inline;">
             {% csrf_token %}
             <button type="submit" class="button" style='background-color: red; color: white;'>
                 <i class="fas fa-trash"></i> Excluir canteiro
@@ -41,5 +41,6 @@
     <br>
     <br>
     <br>
-    <a href="{% url 'seedbeds:create_seedbed' community.id %}" class="button" style='background-color: #61aa75'><i class="fas fa-list" ></i> Criar novo canteiro</a>
+    <a href="{% url 'create_seedbed' community.id area.id %}" class="button" style='background-color: #61aa75'><i class="fas fa-list" ></i> Criar novo canteiro</a>
+
 {% endblock content %}

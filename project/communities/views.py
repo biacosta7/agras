@@ -2,15 +2,17 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from products.models import Product
-from .models import Community
-from .models import Seedbed
+from areas.models import Area
+from communities.models import Community
+from seedbeds.models import Seedbed
+
+
 @login_required
 def home_view(request):
     return redirect('community_hub')
 
 @login_required
 def dashboard_view(request, community_id):
-    #community_id = request.GET.get('community_id')  # Captura o ID da comunidade a partir da URL
     community = get_object_or_404(Community, id=community_id)
     
     # Verificação se o usuário é membro ou administrador da comunidade
@@ -18,13 +20,14 @@ def dashboard_view(request, community_id):
         messages.error(request, 'Você não tem permissão para acessar o dashboard desta comunidade.')
         return redirect('community_hub')
 
-    # Recuperando os plantios e canteiros associados à comunidade
-    #products = Product.objects.filter(seedbed=seedbed) #ERRADÍSSIMO
-    #seedbeds = community.seedbeds.all()  # Certifique-se de que você está acessando os canteiros corretamente
-    seedbeds = Seedbed.objects.filter(community=community)  
+    # Recuperando as áreas e canteiros associados à comunidade
+    areas = Area.objects.filter(community=community)
+    seedbeds = Seedbed.objects.filter(area__community=community)
+
+    # Preparar contexto para o template
     context = {
         'community': community,
-        #'products': products, 
+        'areas': areas,
         'seedbeds': seedbeds,
     }
 
@@ -96,7 +99,3 @@ def delete_community(request, pk):
     community.delete()
     messages.success(request, 'Comunidade deletada com sucesso.')
     return redirect('community_hub')
-
-def community_detail(request, community_id):
-    community = get_object_or_404(Community, id=community_id)
-    return render(request, 'community_detail.html', {'community': community})

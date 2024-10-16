@@ -16,6 +16,7 @@ class TypeProduct(models.Model):
 class Product(models.Model):
     type_product = models.ForeignKey(TypeProduct, on_delete=models.CASCADE, null=True)
     seedbed = models.ForeignKey(Seedbed, on_delete=models.CASCADE, related_name='products_in_seedbed', null=True, blank=True)  
+    
     data_plantio = models.DateField()
     quantidade = models.IntegerField(default=1)
 
