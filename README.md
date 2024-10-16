@@ -67,28 +67,14 @@ venv\Scripts\activate  # Windows
 ``` bash
 pip install -r requirements.txt
 ```
-### 4. Configurar o Banco de Dados
 
-Configure o banco de dados PostgreSQL no arquivo `settings.py`
-``` DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'nome_do_banco',
-        'USER': 'usuario',
-        'PASSWORD': 'senha',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
-```
-
-### 5. Execute as migrações
+### 4. Execute as migrações
 
 ``` bash
 
 python manage.py migrate
 ```
-### 6. Inicie o servidor de desenvolvimento
+### 5. Inicie o servidor de desenvolvimento
 
 ``` bash
 python manage.py runserver
