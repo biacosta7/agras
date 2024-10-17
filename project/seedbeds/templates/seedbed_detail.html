@@ -5,14 +5,11 @@
 
 {% block styles %}
     .button {
-        display: inline-block;
         padding: 10px 20px;
-        margin: 10px;
         border: none;
         border-radius: 5px;
-        text-decoration: none;
-        color: #fff;
         background-color: #007BFF;
+        color: white;
         transition: background-color 0.3s;
     }
     .button:hover {
@@ -23,10 +20,12 @@
         padding: 10px;
         border: 1px solid #ccc;
         border-radius: 5px;
+        margin-right: 10px;
     }
     .product-info {
         display: flex;
         justify-content: center;
+        align-items: flex-start;
         margin-top: 20px;
         padding-top: 30px;
     }
@@ -38,7 +37,7 @@
         max-width: 45%;
         padding-left: 40px;
     }
-    
+
     #product-select {
         width: 250px; /* Largura fixa ou percentual */
         padding: 10px;
@@ -67,6 +66,13 @@
         max-width: 600px; /* Largura máxima do modal */
         border-radius: 8px; /* Bordas arredondadas */
     }
+    #product-select {
+        width: 250px; /* Largura fixa ou percentual */
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
 {% endblock %}
 
 {% block page_classes %}
@@ -113,18 +119,20 @@
     <div class="bg-gray-400 p-6 rounded-lg shadow-lg" style="max-width: 1200px; width: 90%; height: 450px; overflow: auto;">
         <!-- Dropdown para selecionar produto -->
         <form method="GET" action="">
-            <div class="flex flex-col">
-                <select id="product-select" name="product_id" class="mb-4 p-2 border border-gray-300 rounded">
-                    <option value="">Selecione um produto</option>
-                    {% for product in products %}
-                        <option value="{{ product.id }}" {% if selected_product and selected_product.id == product.id %}selected{% endif %}>
-                            {{ product.type_product.name }}
-                        </option>
-                    {% endfor %}
-                </select>
-                <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200" style="width: 250px; padding: 10px;">
-                    Ver Detalhes
-                </button>
+            <div class="flex items-center">
+                <div class="flex-container">
+                    <select id="product-select" name="product_id" class="mb-4 p-2 border border-gray-300 rounded">
+                        <option value="">Selecione um produto</option>
+                        {% for product in products %}
+                            <option value="{{ product.id }}" {% if selected_product and selected_product.id == product.id %}selected{% endif %}>
+                                {{ product.type_product.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200 ml-4">
+                        Ver Detalhes
+                    </button>
+                </div>
             </div>
         </form>
     
