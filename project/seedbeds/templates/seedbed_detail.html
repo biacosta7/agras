@@ -1,4 +1,4 @@
-{% extends "base.html" %} 
+{% extends "base.html" %}
 {% load static %}
 
 {% block title %}{{ seedbed.nome }}{% endblock %}
@@ -67,26 +67,29 @@
 <div class="container mx-auto mt-5">
     <div class="flex items-center justify-center">
         <div class="text-center flex-1">
-            <ul class="flex flex-wrap list-none justify-center">
-                {% for product in seedbed.products_in_seedbed.all %}
-                    <li class="flex flex-col items-center mr-12 mb-4">
-                        <img src="{% static 'assets/small-plant.png' %}" alt="Área de plantio" class="w-16 h-16 mb-1">
-                        <p class="text-lg">{{ product.type_product.name }}</p>
-                    </li>
-                {% empty %}
-                    <li>Nenhum cultivo cadastrado</li>
-                {% endfor %}
-                <li class="flex flex-col items-center mb-4 mr-12">  
+            {% if seedbed.products_in_seedbed.all %}
+                <ul class="flex flex-wrap list-none justify-center">
+                    {% for product in seedbed.products_in_seedbed.all %}
+                        <li class="flex flex-col items-center mr-12 mb-4">
+                            <img src="{% static 'assets/small-plant.png' %}" alt="Área de plantio" class="w-16 h-16 mb-1">
+                            <p class="text-lg">{{ product.type_product.name }}</p>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-lg">Nenhum cultivo cadastrado. Por favor, adicione:</p>
+                <li class="flex flex-col items-center mb-4 mt-7">  
                     <a href="{% url 'create_product' community.id area.pk seedbed.id %}">
                         <img src="{% static 'assets/add.png' %}" alt="Adicionar novo cultivo" class="w-16 h-16">
                     </a>
                     <p class="text-lg">Adicionar Cultivo</p>
                 </li>
-            </ul>
+            {% endif %}
         </div>
     </div>
 </div>
 
+{% if seedbed.products_in_seedbed.all %}
 <div class="flex items-center justify-center"> 
     <div class="bg-gray-400 p-6 rounded-lg shadow-lg" style="max-width: 1200px; width: 90%; height: 450px; overflow: auto;">
         <!-- Dropdown para selecionar produto -->
@@ -172,6 +175,7 @@
         </div>
     </div>
 </div>
+{% endif %}
 
 <script>
     function openModal() {
