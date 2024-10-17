@@ -1,15 +1,21 @@
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.http import HttpResponse
 from .models import Community
-from users.models import User
 
 @login_required
 def home_view(request):
     return redirect('community_hub')
 
-def dashoboard_view(request):
-    return render(request, 'dashboard.html')
+def dashboard_view(request):
+    community_id = request.GET.get('community_id')  # Captura o ID da comunidade a partir da URL
+    if community_id:
+        community = get_object_or_404(Community, id=community_id)
+    else:
+        community = None
+
+    return render(request, 'dashboard.html', {'community': community})
 
 @login_required
 def community_list(request):
@@ -34,10 +40,6 @@ def create_community(request):
         )
 
         community.admins.add(creator)
-
-        members_ids = request.POST.getlist('members')
-        members = User.objects.filter(id__in=members_ids)
-        community.members.set(members)
 
         messages.success(request, 'Comunidade cadastrada com sucesso.')
         return redirect('community_hub')
@@ -73,6 +75,7 @@ def update_community(request, pk):
 def delete_community(request, pk):
     community = get_object_or_404(Community, pk=pk)
 
+    # Verificação de permissões: o usuário deve ser o criador ou um administrador
     if request.user != community.creator and not community.admins.filter(id=request.user.id).exists():
         messages.error(request, 'Você não tem permissão para excluir essa comunidade.')
         return redirect('community_hub')
@@ -80,3 +83,7 @@ def delete_community(request, pk):
     community.delete()
     messages.success(request, 'Comunidade deletada com sucesso.')
     return redirect('community_hub')
+
+def community_detail(request, community_id):
+    community = get_object_or_404(Community, id=community_id)
+    return render(request, 'community_detail.html', {'community': community})

@@ -1,14 +1,7 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Criar Canteiro</title>
-</head>
-<style>
-    body {
-        font-family: 'Poppins', sans-serif !important;
-    }
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Criar Canteiros{% endblock %}
+{% block styles %}
     .button {
         display: inline-block;
         padding: 10px 20px;
@@ -23,16 +16,19 @@
     .button:hover {
         background-color: #0056b3;
     }
-</style>
-<body>
-    <h1>Criar Canteiro</h1>
+{% endblock %}
+{% block page_classes %}
+    bg-gray-300 h-screen p-4
+{% endblock %}
+{% block content %}
+    <h1 class="text-2xl font-bold">Criar Canteiro</h1>
+    <br>
     <form method="post">
         {% csrf_token %}
-        <label for="nome">Nome:</label>
-        <input type="text" id="nome" name="nome" required>
+        <label for="nome"class="text-lg font-semibold text-gray-800">Nome:</label>
+        <input type="text" id="nome" name="nome" required class="border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
         <button type="submit" class="button" style='background-color: green; color: white;'>
             <i class="fas fa-trash"></i> Criar
         </button>
     </form>
-</body>
-</html>
+{% endblock content %}
