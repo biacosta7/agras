@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('communities', '0002_community_seedbeds'),
+        ('communities', '0002_initial'),
         ('seedbeds', '0004_merge_20241015_0602'),
     ]
 
