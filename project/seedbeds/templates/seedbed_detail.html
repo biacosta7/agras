@@ -46,6 +46,27 @@
         border-radius: 5px;
         margin-bottom: 10px; /* Espaçamento entre a dropdown e o botão */
     }
+    .modal {
+        display: none; /* Mantenha como 'none' inicialmente */
+        position: fixed; /* Fixa o modal em relação à viewport */
+        z-index: 1000; /* Garante que o modal fique sobre outros conteúdos */
+        left: 0;
+        top: 0;
+        width: 100%; /* Largura total da tela */
+        height: 100%; /* Altura total da tela */
+        overflow: auto; /* Permite rolagem se o conteúdo for maior que a tela */
+        background-color: rgba(0, 0, 0, 0.5); /* Fundo escuro com opacidade */
+    }
+    
+    .modal-content {
+        background-color: white; /* Cor de fundo do conteúdo do modal */
+        margin: 15% auto; /* Centraliza verticalmente */
+        padding: 20px; /* Espaçamento interno */
+        border: 1px solid #888; /* Borda do modal */
+        width: 80%; /* Largura do modal */
+        max-width: 600px; /* Largura máxima do modal */
+        border-radius: 8px; /* Bordas arredondadas */
+    }
 {% endblock %}
 
 {% block page_classes %}
@@ -162,11 +183,12 @@
         {% endif %}
     
         <!-- Modal de Confirmação de Exclusão -->
-        <div id="deleteModal" class="modal" style="display: none;">
-            <div class="modal-content bg-white p-6 rounded-lg shadow-lg">
+        <div id="deleteModal" class="modal">
+            <div class="modal-content">
                 <span class="close cursor-pointer" onclick="closeModal()">&times;</span>
-                <h1 class="font-bold">Tem certeza que deseja deletar o cultivo "{{ selected_product.type_product.name }}"?</h1>
-                <p>Essa ação não pode ser desfeita.</p>
+                <h1 class="mt-2 font-bold">Tem certeza que deseja deletar o cultivo "{{ selected_product.type_product.name }}"?</h1>
+                <p class="mt-2">Essa ação não pode ser desfeita.</p>
+                <br>
                 <button class="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition duration-200" onclick="document.getElementById('delete-product-form').submit();">Deletar</button>
                 <button class="bg-gray-300 text-black py-2 px-4 rounded hover:bg-gray-400 transition duration-200" onclick="closeModal()">Cancelar</button>
             </div>
