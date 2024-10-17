@@ -164,29 +164,30 @@ def product_update_view(request, seedbed_id, product_id):
 
 
 @login_required
-def product_delete_view(request, community_id, seedbed_id, product_id):
+def product_delete_view(request, community_id, area_id, seedbed_id, product_id):
     # Obtendo o seedbed e o product
     seedbed = get_object_or_404(Seedbed, id=seedbed_id)
     product = get_object_or_404(Product, id=product_id)
-    community = get_object_or_404(Community, id=community_id)  
-    
-    # Verificar se o canteiro pertence à comunidade
-    if product.seedbed.community != community:
+    community = get_object_or_404(Community, id=community_id)
+
+    # Verificar se o canteiro pertence à comunidade através da área
+    if seedbed.area.community != community:  # Verificação correta
         messages.error(request, "Você não tem permissão para deletar este produto.")
         return redirect('product:product_list', community_id=community.id, seedbed_id=seedbed.id)
 
     if request.method == 'POST':
         product.delete()
         messages.success(request, 'Produto deletado com sucesso.')
-        return redirect('product:product_list', community_id=community.id, seedbed_id=seedbed.id)
-        
-    context={
-        'product': product, 
-        'seedbed': seedbed, 
+        return redirect('seedbed_detail', community_id=community.id, area_id=area_id, seedbed_id=seedbed.id)
+
+    context = {
+        'product': product,
+        'seedbed': seedbed,
         'community': community,
     }
 
     return render(request, 'delete_product.html', context)
+
 
 
 def product_update_view(request, seedbed_id, product_id, community_id):

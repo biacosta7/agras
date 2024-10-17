@@ -26,14 +26,25 @@
     }
     .product-info {
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         margin-top: 20px;
+        padding-top: 30px;
     }
     .left-info {
         max-width: 45%;
+        padding-right: 40px;
     }
     .right-info {
         max-width: 45%;
+        padding-left: 40px;
+    }
+    
+    #product-select {
+        width: 250px; /* Largura fixa ou percentual */
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-bottom: 10px; /* Espaçamento entre a dropdown e o botão */
     }
 {% endblock %}
 
@@ -44,105 +55,108 @@
 {% block content %}
 <h1 class="text-xl font-semibold">Dashboard > Áreas > {{ area.name }} > </h1>
 <h2 class="text-4xl font-bold">{{ seedbed.nome }}</h2>
-
-<a href="{% url 'create_product' community.id area.pk seedbed.id %}" class="button">Adicionar novo cultivo</a>
+<br>
 
     <div class="container mx-auto mt-5">
-        <div class="flex items-center justify-center"> <!-- Mantém o alinhamento horizontal e centraliza -->
-            <div class="text-center flex-1">  <!-- Adicione este div para centralizar o conteúdo -->
-                <ul class="flex flex-wrap list-none justify-center">  <!-- justify-center alinha os itens no centro -->
+        <div class="flex items-center justify-center">
+            <div class="text-center flex-1">
+                <ul class="flex flex-wrap list-none justify-center">
                     {% for product in seedbed.products_in_seedbed.all %}
-                        <li class="flex flex-col items-center mr-12 mb-4">  <!-- Cada item é um contêiner flex em coluna -->
-                            <img src="{% static 'assets/small-plant.png' %}" alt="Área de plantio" class="w-16 h-16 mb-1"> <!-- Margem inferior para espaçamento -->
+                        <li class="flex flex-col items-center mr-12 mb-4">
+                            <img src="{% static 'assets/small-plant.png' %}" alt="Área de plantio" class="w-16 h-16 mb-1">
                             <p class="text-lg">{{ product.type_product.name }}</p>
                         </li>
-                    {% empty %}
-                        <li>Nenhum cultivo cadastrado</li>
-                    {% endfor %}
-                </ul>
+                        {% empty %}
+                            <li>Nenhum cultivo cadastrado</li>
+                        {% endfor %}
+                        <li class="flex flex-col items-center mb-4 mr-12">  
+                            <a href="{% url 'create_product' community.id area.pk seedbed.id %}">
+                                <img src="{% static 'assets/add.png' %}" alt="Adicionar novo cultivo" class="w-16 h-16">
+                            </a>
+                            <p class="text-lg">Adicionar Cultivo</p>
+                        </li>
+                    </ul>
+                </div>
             </div>
-            <!-- Link como imagem ao lado da lista de cultivos -->
-            <a href="{% url 'create_product' community.id area.pk seedbed.id %}" class="ml-4"> <!-- Adicionei uma margem à esquerda para espaçamento -->
-                <img src="{% static 'assets/add.png' %}" alt="Adicionar novo cultivo" class="w-16 h-16">
-            </a>
+        </div>
+        <div class="flex items-center justify-center"> 
+            <div class="bg-gray-400 p-6 rounded-lg shadow-lg" style="max-width: 1200px; width: 90%; height: 450px; overflow: auto;">
+                <!-- Dropdown para selecionar produto -->
+                <form method="GET" action="">
+                    <div class="flex flex-col">
+                        <select id="product-select" name="product_id" class="mb-4 p-2 border border-gray-300 rounded">
+                            <option value="">Selecione um produto</option>
+                            {% for product in products %}
+                                <option value="{{ product.id }}" {% if selected_product and selected_product.id == product.id %}selected{% endif %}>
+                                    {{ product.type_product.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200" style="width: 250px; padding: 10px;">Ver Detalhes</button>
+                    </div>
+                </form>
+            
+                <!-- Detalhes do produto selecionado -->
+                <div class="product-info mt-6">
+                    <div class="left-info mb-4">
+                        <h4 class="font-bold">Informações de Plantio</h4>
+                        <p>Data de plantio: <span id="planting-date">{{ selected_product.data_plantio }}</span></p>
+                        <p>Estimativa de colheita: <span id="harvest-estimate">10/12/2024</span></p>
+                        <p>
+                            <a href="#" id="read-more" onclick="toggleToDo()" class="text-blue-500 hover:underline">Ler mais</a>
+                        </p>
+                        <div id="to-do-list" style="display:none;">
+                            <ul class="list-disc ml-5">
+                                <li>Rega</li>
+                                <li>Fertilização</li>
+                                <li>Controle de pragas</li>
+                            </ul>
+                        </div>
+                    </div>
+            
+                    <div class="right-info">
+                        <h4 class="font-bold">Produção e Comentários</h4>
+                        <p>Quantidade: <span id="quantidade">{{ selected_product.quantidade }}</span></p>
+                        <p>Produção esperada: <span id="expected-production">100kg</span></p>
+                        <p>Comentários: <span id="comments">Excelente desenvolvimento até agora!</span></p>
+                        <form id="delete-product-form" method="POST" action="{% url 'product_delete' community.id area.id seedbed.id selected_product.id %}" style="display:none;">
+                            {% csrf_token %}
+                        </form>
+                        <button type="button" class="bg-red-600 text-white py-2 rounded hover:bg-red-700 transition duration-200" onclick="openModal()">Excluir Produto</button>
+                    </div>
+                </div>
+            
+                <!-- Modal de Confirmação de Exclusão -->
+                <div id="deleteModal" class="modal" style="display: none;">
+                    <div class="modal-content bg-white p-6 rounded-lg shadow-lg">
+                        <span class="close cursor-pointer" onclick="closeModal()">&times;</span>
+                        <h1 class="font-bold">Tem certeza que deseja deletar o cultivo "{{ selected_product.type_product.name }}"?</h1>
+                        <p>Essa ação não pode ser desfeita.</p>
+                        <button class="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition duration-200" onclick="document.getElementById('delete-product-form').submit();">Deletar</button>
+                        <button class="bg-gray-300 text-black py-2 px-4 rounded hover:bg-gray-400 transition duration-200" onclick="closeModal()">Cancelar</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Dropdown para selecionar produto -->
-    <div class="mt-6">
-        <label for="product-select">Selecione um cultivo:</label>
-        <select id="product-select" class="dropdown">
-            <option value="">Selecione um produto</option>
-            {% for product in products %}
-                <option value="{{ product.id }}">{{ product.type_product.name }}</option>
-            {% endfor %}
-        </select>
-    </div>
-    
-    <!-- Detalhes do produto selecionado -->
-    <div class="product-info">
-        <div class="left-info">
-            <h4>Informações de Plantio</h4>
-            <p>Data de plantio: <span id="planting-date">{{ selected_product.data_plantio }}</span></p>
-            <p>Estimativa de colheita: <span id="harvest-estimate">10/12/2024</span></p>
-            <p>
-                <a href="#" id="read-more" onclick="toggleToDo()">Ler mais</a>
-            </p>
-            <div id="to-do-list" style="display:none;">
-                <ul>
-                    <li>Rega</li>
-                    <li>Fertilização</li>
-                    <li>Controle de pragas</li>
-                </ul>
-            </div>
-        </div>
-    
-        <div class="right-info">
-            <h4>Produção e Comentários</h4>
-            <p>Quantidade: <span id="quantidade">{{ selected_product.quantidade }}</span></p>
-            <p>Produção esperada: <span id="expected-production">100kg</span></p>
-            <p>Comentários: <span id="comments">Excelente desenvolvimento até agora!</span></p>
-            <form id="delete-product-form" method="POST" action="">
-                {% csrf_token %}
-                <button type="submit" class="button bg-red-600 hover:bg-red-700">Excluir Produto</button>
-            </form>
-        </div>
-    </div>
-    
     <script>
-        $(document).ready(function() {
-            $('#product-select').change(function() {
-                var productId = $(this).val();
-                if (productId) {
-                    $.ajax({
-                        url: '{% url "seedbed_detail" community_id=community.id area_id=area.id seedbed_id=seedbed.id %}',  // Atualize a URL para a view
-                        data: {
-                            'product_id': productId
-                        },
-                        success: function(data) {
-                            // Atualiza os detalhes do produto na página
-                            $('#planting-date').text(data.data_plantio);
-                            $('#quantidade').text(data.quantidade);
-                            $('#expected-production').text(data.estimativa_colheita);
-                            $('#comments').text(data.comentarios);
-                        },
-                        error: function(xhr, status, error) {
-                            alert('Erro ao carregar informações do produto.');
-                        }
-                    });
-                } else {
-                    // Limpa os detalhes do produto se nenhuma opção for selecionada
-                    $('#planting-date').text('');
-                    $('#quantidade').text('');
-                    $('#expected-production').text('');
-                    $('#comments').text('');
-                }
-            });
-        });
+        function openModal() {
+            document.getElementById('deleteModal').style.display = 'block';
+        }
     
-        function toggleToDo() {
-            $('#to-do-list').toggle();
+        function closeModal() {
+            document.getElementById('deleteModal').style.display = 'none';
+        }
+    
+        // Fechar o modal ao clicar fora dele
+        window.onclick = function(event) {
+            const modal = document.getElementById('deleteModal');
+            if (event.target === modal) {
+                closeModal();
+            }
         }
     </script>
 
 {% endblock content %}
+
