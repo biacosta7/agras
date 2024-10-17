@@ -4,86 +4,97 @@
 
 {% block content %}
 <div class="min-h-screen bg-white">
-    <div class="px-8 py-10 mx-auto flex flex-row gap-x-8">
+    <div class="px-4 md:px-8 py-10 mx-auto flex flex-col lg:flex-row gap-x-8">
         
-        <div class="bg-[#8ABF17] flex flex-col items-center rounded-[20px] h-[850px] w-[220px]">
+        <!-- Sidebar -->
+        <div class="bg-[#8ABF17] flex flex-col items-center rounded-[20px] w-full lg:w-[220px] h-auto lg:h-[850px] mb-8 lg:mb-0">
             <a href="/"><img class="w-[146px] mt-12 mb-8" src="{% static 'assets/logo-branco-h.png' %}" alt="AGRAS"> </a>   
-            <div class="flex flex-col gap-y-12 flex-grow mt-12 flex flex-row justify-center">
-                <a href="" class="text-[14px] font-normal text-white flex cursor-pointer"> <span class="material-icons items-center mr-2">dashboard</span> Dashboard</a>
-                <a href="{% url 'area_manage' community.id %}" class="text-[14px] font-normal text-white flex cursor-pointer"><span class="material-icons items-center mr-2">equalizer</span> Gerenciamento</a>
-                <a href="" class="text-[14px] font-normal text-white flex cursor-pointer"><span class="material-icons items-center mr-2">group</span> Time</a>
-                <a href="" class="text-[14px] font-normal text-white flex cursor-pointer"><span class="material-icons items-center mr-2">trending_up</span> Estatísticas</a>
-                <a href="" class="text-[14px] font-normal text-white flex cursor-pointer"><span class="material-icons items-center mr-2">settings</span> Configurações</a>
-                <form action="{% url 'logout' %}" class="text-[14px] font-normal text-white mt-auto mb-12 flex cursor-pointer" method="POST">
+            <div class="flex flex-col gap-y-6 mt-12 w-full px-4 flex-grow">
+                <a href="" class="text-[14px] font-normal text-white flex items-center cursor-pointer"> <span class="material-icons mr-2">dashboard</span> Dashboard</a>
+                <a href="{% url 'area_manage' community.id %}" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">equalizer</span> Gerenciamento</a>
+                <a href="" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">group</span> Time</a>
+                <a href="" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">trending_up</span> Estatísticas</a>
+                <a href="" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">settings</span> Configurações</a>
+                <!-- Espaço flexível para empurrar o botão "Sair" para baixo -->
+                <div class="flex-grow"></div>
+                <form action="{% url 'logout' %}" method="POST" class="w-full px-4 mb-12">
                     {% csrf_token %}
-                    <button class="flex">
-                        <span class="material-icons items-center mr-2">logout</span>Sair</button>
+                    <button class="text-[14px] font-normal text-white flex items-center cursor-pointer w-full">
+                        <span class="material-icons mr-2">logout</span>Sair
+                    </button>
                 </form>
             </div>
         </div>
 
-        <div class="flex flex-col max-w-[620px]">
-            <div class="rounded-[14px] bg-[#F5F5F7] max-w-[620px] max-h-[160px] shadow-md flex flex-row items-center justify-between">
+        <!-- Main Content -->
+        <div class="flex flex-col w-full lg:max-w-[620px]">
+            <!-- Greeting Card -->
+            <div class="rounded-[14px] bg-[#F5F5F7] w-full shadow-md flex flex-col lg:flex-row items-center justify-between">
                 <div class="p-6">
-                    <p class="font-bold text-[32px]">Olá, {{user.first_name}}!</p>
-                    <p class="font-regular text-[16px] text-[#F76711]">Que bom te ver novamente!</p>
-                    <p class="font-regular text-[14px] text-[#562A00] mt-1">Comunidade | {{community.name}}</p>
+                    <p class="font-bold text-[24px] lg:text-[32px]">Olá, {{user.first_name}}!</p>
+                    <p class="font-regular text-[14px] lg:text-[16px] text-[#F76711]">Que bom te ver novamente!</p>
+                    <p class="font-regular text-[12px] lg:text-[14px] text-[#562A00] mt-1">Comunidade | {{community.name}}</p>
                 </div>
                 <div class="p-2">
                     <img src="{% static 'assets/assetszinho.png'%}" alt="">
                 </div>
             </div>
-            <div class="mt-[20px] flex flex-row justify-between">
-                <div class="rounded-[14px] bg-[#F5F5F7] w-[190px] max-h-[100px] shadow-md flex flex-row items-center justify-center">
-                    <div class="p-4">
-                        <p class="font-semibold text-[32px] text-[#8ABF17]">11</p>
-                        <p class="font-regular text-[15px] text-black">Produtos Vendidos</p>
+
+            <!-- Stats Cards -->
+            <div class="mt-4 lg:mt-[20px] flex flex-col lg:flex-row justify-between gap-4">
+                <div class="rounded-[14px] bg-[#F5F5F7] w-full lg:w-[190px] shadow-md flex items-center justify-center">
+                    <div class="p-4 text-center">
+                        <p class="font-semibold text-[24px] lg:text-[32px] text-[#8ABF17]">11</p>
+                        <p class="font-regular text-[13px] lg:text-[15px] text-black">Produtos Vendidos</p>
                     </div>
                 </div>
-                <div class="rounded-[14px] bg-[#F5F5F7] w-[190px] max-h-[100px] shadow-md flex flex-row items-center justify-center">
-                    <div class="p-4">
-                        <p class="font-semibold text-[32px] text-[#562A00]">R$ 2.4k</p>
-                        <p class="font-regular text-[15px] text-black">Total Arrecadado</p>
+                <div class="rounded-[14px] bg-[#F5F5F7] w-full lg:w-[190px] shadow-md flex items-center justify-center">
+                    <div class="p-4 text-center">
+                        <p class="font-semibold text-[24px] lg:text-[32px] text-[#562A00]">R$ 2.4k</p>
+                        <p class="font-regular text-[13px] lg:text-[15px] text-black">Total Arrecadado</p>
                     </div>
                 </div>
-                <div class="rounded-[14px] bg-[#F5F5F7] w-[190px] max-h-[100px] shadow-md flex flex-row items-center justify-center">
-                    <div class="p-4">
-                        <p class="font-semibold text-[32px] text-[#F76711]">36</p>
-                        <p class="font-regular text-[15px] text-black">Tarefas Concluídas</p>
+                <div class="rounded-[14px] bg-[#F5F5F7] w-full lg:w-[190px] shadow-md flex items-center justify-center">
+                    <div class="p-4 text-center">
+                        <p class="font-semibold text-[24px] lg:text-[32px] text-[#F76711]">36</p>
+                        <p class="font-regular text-[13px] lg:text-[15px] text-black">Tarefas Concluídas</p>
                     </div>
                 </div>
             </div> 
 
-            <div class="mt-14 h-full bg-[#F5F5F7] rounded-[16px] p-4"> 
-                <p class="text-[#F76711] font-bold text-[24px]">Estatísticas</p>
-
+            <!-- Statistics Section -->
+            <div class="mt-8 lg:mt-14 h-full bg-[#F5F5F7] rounded-[16px] p-4"> 
+                <p class="text-[#F76711] font-bold text-[20px] lg:text-[24px]">Estatísticas</p>
+                <!-- Conteúdo das estatísticas -->
             </div>
         </div>
         
-        <div class="h-[280px] flex flex-col">
-            <div>
-                <div class="w-[450px]" id="calendar"></div>
+        <!-- Side Widgets -->
+        <div class="w-full lg:w-auto flex flex-col">
+            <!-- Calendar -->
+            <div class="w-full lg:w-[450px]">
+                <div id="calendar"></div>
             </div>
             
-            <div class="bg-[#F5F5F7] rounded-[23px] shadow-md max-w-[435px] p-4 mt-10 mb-2">
+            <!-- Weather Widget -->
+            <div class="bg-[#F5F5F7] rounded-[23px] shadow-md w-full lg:max-w-[435px] p-4 mt-8 lg:mt-10 mb-2">
                 <p class="font-bold text-[16px] mb-2">Clima em Tempo Real</p>
-                <p class="text-justify">Ainda assim, existem dúvidas a respeito de como o fenômeno da Internet talvez venha a ressaltar a relatividade do sistema de participação geral.</p>
-                <img src="{% static 'assets/clima.png'%}" alt="Clima">
+                <p class="text-justify text-[14px]">Ainda assim, existem dúvidas a respeito de como o fenômeno da Internet talvez venha a ressaltar a relatividade do sistema de participação geral.</p>
+                <img src="{% static 'assets/clima.png'%}" alt="Clima" class="mt-4">
             </div>
         </div>
         
-
-        
-        <div class="bg-[#8ABF17] p-6 h-[100px] rounded-[18px] text-white w-1/4 flex flex-row justify-between items-center">
-        <div>
-            <a href="{% url 'area_manage' community.id %}">
-                <p class="font-bold text-[18px]">Criar Tarefa</p>
-                <p class="font-medium text-[14px]">Crie uma nova task</p>
-            </a>
-        </div>
-        <div class="bg-[#F76711] rounded-[23px] flex items-center justify-center w-[60px] h-[60px] text-[50px]">
-            +
-          </div>
+        <!-- Create Task Button -->
+        <div class="bg-[#8ABF17] p-6 h-[100px] rounded-[18px] text-white w-full lg:w-1/4 flex flex-row justify-between items-center mt-8 lg:mt-0">
+            <div>
+                <a href="{% url 'area_manage' community.id %}">
+                    <p class="font-bold text-[16px] lg:text-[18px]">Criar Tarefa</p>
+                    <p class="font-medium text-[12px] lg:text-[14px]">Crie uma nova task</p>
+                </a>
+            </div>
+            <div class="bg-[#F76711] rounded-[23px] flex items-center justify-center w-[50px] h-[50px] lg:w-[60px] lg:h-[60px] text-[40px] lg:text-[50px]">
+                    +
+            </div>
         </div>
         
     </div>
@@ -98,44 +109,42 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Inicialização do calendário
         var calendarEl = document.getElementById('calendar');
         var calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
-            locale: 'pt-br', // Defina o idioma como português
+            locale: 'pt-br',
             headerToolbar: {
                 left: 'prev,next',
                 center: 'title',
                 right: ''
             },
-            eventColor: '#8ABF17', // Define a cor dos eventos
+            eventColor: '#8ABF17',
             events: [
-                // Exemplo de eventos estáticos
                 {
-                    title: 'Colheita', // Deixa o título em maiúsculas
+                    title: 'Colheita',
                     start: '2024-10-01'
                 },
                 {
-                    title: 'Evento 2', // Deixa o título em maiúsculas
+                    title: 'Evento 2',
                     start: '2024-10-05',
                     end: '2024-10-07'
                 },
                 {
-                    title: 'Evento 3', // Deixa o título em maiúsculas
+                    title: 'Evento 3',
                     start: '2024-10-16T12:30:00',
-                    allDay: false // só para eventos de um dia
+                    allDay: false
                 }
             ]
         });
         calendar.render();
-    });
 
-    // Altera a cor de fundo dos botões e remove a borda
-    document.addEventListener('DOMContentLoaded', function() {
+        // Personalização dos botões do calendário
         const buttons = document.querySelectorAll('.fc-prev-button, .fc-next-button, .fc-today-button');
         buttons.forEach(button => {
-            button.style.backgroundColor = '#F76711'; // Altera a cor de fundo
-            button.style.color = 'white'; // Altera a cor do texto para branco
-            button.style.border = 'none'; // Remove a borda preta
+            button.style.backgroundColor = '#F76711';
+            button.style.color = 'white';
+            button.style.border = 'none';
         });
     });
 </script>
@@ -147,7 +156,12 @@
         color: #8ABF17;
     }
     .fc-event {
-        font-size: 0.8em; /* Diminui o tamanho do texto dos eventos */
+        font-size: 0.8em;
+    }
+    /* Responsividade do calendário */
+    #calendar {
+        max-width: 100%;
+        margin: 0 auto;
     }
 </style>
 {% endblock %}
