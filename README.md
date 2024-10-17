@@ -57,10 +57,7 @@ Essa metodologia foi fundamental para a aceleração do desenvolvimento e a melh
 
 ## 🔄 Diagrama de atividades do sistema
 
-![image](https://github.com/user-attachments/assets/545b58ef-21cf-4b76-9f31-f378d7fd1a8a)
-
-
-
+![image](https://github.com/user-attachments/assets/1a0b2710-661d-428f-ba0f-c25c79b8f434)
 
 ## 💻 Tecnologias Utilizadas
 - **Backend:** Django (Python) 🐍
