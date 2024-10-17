@@ -25,15 +25,15 @@ A agricultura familiar é essencial para o sustento de muitas famílias ao redor
 
 ## 🧷 Links
 <a href="https://sites.google.com/cesar.school/agras">
-    <img src="https://img.shields.io/badge/GOOGLE SITES-2E8B57?style=for-the-badge&logo=google&logoColor=white" height="30px"/></a>
+    <img src="https://img.shields.io/badge/GOOGLE SITES-8abf17?style=for-the-badge&logo=google&logoColor=white" height="30px"/></a>
 <a href="https://www.figma.com/design/wqEwDyRuQGX0MaPecGGU4n/Untitled?node-id=0-1&t=wYhB3IAeSWCCwKws-1">
   <img src="https://img.shields.io/badge/FIGMA-2E8B57?style=for-the-badge&logo=figma&logoColor=white" height="30px"/></a>
 <a href="URL DO CLICKUP">
-  <img src="https://img.shields.io/badge/ClickUp-2E8B57?style=for-the-badge&logo=clickup&logoColor=white" height="30px"/></a>
+  <img src="https://img.shields.io/badge/ClickUp-8abf17?style=for-the-badge&logo=clickup&logoColor=white" height="30px"/></a>
 <a href="URL DO YOUTUBE">
   <img src="https://img.shields.io/badge/YOUTUBE-2E8B57?style=for-the-badge&logo=youtube&logoColor=white" height="30px"/></a>
   <a href="https://agras.azurewebsites.net/">
-  <img src="https://img.shields.io/badge/SITE DO PROJETO-2E8B57?style=for-the-badge&logo=google&logoColor=white" height="30px"/></a>
+  <img src="https://img.shields.io/badge/SITE DO PROJETO-8abf17?style=for-the-badge&logo=google&logoColor=white" height="30px"/></a>
 
 # 🚚 Status Report 1
 ## [Screencast Protótipo](https://www.youtube.com/watch?v=edpW3PThu6E)
