@@ -15,7 +15,6 @@
                 <a href="" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">group</span> Time</a>
                 <a href="" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">trending_up</span> Estatísticas</a>
                 <a href="" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">settings</span> Configurações</a>
-                <!-- Espaço flexível para empurrar o botão "Sair" para baixo -->
                 <div class="flex-grow"></div>
                 <form action="{% url 'logout' %}" method="POST" class="w-full px-4 mb-12">
                     {% csrf_token %}
@@ -29,7 +28,7 @@
         <!-- Main Content -->
         <div class="flex flex-col w-full lg:max-w-[620px]">
             <!-- Greeting Card -->
-            <div class="rounded-[14px] bg-[#F5F5F7] w-full shadow-md flex flex-col lg:flex-row items-center justify-between">
+            <div class="rounded-[14px] max-h-[160px] bg-[#F5F5F7] w-full shadow-md flex lg:flex-row items-center justify-between">
                 <div class="p-6">
                     <p class="font-bold text-[24px] lg:text-[32px]">Olá, {{user.first_name}}!</p>
                     <p class="font-regular text-[14px] lg:text-[16px] text-[#F76711]">Que bom te ver novamente!</p>
@@ -71,32 +70,67 @@
         
         <!-- Side Widgets -->
         <div class="w-full lg:w-auto flex flex-col">
-            <!-- Calendar -->
-            <div class="w-full lg:w-[450px]">
-                <div id="calendar"></div>
+            <!-- Calendar and Buttons Container -->
+            <div class="flex flex-col lg:flex-row gap-4 items-start mt-8 lg:mt-10">
+                <!-- Calendar -->
+                <div class="w-full lg:w-[450px]">
+                    <div id="calendar"></div>
+                </div>
+                <!-- Buttons -->
+                <div class="flex flex-col gap-2 mt-4 lg:mt-0 lg:ml-4 w-full lg:w-1/2">
+                    <a href="{% url 'area_manage' community.id %}" class="">
+                        <div class="bg-[#8ABF17] p-6 h-[100px] rounded-[18px] text-white flex flex-row justify-between items-center mt-8 lg:mt-0 cursor-pointer">
+                            <div>
+                                <p class="font-bold text-[16px] lg:text-[18px]">Criar Tarefa</p>
+                                <p class="font-medium text-[12px] lg:text-[14px]">Crie uma nova task</p>
+                            </div>
+                            <div class="bg-[#F76711] rounded-[23px] flex items-center justify-center w-[50px] h-[50px] lg:w-[60px] lg:h-[60px] text-[40px] lg:text-[50px]">
+                                +
+                            </div>
+                        </div>
+                    </a>
+                    <a href="{% url 'area_manage' community.id %}" class="">
+                        <div class="bg-[#562A00] p-6 h-[100px] rounded-[18px] text-white flex flex-row justify-between items-center mt-8 lg:mt-0 cursor-pointer">
+                            <div>
+                                <p class="font-bold text-[16px] lg:text-[18px]">A fazer</p>
+                                <p class="font-medium text-[12px] lg:text-[14px]">Colheita do Cantinho dos Alfaces</p>
+                            </div>
+                            <div class="bg-[#8ABF17] rounded-[23px] flex items-center justify-center w-[50px] h-[50px] lg:w-[60px] lg:h-[60px] text-[40px] lg:text-[50px]">
+                                +
+                            </div>
+                        </div>
+                    </a>
+                    <a href="{% url 'area_manage' community.id %}" class="">
+                        <div class="bg-[#F76711] p-6 h-[100px] rounded-[18px] text-white flex flex-row justify-between items-center mt-8 lg:mt-0 cursor-pointer">
+                            <div>
+                                <p class="font-bold text-[16px] lg:text-[18px]">A fazer</p>
+                                <p class="font-medium text-[12px] lg:text-[14px]">Manejo do Berçário das Batatas</p>
+                            </div>
+                            <div class="bg-[#8ABF17] rounded-[23px] flex items-center justify-center w-[50px] h-[50px] lg:w-[60px] lg:h-[60px] text-white text-[40px] lg:text-[50px]">
+                                +
+                            </div>
+                        </div>
+                    </a>
+                </div>
             </div>
-            
-            <!-- Weather Widget -->
-            <div class="bg-[#F5F5F7] rounded-[23px] shadow-md w-full lg:max-w-[435px] p-4 mt-8 lg:mt-10 mb-2">
-                <p class="font-bold text-[16px] mb-2">Clima em Tempo Real</p>
-                <p class="text-justify text-[14px]">Ainda assim, existem dúvidas a respeito de como o fenômeno da Internet talvez venha a ressaltar a relatividade do sistema de participação geral.</p>
-                <img src="{% static 'assets/clima.png'%}" alt="Clima" class="mt-4">
+
+            <!-- Weather and Moon Phase Widgets in Row -->
+            <div class="flex flex-col lg:flex-row gap-4 mt-8 lg:mt-10">
+                <!-- Weather Widget -->
+                <div class="bg-[#F5F5F7] rounded-[23px] shadow-md w-full lg:w-1/2 p-4">
+                    <p class="font-bold text-[16px] mb-2">Clima em Tempo Real</p>
+                    <p class="text-justify text-[14px]">Ainda assim, existem dúvidas a respeito de como o fenômeno da Internet talvez venha a ressaltar a relatividade do sistema de participação geral.</p>
+                    <img src="{% static 'assets/clima.png'%}" alt="Clima" class="mt-4">
+                </div>
+
+                <!-- Moon Phase Widget -->
+                <div class="bg-[#F5F5F7] rounded-[23px] shadow-md w-full lg:w-1/2 p-4">
+                    <p class="font-bold text-[16px] mb-2">Fases da Lua</p>
+                    <p class="text-justify text-[14px]">Ainda assim, existem dúvidas a respeito de como o fenômeno da Internet talvez venha a ressaltar a relatividade do sistema de participação geral.</p>
+                    <img src="{% static 'assets/fase-lua.png'%}" alt="Clima" class="mt-4">
+                </div>
             </div>
         </div>
-        
-        <!-- Create Task Button -->
-        <div class="bg-[#8ABF17] p-6 h-[100px] rounded-[18px] text-white w-full lg:w-1/4 flex flex-row justify-between items-center mt-8 lg:mt-0">
-            <div>
-                <a href="{% url 'area_manage' community.id %}">
-                    <p class="font-bold text-[16px] lg:text-[18px]">Criar Tarefa</p>
-                    <p class="font-medium text-[12px] lg:text-[14px]">Crie uma nova task</p>
-                </a>
-            </div>
-            <div class="bg-[#F76711] rounded-[23px] flex items-center justify-center w-[50px] h-[50px] lg:w-[60px] lg:h-[60px] text-[40px] lg:text-[50px]">
-                    +
-            </div>
-        </div>
-        
     </div>
 </div>
 
