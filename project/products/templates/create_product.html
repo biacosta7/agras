@@ -1,58 +1,37 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adicionar Cultivo</title>
-</head>
-<style>
-    body {
-        font-family: 'Poppins', sans-serif !important;
-    }
-    .button {
-        display: inline-block;
-        padding: 10px 20px;
-        margin: 10px;
-        border: none;
-        border-radius: 5px;
-        text-decoration: none;
-        color: #fff;
-        background-color: #007BFF;
-        transition: background-color 0.3s;
-    }
-    .button:hover {
-        background-color: #0056b3;
-    }
-</style>
-<body>
-    <h1>Adicionar Cultivo no {{ seedbed.nome }}</h1>
-    {% if seedbed.id %}
-        <form action="{% url 'product:create_product' seedbed.id %}" method="post">
-    {% else %}
-        <p>Erro: Seedbed não está disponível.</p>
-    {% endif %}
-        {% csrf_token %}
-        <label for="tipo_nome">Selecione o cultivo:</label>
-        <select name="tipo_nome" id="tipo_nome" required>
-            <option value="" disabled selected>Escolha um cultivo</option>
-            {% for tipo in tipos_produtos %}
-                <option value="{{ tipo.nome }}">{{ tipo.nome }}</option>
-            {% endfor %}
-        </select>
-        <a href="{% url 'product:create_typeproduct' seedbed.id %}" class="button">Criar Novo Cultivo</a>
-        <br>
+{% extends 'base.html' %} 
+{% load static %}  
+{% block title %}Adicionar Cultivo{% endblock %}
 
-        <label for="quantidade">Quantidade:</label>
-        <input type="number" name="quantidade" id="quantidade" required min="1" value="1">
-        <br>
+{% block content %}
+<body class="font-sans bg-gray-100">
+    <div class="container mx-auto p-6">
+        <h1 class="text-2xl font-bold mb-4">Adicionar Cultivo no Canteiro {{ seedbed.nome }}</h1>
+        
+        <form method="post" class="bg-white p-6 rounded-lg shadow-md">
+            {% csrf_token %}
+            
+            <label for="type_name" class="block text-gray-700">Selecione o cultivo:</label>
+            <select name="type_name" id="type_name" required class="mt-2 block w-full p-2 border border-gray-300 rounded-md">
+                <option value="" disabled selected>Escolha um cultivo</option>
+                {% for tipo in tipos_produtos %}
+                    <option value="{{ tipo.name }}">{{ tipo.name }}</option>  
+                {% endfor %}
+            </select>
+            <a href="{% url 'create_typeproduct' community.id area.id seedbed.id %}" class="button mt-2 inline-block text-blue-500">Criar Novo Cultivo</a>
+            <br>
 
-        <label for="data_plantio">Data de plantio:</label>
-        <input type="date" id="data_plantio" name="data_plantio" value="{{ product.data_plantio }}"><br>
-        <br>
-        <button type="submit" class="button" style='background-color: green; color: white;'>
-            <i class="fas fa-trash"></i> Adicionar Produto
-        </button>
+            <label for="quantity" class="block text-gray-700 mt-4">Quantidade:</label>
+            <input type="number" name="quantity" id="quantity" required min="1" value="1" class="mt-2 block w-full p-2 border border-gray-300 rounded-md">
+            <br>
 
-    </form>
+            <label for="planting_date" class="block text-gray-700 mt-4">Data de plantio:</label>
+            <input type="date" id="planting_date" name="planting_date" class="mt-2 block w-full p-2 border border-gray-300 rounded-md" required>
+            <br>
+
+            <button type="submit" class="mt-4 bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600">
+                Adicionar Produto
+            </button>
+        </form>
+    </div>
 </body>
-</html>
+{% endblock %}

@@ -74,6 +74,7 @@ INSTALLED_APPS = [
     'communities',
     'products',
     'seedbeds',
+    'areas',
     "whitenoise.runserver_nostatic",
 ]
 

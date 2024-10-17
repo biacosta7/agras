@@ -35,16 +35,16 @@
     </style>
 </head>
 <body>
-    <h1>Tem certeza que deseja deletar o cultivo "{{ product.nome }}"?</h1>
+    <h1>Tem certeza que deseja deletar o cultivo "{{ product.type_product.name }}"?</h1>
     <p>Essa ação não pode ser desfeita.</p>
     
     <!-- Botão para confirmar a exclusão -->
-    <form action="{% url 'product:product-delete' seedbed.id product.id %}" method="post">
+    <form action="{% url 'product:product-delete' community.id seedbed.id product.id %}" method="post">
         {% csrf_token %}
         <button type="submit" class="button button-confirm">Deletar</button>
     </form>
 
     <!-- Botão para cancelar e voltar à lista -->
-    <a href="{% url 'product:product-list' seedbed.id %}" class="button button-cancel">Cancelar</a>
+    <a href="{% url 'product:product_list' community.id seedbed.id %}" class="button button-cancel">Cancelar</a>
 </body>
 </html>
