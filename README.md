@@ -40,16 +40,23 @@ A agricultura familiar é essencial para o sustento de muitas famílias ao redor
 
 [![Clique para assistir o vídeo (abrirá em uma nova aba)](https://github.com/user-attachments/assets/8604c9da-aa65-42a5-97c1-ef5479af12bd)](https://www.youtube.com/watch?v=FmrasWVUvC0&list=PLLT61SHdeQXuxTYMoLSTrT0kRCChHpc0W)
 
-## [Issue/Bug Tracker 🐛🔍](https://github.com/biacosta7/agras/issues?q=is%3Aissue+is%3Aclosed)
+## 🐛🔍 [Issue/Bug Tracker](https://github.com/biacosta7/agras/issues?q=is%3Aissue+is%3Aclosed)
 
 ![image](https://github.com/user-attachments/assets/9516bcc5-283c-434e-b518-353196774b0b)
 ![image](https://github.com/user-attachments/assets/a9a6dcaf-e122-4736-ac7e-cb0f0ff22347)
+
+## 🤝 Relatos de Pair Programming
+
+Nas últimas três semanas, a equipe aplicou intensivamente o Pair Programming como uma prática central no desenvolvimento do projeto. Essa abordagem envolve dois programadores trabalhando juntos em uma única tarefa, onde um atua como "driver", escrevendo o código, e o outro como "navigator", revisando e sugerindo melhorias em tempo real. Essa dinâmica permite uma maior troca de ideias e colaboração, com foco na qualidade do código e na detecção rápida de erros. Durante o projeto, a equipe promoveu um rodízio frequente de papéis, garantindo que todos pudessem tanto programar quanto revisar, ampliando o conhecimento coletivo e a familiaridade com o código.
+
+Essa metodologia foi fundamental para a aceleração do desenvolvimento e a melhoria contínua do código, permitindo que os membros da equipe colaborassem de forma mais eficiente. Além de otimizar o tempo e a qualidade das entregas, o Pair Programming também serviu como uma ferramenta de aprendizado colaborativo, onde todos os envolvidos puderam trocar experiências, discutir soluções e aplicar as melhores práticas de programação, tanto no back-end quanto no front-end. Colocar essa metodologia em prática contribuiu para uma maior coesão do grupo e para a entrega de um produto com código mais sólido e bem estruturado.
+
 
 
 ## 💻 Tecnologias Utilizadas
 - **Backend:** Django (Python) 🐍
 - **Banco de Dados:** PostgreSQL 🐘
-- **Frontend:** HTML, CSS, JavaScript 🌐
+- **Frontend:** HTML, Tailwind CSS, JavaScript 🌐
 
 ## ⚙️ Pré-requisitos
 Python 3.12+  
