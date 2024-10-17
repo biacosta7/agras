@@ -25,33 +25,37 @@
                 </form>
             </div>
         </div>
-    
+        
         <!-- Main content -->
         <div class="flex-1 p-6 lg:p-10">
+            
             <!-- Título e Barra de pesquisa -->
             <div class="flex justify-between items-center">
-                <h2 class="ml-5 mt-2 text-4xl font-bold">Área de Plantio</h2>
+                <h1 class="mt-1 ml-5 text-xl font-semibold">
+                    <a href="{% url 'dashboard' community.id %}" class="text-green-600 hover:underline">Dashboard &gt;</a>
+                </h1>
                 <!-- Barra de pesquisa e notificação -->
                 <div class="flex items-center ml-auto mr-5">
                     <form class="relative flex-shrink-0">
                         <input type="text" placeholder="Buscar áreas..." class="border border-gray-300 rounded-md py-1 px-2 focus:outline-none focus:ring-2 focus:ring-green-500">
-                        <button type="submit" class="absolute top-1 text-gray-500">
+                        <button type="submit" class="ml-1 absolute top-1 right-1 text-gray-500">
                             <span class="material-icons">search</span>
                         </button>
                     </form>
-                    <a href="#" class="text-gray-700 pl-7 pt-1.5">
+                    <a href="#" class="text-gray-700 pl-2 pt-1.5">
                         <span class="material-icons">notifications</span>
                     </a>
                 </div>
             </div>
 
-            <br>
-            <div class="flex justify-end">
+            <div class="mt-3 flex justify-between items-center mb-4">
+                <h2 class="ml-5 text-4xl font-bold">Área de Plantio</h2> <!-- Placeholder para ocupar espaço à esquerda -->
                 <!-- Botão Criar nova Área -->
-                <a href="{% url 'create_area' community.id %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md">
+                <a href="{% url 'create_area' community.id %}" class="mr-6 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md">
                     Criar nova Área
                 </a>
             </div>
+            <br>
             <div class="ml-5 mt-5">    
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
                     {% for area in areas %}
@@ -69,11 +73,16 @@
 
                         <ul class="list-disc list-inside mt-2 text-sm lg:text-base">
                             {% for seedbed in area.seedbeds.all %}
-                                <li>{{ seedbed.nome }} ✦ ✦ ✦ ✦</li>
+                                <li>
+                                    {{ seedbed.nome }}
+                                    {% for product in seedbed.products_in_seedbed.all %}
+                                        🌱
+                                    {% endfor %}
+                                </li>
                             {% empty %}
                                 <li>Nenhum canteiro cadastrado</li>
                             {% endfor %}
-                        </ul>
+                        </ul>                        
                         <div class="flex mt-5 justify-center">
                             <a href="{% url 'area_detail' community.id area.id %}" class="inline-block bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 w-2/4 text-center">
                                Visualizar
