@@ -1,34 +1,44 @@
 {% extends "base.html" %}
 {% load static %}
 {% block title %}Criar Canteiros{% endblock %}
-{% block styles %}
-    .button {
-        display: inline-block;
-        padding: 10px 20px;
-        margin: 10px;
-        border: none;
-        border-radius: 5px;
-        text-decoration: none;
-        color: #fff;
-        background-color: #007BFF;
-        transition: background-color 0.3s;
-    }
-    .button:hover {
-        background-color: #0056b3;
-    }
-{% endblock %}
+
 {% block page_classes %}
     bg-gray-300 h-screen p-4
 {% endblock %}
+
 {% block content %}
-    <h1 class="text-2xl font-bold">Criar Canteiro</h1>
-    <br>
-    <form method="post">
+<div class="max-w-xl mx-auto bg-white p-6 shadow-lg rounded-lg mt-10">
+    <h1 class="text-2xl font-bold mb-6 text-gray-800">Criar Canteiro</h1>
+    
+    <form method="post" class="space-y-4">
         {% csrf_token %}
-        <label for="nome"class="text-lg font-semibold text-gray-800">Nome:</label>
-        <input type="text" id="nome" name="nome" required class="border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-        <button type="submit" class="button" style='background-color: green; color: white;'>
-            <i class="fas fa-trash"></i> Criar
-        </button>
+        <div>
+            <label for="seedbed_name" class="block text-sm font-medium text-gray-700">Nome do Canteiro:</label>
+            <input 
+                type="text" 
+                id="seedbed_name" 
+                name="seedbed_name" 
+                required 
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm"
+            >
+        </div>
+        <div>
+            <button 
+                type="submit" 
+                class="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+            >
+                Criar Canteiro
+            </button>
+        </div>
     </form>
-{% endblock content %}
+
+    <div class="mt-4">
+        <a 
+            href="{% url 'area_detail' community.id area.id %}" 
+            class="text-green-600 hover:text-green-800 underline"
+        >
+            Voltar para a lista de canteiros
+        </a>
+    </div>
+</div>
+{% endblock %}

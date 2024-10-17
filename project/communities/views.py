@@ -1,21 +1,37 @@
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.http import HttpResponse
-from .models import Community
+from products.models import Product
+from areas.models import Area
+from communities.models import Community
+from seedbeds.models import Seedbed
+
 
 @login_required
 def home_view(request):
     return redirect('community_hub')
 
-def dashboard_view(request):
-    community_id = request.GET.get('community_id')  # Captura o ID da comunidade a partir da URL
-    if community_id:
-        community = get_object_or_404(Community, id=community_id)
-    else:
-        community = None
+@login_required
+def dashboard_view(request, community_id):
+    community = get_object_or_404(Community, id=community_id)
+    
+    # Verificação se o usuário é membro ou administrador da comunidade
+    if request.user not in community.members.all() and request.user not in community.admins.all():
+        messages.error(request, 'Você não tem permissão para acessar o dashboard desta comunidade.')
+        return redirect('community_hub')
 
-    return render(request, 'dashboard.html', {'community': community})
+    # Recuperando as áreas e canteiros associados à comunidade
+    areas = Area.objects.filter(community=community)
+    seedbeds = Seedbed.objects.filter(area__community=community)
+
+    # Preparar contexto para o template
+    context = {
+        'community': community,
+        'areas': areas,
+        'seedbeds': seedbeds,
+    }
+
+    return render(request, 'dashboard.html', context)
 
 @login_required
 def community_list(request):
@@ -83,7 +99,3 @@ def delete_community(request, pk):
     community.delete()
     messages.success(request, 'Comunidade deletada com sucesso.')
     return redirect('community_hub')
-
-def community_detail(request, community_id):
-    community = get_object_or_404(Community, id=community_id)
-    return render(request, 'community_detail.html', {'community': community})

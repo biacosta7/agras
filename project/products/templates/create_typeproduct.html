@@ -1,44 +1,23 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastrar Cultivo</title>
-</head>
-<style>
-    body {
-        font-family: 'Poppins', sans-serif !important;
-    }
-    .button {
-        display: inline-block;
-        padding: 10px 20px;
-        margin: 10px;
-        border: none;
-        border-radius: 5px;
-        text-decoration: none;
-        color: #fff;
-        background-color: #007BFF;
-        transition: background-color 0.3s;
-    }
-    .button:hover {
-        background-color: #0056b3;
-    }
-</style>
-<body>
-    <div class="container">
-        <h1>Cadastrar cultivo</h1>
-        <form method="POST">
+{% extends 'base.html' %} 
+{% load static %}
+{% block title %}Criar Cultuvo{% endblock %}
+
+{% block content %}
+<body class="font-sans bg-gray-100">
+    <div class="container mx-auto p-6">
+        <h1 class="text-3xl font-bold mb-6">Cadastrar Cultivo</h1>
+        <form method="POST" class="bg-white p-6 rounded-lg shadow-md">
             {% csrf_token %}
-            <label for="nome">Nome do Cultivo:</label>
-            <input type="text" id="nome" name="nome" required>
-        
-            {% if error %}
-                <p style="color: red;">{{ error }}</p>
-            {% endif %}
-            <button type="submit" class="button" style='background-color: green; color: white;'>
-                <i class="fas fa-trash"></i> Cadastrar
+            <input type="hidden" name="area_id" value="{{ area_id }}">
+            <input type="hidden" name="seedbed_id" value="{{ seedbed_id }}">
+            <label for="nome" class="block text-gray-700">Nome do Cultivo:</label>
+            <input type="text" id="nome" name="nome" required 
+                   class="mt-2 block w-full p-2 border border-gray-300 rounded-md">
+            
+            <button type="submit" class="mt-4 bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600">
+                Cadastrar
             </button>
         </form>
     </div>
 </body>
-</html>
+{% endblock %}
