@@ -3,61 +3,62 @@
 {% block title %}Áreas{% endblock %}
 
 {% block content %}
-<!-- Sidebar -->
-<div class="px-8 py-10 mx-auto flex flex-row gap-x-8">
+<div class="min-h-screen bg-gray">
+    <!-- Container -->
+    <div class="px-4 md:px-8 py-10 mx-auto flex flex-col lg:flex-row gap-x-8">
+        
+        <!-- Sidebar -->
+        <div class="bg-[#8ABF17] flex flex-col items-center rounded-[20px] w-full lg:w-[220px] h-auto lg:h-[850px] mb-8 lg:mb-0">
+            <a href="/"><img class="w-[146px] mt-12 mb-8" src="{% static 'assets/logo-branco-h.png' %}" alt="AGRAS"> </a>    
+            <div class="flex flex-col gap-y-6 mt-12 w-full px-4 flex-grow">
+                <a href="{% url 'dashboard' community.id %}" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">dashboard</span> Dashboard</a>
+                <a href="" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">equalizer</span> Gerenciamento</a>
+                <a href="" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">group</span> Time</a>
+                <a href="" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">trending_up</span> Estatísticas</a>
+                <a href="" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">settings</span> Configurações</a>
+                <!-- Espaço flexível para empurrar o botão "Sair" para baixo -->
+                <div class="flex-grow"></div>
+                <form action="{% url 'logout' %}" method="POST" class="w-full px-4 mb-12">
+                    {% csrf_token %}
+                    <button class="text-[14px] font-normal text-white flex items-center cursor-pointer w-full">
+                        <span class="material-icons mr-2">logout</span>Sair
+                    </button>
+                </form>
+            </div>
+        </div>
     
-    <div class="bg-[#8ABF17] flex flex-col items-center rounded-[20px] h-[850px] w-[220px]">
-        <a href="/"><img class="w-[146px] mt-12 mb-8" src="{% static 'assets/logo-branco-h.png' %}" alt="AGRAS"> </a>    
-        <div class="flex flex-col gap-y-12 flex-grow mt-12 flex flex-row justify-center">
-            <a href="/" class="text-[14px] font-normal text-white flex cursor-pointer"><span class="material-icons items-center mr-2">dashboard</span> Dashboard</a>
-            <a href="" class="text-[14px] font-normal text-white flex cursor-pointer"><span class="material-icons items-center mr-2">equalizer</span> Gerenciamento</a>
-            <a href="" class="text-[14px] font-normal text-white flex cursor-pointer"><span class="material-icons items-center mr-2">group</span> Time</a>
-            <a href="" class="text-[14px] font-normal text-white flex cursor-pointer"><span class="material-icons items-center mr-2">trending_up</span> Estatísticas</a>
-            <a href="" class="text-[14px] font-normal text-white flex cursor-pointer"><span class="material-icons items-center mr-2">settings</span> Configurações</a>
-            <form action="{% url 'logout' %}" class="text-[14px] font-normal text-white mt-auto mb-12 flex cursor-pointer" method="POST">
-                {% csrf_token %}
-                <button class="flex">
-                    <span class="material-icons items-center mr-2">logout</span>Sair</button>
-            </form>
-        </div>
-    </div>
+        <!-- Main content -->
+        <div class="flex-1 p-6 lg:p-10">
+            <h1 class="text-xl font-semibold">Dashboard &gt;</h1>
+            <h2 class="text-2xl lg:text-4xl font-bold">Área de Plantio</h2>
+    
+            <div class="mt-5">
+                <a href="{% url 'create_area' community.id %}" class="bg-[#007BFF] text-white px-4 py-2 rounded-md">Criar nova Área</a>
+    
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+                    {% for area in areas %}
+                    <div class="bg-white border border-gray-300 rounded-md p-4 shadow-sm">
+                        <img src="{% static 'assets/canteiro-foto.jpg' %}" alt="Área de plantio" class="w-full h-auto">
 
+                        <h3 class="text-lg lg:text-xl mt-3 font-semibold">
+                            <a href="{% url 'area_detail' community.id area.id %}" class="text-blue-500 hover:underline">{{ area.name }}</a>
+                        </h3>
+                        <p class="text-sm lg:text-base">{{ area.description }}</p>
+                        <div class="mt-2">
+                            <a href="{% url 'update_area' community.id area.pk %}" class="text-blue-500 hover:underline">Editar</a> | 
+                            <a href="{% url 'delete_area' community.id area.pk %}" class="text-red-500 hover:underline">Deletar</a>
+                        </div>
 
-    <!-- Main content -->
-    <div class="flex-1 p-6 lg:p-10">
-        <h1 class="text-xl font-semibold">
-            <a href="{% url 'dashboard' community.id %}" class="text-green-600 hover:underline">Dashboard ></a>
-        </h1>
-        <div class="flex justify-between items-center">
-            <h2 class="mt-2 text-4xl font-bold">Área de Plantio</h2>
-            <a href="{% url 'create_area' community.id %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md mr-14">
-                Criar nova Área
-            </a>
-        </div>
-        <br>
-        <div class="container mx-auto mt-5">           
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-9">
-                {% for area in areas %}
-                <div class="bg-white border border-gray-300 rounded-md p-4 shadow-sm">
-                    <img src="{% static 'assets/canteiro-foto.jpg' %}" alt="Área de plantio" class="w-full h-auto">
-
-                    <h3 class="text-xl mt-3 font-semibold">
-                        <a href="{% url 'area_detail' community.id area.id %}" class="text-blue-500 hover:underline">{{ area.name }}</a>
-                    </h3>
-                    <p>{{ area.description }}</p>
-                    <a href="{% url 'update_area' community.id area.pk %}">Editar</a> | 
-                    <a href="{% url 'delete_area' community.id area.pk %}">Deletar</a>
-
-                    <br><br>
-                    <ul class="list-disc list-inside">
-                        {% for seedbed in area.seedbeds.all %}
-                            <li>{{ seedbed.nome }} ✦  ✦  ✦  ✦</li>
-                        {% empty %}
-                            <li>Nenhum canteiro cadastrado</li>
-                        {% endfor %}
-                    </ul>
+                        <ul class="list-disc list-inside mt-2 text-sm lg:text-base">
+                            {% for seedbed in area.seedbeds.all %}
+                                <li>{{ seedbed.nome }} ✦ ✦ ✦ ✦</li>
+                            {% empty %}
+                                <li>Nenhum canteiro cadastrado</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
             </div>
         </div>
     </div>

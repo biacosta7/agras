@@ -10,11 +10,6 @@
     <div class="bg-[#8ABF17] flex flex-col items-center rounded-[20px] h-[850px] w-[220px]">
         <a href="/"><img class="w-[146px] mt-12 mb-8" src="{% static 'assets/logo-branco-h.png' %}" alt="AGRAS"> </a>    
         <div class="flex flex-col gap-y-12 flex-grow mt-12 flex flex-row justify-center">
-            <a href="" class="text-[14px] font-normal text-white flex cursor-pointer"> <span class="material-icons items-center mr-2">dashboard</span> Dashboard</a>
-            <a href="" class="text-[14px] font-normal text-white flex cursor-pointer"><span class="material-icons items-center mr-2">equalizer</span> Gerenciamento</a>
-            <a href="" class="text-[14px] font-normal text-white flex cursor-pointer"><span class="material-icons items-center mr-2">group</span> Time</a>
-            <a href="" class="text-[14px] font-normal text-white flex cursor-pointer"><span class="material-icons items-center mr-2">trending_up</span> Estatísticas</a>
-            <a href="" class="text-[14px] font-normal text-white flex cursor-pointer"><span class="material-icons items-center mr-2">settings</span> Configurações</a>
             <form action="{% url 'logout' %}" class="text-[14px] font-normal text-white mt-auto mb-12 flex cursor-pointer" method="POST">
                 {% csrf_token %}
                 <button class="flex">
