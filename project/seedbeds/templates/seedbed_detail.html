@@ -92,37 +92,61 @@
                                 </option>
                             {% endfor %}
                         </select>
-                        <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200" style="width: 250px; padding: 10px;">Ver Detalhes</button>
+                        <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200" style="width: 250px; padding: 10px;">
+                            Ver Detalhes
+                        </button>
                     </div>
                 </form>
             
                 <!-- Detalhes do produto selecionado -->
                 <div class="product-info mt-6">
                     <div class="left-info mb-4">
-                        <h4 class="font-bold">Informações de Plantio</h4>
-                        <p>Data de plantio: <span id="planting-date">{{ selected_product.data_plantio }}</span></p>
-                        <p>Estimativa de colheita: <span id="harvest-estimate">10/12/2024</span></p>
                         <p>
-                            <a href="#" id="read-more" onclick="toggleToDo()" class="text-blue-500 hover:underline">Ler mais</a>
+                            <span class="text-lg font-semibold mr-12">Data de plantio:</span>
+                            <span  class="text-lg" id="planting-date">{{ selected_product.data_plantio }}</span>
                         </p>
-                        <div id="to-do-list" style="display:none;">
+                        <br>
+                        <p>
+                            <span class="text-lg font-semibold mr-4">Estimativa de colheita:</span> 
+                            <span class="text-lg" id="harvest-estimate">2 de Janeiro de 2025</span>
+                        </p>
+                        <br>
+                        <span class="text-lg font-semibold mr-12">Tarefas:</span>
+                        <div id="to-do-list" >
                             <ul class="list-disc ml-5">
-                                <li>Rega</li>
-                                <li>Fertilização</li>
-                                <li>Controle de pragas</li>
+                                <li>Regar</li>
+                                <li>Fertilizar</li>
                             </ul>
                         </div>
+                        <p class="mt-2">
+                            <a href="#" id="read-more" onclick="toggleToDo()" 
+                               class="mt-3 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200 inline-block">
+                                Ler mais
+                            </a>
+                        </p>
                     </div>
             
                     <div class="right-info">
-                        <h4 class="font-bold">Produção e Comentários</h4>
-                        <p>Quantidade: <span id="quantidade">{{ selected_product.quantidade }}</span></p>
-                        <p>Produção esperada: <span id="expected-production">100kg</span></p>
-                        <p>Comentários: <span id="comments">Excelente desenvolvimento até agora!</span></p>
+                        <p>
+                            <span class="text-lg font-semibold mr-2">Quantidade: </span>
+                            <span class="text-lg" id="quantidade">{{ selected_product.quantidade }}</span>
+                        </p>
+                        <br>
+                        <p>
+                            <span class="text-lg font-semibold mr-2">Produção esperada: </span>
+                            <span class="text-lg" id="expected-production">100</span>
+                        </p>
+                        <br>
+                        <p> 
+                            <span class="text-lg font-semibold mr-2">Comentários: </span>
+                            <br>
+                            <span class="text-base" id="comments">Excelente desenvolvimento até agora!</span>
+                        </p>
+                        <br>
                         <form id="delete-product-form" method="POST" action="{% url 'product_delete' community.id area.id seedbed.id selected_product.id %}" style="display:none;">
                             {% csrf_token %}
                         </form>
-                        <button type="button" class="bg-red-600 text-white py-2 rounded hover:bg-red-700 transition duration-200" onclick="openModal()">Excluir Produto</button>
+                        <button type="button" class="mt-5 bg-red-600 p-4 text-white py-2 rounded hover:bg-red-700 transition duration-200" onclick="openModal()">Excluir Cultivo</button>
                     </div>
                 </div>
             
