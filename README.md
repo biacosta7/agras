@@ -57,7 +57,8 @@ Essa metodologia foi fundamental para a aceleração do desenvolvimento e a melh
 
 ## 🔄 Diagrama de atividades do sistema
 
-![image](https://github.com/user-attachments/assets/369cf6d1-570b-49bf-b105-fde033d1f6fc)
+![image](https://github.com/user-attachments/assets/545b58ef-21cf-4b76-9f31-f378d7fd1a8a)
+
 
 
 
