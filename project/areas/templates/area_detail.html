@@ -41,29 +41,38 @@
     <!-- Listagem dos canteiros -->
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
         {% for seedbed in area.seedbeds.all %}
-        <div class="bg-white border border-gray-300 rounded-md p-4 shadow-sm">
-            <h3 class="text-2xl font-semibold">
-                <a href="{% url 'seedbed_detail' community.id area.pk seedbed.id %}" class="text-blue-500 hover:underline">{{ seedbed.nome }}</a>
-            </h3>
-            <a href="{% url 'update_seedbed' community.id area.pk seedbed.id %}">Editar</a> | 
-            <a href="{% url 'delete_seedbed' community.id area.pk seedbed.id %}">Deletar</a>
+        <div class="bg-white border border-gray-300 rounded-md p-4 shadow-sm flex flex-col justify-between">
+            <div class="flex-grow">
+                <h3 class="text-2xl font-semibold">
+                    <a href="{% url 'seedbed_detail' community.id area.pk seedbed.id %}" class="text-blue-500 hover:underline">{{ seedbed.nome }}</a>
+                </h3>
+                <a href="{% url 'update_seedbed' community.id area.pk seedbed.id %}">Editar</a> | 
+                <a href="{% url 'delete_seedbed' community.id area.pk seedbed.id %}">Deletar</a>
 
-            <!-- Listando os produtos associados ao canteiro -->
-            <br><br>
-            <ul class="list-disc list-inside">
-                {% for product in seedbed.products_in_seedbed.all %}
-                    <li>{{ product.type_product.name }}</li>
-                {% empty %}
-                    <p>Nenhum cultivo cadastrado</p>
-                {% endfor %}
-            </ul>
-            <br>
-            <a href="{% url 'seedbed_detail' community.id area.pk seedbed.id %}" class="inline-block bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">Visualizar</a>
+                <!-- Listando os produtos associados ao canteiro -->
+                <br><br>
+                <ul class="list-disc list-inside">
+                    {% for product in seedbed.products_in_seedbed.all %}
+                        <li>{{ product.type_product.name }}</li>
+                    {% empty %}
+                        <p>Nenhum cultivo cadastrado</p>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Botão fixo ao fim do card -->
+            <div class="flex mt-5 justify-center">
+                <a href="{% url 'seedbed_detail' community.id area.pk seedbed.id %}" 
+                   class="inline-block bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 w-2/4 text-center">
+                   Visualizar
+                </a>
+            </div>
         </div> 
         {% empty %}
             <p>Nenhum canteiro cadastrado</p>
         {% endfor %}
     </div>
 </div>
+
 
 {% endblock content %}
