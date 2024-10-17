@@ -40,7 +40,7 @@ A agricultura familiar é essencial para o sustento de muitas famílias ao redor
 
 [![Clique para assistir o vídeo (abrirá em uma nova aba)](https://github.com/user-attachments/assets/8604c9da-aa65-42a5-97c1-ef5479af12bd)](https://www.youtube.com/watch?v=FmrasWVUvC0&list=PLLT61SHdeQXuxTYMoLSTrT0kRCChHpc0W)
 
-## [Issues 🐛🔍](https://github.com/biacosta7/agras/issues?q=is%3Aissue+is%3Aclosed)
+## [Issue/Bug Tracker 🐛🔍](https://github.com/biacosta7/agras/issues?q=is%3Aissue+is%3Aclosed)
 
 ![image](https://github.com/user-attachments/assets/9516bcc5-283c-434e-b518-353196774b0b)
 ![image](https://github.com/user-attachments/assets/a9a6dcaf-e122-4736-ac7e-cb0f0ff22347)
