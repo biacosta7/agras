@@ -116,20 +116,20 @@
 
 {% if seedbed.products_in_seedbed.all %}
 <div class="flex items-center justify-center"> 
-    <div class="bg-gray-400 p-6 rounded-lg shadow-lg" style="max-width: 1200px; width: 90%; height: 450px; overflow: auto;">
+    <div class="bg-[#fafafa] p-6 rounded-lg shadow-lg" style="max-width: 1200px; width: 90%; height: 450px; overflow: auto;">
         <!-- Dropdown para selecionar produto -->
         <form method="GET" action="">
             <div class="flex items-center">
                 <div class="flex-container">
                     <select id="product-select" name="product_id" class="mb-4 p-2 border border-gray-300 rounded">
-                        <option value="">Selecione um produto</option>
+                        <option value="">Selecione um cultivo</option>
                         {% for product in products %}
                             <option value="{{ product.id }}" {% if selected_product and selected_product.id == product.id %}selected{% endif %}>
                                 {{ product.type_product.name }}
                             </option>
                         {% endfor %}
                     </select>
-                    <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200 ml-4">
+                    <button type="submit" class="bg-[#8ABF17] text-white py-2 px-4 rounded hover:bg-[#5F8C1B] transition duration-200 ml-4">
                         Ver Detalhes
                     </button>
                 </div>
@@ -157,9 +157,9 @@
                         <li>Fertilizar</li>
                     </ul>
                 </div>
-                <p class="mt-2">
+                <p>
                     <a href="#" id="read-more" onclick="toggleToDo()" 
-                       class="mt-3 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200 inline-block">
+                    class="mt-3 ml-1 text-[#5F8C1B] font-semibold hover:text-[#8ABF17] transition duration-200 inline-block">
                         Ler mais
                     </a>
                 </p>
@@ -179,13 +179,16 @@
                 <p> 
                     <span class="text-lg font-semibold mr-2">Comentários: </span>
                     <br>
-                    <span class="text-base" id="comments">Excelente desenvolvimento até agora!</span>
+                    <span class="ml-1 text-base" id="comments">Em breve...</span>
                 </p>
                 <br>
                 <form id="delete-product-form" method="POST" action="{% url 'product_delete' community.id area.id seedbed.id selected_product.id %}" style="display:none;">
                     {% csrf_token %}
                 </form>
-                <button type="button" class="mt-5 bg-red-600 p-4 text-white py-2 rounded hover:bg-red-700 transition duration-200" onclick="openModal()">Excluir Cultivo</button>
+                <button type="button" class="mt-5 m-2 bg-[#F77711] p-7 text-white py-2 rounded hover:bg-[#F76711] transition duration-200" onclick="openModal()">Excluir</button>
+                <button type="button" class="mt-5 m-2 bg-[#562A00] p-7 text-white py-2 rounded hover:bg-[#401F00] transition duration-200" onclick="openEditModal()">
+                    Editar
+                </button>
             </div>
         </div>
         {% endif %}
@@ -194,13 +197,47 @@
         <div id="deleteModal" class="modal">
             <div class="modal-content">
                 <span class="close cursor-pointer" onclick="closeModal()">&times;</span>
-                <h1 class="mt-2 font-bold">Tem certeza que deseja deletar o cultivo "{{ selected_product.type_product.name }}"?</h1>
+                <h1 class="mt-2 font-bold">Tem certeza que deseja excluir o cultivo "{{ selected_product.type_product.name }}"?</h1>
                 <p class="mt-2">Essa ação não pode ser desfeita.</p>
                 <br>
-                <button class="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition duration-200" onclick="document.getElementById('delete-product-form').submit();">Deletar</button>
+                <button class="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition duration-200" onclick="document.getElementById('delete-product-form').submit();">Excluir</button>
                 <button class="bg-gray-300 text-black py-2 px-4 rounded hover:bg-gray-400 transition duration-200" onclick="closeModal()">Cancelar</button>
             </div>
         </div>
+        <!-- Modal de Edição -->
+        <div id="editModal" class="modal">
+            <div class="modal-content">
+                <span class="close cursor-pointer" onclick="closeEditModal()">&times;</span>
+                <h1 class="mt-2 font-bold">Editar Cultivo "{{ selected_product.type_product.name }}"</h1>
+
+               <!-- Formulário de Edição -->
+                <form id="edit-product-form" method="POST" action="{% url 'product_update' community.id area.id seedbed.id selected_product.id %}">
+                    {% csrf_token %}
+                    
+                    <!-- Campo para editar quantidade -->
+                    <div class="mt-4">
+                        <label for="edit-quantidade" class="block font-semibold">Quantidade:</label>
+                        <input type="number" id="edit-quantidade" name="quantidade" class="w-full border border-gray-300 p-2 rounded" 
+                            value="{{ selected_product.quantidade }}" required>
+                    </div>
+
+                    <!-- Campo para editar data de plantio -->
+                    <div class="mt-4">
+                        <label for="edit-data-plantio" class="block font-semibold">Data de Plantio:</label>
+                        <input type="date" id="edit-data-plantio" name="data_plantio" class="w-full border border-gray-300 p-2 rounded" 
+                            value="{{ selected_product.data_plantio|date:'Y-m-d' }}" required>
+                    </div>
+
+                    <!-- Botões de ação -->
+                    <div class="mt-6 flex justify-end">
+                        <button type="button" class="bg-gray-300 text-black py-2 px-4 rounded hover:bg-gray-400 transition duration-200 mr-2" onclick="closeEditModal()">Cancelar</button>
+                        <button type="submit" class="bg-[#8ABF17] text-white py-2 px-4 rounded hover:bg-[#5F8C1B] transition duration-200">Salvar Alterações</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
     </div>
 </div>
 {% endif %}
@@ -219,6 +256,22 @@
         const modal = document.getElementById('deleteModal');
         if (event.target === modal) {
             closeModal();
+        }
+    }
+    //modal de edit
+    function openEditModal() {
+        document.getElementById('editModal').style.display = 'block';
+    }
+
+    function closeEditModal() {
+        document.getElementById('editModal').style.display = 'none';
+    }
+
+    // Fechar o modal ao clicar fora dele
+    window.onclick = function(event) {
+        const editModal = document.getElementById('editModal');
+        if (event.target === editModal) {
+            closeEditModal();
         }
     }
 </script>

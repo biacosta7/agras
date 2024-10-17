@@ -28,13 +28,28 @@
     <a href="{% url 'dashboard' community.id %}" class="text-green-600 hover:underline">Dashboard &gt;</a>
     <a href="{% url 'area_manage' community.id %}" class="text-green-600 hover:underline">Áreas &gt;</a>
 </h1>
-<div class="flex justify-between items-center">
-    <h2 class=" ml-5 mt-2 text-4xl font-bold">{{ area.name }}</h2>
-    <a href="{% url 'create_seedbed' community.id area.pk %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md mr-14">
-        Criar novo canteiro
+
+<!-- Barra de pesquisa abaixo do botão de criar canteiro -->
+<div class="flex justify-end mt-4 mr-5">
+    <form class="relative flex-shrink-0">
+        <input type="text" placeholder="Buscar canteiros..." class="border border-gray-300 rounded-md py-1 px-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+        <button type="submit" class="absolute top-1 right-1 text-gray-500">
+            <span class="material-icons">search</span>
+        </button>
+    </form>
+    <a href="#" class="text-gray-700 pl-4 pt-1.5">
+        <span class="material-icons">notifications</span>
     </a>
 </div>
-
+<br>
+<div class="flex justify-between items-center">
+    <h2 class="ml-5 mt-2 text-4xl font-bold">{{ area.name }}</h2>
+    <div class="flex items-center space-x-4 mr-5">
+        <a href="{% url 'create_seedbed' community.id area.pk %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md">
+            Criar novo canteiro
+        </a>
+    </div>
+</div>
 
 <br>
 <div class="ml-5 container mx-auto mt-5">
@@ -73,6 +88,5 @@
         {% endfor %}
     </div>
 </div>
-
 
 {% endblock content %}
