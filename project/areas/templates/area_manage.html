@@ -16,7 +16,6 @@
                 <a href="" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">group</span> Time</a>
                 <a href="" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">trending_up</span> Estatísticas</a>
                 <a href="" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">settings</span> Configurações</a>
-                <!-- Espaço flexível para empurrar o botão "Sair" para baixo -->
                 <div class="flex-grow"></div>
                 <form action="{% url 'logout' %}" method="POST" class="w-full px-4 mb-12">
                     {% csrf_token %}
@@ -29,16 +28,30 @@
     
         <!-- Main content -->
         <div class="flex-1 p-6 lg:p-10">
-            <h1 class="mt-1 ml-5 text-xl font-semibold">
-                <a href="{% url 'dashboard' community.id %}" class="text-green-600 hover:underline">Dashboard &gt;</a>
-            </h1>
+            <!-- Título e Barra de pesquisa -->
             <div class="flex justify-between items-center">
-                <h2 class=" ml-5 mt-2 text-4xl font-bold">Área de Plantio</h2>
-                <a href="{% url 'create_area' community.id %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md mr-14">
+                <h2 class="ml-5 mt-2 text-4xl font-bold">Área de Plantio</h2>
+                <!-- Barra de pesquisa e notificação -->
+                <div class="flex items-center ml-auto mr-5">
+                    <form class="relative flex-shrink-0">
+                        <input type="text" placeholder="Buscar áreas..." class="border border-gray-300 rounded-md py-1 px-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <button type="submit" class="absolute top-1 text-gray-500">
+                            <span class="material-icons">search</span>
+                        </button>
+                    </form>
+                    <a href="#" class="text-gray-700 pl-7 pt-1.5">
+                        <span class="material-icons">notifications</span>
+                    </a>
+                </div>
+            </div>
+
+            <br>
+            <div class="flex justify-end">
+                <!-- Botão Criar nova Área -->
+                <a href="{% url 'create_area' community.id %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md">
                     Criar nova Área
                 </a>
             </div>
-            <br>
             <div class="ml-5 mt-5">    
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
                     {% for area in areas %}
