@@ -29,12 +29,17 @@
     
         <!-- Main content -->
         <div class="flex-1 p-6 lg:p-10">
-            <h1 class="text-xl font-semibold">Dashboard &gt;</h1>
-            <h2 class="text-2xl lg:text-4xl font-bold">Área de Plantio</h2>
-    
-            <div class="mt-5">
-                <a href="{% url 'create_area' community.id %}" class="bg-[#007BFF] text-white px-4 py-2 rounded-md">Criar nova Área</a>
-    
+            <h1 class="mt-1 ml-5 text-xl font-semibold">
+                <a href="{% url 'dashboard' community.id %}" class="text-green-600 hover:underline">Dashboard &gt;</a>
+            </h1>
+            <div class="flex justify-between items-center">
+                <h2 class=" ml-5 mt-2 text-4xl font-bold">Área de Plantio</h2>
+                <a href="{% url 'create_area' community.id %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md mr-14">
+                    Criar nova Área
+                </a>
+            </div>
+            <br>
+            <div class="ml-5 mt-5">    
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
                     {% for area in areas %}
                     <div class="bg-white border border-gray-300 rounded-md p-4 shadow-sm">
