@@ -32,8 +32,10 @@ A agricultura familiar é essencial para o sustento de muitas famílias ao redor
   <img src="https://img.shields.io/badge/ClickUp-8abf17?style=for-the-badge&logo=clickup&logoColor=white" height="30px"/></a>
 <a href="URL DO YOUTUBE">
   <img src="https://img.shields.io/badge/YOUTUBE-2E8B57?style=for-the-badge&logo=youtube&logoColor=white" height="30px"/></a>
-  <a href="https://agras.azurewebsites.net/">
+<a href="https://agras.azurewebsites.net/">
   <img src="https://img.shields.io/badge/SITE DO PROJETO-8abf17?style=for-the-badge&logo=google&logoColor=white" height="30px"/></a>
+<a href="https://agras.atlassian.net/jira/software/projects/KAN/boards/1">
+  <img src="https://img.shields.io/badge/JIRA-2E8B57?style=for-the-badge&logo=jira&logoColor=white" height="30px"/></a>
 
 # 🚚 Status Report 1
 
@@ -58,6 +60,11 @@ Essa metodologia foi fundamental para a aceleração do desenvolvimento e a melh
 ## 🔄 Diagrama de atividades do sistema
 
 ![image](https://github.com/user-attachments/assets/553302b0-f5e2-4945-aec9-cb561c4cf5e5)
+
+## 📝 Histórias do usuário (JIRA)
+
+![image](https://github.com/user-attachments/assets/064f223a-c9b8-449d-9f1d-9e9fecfa284a)
+
 
 ## 💻 Tecnologias Utilizadas
 - **Backend:** Django (Python) 🐍
