@@ -33,7 +33,7 @@ A agricultura familiar é essencial para o sustento de muitas famílias ao redor
 <a href="https://app.clickup.com/9013393286/v/o/s/90131619724">
   <img src="https://img.shields.io/badge/ClickUp-8abf17?style=for-the-badge&logo=clickup&logoColor=white" height="30px"/></a>
   
-<a href="URL DO YOUTUBE">
+<a href="https://www.youtube.com/@AGRAS2024/videos" target="_blank">
   <img src="https://img.shields.io/badge/YOUTUBE-183219?style=for-the-badge&logo=youtube&logoColor=white" height="30px"/></a>
   
 <a href="https://agras.azurewebsites.net/">
@@ -44,9 +44,11 @@ A agricultura familiar é essencial para o sustento de muitas famílias ao redor
 
 # 🚚 Status Report 1
 
-## [🎬 Screencast Protótipo](https://www.youtube.com/watch?v=edpW3PThu6E)
+## [🎬 Screencast Protótipo](https://www.youtube.com/watch?v=i34DN3N1n_Y)
 
-[![Clique para assistir o vídeo (abrirá em uma nova aba)](https://github.com/user-attachments/assets/8604c9da-aa65-42a5-97c1-ef5479af12bd)](https://www.youtube.com/watch?v=FmrasWVUvC0&list=PLLT61SHdeQXuxTYMoLSTrT0kRCChHpc0W)
+<a href="https://www.youtube.com/watch?v=i34DN3N1n_Y" target="_blank">
+    <img src="https://github.com/user-attachments/assets/8604c9da-aa65-42a5-97c1-ef5479af12bd" alt="Clique para assistir o vídeo (abrirá em uma nova aba)">
+</a>
 
 
 ## 🐛🔍 [Issue/Bug Tracker](https://github.com/biacosta7/agras/issues?q=is%3Aissue+is%3Aclosed)
