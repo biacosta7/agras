@@ -33,7 +33,7 @@ A agricultura familiar é essencial para o sustento de muitas famílias ao redor
 <a href="https://app.clickup.com/9013393286/v/o/s/90131619724">
   <img src="https://img.shields.io/badge/ClickUp-8abf17?style=for-the-badge&logo=clickup&logoColor=white" height="30px"/></a>
   
-<a href="URL DO YOUTUBE">
+<a href="https://www.youtube.com/@AGRAS2024" target="_blank">
   <img src="https://img.shields.io/badge/YOUTUBE-183219?style=for-the-badge&logo=youtube&logoColor=white" height="30px"/></a>
   
 <a href="https://agras.azurewebsites.net/">
