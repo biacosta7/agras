@@ -128,39 +128,55 @@ def product_detail_view(request, id):
 	} 
 	return render(request, "products/product_details.html", context)
 
-def product_update_view(request, seedbed_id, product_id):
+@login_required
+def product_update_view(request, community_id, area_id, seedbed_id, product_id):
     seedbed = get_object_or_404(Seedbed, id=seedbed_id)
     product = get_object_or_404(Product, id=product_id)
+    community = get_object_or_404(Community, id=community_id)
+    area = get_object_or_404(Area, id=area_id)
 
-    # Verificar se o canteiro pertence à comunidade
-    if product.seedbed.community != seedbed.community:
+    # Verificar se o canteiro pertence à área e se a área pertence à comunidade
+    if seedbed.area != area or area.community != community:
         messages.error(request, "Você não tem permissão para editar este produto.")
-        return redirect('product:product-list', seedbed.id)
+        return redirect('seedbed_detail', community_id=community.id, area_id=area.id, seedbed_id=seedbed_id)
 
-    type_products = TypeProduct.objects.all()
+    type_products = TypeProduct.objects.filter(community=community)
 
     if request.method == "GET":
-        return render(request, 'edit_product.html', {
+        return render(request, 'seedbed_detail.html', {
+            'community': community,
             'product': product,
             'type_products': type_products,
-            'seedbed': seedbed
+            'seedbed': seedbed,
+            'area': area,
         })
 
     else:
-        nome = request.POST.get('nome')
         data_plantio = request.POST.get('data_plantio')
         quantidade = request.POST.get('quantidade')
 
-        # Atualizando o produto com a nova informação
-        type_product = get_object_or_404(TypeProduct, name=nome)
-        product.type_product = type_product  # Corrigido para usar `type_product`
-        product.planting_date = data_plantio
-        product.quantity = quantidade    
-        product.save()
+        # Verificação de campos obrigatórios
+        errors = []
+        if not data_plantio:
+            errors.append("O campo 'Data de plantio' é obrigatório.")
+        if not quantidade:
+            errors.append("O campo 'Quantidade' é obrigatório.")
+        elif not quantidade.isdigit():
+            errors.append("O campo 'Quantidade' deve ser um número válido.")
 
+        if errors:
+            for error in errors:
+                messages.error(request, error)
+            return redirect('product_update', community_id=community_id, area_id=area_id, seedbed_id=seedbed_id, product_id=product_id)
+
+        # Atualizar os dados do produto mantendo o tipo de produto original
+        product.data_plantio = data_plantio
+        product.quantidade = int(quantidade)  # Converte para int
+        product.save()
         messages.success(request, 'Cultivo editado com sucesso.')
 
-        return redirect('product:product-list', seedbed.id)
+        return redirect('seedbed_detail', community_id=community.id, area_id=area.id, seedbed_id=seedbed.id)
+
 
 
 @login_required
@@ -188,37 +204,6 @@ def product_delete_view(request, community_id, area_id, seedbed_id, product_id):
 
     return render(request, 'delete_product.html', context)
 
-
-
-def product_update_view(request, seedbed_id, product_id, community_id):
-    seedbed = get_object_or_404(Seedbed, id=seedbed_id)
-    product = get_object_or_404(Product, id=product_id)
-    community = get_object_or_404(Community, id=community_id)
-
-    type_products = TypeProduct.objects.filter(community=community)
-
-    if request.method == "GET":
-        return render(request, 'edit_product.html', {'product': product, 'type_products': type_products, 'seedbed': seedbed, 'community': community})
-
-    else:
-        nome = request.POST.get('nome')
-        data_plantio = request.POST.get('data_plantio')
-        quantidade = request.POST.get('quantidade')
-
-        # Atualizando o produto com a nova informação
-        try:
-            type_product = TypeProduct.objects.get(name=nome, community=community)   
-            product.type_product = type_product
-        except TypeProduct.DoesNotExistw:
-            messages.error(request, 'Tipo de produto não encontrado')
-            return redirect('product:product_update_view', seedbed_id, product_id, community_id)
-        product.data_plantio = data_plantio
-        product.quantidade = quantidade    
-        product.save()
-
-        messages.success(request, 'Cultivo editado com sucesso.')
-
-        return redirect('product:product_list', community_id, seedbed.id)
     
 def get_product_info_view(request, product_id):
     product = get_object_or_404(Product, id=product_id)

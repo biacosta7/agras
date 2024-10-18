@@ -24,55 +24,73 @@
 {% endblock %}
 
 {% block content %}
-<h1 class="mt-1 ml-5 text-xl font-semibold">
-    <a href="{% url 'dashboard' community.id %}" class="text-green-600 hover:underline">Dashboard &gt;</a>
-    <a href="{% url 'area_manage' community.id %}" class="text-green-600 hover:underline">Áreas &gt;</a>
-</h1>
-<div class="flex justify-between items-center">
-    <h2 class=" ml-5 mt-2 text-4xl font-bold">{{ area.name }}</h2>
-    <a href="{% url 'create_seedbed' community.id area.pk %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md mr-14">
-        Criar novo canteiro
-    </a>
-</div>
+<div class="flex-1 p-2 lg:p-6">
+    <div class="flex items-center justify-between">
+        <h1 class="mt-1 ml-5 text-xl font-semibold">
+            <a href="{% url 'dashboard' community.id %}" class="text-green-600 hover:underline">Dashboard &gt;</a>
+            <a href="{% url 'area_manage' community.id %}" class="text-green-600 hover:underline">Áreas &gt;</a>
+        </h1>
+        
+        <!-- Barra de pesquisa e ícone de notificações alinhados à direita -->
+        <div class="flex items-center ml-auto mr-5">
+            <form class="relative flex-shrink-0">
+                <input type="text" placeholder="Buscar canteiros..." class="border border-gray-300 rounded-md py-1 px-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                <button type="submit" class="ml-1 absolute top-1 right-1 text-gray-500">
+                    <span class="material-icons">search</span>
+                </button>
+            </form>
+            <a href="#" class="ml-1 text-gray-700 ml-2">
+                <span class="material-icons">notifications</span>
+            </a>
+        </div>
+    </div>
 
+    <div class="mt-3 flex justify-between items-center mb-4">
+        <h2 class="ml-5 text-4xl font-bold">{{ area.name }}</h2>
+        <!-- Botão de criar novo canteiro alinhado à direita -->
+        <div class="ml-7">
+            <a href="{% url 'create_seedbed' community.id area.pk %}" class="mr-6 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md">
+                Criar novo canteiro
+            </a>
+        </div>
+    </div>
 
-<br>
-<div class="ml-5 container mx-auto mt-5">
-    <!-- Listagem dos canteiros -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
-        {% for seedbed in area.seedbeds.all %}
-        <div class="bg-white border border-gray-300 rounded-md p-4 shadow-sm flex flex-col justify-between">
-            <div class="flex-grow">
-                <h3 class="text-2xl font-semibold">
-                    <a href="{% url 'seedbed_detail' community.id area.pk seedbed.id %}" class="text-blue-500 hover:underline">{{ seedbed.nome }}</a>
-                </h3>
-                <a href="{% url 'update_seedbed' community.id area.pk seedbed.id %}">Editar</a> | 
-                <a href="{% url 'delete_seedbed' community.id area.pk seedbed.id %}">Deletar</a>
+    <br>
+    <div class="ml-5 container mx-auto mt-5">
+        <!-- Listagem dos canteiros -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+            {% for seedbed in area.seedbeds.all %}
+            <div class="bg-white border border-gray-300 rounded-md p-4 shadow-sm flex flex-col justify-between">
+                <div class="flex-grow">
+                    <h3 class="text-2xl font-semibold">
+                        <a href="{% url 'seedbed_detail' community.id area.pk seedbed.id %}" class="text-blue-500 hover:underline">{{ seedbed.nome }}</a>
+                    </h3>
+                    <a href="{% url 'update_seedbed' community.id area.pk seedbed.id %}">Editar</a> | 
+                    <a href="{% url 'delete_seedbed' community.id area.pk seedbed.id %}">Deletar</a>
 
-                <!-- Listando os produtos associados ao canteiro -->
-                <br><br>
-                <ul class="list-disc list-inside">
-                    {% for product in seedbed.products_in_seedbed.all %}
-                        <li>{{ product.type_product.name }}</li>
-                    {% empty %}
-                        <p>Nenhum cultivo cadastrado</p>
-                    {% endfor %}
-                </ul>
-            </div>
+                    <!-- Listando os produtos associados ao canteiro -->
+                    <br><br>
+                    <ul class="list-disc list-inside">
+                        {% for product in seedbed.products_in_seedbed.all %}
+                            <li>{{ product.type_product.name }}</li>
+                        {% empty %}
+                            <p>Nenhum cultivo cadastrado</p>
+                        {% endfor %}
+                    </ul>
+                </div>
 
-            <!-- Botão fixo ao fim do card -->
-            <div class="flex mt-5 justify-center">
-                <a href="{% url 'seedbed_detail' community.id area.pk seedbed.id %}" 
-                   class="inline-block bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 w-2/4 text-center">
-                   Visualizar
-                </a>
-            </div>
-        </div> 
-        {% empty %}
-            <p>Nenhum canteiro cadastrado</p>
-        {% endfor %}
+                <!-- Botão fixo ao fim do card -->
+                <div class="flex mt-5 justify-center">
+                    <a href="{% url 'seedbed_detail' community.id area.pk seedbed.id %}" 
+                    class="inline-block bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 w-2/4 text-center">
+                    Visualizar
+                    </a>
+                </div>
+            </div> 
+            {% empty %}
+                <p>Nenhum canteiro cadastrado</p>
+            {% endfor %}
+        </div>
     </div>
 </div>
-
-
 {% endblock content %}
