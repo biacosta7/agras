@@ -25,20 +25,58 @@ A agricultura familiar é essencial para o sustento de muitas famílias ao redor
 
 ## 🧷 Links
 <a href="https://sites.google.com/cesar.school/agras">
-    <img src="https://img.shields.io/badge/GOOGLE SITES-2E8B57?style=for-the-badge&logo=google&logoColor=white" height="30px"/></a>
+    <img src="https://img.shields.io/badge/GOOGLE SITES-8abf17?style=for-the-badge&logo=google&logoColor=white" height="30px"/></a>
+    
 <a href="https://www.figma.com/design/wqEwDyRuQGX0MaPecGGU4n/Untitled?node-id=0-1&t=wYhB3IAeSWCCwKws-1">
-  <img src="https://img.shields.io/badge/FIGMA-2E8B57?style=for-the-badge&logo=figma&logoColor=white" height="30px"/></a>
-<a href="URL DO CLICKUP">
-  <img src="https://img.shields.io/badge/ClickUp-2E8B57?style=for-the-badge&logo=clickup&logoColor=white" height="30px"/></a>
-<a href="URL DO YOUTUBE">
-  <img src="https://img.shields.io/badge/YOUTUBE-2E8B57?style=for-the-badge&logo=youtube&logoColor=white" height="30px"/></a>
-  <a href="https://agras.azurewebsites.net/">
-  <img src="https://img.shields.io/badge/SITE DO PROJETO-2E8B57?style=for-the-badge&logo=google&logoColor=white" height="30px"/></a>
+  <img src="https://img.shields.io/badge/FIGMA-183219?style=for-the-badge&logo=figma&logoColor=white" height="30px"/></a>
+  
+<a href="https://app.clickup.com/9013393286/v/o/s/90131619724">
+  <img src="https://img.shields.io/badge/ClickUp-8abf17?style=for-the-badge&logo=clickup&logoColor=white" height="30px"/></a>
+  
+<a href="https://www.youtube.com/@AGRAS2024/videos" target="_blank">
+  <img src="https://img.shields.io/badge/YOUTUBE-183219?style=for-the-badge&logo=youtube&logoColor=white" height="30px"/></a>
+  
+<a href="https://agras.azurewebsites.net/">
+  <img src="https://img.shields.io/badge/SITE DO PROJETO-8abf17?style=for-the-badge&logo=google&logoColor=white" height="30px"/></a>
+  
+<a href="https://agras.atlassian.net/jira/software/projects/KAN/boards/1">
+  <img src="https://img.shields.io/badge/JIRA-183219?style=for-the-badge&logo=jira&logoColor=white" height="30px"/></a>
+
+# 🚚 Status Report 1
+
+## [🎬 Screencast Protótipo](https://www.youtube.com/watch?v=i34DN3N1n_Y)
+
+<a href="https://www.youtube.com/watch?v=i34DN3N1n_Y" target="_blank">
+    <img src="https://github.com/user-attachments/assets/8604c9da-aa65-42a5-97c1-ef5479af12bd" alt="Clique para assistir o vídeo (abrirá em uma nova aba)">
+</a>
+
+
+## 🐛🔍 [Issue/Bug Tracker](https://github.com/biacosta7/agras/issues?q=is%3Aissue+is%3Aclosed)
+
+![image](https://github.com/user-attachments/assets/9516bcc5-283c-434e-b518-353196774b0b)
+![image](https://github.com/user-attachments/assets/a9a6dcaf-e122-4736-ac7e-cb0f0ff22347)
+
+
+## 🤝 Relatos de Pair Programming
+
+Nas últimas três semanas, a equipe aplicou intensivamente o Pair Programming como uma prática central no desenvolvimento do projeto. Essa abordagem envolve dois programadores trabalhando juntos em uma única tarefa, onde um atua como "driver", escrevendo o código, e o outro como "navigator", revisando e sugerindo melhorias em tempo real. Essa dinâmica permite uma maior troca de ideias e colaboração, com foco na qualidade do código e na detecção rápida de erros. Durante o projeto, a equipe promoveu um rodízio frequente de papéis, garantindo que todos pudessem tanto programar quanto revisar, ampliando o conhecimento coletivo e a familiaridade com o código.
+
+Essa metodologia foi fundamental para a aceleração do desenvolvimento e a melhoria contínua do código, permitindo que os membros da equipe colaborassem de forma mais eficiente. Além de otimizar o tempo e a qualidade das entregas, o Pair Programming também serviu como uma ferramenta de aprendizado colaborativo, onde todos os envolvidos puderam trocar experiências, discutir soluções e aplicar as melhores práticas de programação, tanto no back-end quanto no front-end. Colocar essa metodologia em prática contribuiu para uma maior coesão do grupo e para a entrega de um produto com código mais sólido e bem estruturado.
+
+
+## 🔄 Diagrama de atividades do sistema
+
+![image](https://github.com/user-attachments/assets/553302b0-f5e2-4945-aec9-cb561c4cf5e5)
+
+## 📝 Histórias do usuário (JIRA)
+
+![image](https://github.com/user-attachments/assets/064f223a-c9b8-449d-9f1d-9e9fecfa284a)
+
 
 ## 💻 Tecnologias Utilizadas
 - **Backend:** Django (Python) 🐍
 - **Banco de Dados:** PostgreSQL 🐘
-- **Frontend:** HTML, CSS, JavaScript 🌐
+- **Frontend:** HTML, Tailwind CSS, JavaScript 🌐
 
 ## ⚙️ Pré-requisitos
 Python 3.12+  
