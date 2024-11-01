@@ -3,9 +3,9 @@
 {% block title %}Gerenciamento da Comunidade{% endblock %}
 
 {% block content %}
-<div class="bg-white min-h-screen flex flex-row">
+<div class="bg-white min-h-screen flex px-4 md:px-8 py-10 mx-auto ">
     <!-- Sidebar -->
-    <div class="bg-[#8ABF17] flex flex-col items-center rounded-[20px] w-full lg:w-[490px] h-auto lg:h-[850px] mb-8 lg:mb-0"> 
+    <div class="bg-[#8ABF17] flex flex-col items-center rounded-[20px] w-full lg:w-[220px] h-auto lg:h-[850px] mb-8 lg:mb-0"> 
         <a href="/"><img class="w-[146px] mt-12 mb-8" src="{% static 'assets/logo-branco-h.png' %}" alt="AGRAS"> </a>   
         <div class="flex flex-col gap-y-6 mt-12 w-full px-4 flex-grow">
             <a href="" class="text-[14px] font-normal text-white flex items-center cursor-pointer"> 
@@ -34,7 +34,7 @@
     </div>
 
     <!-- Main content -->
-    <div class="flex-grow lg:ml-[490px] p-6">
+    <div class="flex-grow px-4 lg:px-8 py-10">
         <!-- Toggle button for smaller screens -->
         <button id="menu-toggle" class="lg:hidden text-gray-600 focus:outline-none mb-4">
             <span class="material-icons">menu</span>
@@ -43,72 +43,48 @@
         <h1 class="text-2xl font-bold mb-4">Gerenciamento da Comunidade</h1>
 
         <!-- Seção de solicitações de acesso -->
-        <div class="bg-gray-100 p-4 rounded-lg mb-6">
+        <div class="bg-gray-100 p-4 rounded-lg mb-6 max-w-[500px]">
             <h2 class="text-xl font-semibold mb-4">Solicitações de Acesso</h2>
             <ul class="list-disc pl-5">
                 {% for request in membership_requests %}
-                    <li>
-                        {{ request.user }} - 
-                        <button class="text-[#4CAF50] underline" onclick="acceptRequest({{ request.id }})">Aceitar</button> / 
-                        <button class="text-red-500 underline" onclick="rejectRequest({{ request.id }})">Recusar</button>
-                    </li>
+                <li class="flex justify-between items-center mb-4 p-2 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
+                    <div class="flex flex-col">
+                        <span class="font-semibold text-gray-800">Usuario: {{ request.user }}</span>
+                        <span class="text-gray-600">Email: {{ request.user.email }}</span>
+                    </div>
+                    <div class="flex flex-col items-end">
+                        <span class="text-sm text-gray-500">Status: {{ request.status }}</span>
+                        <span class="text-xs text-gray-400">{{ request.request_date }}</span>
+                    </div>
+                    <div class="flex space-x-2">
+                        <form action="" method="post" class="inline-flex items-center justify-center">
+                            {% csrf_token %}
+                            <button type="submit" class="bg-green-500 text-white rounded-full p-0.5 transition hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 flex items-center justify-center">
+                                <span class="material-icons">check</span>
+                            </button>
+                        </form>
+                        <form action="" method="post" class="inline-flex items-center justify-center">
+                            {% csrf_token %}
+                            <button type="submit" class="bg-red-500 text-white rounded-full p-0.5 transition hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 flex items-center justify-center">
+                                <span class="material-icons">close</span>
+                            </button>
+                        </form>
+                    </div>
+                </li>
+                
                 {% empty %}
                     <li>Não há solicitações de acesso no momento.</li>
                 {% endfor %}
             </ul>
         </div>
+        
+        
 
         <!-- Botões de Editar e Excluir -->
         <div class="flex space-x-4 mb-6">
             <button id="edit-button" class="bg-[#4CAF50] text-white p-2 rounded">Editar Comunidade</button>
             <button id="delete-button" class="bg-red-500 text-white p-2 rounded">Excluir Comunidade</button>
         </div>
-
-        <!-- Modal para edição -->
-        <div id="edit-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div class="bg-white rounded-lg p-6 w-[90%] max-w-md">
-                <h2 class="text-xl font-semibold mb-4">Editar Comunidade</h2>
-                <form id="edit-form">
-                    <label class="block mb-2" for="community-name">Nome da Comunidade:</label>
-                    <input type="text" id="community-name" class="border rounded p-2 w-full mb-4" placeholder="Nome da comunidade">
-                    <button type="submit" class="bg-[#4CAF50] text-white p-2 rounded w-full">Salvar</button>
-                </form>
-                <button id="close-modal" class="mt-4 text-red-500">Fechar</button>
-            </div>
-        </div>
     </div>
 </div>
-
-<!-- Script para o toggle do menu e o modal -->
-<script>
-    document.getElementById('menu-toggle').addEventListener('click', function() {
-        const sidebar = document.getElementById('sidebar');
-        sidebar.classList.toggle('-translate-x-full');
-    });
-
-    const editButton = document.getElementById('edit-button');
-    const deleteButton = document.getElementById('delete-button');
-    const editModal = document.getElementById('edit-modal');
-    const closeModal = document.getElementById('close-modal');
-
-    // Abre o modal ao clicar em Editar
-    editButton.addEventListener('click', function() {
-        editModal.classList.remove('hidden');
-    });
-
-    // Fecha o modal ao clicar em Fechar
-    closeModal.addEventListener('click', function() {
-        editModal.classList.add('hidden');
-    });
-
-    // Lógica para o botão Excluir (pode incluir um prompt de confirmação)
-    deleteButton.addEventListener('click', function() {
-        if (confirm('Tem certeza que deseja excluir esta comunidade?')) {
-            // Lógica para exclusão da comunidade
-            // Exemplo: fazer uma requisição AJAX ou redirecionar
-            alert('Comunidade excluída com sucesso!');
-            // Redirecionar ou atualizar a página
-        }
-    });
-</script>
 {% endblock %}
