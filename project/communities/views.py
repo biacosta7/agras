@@ -11,13 +11,27 @@ from seedbeds.models import Seedbed
 def home_view(request):
     return redirect('community_hub')
 
+from django.utils import timezone
+from communities.models import Community, MembershipRequest
+
 @login_required
 def dashboard_view(request, community_id):
     community = get_object_or_404(Community, id=community_id)
     
     # Verificação se o usuário é membro ou administrador da comunidade
     if request.user not in community.members.all() and request.user not in community.admins.all():
-        messages.error(request, 'Você não tem permissão para acessar o dashboard desta comunidade.')
+        # Verificar se já existe uma solicitação pendente para este usuário e comunidade
+        membership_request, created = MembershipRequest.objects.get_or_create(
+            user=request.user,
+            community=community,
+            defaults={'status': 'pending', 'request_date': timezone.now()}
+        )
+        
+        if created:
+            messages.info(request, 'Sua solicitação para entrar na comunidade foi enviada ao administrador.')
+        else:
+            messages.info(request, 'Você já enviou uma solicitação para esta comunidade. Aguarde a resposta do administrador.')
+
         return redirect('community_hub')
 
     # Recuperando as áreas e canteiros associados à comunidade
@@ -32,6 +46,25 @@ def dashboard_view(request, community_id):
     }
 
     return render(request, 'dashboard.html', context)
+
+@login_required
+def manage_community(request, community_id):
+    community = get_object_or_404(Community, id=community_id)
+    
+    # Verifica se o usuário tem permissão para acessar o gerenciamento
+    if request.user != community.creator and not community.admins.filter(id=request.user.id).exists():
+        messages.error(request, 'Você não tem permissão para gerenciar esta comunidade.')
+        return redirect('community_hub')
+    
+    membership_requests = MembershipRequest.objects.filter(community=community, status='pending')
+
+    context = {
+        'community': community,
+        'membership_requests': membership_requests,
+    }
+    
+    return render(request, 'manage_community.html', context)
+
 
 @login_required
 def community_list(request):
