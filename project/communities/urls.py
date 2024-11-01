@@ -13,6 +13,9 @@ urlpatterns = [
     path('editar/<int:pk>/', community_views.update_community, name='update_community'),
     path('deletar/<int:pk>/', community_views.delete_community, name='delete_community'),
 
+    # URL para gerenciamento de uma comunidade especifica
+    path('comunidade/<int:community_id>/gerenciamento/', community_views.manage_community, name='manage_community'),
+
     # URL para o dashboard de uma comunidade específica
     path('dashboard/<int:community_id>/', community_views.dashboard_view, name='dashboard'),
 
