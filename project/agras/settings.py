@@ -18,6 +18,7 @@ if NOT_PROD:
     DEBUG = True
     # SECURITY WARNING: keep the secret key used in production secret!
     SECRET_KEY = 'django-insecure-pati6-&4n7tnx**0u$jl@g2)*d9-$s5a+n5=ps^29adk2^-#(@'
+    API_KEY='AIzaSyB99B2kY68RtNGw7OZEyzHfbzYGvdlhwuU'
     ALLOWED_HOSTS = ['localhost', '127.0.0.1']
     DATABASES = {
         'default': {
@@ -30,6 +31,7 @@ if NOT_PROD:
     STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 else:
+    API_KEY=os.getenv('API_KEY')
     SECRET_KEY = os.getenv('SECRET_KEY')
     DEBUG = os.getenv('DEBUG', '0').lower() in ['true', 't', '1']
     ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(' ')
@@ -75,6 +77,7 @@ INSTALLED_APPS = [
     'products',
     'seedbeds',
     'areas',
+    'chat',
     "whitenoise.runserver_nostatic",
 ]
 
