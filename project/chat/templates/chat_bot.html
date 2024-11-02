@@ -5,23 +5,32 @@
 {% block content %}
 <body class="font-sans bg-gray-100">
     <div class="container mx-auto p-6">
-        <h1 class="text-3xl font-bold mb-6">Chat Gemini</h1>
-        <div id="chat-history">
+        <h1 class="text-3xl font-bold text-center mb-6">Chat Gemini 🌱</h1>
+
+        <!-- Histórico de mensagens -->
+        <div id="chat-history" class="bg-white shadow-md rounded-lg p-4 mb-4 max-h-96 overflow-y-auto">
             {% for chat in chats %}
-                <div class="message user-message">
+                <div class="message user-message my-2 p-3 rounded-lg bg-blue-100 text-right">
                     <strong>Você:</strong> {{ chat.text_input }}
                 </div>
-                <div class="message bot-message">
-                    <strong>Bot:</strong> {{ chat.gemini_output }}
+                <div class="message bot-message my-2 p-3 rounded-lg bg-green-100 text-left">
+                    <strong>IA:</strong>
+                    <div class="whitespace-pre-wrap">{% autoescape off %}{{ chat.gemini_output }}{% endautoescape %}</div>
                 </div>
             {% endfor %}
         </div>
 
         <!-- Formulário para enviar novas perguntas -->
-        <div class="form-container">
-            <input type="text" id="user-input" placeholder="Digite sua pergunta..." required>
-            <button onclick="sendMessage()">Enviar</button>
+        <div class="flex items-center">
+            <input type="text" id="user-input" placeholder="Digite sua pergunta..."
+                   class="flex-grow p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-200"
+                   required>
+            <button onclick="sendMessage()"
+                    class="ml-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-200">
+                Enviar
+            </button>
         </div>
+    </div>
 </body>
 
 <script>

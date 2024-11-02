@@ -3,7 +3,7 @@ from . import views as community_views  # Importando as views do app de comunida
 from areas import views as area_views    # Importando as views do app de áreas
 from seedbeds import views as seedbed_views  # Importando as views do app de canteiros
 from products import views as product_views  # Importando as views do app de produtos
-#from chat import views as chat_views
+from chat import views as chat_views
 
 urlpatterns = [
     # URL para a lista de comunidades (hub)
@@ -40,6 +40,6 @@ urlpatterns = [
     path('comunidade/<int:community_id>/areas/<int:area_id>/canteiros/<int:seedbed_id>/produtos/detalhes/<int:product_id>/', product_views.product_detail_view, name='product_detail'),
     path('comunidades/<int:community_id>/areas/<int:area_id>/canteiros/<int:seedbed_id>/produtos/infos/<int:product_id>/', product_views.get_product_info_view, name='get_product_info'),
 
-    # path("comunidades/<int:community_id>/<int:user_id>/chat/", chat_views.chat, name="chat"),
-    # path("comunidades/<int:community_id>/<int:user_id>/ask_question/", chat_views.ask_question, name="ask_question"),
+    path("comunidades/<int:community_id>/<int:user_id>/chat/", chat_views.chat, name="chat"),
+    path("comunidades/<int:community_id>/<int:user_id>/ask_question/", chat_views.ask_question, name="ask_question")
 ]
