@@ -5,9 +5,8 @@
 {% block content %}
 
 <!-- Sidebar -->
-<div class="px-8 py-10 mx-auto flex flex-row gap-x-8 bg-white">
-    
-    <div class="bg-[#8ABF17] flex flex-col items-center rounded-[20px] w-full lg:w-[220px] h-auto lg:h-[850px] mb-8 lg:mb-0"> 
+<div class="flex px-8 py-10 mx-auto bg-white">
+    <div class="bg-[#8ABF17] lg:flex hidden flex flex-col items-center rounded-[20px] w-full lg:w-[220px] h-auto lg:h-[850px] fixed z-10"> 
         <a href="/"><img class="w-[146px] mt-12 mb-8" src="{% static 'assets/logo-branco-h.png' %}" alt="AGRAS"> </a>   
         <div class="flex flex-col gap-y-6 mt-12 w-full px-4 flex-grow">
             <div class="flex-grow"></div>
@@ -19,9 +18,9 @@
             </form>
         </div>
     </div> 
-
+    
     <!-- Main content -->
-    <div class="flex-1 p-6 lg:p-10">
+    <div class="flex-1 p-6 lg:p-10 ml-0 lg:ml-[220px]">
         <header class="mb-6">
             <h1 class="text-3xl lg:text-[48px] font-bold">Comunidades</h1>
             <p class="text-lg text-black font-medium">Encontre, crie e gerencie seus plantios!</p>
@@ -77,30 +76,29 @@
             </div>
         </div>
 
-<!-- Cards Grid -->
-<div id="communitiesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-    {% for community in communities %}
-    <div class="bg-white shadow-md rounded-lg overflow-hidden flex flex-col h-full">
-        <div class="flex-1 p-4 bg-[#8ABF17] text-center text-white">
-            <h3 class="font-bold text-lg">{{ community.name }}</h3>
-            <p class="text-sm break-words">{{ community.description }}</p>
-        </div>
-        <div class="p-4 bg-[#8ABF17] flex justify-between">
-            <div class="flex-grow flex justify-between">
-                <a href="{% url 'dashboard' community.id %}" class="bg-white text-[#8ABF17] font-semibold px-4 py-2 rounded-md border-2 border-white flex-1 mx-1 text-center">Entrar</a>
-                <form action="{% url 'delete_community' community.id %}" method="post" class="inline flex-1 mx-1">
-                    {% csrf_token %}
-                    <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-md flex-1 text-center">Excluir</button>
-                </form>
-                <button class="bg-blue-500 text-white px-4 py-2 rounded-md flex-1 mx-1 text-center edit-btn" data-id="{{ community.id }}" data-name="{{ community.name }}" data-description="{{ community.description }}" onclick="openEditModal(this)">Editar</button>
+        <!-- Cards Grid -->
+        <div id="communitiesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4  gap-6">
+            {% for community in communities %}
+            <div class="bg-white shadow-md rounded-[20px] overflow-hidden flex flex-col h-full">
+                <div class="bg-[#EFF1F3] py-12 flex items-center justify-center h-full">
+                    <img class="w-[150px]" src="{% static 'assets/vertcolorido.png' %}" alt="">
+                </div>
+                <div class="flex-1 p-4 py-6 bg-[#8ABF17] text-center text-white">
+                    <h3 class="font-bold text-lg">{{ community.name }}</h3>
+                    <p class="text-sm break-words">{{ community.description }}</p>
+                </div>
+                <div class="p-4 bg-[#8ABF17] flex justify-between">
+                    <div class="flex-grow flex justify-between">
+                        <a href="{% url 'dashboard' community.id %}" class="bg-white text-[#8ABF17] font-semibold px-4 py-2 rounded-md border-2 border-white flex-1 mx-1 text-center">Entrar</a>
+                    </div>
+                </div>
             </div>
+            {% empty %}
+            <p class="text-gray-500">Nenhuma comunidade encontrada.</p>
+            {% endfor %}
         </div>
     </div>
-    {% empty %}
-    <p class="text-gray-500">Nenhuma comunidade encontrada.</p>
-    {% endfor %}
 </div>
-
 
 <script>
     function toggleModal(action) {
@@ -116,21 +114,6 @@
         } else if (action === 'closeEdit') {
             editModal.classList.add('hidden');
         }
-    }
-
-    function openEditModal(button) {
-        const id = button.getAttribute('data-id');
-        const name = button.getAttribute('data-name');
-        const description = button.getAttribute('data-description');
-
-        document.getElementById('editCommunityId').value = id;
-        document.getElementById('editName').value = name;
-        document.getElementById('editDescription').value = description;
-
-        document.getElementById('editCommunityForm').action = `{% url 'update_community' 0 %}`.replace('0', id);
-
-        toggleModal('close');
-        toggleModal('openEdit');
     }
 </script>
 {% endblock %}

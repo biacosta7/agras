@@ -56,6 +56,27 @@
             font-size: 10px; 
         }
 
+        /* Scrollbar for Webkit browsers (Chrome, Safari) */
+        ::-webkit-scrollbar {
+            width: 4px; /* Largura da scrollbar */
+            height: 4px; /* Altura da scrollbar (para scroll horizontal) */
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #8ABF17; /* Cor da parte que arrasta */
+            border-radius: 4px; /* Bordas arredondadas */
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent; /* Cor do fundo da scrollbar */
+        }
+
+        /* Scrollbar for Firefox */
+        .scrollbar {
+            scrollbar-width: thin; /* Define a largura como fina */
+            scrollbar-color: #8ABF17 transparent; /* Cor do thumb e do track */
+        }
+
     {% endblock styles %}
 </style>
 

@@ -47,11 +47,11 @@
         <div class="bg-gray-100 p-4 rounded-lg mb-6 max-w-[500px] flex items-center justify-between">
             <h2 class="text-xl font-semibold">Comunidade</h2>
             <div class="flex items-center">
-                <span class="bg-[#4CAF50] text-white px-4 py-2 rounded-lg">{{ community.name }}</span>
-                <button onclick="openEditModal()" class="ml-2 bg-yellow-500 text-white p-1 rounded-full hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400">
-                    <span class="material-icons-outlined">edit</span>
+                <span class="bg-[#4CAF50] text-white px-4 py-2 rounded-lg font-semibold">{{ community.name }}</span>
+                <button onclick="openEditModal()" class="ml-2 bg-yellow-500 text-white p-1 rounded-full hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 flex">
+                    <span class="material-icons-outlined text-sm">edit</span>
                 </button>
-                <button onclick="openDeleteModal()" class="ml-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400">
+                <button onclick="openDeleteModal()" class="ml-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 flex">
                     <span class="material-icons-outlined">delete</span>
                 </button>
             </div>
@@ -80,13 +80,13 @@
                         <td class="py-2 px-4 flex justify-center space-x-2">
                             <form action="" method="post">
                                 {% csrf_token %}
-                                <button type="submit" class="bg-green-500 text-white rounded-full p-1 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400">
+                                <button type="submit" class="bg-green-500 text-white rounded-full p-1 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 flex">
                                     <span class="material-icons-outlined">check</span>
                                 </button>
                             </form>
                             <form action="" method="post">
                                 {% csrf_token %}
-                                <button type="submit" class="bg-red-500 text-white rounded-full p-1 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400">
+                                <button type="submit" class="bg-red-500 text-white rounded-full p-1 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 flex">
                                     <span class="material-icons-outlined">close</span>
                                 </button>
                             </form>
@@ -102,6 +102,8 @@
         </div>
 
         <!-- Modais -->
+
+        <!-- Modal de edição -->
         <div id="editModal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
             <div class="bg-white p-6 rounded-lg w-full max-w-lg">
                 <h3 class="text-xl font-semibold mb-4">Editar Comunidade</h3>
@@ -119,6 +121,7 @@
             </div>
         </div>
 
+        <!-- Modal de deleção -->
         <div id="deleteModal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
             <div class="bg-white p-6 rounded-lg w-full max-w-lg">
                 <h3 class="text-xl font-semibold mb-4 text-red-600">Excluir Comunidade</h3>
