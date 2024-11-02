@@ -18,7 +18,7 @@ if NOT_PROD:
     DEBUG = True
     # SECURITY WARNING: keep the secret key used in production secret!
     SECRET_KEY = 'django-insecure-pati6-&4n7tnx**0u$jl@g2)*d9-$s5a+n5=ps^29adk2^-#(@'
-    API_KEY='AIzaSyB99B2kY68RtNGw7OZEyzHfbzYGvdlhwuU'
+    API_KEY='AIzaSyC2pCVgR3wzXaEaT2uDw73syf6B3LONiEg'
     ALLOWED_HOSTS = ['localhost', '127.0.0.1']
     DATABASES = {
         'default': {
