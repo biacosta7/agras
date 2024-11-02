@@ -5,8 +5,8 @@
 {% block content %}
 
 <!-- Sidebar -->
-<div class="flex px-8 py-10 mx-auto bg-white">
-    <div class="bg-[#8ABF17] lg:flex hidden flex flex-col items-center rounded-[20px] w-full lg:w-[220px] h-auto lg:h-[850px] fixed z-10"> 
+<div class="flex px-8 py-10 mx-auto bg-white relative">
+    <div class="bg-[#8ABF17] lg:flex hidden flex flex-col items-center rounded-[20px] w-full lg:w-[220px] h-auto lg:h-[850px] fixed"> 
         <a href="/"><img class="w-[146px] mt-12 mb-8" src="{% static 'assets/logo-branco-h.png' %}" alt="AGRAS"> </a>   
         <div class="flex flex-col gap-y-6 mt-12 w-full px-4 flex-grow">
             <div class="flex-grow"></div>
@@ -18,6 +18,32 @@
             </form>
         </div>
     </div> 
+
+    <!-- Hamburger Menu Button (mobile) -->
+    <button id="menu-btn" class="lg:hidden fixed top-4 left-4 z-20 p-2 rounded-md bg-[#8ABF17] text-white focus:outline-none">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+    </button>
+
+    <!-- Mobile Sidebar -->
+    <div id="mobile-sidebar" class="hidden fixed top-0 left-0 w-[250px] h-full bg-[#8ABF17] z-20 transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
+        <div class="flex justify-between items-center p-4">
+            <a href="/"><img class="w-[146px]" src="{% static 'assets/logo-branco-h.png' %}" alt="AGRAS"></a>
+            <button id="close-menu" class="text-white">
+                <span class="material-icons">close</span>
+            </button>
+        </div>
+        <div class="flex flex-col gap-y-6 mt-12 w-full px-4 flex-grow">
+            <div class="flex-grow"></div>
+            <form action="{% url 'logout' %}" method="POST" class="w-full px-4 mb-12">
+                {% csrf_token %}
+                <button class="text-[14px] font-normal text-white flex items-center cursor-pointer w-full">
+                    <span class="material-icons mr-2">logout</span>Sair
+                </button>
+            </form>
+        </div>
+    </div>
     
     <!-- Main content -->
     <div class="flex-1 p-6 lg:p-10 ml-0 lg:ml-[220px]">
@@ -77,7 +103,7 @@
         </div>
 
         <!-- Cards Grid -->
-        <div id="communitiesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4  gap-6">
+        <div id="communitiesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
             {% for community in communities %}
             <div class="bg-white shadow-md rounded-[20px] overflow-hidden flex flex-col h-full">
                 <div class="bg-[#EFF1F3] py-12 flex items-center justify-center h-full">
@@ -115,5 +141,27 @@
             editModal.classList.add('hidden');
         }
     }
+
+    // Abrir e fechar o menu
+    const menuBtn = document.getElementById('menu-btn');
+    const mobileSidebar = document.getElementById('mobile-sidebar');
+    const closeMenu = document.getElementById('close-menu');
+
+    menuBtn.addEventListener('click', () => {
+        mobileSidebar.classList.remove('hidden');
+        requestAnimationFrame(() => {
+            mobileSidebar.classList.add('transform', 'translate-x-0');
+        });
+    });
+
+    closeMenu.addEventListener('click', () => {
+        mobileSidebar.classList.remove('transform', 'translate-x-0');
+        // Espera a animação de fechamento terminar antes de adicionar a classe 'hidden'
+        mobileSidebar.addEventListener('transitionend', function handleTransitionEnd() {
+            mobileSidebar.classList.add('hidden');
+            mobileSidebar.removeEventListener('transitionend', handleTransitionEnd);
+        });
+    });
 </script>
+
 {% endblock %}
