@@ -1,0 +1,66 @@
+{% extends 'base.html' %} 
+{% load static %}
+{% block title %}Chat{% endblock %}
+
+{% block content %}
+<body class="font-sans bg-gray-100">
+    <div class="container mx-auto p-6">
+        <h1 class="text-3xl font-bold mb-6">Chat Gemini</h1>
+        <div id="chat-history">
+            {% for chat in chats %}
+                <div class="message user-message">
+                    <strong>Você:</strong> {{ chat.text_input }}
+                </div>
+                <div class="message bot-message">
+                    <strong>Bot:</strong> {{ chat.gemini_output }}
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Formulário para enviar novas perguntas -->
+        <div class="form-container">
+            <input type="text" id="user-input" placeholder="Digite sua pergunta..." required>
+            <button onclick="sendMessage()">Enviar</button>
+        </div>
+</body>
+
+<script>
+    function sendMessage() {
+        const userInput = document.getElementById("user-input");
+        const messageText = userInput.value.trim();
+
+        if (!messageText) return;
+
+        // URL dinâmica com community_id e user_id
+        fetch("{% url 'ask_question' community_id=community_id user_id=user_id %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: new URLSearchParams({ text: messageText })
+        })
+        .then(response => response.json())
+        .then(data => {
+            const chatHistory = document.getElementById("chat-history");
+
+            // Adiciona a mensagem do usuário no histórico
+            const userMessage = document.createElement("div");
+            userMessage.classList.add("message", "user-message");
+            userMessage.innerHTML = `<strong>Você:</strong> ${messageText}`;
+            chatHistory.appendChild(userMessage);
+
+            // Adiciona a resposta do bot no histórico
+            const botMessage = document.createElement("div");
+            botMessage.classList.add("message", "bot-message");
+            botMessage.innerHTML = `<strong>Bot:</strong> ${data.data.text}`;
+            chatHistory.appendChild(botMessage);
+
+            // Limpa o campo de entrada de texto
+            userInput.value = "";
+            chatHistory.scrollTop = chatHistory.scrollHeight; // Rolagem automática para a última mensagem
+        })
+        .catch(error => console.error("Erro ao enviar mensagem:", error));
+    }
+</script>
+{% endblock content %}
