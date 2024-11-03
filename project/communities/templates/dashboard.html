@@ -5,7 +5,7 @@
 {% block content %}
 <div class="min-h-screen bg-white flex px-4 md:px-8 py-10 gap-x-8">
     <!-- Sidebar (Desktop) -->
-    <div class="bg-[#8ABF17] lg:flex hidden flex-col items-center rounded-[20px] w-[220px] h-[90%] fixed">
+    <div class="bg-[#8ABF17] lg:flex xl:flex 2xl:flex hidden flex-col items-center rounded-[20px] w-[220px] h-[90%] fixed">
         <a href="/"><img class="w-[146px] mt-12 mb-8" src="{% static 'assets/logo-branco-h.png' %}" alt="AGRAS"> </a>
         <div class="flex flex-col gap-y-6 mt-12 w-full px-4 flex-grow">
             <a href="{% url 'dashboard' community.id %}" class="text-[14px] font-normal text-white flex items-center cursor-pointer"> <span class="material-icons mr-2">dashboard</span> Dashboard</a>
@@ -61,11 +61,11 @@
     <div class="flex flex-col w-full max-w-[26rem]">
         <div class="rounded-[14px] max-h-[125px] bg-[#F5F5F7] shadow-md flex items-center justify-between">
             <div class="px-6">
-                <p class="font-bold text-[24px] lg:text-[32px]">Olá, {{user.first_name}}!</p>
-                <p class="font-regular text-[14px] lg:text-[16px] text-[#F76711]">Que bom te ver novamente!</p>
+                <p class="font-bold text-[24px] lg:text-[24px]">Olá, {{user.first_name}}!</p>
+                <p class="font-regular text-[14px] lg:text-[14px] text-[#F76711]">Que bom te ver novamente!</p>
             </div>
             <div class="px-2">
-                <img src="{% static 'assets/assetszinho.png'%}" alt="">
+                <img src="{% static 'assets/assetszinho.png'%}" class="w-[140px] lg:w-[360px]" alt="">
             </div>
         </div>
         <div class="mt-4 lg:mt-[20px] flex flex-col lg:flex-row justify-between gap-4">
@@ -91,7 +91,7 @@
 
         <div class="mt-8 bg-[#F5F5F7] rounded-[23px] shadow-md p-6">
             <h1 class="text-[#F7833F] font-bold text-xl mb-4">Cultivos Populares</h1>
-            <ol class="h-[17rem] max-h-full overflow-y-scroll"> 
+            <ol class="h-full overflow-y-scroll"> 
                 <li class="flex items-center p-4 border-b border-gray-200">
                     <span class="font-bold text-2xl text-[#F7833F] mr-4">1</span> Tomate
                     <span class="ml-auto text-green-500">+20%</span>
@@ -126,7 +126,7 @@
         <!-- Lista de Tarefas -->
         <div class="mt-8 bg-[#F5F5F7] rounded-[23px] shadow-md p-6">
             <h1 class="text-[#F7833F] font-bold text-xl mb-4">Tarefas Recentes</h1>
-            <ul class="space-y-4 h-[128px] overflow-y-scroll">
+            <ul class="space-y-4 h-full overflow-y-scroll">
                 <li class="flex items-center justify-between bg-white p-4 rounded-lg shadow-sm">
                     <div>
                         <p class="font-semibold text-gray-800">Regar o canteiro de tomates</p>
@@ -163,7 +163,7 @@
                             <p class="font-bold text-[16px] lg:text-[18px]">Criar Tarefa</p>
                             <p class="font-medium text-[12px] lg:text-[14px]">Crie uma nova task</p>
                         </div>
-                        <div class="bg-[#F76711] rounded-full flex items-center justify-center ml-[50px] w-[50px] h-[50px] lg:w-[60px] lg:h-[60px]">
+                        <div class="bg-[#F76711] rounded-full flex items-center justify-center w-[50px] h-[50px] lg:w-[60px] lg:h-[60px]">
                             <span class="material-icons text-white" style="font-size: 40px; lg:font-size: 50px;">add</span>
                         </div>
                     </div>
@@ -174,7 +174,7 @@
                             <p class="font-bold text-[16px] lg:text-[18px]">Criar Tarefa</p>
                             <p class="font-medium text-[12px] lg:text-[14px]">Crie uma nova task</p>
                         </div>
-                        <div class="bg-[#F76711] rounded-full flex items-center justify-center ml-[50px] w-[50px] h-[50px] lg:w-[60px] lg:h-[60px]">
+                        <div class="bg-[#F76711] rounded-full flex items-center justify-center w-[50px] h-[50px] lg:w-[60px] lg:h-[60px]">
                             <span class="material-icons text-white" style="font-size: 40px; lg:font-size: 50px;">add</span>
                         </div>
                     </div>
@@ -185,7 +185,7 @@
                             <p class="font-bold text-[16px] lg:text-[18px]">Criar Tarefa</p>
                             <p class="font-medium text-[12px] lg:text-[14px]">Crie uma nova task</p>
                         </div>
-                        <div class="bg-[#F76711] rounded-full flex items-center justify-center ml-[50px] w-[50px] h-[50px] lg:w-[60px] lg:h-[60px]">
+                        <div class="bg-[#F76711] rounded-full flex items-center justify-center w-[50px] h-[50px] lg:w-[60px] lg:h-[60px]">
                             <span class="material-icons text-white" style="font-size: 40px; lg:font-size: 50px;">add</span>
                         </div>
                     </div>
