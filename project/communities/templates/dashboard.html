@@ -3,180 +3,206 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<div class="min-h-screen bg-white relative">
-    <div class="px-4 md:px-8 py-10 mx-auto flex flex-col lg:flex-row gap-x-8">
-        
-        <!-- Sidebar -->
-        <div class="bg-[#8ABF17] lg:flex hidden flex flex-col items-center rounded-[20px] w-full lg:w-[220px] h-[90%] fixed"> 
-            <a href="/"><img class="w-[146px] mt-12 mb-8" src="{% static 'assets/logo-branco-h.png' %}" alt="AGRAS"> </a>   
-            <div class="flex flex-col gap-y-6 mt-12 w-full px-4 flex-grow">
-                <a href="{% url 'dashboard' community.id %}" class="text-[14px] font-normal text-white flex items-center cursor-pointer"> <span class="material-icons mr-2">dashboard</span> Dashboard</a>
-                <a href="{% url 'area_manage' community.id %}" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">forest</span> Areas</a>
-                <a href="" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">trending_up</span> Estatísticas</a>
-                <a href="{% url 'manage_community' community.id %}" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">equalizer</span> Gerenciamento</a>
-                <a href="" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">settings</span> Configurações</a>
-                <div class="flex-grow"></div>
-                <form action="{% url 'logout' %}" method="POST" class="w-full px-4 mb-12">
-                    {% csrf_token %}
-                    <button class="text-[14px] font-normal text-white flex items-center cursor-pointer w-full">
-                        <span class="material-icons mr-2">logout</span>Sair
-                    </button>
-                </form>
-            </div>
-        </div>
-
-        <!-- Hamburger Menu Button (mobile) -->
-        <button id="menu-btn" class="lg:hidden fixed top-4 left-4 z-20 p-2 rounded-md bg-[#8ABF17] text-white focus:outline-none">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-        </button>
-
-        <!-- Mobile Sidebar -->
-        <div id="mobile-sidebar" class="hidden fixed top-0 left-0 w-[250px] h-full bg-[#8ABF17] z-20 transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
-            <div class="flex justify-between items-center p-4">
-                <a href="/"><img class="w-[146px]" src="{% static 'assets/logo-branco-h.png' %}" alt="AGRAS"> </a>
-                    <button id="close-menu" class="text-white">
-                        <span class="material-icons">close</span>
-                    </button>
-            </div>
-            <div class="flex flex-col gap-y-6 mt-12 w-full px-4 flex-grow">
-                <a href="{% url 'dashboard' community.id %}" class="text-[14px] font-normal text-white flex items-center cursor-pointer"> <span class="material-icons mr-2">dashboard</span> Dashboard</a>
-                <a href="{% url 'area_manage' community.id %}" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">forest</span> Areas</a>
-                <a href="" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">trending_up</span> Estatísticas</a>
-                <a href="{% url 'manage_community' community.id %}" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">equalizer</span> Gerenciamento</a>
-                <a href="" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">settings</span> Configurações</a>
-                <div class="flex-grow"></div> <!-- Este elemento faz o botão de logout descer -->
-            </div>
-            <form action="{% url 'logout' %}" method="POST" class="w-full px-4 mb-12">
+<div class="min-h-screen bg-white flex px-4 md:px-8 py-10 gap-x-8">
+    <!-- Sidebar (Desktop) -->
+    <div class="bg-[#8ABF17] lg:flex hidden flex-col items-center rounded-[20px] w-[220px] h-[90%] fixed">
+        <a href="/"><img class="w-[146px] mt-12 mb-8" src="{% static 'assets/logo-branco-h.png' %}" alt="AGRAS"> </a>
+        <div class="flex flex-col gap-y-6 mt-12 w-full px-4 flex-grow">
+            <a href="{% url 'dashboard' community.id %}" class="text-[14px] font-normal text-white flex items-center cursor-pointer"> <span class="material-icons mr-2">dashboard</span> Dashboard</a>
+            <a href="{% url 'area_manage' community.id %}" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">forest</span> Areas</a>
+            <a href="#" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">trending_up</span> Estatísticas</a>
+            <a href="{% url 'manage_community' community.id %}" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">equalizer</span> Gerenciamento</a>
+            <a href="#" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">settings</span> Configurações</a>
+            <a href="#" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">help</span> Ajuda</a>
+            <div class="flex-grow"></div>
+            <form action="{% url 'logout' %}" method="POST" class="w-full mb-12">
                 {% csrf_token %}
                 <button class="text-[14px] font-normal text-white flex items-center cursor-pointer w-full">
                     <span class="material-icons mr-2">logout</span>Sair
                 </button>
             </form>
         </div>
+    </div>
 
-        <!-- Main Content -->
-        <div class="px-4 md:px-8 py-10 mx-auto lg:ml-[220px]"> 
+    <!-- Mobile Sidebar Toggle -->
+    <button id="menu-btn" class="lg:hidden fixed top-4 left-4 z-20 p-2 rounded-md bg-[#8ABF17] text-white focus:outline-none">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+    </button>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                 <!-- Coluna 1: Greeting Card and Stats -->
-                 <div class="flex flex-col">
-                    <div class="rounded-[14px] max-h-[160px] bg-[#F5F5F7] w-full shadow-md flex lg:flex-row items-center justify-between">
-                        <div class="p-6">
-                            <p class="font-bold text-[24px] lg:text-[32px]">Olá, {{user.first_name}}!</p>
-                            <p class="font-regular text-[14px] lg:text-[16px] text-[#F76711]">Que bom te ver novamente!</p>
-                            <p class="font-regular text-[12px] lg:text-[14px] text-[#562A00] mt-1">Comunidade | {{community.name}}</p>
-                        </div>
-                        <div class="p-2">
-                            <img src="{% static 'assets/assetszinho.png'%}" alt="">
-                        </div>
-                    </div>
-                    <div class="mt-4 lg:mt-[20px] flex flex-col lg:flex-row justify-between gap-4">
-                        <div class="rounded-[14px] bg-[#F5F5F7] w-full lg:w-[190px] shadow-md flex items-center justify-center">
-                            <div class="p-4 text-center">
-                                <p class="font-semibold text-[24px] lg:text-[32px] text-[#8ABF17]">11</p>
-                                <p class="font-regular text-[13px] lg:text-[15px] text-black">Produtos Vendidos</p>
-                            </div>
-                        </div>
-                        <div class="rounded-[14px] bg-[#F5F5F7] w-full lg:w-[190px] shadow-md flex items-center justify-center">
-                            <div class="p-4 text-center">
-                                <p class="font-semibold text-[24px] lg:text-[32px] text-[#562A00]">R$ 2.4k</p>
-                                <p class="font-regular text-[13px] lg:text-[15px] text-black">Total Arrecadado</p>
-                            </div>
-                        </div>
-                        <div class="rounded-[14px] bg-[#F5F5F7] w-full lg:w-[190px] shadow-md flex items-center justify-center">
-                            <div class="p-4 text-center">
-                                <p class="font-semibold text-[24px] lg:text-[32px] text-[#F76711]">36</p>
-                                <p class="font-regular text-[13px] lg:text-[15px] text-black">Tarefas Concluídas</p>
-                            </div>
-                        </div>
-                    </div> 
-                    <!-- Crop Ranks -->
-                    <div class="mt-8 lg:mt-14 h-full bg-[#F5F5F7] rounded-[23px] shadow-md w-full p-6">
-                        <h1 class="text-[#F7833F] font-bold text-xl mb-4">Cultivos Populares</h1>
-                        <ol class="space-y-4">
-                            <li class="flex items-center bg-white rounded-lg shadow p-4">
-                                <span class="text-[#F7833F] font-bold text-2xl mr-4">1</span>
-                                <div>
-                                    <p class="font-bold text-gray-800">Tomate</p>
-                                    <p class="text-sm text-gray-500">Alta popularidade e produção</p>
-                                </div>
-                                <span class="ml-auto text-green-500 font-semibold">+20%</span>
-                            </li>
-                            <li class="flex items-center bg-white rounded-lg shadow p-4">
-                                <span class="text-[#F7833F] font-bold text-2xl mr-4">2</span>
-                                <div>
-                                    <p class="font-bold text-gray-800">Alface</p>
-                                    <p class="text-sm text-gray-500">Cultivo rápido e lucrativo</p>
-                                </div>
-                                <span class="ml-auto text-green-500 font-semibold">+15%</span>
-                            </li>
-                            <li class="flex items-center bg-white rounded-lg shadow p-4">
-                                <span class="text-[#F7833F] font-bold text-2xl mr-4">3</span>
-                                <div>
-                                    <p class="font-bold text-gray-800">Cenoura</p>
-                                    <p class="text-sm text-gray-500">Resistente e versátil</p>
-                                </div>
-                                <span class="ml-auto text-green-500 font-semibold">+10%</span>
-                            </li>
-                        </ol>
-                    </div>
+    <!-- Mobile Sidebar -->
+    <div id="mobile-sidebar" class="hidden fixed top-0 left-0 w-[250px] h-full bg-[#8ABF17] z-20 transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
+        <div class="flex justify-between items-center p-4">
+            <a href="/"><img class="w-[146px]" src="{% static 'assets/logo-branco-h.png' %}" alt="AGRAS"> </a>
+            <button id="close-menu" class="text-white">
+                <span class="material-icons">close</span>
+            </button>
+        </div>
+        <div class="flex flex-col gap-y-6 mt-12 w-full px-4 flex-grow">
+            <a href="{% url 'dashboard' community.id %}" class="text-[14px] font-normal text-white flex items-center cursor-pointer"> <span class="material-icons mr-2">dashboard</span> Dashboard</a>
+            <a href="{% url 'area_manage' community.id %}" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">forest</span> Areas</a>
+            <a href="#" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">trending_up</span> Estatísticas</a>
+            <a href="{% url 'manage_community' community.id %}" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">equalizer</span> Gerenciamento</a>
+            <a href="#" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">settings</span> Configurações</a>
+            <a href="#" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">help</span> Ajuda</a>
+            <div class="flex-grow"></div>
+        </div>
+        <form action="{% url 'logout' %}" method="POST" class="w-full px-4 mb-12">
+            {% csrf_token %}
+            <button class="text-[14px] font-normal text-white flex items-center cursor-pointer w-full">
+                <span class="material-icons mr-2">logout</span>Sair
+            </button>
+        </form>
+    </div>
+
+<!-- Main Content -->
+<div class="ml-0 lg:ml-[250px] flex lg:flex-row flex-col gap-x-8">
+    <div class="flex flex-col w-full max-w-[26rem]">
+        <div class="rounded-[14px] max-h-[125px] bg-[#F5F5F7] shadow-md flex items-center justify-between">
+            <div class="px-6">
+                <p class="font-bold text-[24px] lg:text-[32px]">Olá, {{user.first_name}}!</p>
+                <p class="font-regular text-[14px] lg:text-[16px] text-[#F76711]">Que bom te ver novamente!</p>
+            </div>
+            <div class="px-2">
+                <img src="{% static 'assets/assetszinho.png'%}" alt="">
+            </div>
+        </div>
+        <div class="mt-4 lg:mt-[20px] flex flex-col lg:flex-row justify-between gap-4">
+            <div class="rounded-[14px] bg-[#F5F5F7] w-full max-w-xs shadow-md flex items-center justify-center">
+                <div class="p-4 text-center">
+                    <p class="font-semibold text-[32px] lg:text-[24px] text-[#8ABF17]">11</p>
+                    <p class="font-regular text-[15px] lg:text-[13px] text-black">Produtos Vendidos</p>
                 </div>
-    
-                <!-- Coluna 2: Calendário e Clima e Fases da Lua -->
-                <div class="flex flex-col w-full">
-                    <div class="rounded-[23px] bg-[#F5F5F7] mb-4 p-4 max-h-[440px]">
-                        <div id="calendar" class="h-full overflow-auto"></div>
-                    </div>
-    
-                    <div class="flex flex-col gap-2 mt-4 lg:mt-0 lg:ml-4">
-                        <a href="{% url 'area_manage' community.id %}" class="">
-                            <div class="bg-[#8ABF17] p-6 h-[100px] rounded-[18px] text-white flex flex-row justify-between items-center mt-0 cursor-pointer">
-                                <div>
-                                    <p class="font-bold text-[16px] lg:text-[18px]">Criar Tarefa</p>
-                                    <p class="font-medium text-[12px] lg:text-[14px]">Crie uma nova task</p>
-                                </div>
-                                <div class="bg-[#F76711] rounded-[23px] flex items-center justify-center w-[50px] h-[50px] lg:w-[60px] lg:h-[60px] text-[40px] lg:text-[50px]">
-                                    +
-                                </div>
-                            </div>
-                        </a>
-                        <a href="{% url 'area_manage' community.id %}" class="">
-                            <div class="bg-[#562A00] p-6 h-[100px] rounded-[18px] text-white flex flex-row justify-between items-center mt-0 cursor-pointer">
-                                <div>
-                                    <p class="font-bold text-[16px] lg:text-[18px]">A fazer</p>
-                                    <p class="font-medium text-[12px] lg:text-[14px]">Colheita do Cantinho dos Alfaces</p>
-                                </div>
-                                <div class="bg-[#8ABF17] rounded-[23px] flex items-center justify-center w-[50px] h-[50px] lg:w-[60px] lg:h-[60px] text-[40px] lg:text-[50px]">
-                                    +
-                                </div>
-                            </div>
-                        </a>
-                        <a href="{% url 'area_manage' community.id %}" class="">
-                            <div class="bg-[#F76711] p-6 h-[100px] rounded-[18px] text-white flex flex-row justify-between items-center mt-0 cursor-pointer">
-                                <div>
-                                    <p class="font-bold text-[16px] lg:text-[18px]">A fazer</p>
-                                    <p class="font-medium text-[12px] lg:text-[14px]">Manejo do Berçário das Batatas</p>
-                                </div>
-                                <div class="bg-[#8ABF17] rounded-[23px] flex items-center justify-center w-[50px] h-[50px] lg:w-[60px] lg:h-[60px] text-white text-[40px] lg:text-[50px]">
-                                    +
-                                </div>
-                            </div>
-                        </a>
-        
+            </div>
+            <div class="rounded-[14px] bg-[#F5F5F7] w-full max-w-xs shadow-md flex items-center justify-center">
+                <div class="p-4 text-center">
+                    <p class="font-semibold text-[32px] lg:text-[24px] text-[#562A00]">R$ 2.4k</p>
+                    <p class="font-regular text-[15px] lg:text-[13px] text-black">Total Arrecadado</p>
                 </div>
-            </div> 
-            
-            <!-- Coluna 2: Calendário e Clima e Fases da Lua -->
-            <div class="flex flex-col w-full">
-    
-                <h1>Coluna 3</h1>
-        </div> 
+            </div>
+            <div class="rounded-[14px] bg-[#F5F5F7] w-full max-w-xs shadow-md flex items-center justify-center">
+                <div class="p-4 text-center">
+                    <p class="font-semibold text-[32px] lg:text-[24px] text-[#F76711]">36</p>
+                    <p class="font-regular text-[15px] lg:text-[13px] text-black">Tarefas Concluídas</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-8 bg-[#F5F5F7] rounded-[23px] shadow-md p-6">
+            <h1 class="text-[#F7833F] font-bold text-xl mb-4">Cultivos Populares</h1>
+            <ol class="h-[17rem] max-h-full overflow-y-scroll"> 
+                <li class="flex items-center p-4 border-b border-gray-200">
+                    <span class="font-bold text-2xl text-[#F7833F] mr-4">1</span> Tomate
+                    <span class="ml-auto text-green-500">+20%</span>
+                </li>
+                <li class="flex items-center p-4 border-b border-gray-200">
+                    <span class="font-bold text-2xl text-[#F7833F] mr-4">2</span> Alface
+                    <span class="ml-auto text-green-500">+15%</span>
+                </li>
+                <li class="flex items-center p-4 border-b border-gray-200">
+                    <span class="font-bold text-2xl text-[#F7833F] mr-4">3</span> Cenoura
+                    <span class="ml-auto text-yellow-500">+10%</span>
+                </li>
+                <li class="flex items-center p-4 border-b border-gray-200">
+                    <span class="font-bold text-2xl text-[#F7833F] mr-4">4</span> Abobrinha
+                    <span class="ml-auto text-red-500">-5%</span>
+                </li>
+                <li class="flex items-center p-4 border-b border-gray-200">
+                    <span class="font-bold text-2xl text-[#F7833F] mr-4">5</span> Pimentão
+                    <span class="ml-auto text-green-500">+8%</span>
+                </li>
+                <li class="flex items-center p-4 border-b border-gray-200">
+                    <span class="font-bold text-2xl text-[#F7833F] mr-4">6</span> Batata
+                    <span class="ml-auto text-green-500">+12%</span>
+                </li>
+            </ol>
         </div>
     </div>
+
+
+    <div class="flex flex-col max-w-md">
+        <div class="w-[450px]" id="calendar"></div>
+        <!-- Lista de Tarefas -->
+        <div class="mt-8 bg-[#F5F5F7] rounded-[23px] shadow-md p-6">
+            <h1 class="text-[#F7833F] font-bold text-xl mb-4">Tarefas Recentes</h1>
+            <ul class="space-y-4 h-[128px] overflow-y-scroll">
+                <li class="flex items-center justify-between bg-white p-4 rounded-lg shadow-sm">
+                    <div>
+                        <p class="font-semibold text-gray-800">Regar o canteiro de tomates</p>
+                        <p class="text-sm text-gray-500">02 de novembro de 2024</p>
+                    </div>
+                    <span class="text-[#F7833F] font-semibold">Pendente</span>
+                </li>
+    
+                <li class="flex items-center justify-between bg-white p-4 rounded-lg shadow-sm">
+                    <div>
+                        <p class="font-semibold text-gray-800">Colher as cenouras</p>
+                        <p class="text-sm text-gray-500">01 de novembro de 2024</p>
+                    </div>
+                    <span class="text-green-600 font-semibold">Concluído</span>
+                </li>
+    
+                <li class="flex items-center justify-between bg-white p-4 rounded-lg shadow-sm">
+                    <div>
+                        <p class="font-semibold text-gray-800">Aplicar fertilizante nos canteiros de alface</p>
+                        <p class="text-sm text-gray-500">31 de outubro de 2024</p>
+                    </div>
+                    <span class="text-[#F7833F] font-semibold">Pendente</span>
+                </li>
+            </ul>
+        </div>
     </div>
+
+    <div class="flex flex-col">
+        <div class="flex flex-col h-full w-full">
+            <div class="flex flex-col gap-2">
+                <a href="{% url 'area_manage' community.id %}" class="">
+                    <div class="bg-[#8ABF17] shadow-md p-6 h-[100px] rounded-[18px] text-white flex flex-row items-center mt-8 lg:mt-0 cursor-pointer">
+                        <div>
+                            <p class="font-bold text-[16px] lg:text-[18px]">Criar Tarefa</p>
+                            <p class="font-medium text-[12px] lg:text-[14px]">Crie uma nova task</p>
+                        </div>
+                        <div class="bg-[#F76711] rounded-full flex items-center justify-center ml-[50px] w-[50px] h-[50px] lg:w-[60px] lg:h-[60px]">
+                            <span class="material-icons text-white" style="font-size: 40px; lg:font-size: 50px;">add</span>
+                        </div>
+                    </div>
+                </a>
+                <a href="{% url 'area_manage' community.id %}" class="">
+                    <div class="bg-[#8ABF17] shadow-md p-6 h-[100px] rounded-[18px] text-white flex flex-row items-center mt-8 lg:mt-0 cursor-pointer">
+                        <div>
+                            <p class="font-bold text-[16px] lg:text-[18px]">Criar Tarefa</p>
+                            <p class="font-medium text-[12px] lg:text-[14px]">Crie uma nova task</p>
+                        </div>
+                        <div class="bg-[#F76711] rounded-full flex items-center justify-center ml-[50px] w-[50px] h-[50px] lg:w-[60px] lg:h-[60px]">
+                            <span class="material-icons text-white" style="font-size: 40px; lg:font-size: 50px;">add</span>
+                        </div>
+                    </div>
+                </a>
+                <a href="{% url 'area_manage' community.id %}" class="">
+                    <div class="bg-[#8ABF17] shadow-md p-6 h-[100px] rounded-[18px] text-white flex flex-row items-center mt-8 lg:mt-0 cursor-pointer">
+                        <div>
+                            <p class="font-bold text-[16px] lg:text-[18px]">Criar Tarefa</p>
+                            <p class="font-medium text-[12px] lg:text-[14px]">Crie uma nova task</p>
+                        </div>
+                        <div class="bg-[#F76711] rounded-full flex items-center justify-center ml-[50px] w-[50px] h-[50px] lg:w-[60px] lg:h-[60px]">
+                            <span class="material-icons text-white" style="font-size: 40px; lg:font-size: 50px;">add</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="bg-[#F5F5F7] shadow-md rounded-[23px] mt-6 h-full p-6">
+                <h1 class="text-[#F7833F] font-bold text-xl">Precisa de ajuda?</h1>
+            </div>
+        </div>
+    </div>
+
 </div>
+
+
+
+
+
 
 <!-- Adicione o CSS do FullCalendar -->
 <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
