@@ -3,9 +3,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from products.models import Product
 from areas.models import Area
-from communities.models import Community
+from communities.models import Community, MembershipRequest
 from seedbeds.models import Seedbed
-
+from django.utils import timezone
 
 @login_required
 def home_view(request):
@@ -17,14 +17,22 @@ def dashboard_view(request, community_id):
     
     # Verificação se o usuário é membro ou administrador da comunidade
     if request.user not in community.members.all() and request.user not in community.admins.all():
-        messages.error(request, 'Você não tem permissão para acessar o dashboard desta comunidade.')
+        membership_request, created = MembershipRequest.objects.get_or_create(
+            user=request.user,
+            community=community,
+            defaults={'status': 'pending', 'request_date': timezone.now()}
+        )
+        
+        if created:
+            messages.info(request, 'Sua solicitação para entrar na comunidade foi enviada ao administrador.')
+        else:
+            messages.info(request, 'Você já enviou uma solicitação para esta comunidade. Aguarde a resposta do administrador.')
+
         return redirect('community_hub')
 
-    # Recuperando as áreas e canteiros associados à comunidade
     areas = Area.objects.filter(community=community)
     seedbeds = Seedbed.objects.filter(area__community=community)
 
-    # Preparar contexto para o template
     context = {
         'community': community,
         'areas': areas,
@@ -32,6 +40,56 @@ def dashboard_view(request, community_id):
     }
 
     return render(request, 'dashboard.html', context)
+
+@login_required
+def manage_community(request, community_id):
+    community = get_object_or_404(Community, id=community_id)
+    
+    # Verifica se o usuário tem permissão para acessar o gerenciamento
+    if request.user != community.creator and not community.admins.filter(id=request.user.id).exists():
+        messages.error(request, 'Você não tem permissão para gerenciar esta comunidade.')
+        return redirect('community_hub')
+    
+    membership_requests = MembershipRequest.objects.filter(community=community, status='pending')
+
+    context = {
+        'community': community,
+        'membership_requests': membership_requests,
+    }
+    
+    return render(request, 'manage_community.html', context)
+
+@login_required
+def aceitar_solicitacao(request, request_id):
+    membership_request = get_object_or_404(MembershipRequest, id=request_id)
+
+    if request.user != membership_request.community.creator and not membership_request.community.admins.filter(id=request.user.id).exists():
+        messages.error(request, 'Você não tem permissão para aceitar esta solicitação.')
+        return redirect('manage_community', community_id=membership_request.community.id)
+
+    membership_request.status = 'approved'
+    membership_request.decision_date = timezone.now()
+    membership_request.save()
+
+    membership_request.community.members.add(membership_request.user)
+
+    messages.success(request, 'Solicitação aceita com sucesso!')
+    return redirect('manage_community', community_id=membership_request.community.id)
+
+@login_required
+def rejeitar_solicitacao(request, request_id):
+    membership_request = get_object_or_404(MembershipRequest, id=request_id)
+
+    if request.user != membership_request.community.creator and not membership_request.community.admins.filter(id=request.user.id).exists():
+        messages.error(request, 'Você não tem permissão para rejeitar esta solicitação.')
+        return redirect('manage_community', community_id=membership_request.community.id)
+
+    membership_request.status = 'rejected'
+    membership_request.decision_date = timezone.now()
+    membership_request.save()
+
+    messages.success(request, 'Solicitação rejeitada com sucesso!')
+    return redirect('manage_community', community_id=membership_request.community.id)
 
 @login_required
 def community_list(request):

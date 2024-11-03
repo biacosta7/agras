@@ -6,16 +6,16 @@ from products import views as product_views  # Importando as views do app de pro
 from chat import views as chat_views
 
 urlpatterns = [
-    # URL para a lista de comunidades (hub)
     path('', community_views.community_list, name='community_hub'),
-
-    # URLs para criação, edição e deleção de comunidades
     path('criar/', community_views.create_community, name='create_community'),
     path('editar/<int:pk>/', community_views.update_community, name='update_community'),
     path('deletar/<int:pk>/', community_views.delete_community, name='delete_community'),
-
-    # URL para o dashboard de uma comunidade específica
+    path('comunidade/<int:community_id>/gerenciamento/', community_views.manage_community, name='manage_community'),
     path('dashboard/<int:community_id>/', community_views.dashboard_view, name='dashboard'),
+    
+    # URLs para aceitar e rejeitar solicitações
+    path('solicitacao/aceitar/<int:request_id>/', community_views.aceitar_solicitacao, name='aceitar_solicitacao'),
+    path('solicitacao/rejeitar/<int:request_id>/', community_views.rejeitar_solicitacao, name='rejeitar_solicitacao'),
 
     # URLs para áreas dentro de uma comunidade
     path('comunidade/<int:community_id>/areas/', area_views.area_manage, name='area_manage'),

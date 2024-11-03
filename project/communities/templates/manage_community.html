@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Gerenciamento da Comunidade{% endblock %}
+
+{% block content %}
+<div class="bg-white min-h-screen flex px-4 md:px-8 py-10 mx-auto relative">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+     <!-- Sidebar (Desktop) -->
+     <div class="bg-[#8ABF17] lg:flex xl:flex 2xl:flex sm:hidden md:hidden hidden-sm flex-col items-center rounded-[20px] w-[220px] h-[90%] fixed">
+        <a href="/"><img class="w-[146px] mt-12 mb-8" src="{% static 'assets/logo-branco-h.png' %}" alt="AGRAS"> </a>
+        <div class="flex flex-col gap-y-6 mt-12 w-full px-4 flex-grow">
+            <a href="{% url 'dashboard' community.id %}" class="text-[14px] font-normal text-white flex items-center cursor-pointer"> <span class="material-icons mr-2">dashboard</span> Dashboard</a>
+            <a href="{% url 'area_manage' community.id %}" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">forest</span> Areas</a>
+            <a href="#" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">trending_up</span> Estatísticas</a>
+            <a href="{% url 'manage_community' community.id %}" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">equalizer</span> Gerenciamento</a>
+            <a href="#" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">settings</span> Configurações</a>
+            <a href="#" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">help</span> Ajuda</a>
+            <div class="flex-grow"></div>
+            <form action="{% url 'logout' %}" method="POST" class="w-full mb-12">
+                {% csrf_token %}
+                <button class="text-[14px] font-normal text-white flex items-center cursor-pointer w-full">
+                    <span class="material-icons mr-2">logout</span>Sair
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Mobile Sidebar Toggle -->
+    <button id="menu-btn" class="lg:hidden fixed top-4 left-4 z-20 p-2 rounded-md bg-[#8ABF17] text-white focus:outline-none">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+    </button>
+
+    <!-- Mobile Sidebar -->
+    <div id="mobile-sidebar" class="hidden fixed top-0 left-0 w-[250px] h-full bg-[#8ABF17] z-20 transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
+        <div class="flex justify-between items-center p-4">
+            <a href="/"><img class="w-[146px]" src="{% static 'assets/logo-branco-h.png' %}" alt="AGRAS"> </a>
+            <button id="close-menu" class="text-white">
+                <span class="material-icons">close</span>
+            </button>
+        </div>
+        <div class="flex flex-col gap-y-6 mt-12 w-full px-4 flex-grow">
+            <a href="{% url 'dashboard' community.id %}" class="text-[14px] font-normal text-white flex items-center cursor-pointer"> <span class="material-icons mr-2">dashboard</span> Dashboard</a>
+            <a href="{% url 'area_manage' community.id %}" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">forest</span> Areas</a>
+            <a href="#" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">trending_up</span> Estatísticas</a>
+            <a href="{% url 'manage_community' community.id %}" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">equalizer</span> Gerenciamento</a>
+            <a href="#" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">settings</span> Configurações</a>
+            <a href="#" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">help</span> Ajuda</a>
+            <div class="flex-grow"></div>
+        </div>
+        <form action="{% url 'logout' %}" method="POST" class="w-full px-4 mb-12">
+            {% csrf_token %}
+            <button class="text-[14px] font-normal text-white flex items-center cursor-pointer w-full">
+                <span class="material-icons mr-2">logout</span>Sair
+            </button>
+        </form>
+    </div>
+
+    <!-- Main content -->
+    <div class="flex-grow px-4 lg:px-8 py-10 ml-0 lg:ml-[220px]">
+        <h1 class="text-2xl font-bold mb-4">Gerenciamento da Comunidade</h1>
+
+        <!-- Barra de Comunidade -->
+        <div class="bg-gray-100 p-4 rounded-lg mb-6 max-w-[500px] flex items-center justify-between">
+            <h2 class="text-xl font-semibold">Comunidade</h2>
+            <div class="flex items-center">
+                <span class="bg-[#4CAF50] text-white px-4 py-2 rounded-lg font-semibold">{{ community.name }}</span>
+                <button onclick="openEditModal()" class="ml-2 bg-yellow-500 text-white p-1 rounded-full hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 flex">
+                    <span class="material-icons-outlined text-sm">edit</span>
+                </button>
+                <button onclick="openDeleteModal()" class="ml-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 flex">
+                    <span class="material-icons-outlined">delete</span>
+                </button>
+            </div>
+        </div>
+
+
+        <!-- Seção de solicitações de acesso -->
+<div class="bg-gray-100 p-4 rounded-lg mb-6 max-w-full">
+    <h2 class="text-xl font-semibold mb-4">Solicitações</h2>
+    <p class="text-gray-600 mb-4">Lista de usuários que solicitaram entrada na comunidade</p>
+    <table class="min-w-full bg-white rounded-lg">
+        <thead>
+            <tr>
+                <th class="py-2 px-4 text-left font-semibold text-gray-700">Usuário</th>
+                <th class="py-2 px-4 text-left font-semibold text-gray-700">Email</th>
+                <th class="py-2 px-4 text-left font-semibold text-gray-700">Cargo</th>
+                <th class="py-2 px-4 text-center font-semibold text-gray-700">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for request in membership_requests %}
+            <tr class="border-b border-gray-200 hover:bg-gray-100">
+                <td class="py-2 px-4 text-gray-800">{{ request.user }}</td>
+                <td class="py-2 px-4 text-gray-600">{{ request.user.email }}</td>
+                <td class="py-2 px-4 text-gray-600">Membro</td>
+                <td class="py-2 px-4 flex justify-center space-x-2">
+                    <form action="{% url 'aceitar_solicitacao' request.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="bg-green-500 text-white rounded-full p-1 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 flex">
+                            <span class="material-icons-outlined">check</span>
+                        </button>
+                    </form>
+                    <form action="{% url 'rejeitar_solicitacao' request.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="bg-red-500 text-white rounded-full p-1 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 flex">
+                            <span class="material-icons-outlined">close</span>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="py-4 text-center text-gray-600">Não há solicitações de acesso no momento.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+        <!-- Modais -->
+
+        <!-- Modal de edição -->
+        <div id="editModal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
+            <div class="bg-white p-6 rounded-lg w-full max-w-lg">
+                <h3 class="text-xl font-semibold mb-4">Editar Comunidade</h3>
+                <form method="POST" action="{% url 'update_community' community.id %}">
+                    {% csrf_token %}
+                    <label for="name" class="block text-gray-700 font-semibold mb-2">Nome da Comunidade:</label>
+                    <input type="text" id="name" name="name" value="{{ community.name }}" class="w-full px-4 py-2 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+                    
+                    <label for="description" class="block text-gray-700 font-semibold mb-2">Descrição:</label>
+                    <textarea id="description" name="description" class="w-full px-4 py-2 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">{{ community.description }}</textarea>
+
+                    <button type="submit" class="bg-[#4CAF50] text-white px-4 py-2 rounded-lg hover:bg-green-600">Salvar Alterações</button>
+                    <button type="button" onclick="closeEditModal()" class="ml-4 text-gray-600 hover:text-gray-800">Cancelar</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal de deleção -->
+        <div id="deleteModal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
+            <div class="bg-white p-6 rounded-lg w-full max-w-lg">
+                <h3 class="text-xl font-semibold mb-4 text-red-600">Excluir Comunidade</h3>
+                <p class="text-gray-700 mb-6">Tem certeza de que deseja excluir a comunidade "{{ community.name }}"? Esta ação não pode ser desfeita.</p>
+                <form method="POST" action="{% url 'delete_community' community.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Excluir</button>
+                    <button type="button" onclick="closeDeleteModal()" class="ml-4 text-gray-600 hover:text-gray-800">Cancelar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function openEditModal() {
+    document.getElementById('editModal').classList.remove('hidden');
+}
+
+function closeEditModal() {
+    document.getElementById('editModal').classList.add('hidden');
+}
+
+function openDeleteModal() {
+    document.getElementById('deleteModal').classList.remove('hidden');
+}
+
+function closeDeleteModal() {
+    document.getElementById('deleteModal').classList.add('hidden');
+}
+
+
+// Abrir e fechar o menu
+const menuBtn = document.getElementById('menu-btn');
+const mobileSidebar = document.getElementById('mobile-sidebar');
+const closeMenu = document.getElementById('close-menu');
+
+menuBtn.addEventListener('click', () => {
+    mobileSidebar.classList.remove('hidden');
+    requestAnimationFrame(() => {
+        mobileSidebar.classList.add('transform', 'translate-x-0');
+    });
+});
+
+closeMenu.addEventListener('click', () => {
+    mobileSidebar.classList.remove('transform', 'translate-x-0');
+    // Espera a animação de fechamento terminar antes de adicionar a classe 'hidden'
+    mobileSidebar.addEventListener('transitionend', function handleTransitionEnd() {
+        mobileSidebar.classList.add('hidden');
+        mobileSidebar.removeEventListener('transitionend', handleTransitionEnd);
+    });
+});
+</script>
+{% endblock %}
