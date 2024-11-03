@@ -3,16 +3,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from products.models import Product
 from areas.models import Area
-from communities.models import Community
+from communities.models import Community, MembershipRequest
 from seedbeds.models import Seedbed
-
+from django.utils import timezone
 
 @login_required
 def home_view(request):
     return redirect('community_hub')
-
-from django.utils import timezone
-from communities.models import Community, MembershipRequest
 
 @login_required
 def dashboard_view(request, community_id):
@@ -20,7 +17,6 @@ def dashboard_view(request, community_id):
     
     # Verificação se o usuário é membro ou administrador da comunidade
     if request.user not in community.members.all() and request.user not in community.admins.all():
-        # Verificar se já existe uma solicitação pendente para este usuário e comunidade
         membership_request, created = MembershipRequest.objects.get_or_create(
             user=request.user,
             community=community,
@@ -34,11 +30,9 @@ def dashboard_view(request, community_id):
 
         return redirect('community_hub')
 
-    # Recuperando as áreas e canteiros associados à comunidade
     areas = Area.objects.filter(community=community)
     seedbeds = Seedbed.objects.filter(area__community=community)
 
-    # Preparar contexto para o template
     context = {
         'community': community,
         'areas': areas,
@@ -65,6 +59,37 @@ def manage_community(request, community_id):
     
     return render(request, 'manage_community.html', context)
 
+@login_required
+def aceitar_solicitacao(request, request_id):
+    membership_request = get_object_or_404(MembershipRequest, id=request_id)
+
+    if request.user != membership_request.community.creator and not membership_request.community.admins.filter(id=request.user.id).exists():
+        messages.error(request, 'Você não tem permissão para aceitar esta solicitação.')
+        return redirect('manage_community', community_id=membership_request.community.id)
+
+    membership_request.status = 'approved'
+    membership_request.decision_date = timezone.now()
+    membership_request.save()
+
+    membership_request.community.members.add(membership_request.user)
+
+    messages.success(request, 'Solicitação aceita com sucesso!')
+    return redirect('manage_community', community_id=membership_request.community.id)
+
+@login_required
+def rejeitar_solicitacao(request, request_id):
+    membership_request = get_object_or_404(MembershipRequest, id=request_id)
+
+    if request.user != membership_request.community.creator and not membership_request.community.admins.filter(id=request.user.id).exists():
+        messages.error(request, 'Você não tem permissão para rejeitar esta solicitação.')
+        return redirect('manage_community', community_id=membership_request.community.id)
+
+    membership_request.status = 'rejected'
+    membership_request.decision_date = timezone.now()
+    membership_request.save()
+
+    messages.success(request, 'Solicitação rejeitada com sucesso!')
+    return redirect('manage_community', community_id=membership_request.community.id)
 
 @login_required
 def community_list(request):
