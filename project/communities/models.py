@@ -10,7 +10,6 @@ class Community(models.Model):
     members = models.ManyToManyField(User, related_name='communities_members')
     admins = models.ManyToManyField(User, related_name='admin_communities', blank=True)
     seedbeds = models.ManyToManyField(Seedbed, related_name='communities')
-    # community_pic = models.ImageField(upload_to='community_pics/', blank=True, null=True)
 
     def __str__(self):
         return self.name
