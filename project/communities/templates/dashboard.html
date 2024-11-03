@@ -57,8 +57,8 @@
     </div>
 
 <!-- Main Content -->
-<div class="ml-0 lg:ml-[250px] flex lg:flex-row flex-col gap-x-8">
-    <div class="flex flex-col w-full max-w-[26rem]">
+<div class="lg:0 lg:ml-[250px] w-full lg:w-auto flex-grow flex flex-col md:flex-row gap-8">
+    <div class="flex flex-col w-full max-w-screen-md">
         <div class="rounded-[14px] max-h-[125px] bg-[#F5F5F7] shadow-md flex items-center justify-between">
             <div class="px-6">
                 <p class="font-bold text-[24px] lg:text-[24px]">Olá, {{user.first_name}}!</p>
@@ -69,19 +69,19 @@
             </div>
         </div>
         <div class="mt-4 lg:mt-[20px] flex flex-col lg:flex-row justify-between gap-4">
-            <div class="rounded-[14px] bg-[#F5F5F7] w-full max-w-xs shadow-md flex items-center justify-center">
+            <div class="rounded-[14px] bg-[#F5F5F7] w-full shadow-md flex items-center justify-center">
                 <div class="p-4 text-center">
                     <p class="font-semibold text-[32px] lg:text-[24px] text-[#8ABF17]">11</p>
                     <p class="font-regular text-[15px] lg:text-[13px] text-black">Produtos Vendidos</p>
                 </div>
             </div>
-            <div class="rounded-[14px] bg-[#F5F5F7] w-full max-w-xs shadow-md flex items-center justify-center">
+            <div class="rounded-[14px] bg-[#F5F5F7] w-full shadow-md flex items-center justify-center">
                 <div class="p-4 text-center">
                     <p class="font-semibold text-[32px] lg:text-[24px] text-[#562A00]">R$ 2.4k</p>
                     <p class="font-regular text-[15px] lg:text-[13px] text-black">Total Arrecadado</p>
                 </div>
             </div>
-            <div class="rounded-[14px] bg-[#F5F5F7] w-full max-w-xs shadow-md flex items-center justify-center">
+            <div class="rounded-[14px] bg-[#F5F5F7] w-full shadow-md flex items-center justify-center">
                 <div class="p-4 text-center">
                     <p class="font-semibold text-[32px] lg:text-[24px] text-[#F76711]">36</p>
                     <p class="font-regular text-[15px] lg:text-[13px] text-black">Tarefas Concluídas</p>
@@ -121,7 +121,7 @@
     </div>
 
 
-    <div class="flex flex-col max-w-md">
+    <div class="flex flex-col w-full md:max-w-md lg:max-w-lg xl:max-w-x">
         <div class="w-[450px]" id="calendar"></div>
         <!-- Lista de Tarefas -->
         <div class="mt-8 bg-[#F5F5F7] rounded-[23px] shadow-md p-6">
@@ -154,38 +154,38 @@
         </div>
     </div>
 
-    <div class="flex flex-col">
+    <div class="flex flex-col w-full md:max-w-md lg:max-w-lg">
         <div class="flex flex-col h-full w-full">
             <div class="flex flex-col gap-2">
                 <a href="{% url 'area_manage' community.id %}" class="">
-                    <div class="bg-[#8ABF17] shadow-md p-6 h-[100px] rounded-[18px] text-white flex flex-row items-center mt-8 lg:mt-0 cursor-pointer">
+                    <div class="bg-[#8ABF17] shadow-md p-6 h-[100px] rounded-[18px] text-white flex flex-row items-center lg:mt-0 cursor-pointer">
                         <div>
                             <p class="font-bold text-[16px] lg:text-[18px]">Criar Tarefa</p>
                             <p class="font-medium text-[12px] lg:text-[14px]">Crie uma nova task</p>
                         </div>
-                        <div class="bg-[#F76711] rounded-full flex items-center justify-center w-[50px] h-[50px] lg:w-[60px] lg:h-[60px]">
+                        <div class="ml-auto bg-[#F76711] rounded-full flex items-center justify-center w-[50px] h-[50px] lg:w-[60px] lg:h-[60px]">
                             <span class="material-icons text-white" style="font-size: 40px; lg:font-size: 50px;">add</span>
                         </div>
                     </div>
                 </a>
                 <a href="{% url 'area_manage' community.id %}" class="">
-                    <div class="bg-[#8ABF17] shadow-md p-6 h-[100px] rounded-[18px] text-white flex flex-row items-center mt-8 lg:mt-0 cursor-pointer">
+                    <div class="bg-[#8ABF17] shadow-md p-6 h-[100px] rounded-[18px] text-white flex flex-row items-center lg:mt-0 cursor-pointer">
                         <div>
                             <p class="font-bold text-[16px] lg:text-[18px]">Criar Tarefa</p>
                             <p class="font-medium text-[12px] lg:text-[14px]">Crie uma nova task</p>
                         </div>
-                        <div class="bg-[#F76711] rounded-full flex items-center justify-center w-[50px] h-[50px] lg:w-[60px] lg:h-[60px]">
+                        <div class="ml-auto bg-[#F76711] rounded-full flex items-center justify-center w-[50px] h-[50px] lg:w-[60px] lg:h-[60px]">
                             <span class="material-icons text-white" style="font-size: 40px; lg:font-size: 50px;">add</span>
                         </div>
                     </div>
                 </a>
                 <a href="{% url 'area_manage' community.id %}" class="">
-                    <div class="bg-[#8ABF17] shadow-md p-6 h-[100px] rounded-[18px] text-white flex flex-row items-center mt-8 lg:mt-0 cursor-pointer">
+                    <div class="bg-[#8ABF17] shadow-md p-6 h-[100px] rounded-[18px] text-white flex flex-row items-center lg:mt-0 cursor-pointer">
                         <div>
                             <p class="font-bold text-[16px] lg:text-[18px]">Criar Tarefa</p>
                             <p class="font-medium text-[12px] lg:text-[14px]">Crie uma nova task</p>
                         </div>
-                        <div class="bg-[#F76711] rounded-full flex items-center justify-center w-[50px] h-[50px] lg:w-[60px] lg:h-[60px]">
+                        <div class="ml-auto bg-[#F76711] rounded-full flex items-center justify-center w-[50px] h-[50px] lg:w-[60px] lg:h-[60px]">
                             <span class="material-icons text-white" style="font-size: 40px; lg:font-size: 50px;">add</span>
                         </div>
                     </div>
