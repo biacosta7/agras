@@ -57,15 +57,15 @@
     </div>
 
 <!-- Main Content -->
-<div class="lg:0 lg:ml-[250px] w-full lg:w-auto flex-grow flex flex-col md:flex-row gap-8">
-    <div class="flex flex-col w-full max-w-screen-md">
-        <div class="rounded-[14px] max-h-[125px] bg-[#F5F5F7] shadow-md flex items-center justify-between">
+<div class="lg:0 lg:ml-[250px] w-full lg:w-auto flex-grow grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-8">
+    <div class="flex flex-col">
+        <div class="rounded-[14px] min-h-[105px] max-h-[125px] bg-[#F5F5F7] shadow-md flex items-center justify-between">
             <div class="px-6">
                 <p class="font-bold text-[24px] lg:text-[24px]">Olá, {{user.first_name}}!</p>
                 <p class="font-regular text-[14px] lg:text-[14px] text-[#F76711]">Que bom te ver novamente!</p>
             </div>
-            <div class="px-2">
-                <img src="{% static 'assets/assetszinho.png'%}" class="w-[140px] lg:w-[360px]" alt="">
+            <div class="px-2 h-full"> 
+                <img src="{% static 'assets/assetszinho.png'%}" class="w-auto h-full object-cover" alt="">
             </div>
         </div>
         <div class="mt-4 lg:mt-[20px] flex flex-col lg:flex-row justify-between gap-4">
@@ -121,8 +121,8 @@
     </div>
 
 
-    <div class="flex flex-col w-full md:max-w-md lg:max-w-lg xl:max-w-x">
-        <div class="w-[450px]" id="calendar"></div>
+    <div class="flex flex-col">
+        <div class="" id="calendar"></div>
         <!-- Lista de Tarefas -->
         <div class="mt-8 bg-[#F5F5F7] rounded-[23px] shadow-md p-6">
             <h1 class="text-[#F7833F] font-bold text-xl mb-4">Tarefas Recentes</h1>
@@ -154,7 +154,7 @@
         </div>
     </div>
 
-    <div class="flex flex-col w-full md:max-w-md lg:max-w-lg">
+    <div class="flex flex-col">
         <div class="flex flex-col h-full w-full">
             <div class="flex flex-col gap-2">
                 <a href="{% url 'area_manage' community.id %}" class="">
@@ -201,9 +201,6 @@
 
 
 
-
-
-
 <!-- Adicione o CSS do FullCalendar -->
 <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
@@ -221,23 +218,6 @@
                 center: 'title',
                 right: ''
             },
-            eventColor: '#8ABF17',
-            events: [
-                {
-                    title: 'Colheita',
-                    start: '2024-10-01'
-                },
-                {
-                    title: 'Evento 2',
-                    start: '2024-10-05',
-                    end: '2024-10-07'
-                },
-                {
-                    title: 'Evento 3',
-                    start: '2024-10-16T12:30:00',
-                    allDay: false
-                }
-            ]
         });
         calendar.render();
 
@@ -247,6 +227,8 @@
             button.style.backgroundColor = '#F76711';
             button.style.color = 'white';
             button.style.border = 'none';
+            button.style.padding = '0.5rem 1rem'; // Adicionado padding
+            button.style.borderRadius = '0.25rem'; // Adicionado border-radius
         });
     });
 
@@ -273,18 +255,56 @@
 </script>
 
 <style>
+    /* Estilos gerais do calendário */
+    .fc {
+        font-family: sans-serif; /* Fonte mais moderna */
+    }
+
     .fc-toolbar-title {
         text-transform: uppercase;
         font-weight: bold;
         color: #8ABF17;
+        font-size: 1.2rem; /* Tamanho da fonte maior */
     }
+
     .fc-event {
-        font-size: 0.8em;
+        font-size: 0.9em;
+        padding: 0.5em; /* Espaçamento interno nos eventos */
+        border-radius: 0.25rem; /* Cantos arredondados nos eventos*/
     }
-    /* Responsividade do calendário */
+    .fc-daygrid-event { /* altura dos eventos */
+        height: 1.5em;
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+        .fc-header-toolbar {
+            font-size: 0.8rem; /* Fonte menor em telas menores */
+        }
+
+        .fc-toolbar-chunk {
+            display: flex;
+            flex-wrap: wrap; /* Permite que os botões quebrem a linha */
+            justify-content: center;
+        }
+
+        .fc-prev-button, .fc-next-button, .fc-today-button {
+            padding: 0.25rem 0.5rem; /* Padding menor em telas menores*/
+        }
+
+        .fc-daygrid-event {
+            font-size: 0.75em; /* Fonte dos eventos menor */
+        }
+    }
     #calendar {
-        max-width: 100%;
-        margin: 0 auto;
+       max-width: 90%; /* Ocupar 90% da largura disponível */
+        margin: 20px auto; /* Margem superior/inferior de 20px e centralizado */
+        width: 95%; /* Largura de 95% */
+        max-width: 800px; /* Largura máxima de 800px */
+        margin: 0 auto; /* Centraliza o calendário */
     }
+
+
+
 </style>
 {% endblock %}
