@@ -78,6 +78,7 @@ INSTALLED_APPS = [
     'seedbeds',
     'areas',
     'chat',
+    'tasks',
     "whitenoise.runserver_nostatic",
 ]
 
