@@ -1,0 +1,59 @@
+<div id="taskModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
+    <div class="bg-white w-full max-w-lg p-6 rounded-lg shadow-lg">
+        <!-- Header do modal -->
+        <div class="flex justify-between items-center border-b pb-3">
+            <h2 class="text-xl font-bold">Adicionar Nova Task</h2>
+            <button onclick="closeModal()" class="text-gray-500 hover:text-gray-800">&times;</button>
+        </div>
+        
+        <!-- Conteúdo do modal (formulário de criação de task) -->
+        <form action="{% url 'add_task' community_id=community_id area_id=area_id seedbed_id=seedbed_id product_id=product_id %}" method="POST">
+            {% csrf_token %}
+            <div class="mt-4">
+                <label for="title" class="block font-medium">Título:</label>
+                <input type="text" id="title" name="title" class="w-full border p-2 rounded mt-1" required>
+            </div>
+            <div class="mt-4">
+                <label for="description" class="block font-medium">Descrição:</label>
+                <textarea id="description" name="description" class="w-full border p-2 rounded mt-1"></textarea>
+            </div>
+            <div class="mt-4">
+                <label for="deadline" class="block font-medium">Prazo (DD/MM/AAAA HH:MM):</label>
+                <input type="text" id="deadline" name="deadline" class="w-full border p-2 rounded mt-1" required>
+            </div>
+            <div class="mt-4">
+                <label for="recurrence" class="block font-medium">Recorrência:</label>
+                <select id="recurrence" name="recurrence" class="w-full border p-2 rounded mt-1" required>
+                    <option value="daily">Diário</option>
+                    <option value="weekly">Semanal</option>
+                    <option value="monthly">Mensal</option>
+                    <option value="yearly">Anual</option>
+                </select>
+            </div>
+            <div class="mt-4">
+                <label for="time" class="block font-medium">Período:</label>
+                <select id="time" name="time" class="w-full border p-2 rounded mt-1" required>
+                    <option value="morning">Manhã</option>
+                    <option value="afternoon">Tarde</option>
+                    <option value="full_day">Dia todo</option>
+                </select>
+            </div>
+            <div class="mt-4 flex items-center">
+                <label for="is_completed" class="font-medium mr-2">Completo:</label>
+                <input type="checkbox" id="is_completed" name="is_completed">
+            </div>
+            
+            <!-- Botões de ação -->
+            <div class="mt-6 flex justify-end">
+                <button type="button" onclick="closeModal()" class="bg-gray-300 text-gray-700 px-4 py-2 rounded mr-2">Cancelar</button>
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Salvar Task</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function closeModal() {
+        document.getElementById('taskModal').classList.add('hidden');
+    }
+</script>

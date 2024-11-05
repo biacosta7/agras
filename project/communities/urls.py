@@ -48,5 +48,4 @@ urlpatterns = [
     # tasks
     path('comunidade/<int:community_id>/areas/<int:area_id>/canteiros/<int:seedbed_id>/cultivo/<int:product_id>/adicionar_task/', tasks_views.add_task, name='add_task'),
 
-
 ]
