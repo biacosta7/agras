@@ -208,3 +208,55 @@ def forgot_password(request):
         else:
             messages.error(request, 'As senhas não coincidem.')
             return redirect('forgot_password')
+        
+        
+@login_required
+def editar(request):
+    user = request.user
+
+    if request.method == "GET":
+        return render(request, 'edit_profile.html', {'user': user})
+    else:
+        first_name = request.POST.get('first_name')
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        city = request.POST.get('city')
+        state = request.POST.get('state')
+
+        valid_chars = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_")
+        if not set(username).issubset(valid_chars):
+            messages.error(request, 'O nome de usuário deve conter apenas letras, números ou underlines, sem espaços ou caracteres especiais.')
+            return redirect('edit')
+
+        valid_name = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+        if not set(first_name).issubset(valid_name):
+            messages.error(request, 'O nome não deve conter números ou caracteres especiais.')
+            return redirect('edit')
+
+        if '@' not in email or email.count('@') != 1:
+            messages.error(request, 'Por favor, insira um email válido.')
+            return redirect('edit')
+
+        if User.objects.filter(username=username).exclude(id=user.id).exists():
+            messages.error(request, 'Este nome de usuário já está em uso.')
+            return redirect('edit')
+
+        if User.objects.filter(email=email).exclude(id=user.id).exists():
+            messages.error(request, 'Já existe um usuário com este email.')
+            return redirect('edit')
+
+        # Atualiza as credenciais do usuário
+        user.first_name = first_name
+        user.username = username
+        user.email = email
+        user.city = city
+        user.state = state
+
+        try:
+            user.save()
+            messages.success(request, 'Credenciais atualizadas com sucesso.')
+        except IntegrityError:
+            messages.error(request, 'Erro ao atualizar as credenciais. Tente novamente.')
+            return redirect('edit')
+
+        return render(request, 'login.html') # Redireciona de volta à página de edição após a atualização
