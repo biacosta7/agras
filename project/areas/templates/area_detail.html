@@ -79,7 +79,7 @@
         
     <div class="container mt-5">
         <!-- Modal para criar canteiro -->
-        <div id="areaModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center">
+        <div id="areaModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-10">
             <div class="bg-white px-14 py-12 rounded-[34px] w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] max-w-[596px] max-h-[663px] overflow-y-auto rounded-[32px]">
                 <h2 id="modalTitle" class="text-[24px] font-bold mb-4 text-[#8ABF17]">Novo canteiro</h2>
                 <p class="font-medium text-[16px]">Preencha a informação abaixo para criar um novo canteiro</p>
@@ -110,21 +110,26 @@
                         <a href="{% url 'delete_seedbed' community.id area.pk seedbed.id %}">Deletar</a>
     
                         <!-- Listando os produtos associados ao canteiro -->
-                        <ul class="list-disc list-inside mt-4">
-                            {% for product in seedbed.products_in_seedbed.all %}
-                                <li>{{ product.type_product.name }}</li>
-                            {% empty %}
-                                <p class="flex justify-center items-center">Nenhum cultivo cadastrado</p>
-                            {% endfor %}
-                        </ul>
-                        <!-- Botão fixo ao fim do card -->
-                        <div class="flex mt-5 justify-center">
-                            <a href="{% url 'seedbed_detail' community.id area.pk seedbed.id %}" class="inline-block bg-[#8ABF17] text-white py-2 px-4 rounded-md hover:bg-[#7cad10] font-bold focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 w-2/4 text-center w-full">
-                                Visualizar
-                            </a>
+                        <div class="mt-2">
+                            <button class="w-full text-left bg-[#f7f7f7] p-3 rounded-[9px] text-sm lg:text-base font-medium border-2 border-[#8ABF17] focus:outline-none flex justify-between items-center transition-all transform hover:shadow-lg" onclick="toggleDropdown('seedbed-list-{{ seedbed.id }}')">
+                                Mostrar Cultivos
+                                <span id="arrow-{{ seedbed.id }}" class="transition-transform transform rotate-0 material-icons">arrow_drop_down</span>
+                            </button>
+                            <ul id="seedbed-list-{{ seedbed.id }}" class="list-disc list-inside mt-4 hidden">
+                                {% for product in seedbed.products_in_seedbed.all %}
+                                    <li>{{ product.type_product.name }}</li>
+                                {% empty %}
+                                    <p class="flex justify-center items-center">Nenhum cultivo cadastrado</p>
+                                {% endfor %}
+                            </ul>
+                            <!-- Botão fixo ao fim do card -->
+                            <div class="flex mt-5 justify-center">
+                                <a href="{% url 'seedbed_detail' community.id area.pk seedbed.id %}" class="inline-block bg-[#8ABF17] text-white py-2 px-4 rounded-md hover:bg-[#7cad10] font-bold focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 w-2/4 text-center w-full">
+                                    Visualizar
+                                </a>
+                            </div>
                         </div>
                     </div>
-                    
                 </div>
             </div> 
             {% empty %}
@@ -156,5 +161,18 @@ function toggleModal(action) {
         areaModal.classList.add('hidden'); // Esconde o modal de criar área
     } 
 }
+
+function toggleDropdown(id) {
+        const dropdown = document.getElementById(id);
+        const arrow = document.getElementById('arrow-' + id.split('-')[2]);
+
+        dropdown.classList.toggle('hidden');
+        // Alterar a rotação da seta dependendo da visibilidade do dropdown
+        if (dropdown.classList.contains('hidden')) {
+            arrow.classList.remove('rotate-180');
+        } else {
+            arrow.classList.add('rotate-180');
+        }
+    }
 </script>
 {% endblock content %}
