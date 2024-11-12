@@ -7,7 +7,13 @@
         </div>
         
         <!-- Conteúdo do modal (formulário de criação de task) -->
-        <form action="{% url 'add_task' community_id=community_id area_id=area_id seedbed_id=seedbed_id product_id=product_id %}" method="POST">
+        <form action="{% url 'tasks:add_task' 
+            community_id=community_id if community_id else None 
+            area_id=area_id if area_id else None 
+            seedbed_id=seedbed_id if seedbed_id else None 
+            product_id=product_id if product_id else None 
+            type_product_id=type_product_id if type_product_id else None 
+        %}" method="POST">
             {% csrf_token %}
             <div class="mt-4">
                 <label for="title" class="block font-medium">Título:</label>

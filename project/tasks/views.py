@@ -69,10 +69,12 @@ def add_task(request, community_id=None, area_id=None, seedbed_id=None, product_
         )
 
     context = {
-        'product_id': product_id,
-        'community_id': community_id,
-        'area_id': area_id,
-        'seedbed_id': seedbed_id,
-        'type_product_id': type_product_id,
-    }
+    'product_id': product_id if product_id is not None else None,
+    'community_id': community_id if community_id is not None else None,
+    'area_id': area_id if area_id is not None else None,
+    'seedbed_id': seedbed_id if seedbed_id is not None else None,
+    'type_product_id': type_product_id if type_product_id is not None else None,
+}
+    
     return render(request, 'add_task.html', context)
+
