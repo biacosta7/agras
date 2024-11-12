@@ -93,8 +93,18 @@ def rejeitar_solicitacao(request, request_id):
 
 @login_required
 def community_list(request):
+    user = request.user
+    user_communities = user.communities_members.all()
+    is_admin_of_community = user.admin_communities.exists()
+    has_communities = user_communities.exists() or is_admin_of_community
     communities = Community.objects.all()
-    return render(request, 'hub.html', {'communities': communities})
+
+    context = {
+        'communities': communities,
+        'has_communities': has_communities,
+    }
+
+    return render(request, 'hub.html', context)
 
 @login_required
 def create_community(request):

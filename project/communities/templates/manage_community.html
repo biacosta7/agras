@@ -124,31 +124,38 @@
 
         <!-- Modal de edição -->
         <div id="editModal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
-            <div class="bg-white p-6 rounded-lg w-full max-w-lg">
-                <h3 class="text-xl font-semibold mb-4">Editar Comunidade</h3>
+            <div class="bg-white px-14 py-12 rounded-[34px] w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] max-w-[596px] max-h-[663px] overflow-y-auto rounded-[32px]">
+                <h2 id="modalTitle" class="text-[24px] font-bold mb-4 text-[#8ABF17]">Editar comunidade</h2>
+                <p class="font-medium text-[16px]">Altere as informações abaixo para editar sua comunidade</p>
                 <form method="POST" action="{% url 'update_community' community.id %}">
                     {% csrf_token %}
-                    <label for="name" class="block text-gray-700 font-semibold mb-2">Nome da Comunidade:</label>
-                    <input type="text" id="name" name="name" value="{{ community.name }}" class="w-full px-4 py-2 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
-                    
-                    <label for="description" class="block text-gray-700 font-semibold mb-2">Descrição:</label>
-                    <textarea id="description" name="description" class="w-full px-4 py-2 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">{{ community.description }}</textarea>
-
-                    <button type="submit" class="bg-[#4CAF50] text-white px-4 py-2 rounded-lg hover:bg-green-600">Salvar Alterações</button>
-                    <button type="button" onclick="closeEditModal()" class="ml-4 text-gray-600 hover:text-gray-800">Cancelar</button>
+                    <div class="mb-4 mt-6">
+                        <label for="name" class="block text-sm font-medium text-gray-700">Nome*</label>
+                        <input type="text" name="name" id="name" value="{{ community.name }}" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] h-[55px] py-2 px-3">
+                    </div>
+                    <div class="mb-4">
+                        <label for="description" class="block text-sm font-medium text-gray-700">Descrição</label>
+                        <textarea name="description" id="description" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] h-[120px] py-2 px-3">{{ community.description }}</textarea>
+                    </div>
+                    <div class="flex justify-end">
+                        <button type="button" onclick="closeEditModal()" class="mr-2 bg-white border-2 border-[#8ABF17] hover:border-[#7aab0f] text-[#8ABF17] hover:text-[#7aab0f] font-bold px-6 py-3 rounded-[9px] w-full">Cancelar</button>
+                        <button type="submit" class="mr-2 bg-[#8ABF17] text-white font-bold px-6 py-3 rounded-[9px] hover:bg-[#7aab0f] text-[#f3f7f0] w-full">Salvar Alterações</button>
+                    </div>
                 </form>
             </div>
         </div>
 
         <!-- Modal de deleção -->
         <div id="deleteModal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
-            <div class="bg-white p-6 rounded-lg w-full max-w-lg">
-                <h3 class="text-xl font-semibold mb-4 text-red-600">Excluir Comunidade</h3>
+            <div class="bg-white px-14 py-12 rounded-[34px] w-full max-w-lg">
+                <h3 class="text-xl font-bold mb-4 text-red-600">Excluir Comunidade</h3>
                 <p class="text-gray-700 mb-6">Tem certeza de que deseja excluir a comunidade "{{ community.name }}"? Esta ação não pode ser desfeita.</p>
                 <form method="POST" action="{% url 'delete_community' community.id %}">
                     {% csrf_token %}
-                    <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Excluir</button>
-                    <button type="button" onclick="closeDeleteModal()" class="ml-4 text-gray-600 hover:text-gray-800">Cancelar</button>
+                    <div class="flex flex-row justify-between">
+                        <button type="submit" class="mr-2 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 w-full font-bold">Excluir</button>
+                        <button type="button" onclick="closeDeleteModal()" class="bg-white border-2 border-[#8ABF17] hover:border-[#7aab0f] text-[#8ABF17] hover:text-[#7aab0f] font-bold px-6 py-3 rounded-[9px] w-full">Cancelar</button>
+                    </div>
                 </form>
             </div>
         </div>
