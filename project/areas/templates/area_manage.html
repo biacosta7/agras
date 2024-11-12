@@ -58,75 +58,107 @@
 
         <!-- Main content -->
         <div class="flex-1 p-6 lg:p-10 ml-0 lg:ml-[220px]">
-            
-            <!-- Título e Barra de pesquisa -->
+
             <div class="flex justify-between items-center">
-                <h1 class="mt-1 ml-5 text-xl font-semibold">
-                    <a href="{% url 'dashboard' community.id %}" class="text-green-600 hover:underline">Dashboard &gt;</a>
+                <h1 class="mb-4 text-xl font-semibold">
+                    <a href="{% url 'dashboard' community.id %}" class="text-[#8ABF17] hover:underline">Dashboard &gt;</a>
+                    <a href="{% url 'area_manage' community.id %}" class="text-[#8ABF17] hover:underline">Áreas &gt;</a>
                 </h1>
-                <!-- Barra de pesquisa e notificação -->
-                <div class="flex items-center ml-auto mr-5">
-                    <form class="relative flex-shrink-0">
-                        <input type="text" placeholder="Buscar áreas..." class="border border-gray-300 rounded-md py-1 px-2 focus:outline-none focus:ring-2 focus:ring-green-500">
-                        <button type="submit" class="ml-1 absolute top-1 right-1 text-gray-500">
-                            <span class="material-icons">search</span>
-                        </button>
-                    </form>
-                    <a href="#" class="text-gray-700 pl-2 pt-1.5">
-                        <span class="material-icons">notifications</span>
-                    </a>
-                </div>
             </div>
 
-            <div class="mt-3 flex justify-between items-center mb-4">
-                <h2 class="ml-5 text-4xl font-bold">Área de Plantio</h2> <!-- Placeholder para ocupar espaço à esquerda -->
-                <!-- Botão Criar nova Área -->
-                <a href="{% url 'create_area' community.id %}" class="mr-6 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md">
-                    Criar nova Área
-                </a>
-            </div>
-            <br>
-            <div class="ml-5 mt-5">    
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
-                    {% for area in areas %}
-                    <div class="bg-white border border-gray-300 rounded-md p-4 shadow-sm">
-                        <img src="{% static 'assets/canteiro-foto.jpg' %}" alt="Área de plantio" class="w-full h-auto">
+            {% if areas %}
+            <header class="mb-6">
+                <h1 class="text-3xl lg:text-[48px] font-bold mt-2">Áreas de Plantio</h1>
+                <p class="text-lg text-black font-medium">Encontre, crie e gerencie suas áreas!</p>
+            </header>
 
+            <button id="addCommunityBtn" class="bg-[#8ABF17] text-white px-6 py-3 rounded-[9px] mb-6 hover:bg-[#7cad10] hover:text-[#edf0e9]" onclick="toggleModal('create')">
+                Criar Área de Plantio
+            </button>
+            {% endif %}
+
+
+        <!-- Modal para criar area -->
+        <div id="areaModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center">
+            <div class="bg-white px-14 py-12 rounded-[34px] w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] max-w-[596px] max-h-[663px] overflow-y-auto rounded-[32px]">
+                <h2 id="modalTitle" class="text-[24px] font-bold mb-4 text-[#8ABF17]">Nova área de plantio</h2>
+                <p class="font-medium text-[16px]">Preencha as informações abaixo para criar uma nova área</p>
+                <form id="areaForm" method="post" action="{% url 'areas:area_create' community.id %}">
+                    {% csrf_token %}
+                    <div class="mb-4 mt-6">
+                        <label for="name" class="block text-sm font-medium text-gray-700">Nome*</label>
+                        <input type="text" name="name" id="name" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] h-[55px] py-2 px-3">
+                    </div>
+                    <div class="mb-4">
+                        <label for="description" class="block text-sm font-medium text-gray-700">Descrição</label>
+                        <textarea name="description" id="description" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] h-[120px] py-2 px-3"></textarea>
+                    </div>
+                    <div class="flex justify-end">
+                        <button type="button" class="mr-2 bg-white border-2 border-[#8ABF17] hover:border-[#7aab0f] text-[#8ABF17] hover:text-[#7aab0f] font-bold px-6 py-3 rounded-[9px] w-full" onclick="toggleModal('close')">Cancelar</button>
+                        <button type="submit" class="mr-2 bg-[#8ABF17] text-white font-bold px-6 py-3 hover:bg-[#7aab0f] text-[#f3f7f0] rounded-[9px] w-full">Criar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="mt-5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+                {% for area in areas %}
+                <div class="bg-white border border-gray-300 shadow-sm rounded-[12px]">
+                    <img src="{% static 'assets/seedbed-pic.jpg' %}" alt="Área de plantio" class="w-full h-auto rounded-t-[12px]">
+                    <div class="p-4">
+                        
                         <h3 class="text-lg lg:text-xl mt-3 font-semibold">
-                            <a href="{% url 'area_detail' community.id area.id %}" class="text-blue-500 hover:underline">{{ area.name }}</a>
+                            <a href="{% url 'area_detail' community.id area.id %}" class="text-[#8ABF17] hover:underline">{{ area.name }}</a>
                         </h3>
                         <p class="text-sm lg:text-base">{{ area.description }}</p>
+        
+                        <!-- Dropdown para os canteiros -->
                         <div class="mt-2">
-                            <a href="{% url 'update_area' community.id area.pk %}" class="text-blue-500 hover:underline">Editar</a> | 
-                            <a href="{% url 'delete_area' community.id area.pk %}" class="text-red-500 hover:underline">Deletar</a>
-                        </div>
-
-                        <ul class="list-disc list-inside mt-2 text-sm lg:text-base">
-                            {% for seedbed in area.seedbeds.all %}
-                                <li>
+                            <button class="w-full text-left bg-[#f7f7f7] p-3 rounded-[9px] text-sm lg:text-base font-medium border-2 border-[#8ABF17] focus:outline-none flex justify-between items-center transition-all transform hover:shadow-lg" onclick="toggleDropdown('seedbed-list-{{ area.id }}')">
+                                Mostrar Canteiros
+                                <span id="arrow-{{ area.id }}" class="transition-transform transform rotate-0 material-icons">arrow_drop_down</span>
+                            </button>
+                            <ul id="seedbed-list-{{ area.id }}" class="list-disc list-inside mt-2 hidden">
+                                {% for seedbed in area.seedbeds.all %}
+                                <li class="text-sm lg:text-base">
                                     {{ seedbed.nome }}
                                     {% for product in seedbed.products_in_seedbed.all %}
                                         🌱
                                     {% endfor %}
                                 </li>
-                            {% empty %}
-                                <li>Nenhum canteiro cadastrado</li>
-                            {% endfor %}
-                        </ul>                        
+                                {% empty %}
+                                <li class="text-sm lg:text-base">Nenhum canteiro cadastrado</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+        
                         <div class="flex mt-5 justify-center">
-                            <a href="{% url 'area_detail' community.id area.id %}" class="inline-block bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 w-2/4 text-center">
-                               Visualizar
+                            <a href="{% url 'area_detail' community.id area.id %}" class="inline-block bg-[#8ABF17] text-white py-2 px-4 rounded-md hover:bg-[#7cad10] font-bold focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 w-2/4 text-center w-full">
+                                Visualizar
                             </a>
                         </div>
                     </div>
-                    {% endfor %}
                 </div>
+                {% empty %}
+                <div class="text-center col-span-full mt-[15vh]">
+                    <div class="flex flex-col items-center justify-center">
+                        <img src="{% static 'assets/Ativo 304x.png' %}" alt="Plantas" class="w-64 mb-4">
+                        <h1 class="font-bold text-[24px]">Nenhuma área de plantio criada</h1>
+                        <p class="font-normal text-[16px]">Clique no botão abaixo para criar áreas de plantio e visualizá-los</p>
+                        <button id="addCommunityBtn" class="mt-4 bg-[#8ABF17] text-white px-6 py-3 rounded-[9px] mb-6 hover:bg-[#7cad10] hover:text-[#edf0e9]" onclick="toggleModal('create')">
+                            Criar Área de Plantio
+                        </button>
+                    </div>
+                </div> 
+                {% endfor %}
             </div>
+        </div>     
         </div>
     </div>
 </div>
 <script>
-    // Abrir e fechar o menu
+
+// Abrir e fechar o menu
 const menuBtn = document.getElementById('menu-btn');
 const mobileSidebar = document.getElementById('mobile-sidebar');
 const closeMenu = document.getElementById('close-menu');
@@ -146,5 +178,29 @@ closeMenu.addEventListener('click', () => {
         mobileSidebar.removeEventListener('transitionend', handleTransitionEnd);
     });
 });
+
+function toggleModal(action) {
+    const areaModal = document.getElementById('areaModal'); // Corrigido o ID do modal
+
+    if (action === 'create') {
+        areaModal.classList.remove('hidden'); // Mostra o modal de criar área
+        document.getElementById('areaForm').reset(); // Limpa o formulário (opcional)
+    } else if (action === 'close') {
+        areaModal.classList.add('hidden'); // Esconde o modal de criar área
+    } 
+}
+
+function toggleDropdown(id) {
+        const dropdown = document.getElementById(id);
+        const arrow = document.getElementById('arrow-' + id.split('-')[2]);
+
+        dropdown.classList.toggle('hidden');
+        // Alterar a rotação da seta dependendo da visibilidade do dropdown
+        if (dropdown.classList.contains('hidden')) {
+            arrow.classList.remove('rotate-180');
+        } else {
+            arrow.classList.add('rotate-180');
+        }
+    }
 </script>
 {% endblock %}
