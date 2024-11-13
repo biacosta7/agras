@@ -16,6 +16,7 @@ def add_task(request, community_id=None, area_id=None, seedbed_id=None, product_
     # seedbed = get_object_or_404(Seedbed, id=seedbed_id, area=area) if seedbed_id else None
     # product = get_object_or_404(Product, id=product_id, seedbed=seedbed) if product_id else None
     # type_product = get_object_or_404(TypeProduct, id=type_product_id) if type_product_id else None
+    users = community.members.all().union(community.admins.all()) if community else None
 
     if request.method == 'POST':
         title = request.POST.get('title')
@@ -24,7 +25,10 @@ def add_task(request, community_id=None, area_id=None, seedbed_id=None, product_
         deadline = request.POST.get('deadline')
         recurrence = request.POST.get('recurrence')
         status = request.POST.get('status')
+        priority = request.POST.get('priority')
+        responsible_users = request.POST.getlist('responsible_users')
 
+        #fazer recorrencia nao ser obrigatoria
         if not title or not deadline or not recurrence:
             return HttpResponseBadRequest("Todos os campos são obrigatórios.")
 
@@ -40,6 +44,8 @@ def add_task(request, community_id=None, area_id=None, seedbed_id=None, product_
             deadline=deadline,
             recurrence=recurrence,
             status=status,
+            priority=priority,
+            responsible_users=responsible_users
         )
 
         # if task_type == 'community' and community:
@@ -75,7 +81,7 @@ def add_task(request, community_id=None, area_id=None, seedbed_id=None, product_
         kwargs['type_product_id'] = type_product_id
 
     # Gerar a URL para o formulário
-    form_url = reverse('tasks:add_task', kwargs=kwargs)
+    form_url = reverse('add_task', kwargs=kwargs)
 
     context = {
         'form_url': form_url,
@@ -84,6 +90,21 @@ def add_task(request, community_id=None, area_id=None, seedbed_id=None, product_
         'area_id': area_id,
         'seedbed_id': seedbed_id,
         'type_product_id': type_product_id,
+        'users': users
     }
 
     return render(request, 'add_task.html', context)
+
+def view_tasks(request, community_id=None, area_id=None, seedbed_id=None, product_id=None, type_product_id=None):
+    tasks = Task.objects.all()
+
+    context = {
+        'tasks': tasks,
+        'product_id': product_id,
+        'community_id': community_id,
+        'area_id': area_id,
+        'seedbed_id': seedbed_id,
+        'type_product_id': type_product_id,
+    }
+
+    return render(request, 'view_tasks.html', context)

@@ -1,3 +1,4 @@
+
 <div id="taskModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
     <div class="bg-white w-full max-w-lg p-6 rounded-lg shadow-lg">
         <!-- Header do modal -->
@@ -37,7 +38,28 @@
                     <option value="afternoon">Tarde</option>
                     <option value="full_day">Dia todo</option>
                 </select>
+            </div> 
+            {% comment %} remover periodo {% endcomment %}
+            <div class="mt-4">
+                <label for="priority" class="block font-medium">Prioridade:</label>
+                <select id="priority" name="priority" class="w-full border p-2 rounded mt-1" required>
+                    <option value="low">Baixa</option>
+                    <option value="medium">Média</option>
+                    <option value="high">Alta</option>
+                </select>
             </div>
+            <div class="mt-4">
+                <label for="responsible_users" class="block font-medium">Responsável:</label>
+                <select id="responsible_users" name="responsible_users" class="w-full border p-2 rounded mt-1" required>
+                    {% if users %}
+                        {% for user in users %}
+                            <option value="{{ user.id }}">{{ user.username }}</option>
+                        {% endfor %}
+                    {% else %}
+                        <option value="">Membros não encontrados</option>
+                    {% endif %}
+                </select>                
+            </div>          
             <div class="mt-4 flex items-center">
                 <label for="is_completed" class="font-medium mr-2">Completo:</label>
                 <input type="checkbox" id="is_completed" name="is_completed">
@@ -53,7 +75,34 @@
 </div>
 
 <script>
+
     function closeModal() {
         document.getElementById('taskModal').classList.add('hidden');
     }
+    function toggleDropdown() {
+        const dropdown = document.getElementById('userDropdown');
+        dropdown.classList.toggle('hidden');
+    }
+
+    function updateSelectedUsers() {
+        const checkboxes = document.querySelectorAll('input[name="responsible_users"]:checked');
+        const selectedSpan = document.getElementById('selectedUsers');
+        
+        if (checkboxes.length === 0) {
+            selectedSpan.textContent = 'Selecionar responsáveis';
+        } else {
+            const selectedUsers = Array.from(checkboxes).map(cb => cb.nextElementSibling.textContent);
+            selectedSpan.textContent = selectedUsers.join(', ');
+        }
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        const dropdown = document.getElementById('userDropdown');
+        const button = event.target.closest('button');
+        
+        if (!button && !event.target.closest('#userDropdown')) {
+            dropdown.classList.add('hidden');
+        }
+    });   
 </script>

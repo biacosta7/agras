@@ -27,6 +27,12 @@ class Task(models.Model):
         ('product', 'Produto'),
     ]
 
+    PRIORITY = [
+        ('low', 'Baixa'),
+        ('medium', 'Média'),
+        ('high', 'Alta'),
+    ]
+
     type = models.CharField(max_length=15, choices=TYPE_CHOICES, default='community')
     
     community = models.ForeignKey(Community, related_name='community_tasks', on_delete=models.CASCADE, null=True, blank=True)
@@ -41,6 +47,8 @@ class Task(models.Model):
     deadline = models.DateField()
     recurrence = models.CharField(max_length=10, choices=RECURRENCE_CHOICES)
     status = models.CharField(max_length=100, null=True, blank=True)
+    responsible_users = models.ManyToManyField('users.User', blank=True)
+    priority = models.CharField(max_length=15, choices=PRIORITY, default='low')
 
     # def save(self, *args, **kwargs):
     #     # Validações para garantir o preenchimento correto com base no tipo
