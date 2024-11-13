@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseBadRequest
 from django.utils import timezone
 from .models import Task
+from users.models import User
 from products.models import Product, TypeProduct
 from areas.models import Area
 from seedbeds.models import Seedbed
@@ -26,7 +27,8 @@ def add_task(request, community_id=None, area_id=None, seedbed_id=None, product_
         recurrence = request.POST.get('recurrence')
         status = request.POST.get('status')
         priority = request.POST.get('priority')
-        responsible_users = request.POST.getlist('responsible_users')
+        responsible_user_ids = request.POST.getlist('responsible_users[]')
+
 
         #fazer recorrencia nao ser obrigatoria
         if not title or not deadline or not recurrence:
@@ -45,7 +47,6 @@ def add_task(request, community_id=None, area_id=None, seedbed_id=None, product_
             recurrence=recurrence,
             status=status,
             priority=priority,
-            responsible_users=responsible_users
         )
 
         # if task_type == 'community' and community:
@@ -62,6 +63,15 @@ def add_task(request, community_id=None, area_id=None, seedbed_id=None, product_
         #     return HttpResponseBadRequest("Tipo inválido ou não encontrado.")
 
         task.save()
+
+        # Then set the many-to-many relationship
+        if responsible_user_ids:
+            # Convert IDs to integers and filter out empty strings
+            user_ids = [int(uid) for uid in responsible_user_ids if uid]
+            # Get the user objects
+            users = User.objects.filter(id__in=user_ids)
+            # Set the many-to-many relationship
+            task.responsible_users.set(users)
 
         # Gerar a URL para redirecionar para o dashboard, com os parâmetros necessários
         redirect_url = reverse('dashboard', kwargs={'community_id': community_id})

@@ -46,7 +46,7 @@ class Task(models.Model):
     is_completed = models.BooleanField(default=False)
     deadline = models.DateField()
     recurrence = models.CharField(max_length=10, choices=RECURRENCE_CHOICES)
-    status = models.CharField(max_length=100, null=True, blank=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='to-do', null=True)
     responsible_users = models.ManyToManyField('users.User', blank=True)
     priority = models.CharField(max_length=15, choices=PRIORITY, default='low')
 

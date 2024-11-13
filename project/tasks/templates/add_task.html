@@ -1,56 +1,62 @@
 
-<div id="taskModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
-    <div class="bg-white w-full max-w-lg p-6 rounded-lg shadow-lg">
-        <!-- Header do modal -->
-        <div class="flex justify-between items-center border-b pb-3">
-            <h2 class="text-xl font-bold">Adicionar Nova Task</h2>
-            <button onclick="closeModal()" class="text-gray-500 hover:text-gray-800">&times;</button>
-        </div>
-        
-        <!-- Conteúdo do modal (formulário de criação de task) -->
-        <form action="{{ form_url }}" method="POST">
-            {% csrf_token %}
-            <div class="mt-4">
-                <label for="title" class="block font-medium">Título:</label>
-                <input type="text" id="title" name="title" class="w-full border p-2 rounded mt-1" required>
+
+    <div id="taskModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
+        <div class="bg-white w-full max-w-lg p-6 rounded-lg shadow-lg">
+            <!-- Header do modal -->
+            <div class="flex justify-between items-center border-b pb-3">
+                <h2 class="text-xl font-bold">Adicionar Nova Task</h2>
+                <button onclick="closeModal()" class="text-gray-500 hover:text-gray-800">&times;</button>
             </div>
-            <div class="mt-4">
-                <label for="description" class="block font-medium">Descrição:</label>
-                <textarea id="description" name="description" class="w-full border p-2 rounded mt-1"></textarea>
-            </div>
-            <div class="mt-4">
-                <label for="deadline" class="block font-medium">Prazo (DD/MM/AAAA HH:MM):</label>
-                <input type="text" id="deadline" name="deadline" class="w-full border p-2 rounded mt-1" required>
-            </div>
-            <div class="mt-4">
-                <label for="recurrence" class="block font-medium">Recorrência:</label>
-                <select id="recurrence" name="recurrence" class="w-full border p-2 rounded mt-1" required>
-                    <option value="daily">Diário</option>
-                    <option value="weekly">Semanal</option>
-                    <option value="monthly">Mensal</option>
-                    <option value="yearly">Anual</option>
-                </select>
-            </div>
-            <div class="mt-4">
-                <label for="time" class="block font-medium">Período:</label>
-                <select id="time" name="time" class="w-full border p-2 rounded mt-1" required>
-                    <option value="morning">Manhã</option>
-                    <option value="afternoon">Tarde</option>
-                    <option value="full_day">Dia todo</option>
-                </select>
-            </div> 
-            {% comment %} remover periodo {% endcomment %}
-            <div class="mt-4">
-                <label for="priority" class="block font-medium">Prioridade:</label>
-                <select id="priority" name="priority" class="w-full border p-2 rounded mt-1" required>
-                    <option value="low">Baixa</option>
-                    <option value="medium">Média</option>
-                    <option value="high">Alta</option>
-                </select>
-            </div>
-            <div class="mt-4">
-                <label for="responsible_users" class="block font-medium">Responsável:</label>
-                <select id="responsible_users" name="responsible_users" class="w-full border p-2 rounded mt-1" required>
+            
+            <!-- Conteúdo do modal (formulário de criação de task) -->
+            <form action="{{ form_url }}" method="POST">
+                {% csrf_token %}
+                <div class="mt-4">
+                    <label for="title" class="block font-medium">Título:</label>
+                    <input type="text" id="title" name="title" class="w-full border p-2 rounded mt-1" required>
+                </div>
+                <div class="mt-4">
+                    <label for="description" class="block font-medium">Descrição:</label>
+                    <textarea id="description" name="description" class="w-full border p-2 rounded mt-1"></textarea>
+                </div>
+                <div class="mt-4">
+                    <label for="deadline" class="block font-medium">Prazo (DD/MM/AAAA HH:MM):</label>
+                    <input type="text" id="deadline" name="deadline" class="w-full border p-2 rounded mt-1" required>
+                </div>
+                <div class="mt-4">
+                    <label for="recurrence" class="block font-medium">Recorrência:</label>
+                    <select id="recurrence" name="recurrence" class="w-full border p-2 rounded mt-1" required>
+                        <option value="daily">Diário</option>
+                        <option value="weekly">Semanal</option>
+                        <option value="monthly">Mensal</option>
+                        <option value="yearly">Anual</option>
+                    </select>
+                </div>
+                <div class="mt-4">
+                    <label for="time" class="block font-medium">Período:</label>
+                    <select id="time" name="time" class="w-full border p-2 rounded mt-1" required>
+                        <option value="morning">Manhã</option>
+                        <option value="afternoon">Tarde</option>
+                        <option value="full_day">Dia todo</option>
+                    </select>
+                </div> 
+                {% comment %} remover periodo {% endcomment %}
+                <div class="mt-4">
+                    <label for="priority" class="block font-medium">Prioridade:</label>
+                    <select id="priority" name="priority" class="w-full border p-2 rounded mt-1" required>
+                        <option value="low">Baixa</option>
+                        <option value="medium">Média</option>
+                        <option value="high">Alta</option>
+                    </select>
+                </div>
+                <div class="mt-4">
+                    <label for="responsible_users" class="block font-medium">Atribuir à:</label>
+                    <select id="responsible_users" 
+                        name="responsible_users[]" 
+                        class="w-full border p-2 rounded mt-1" 
+                        multiple
+                        size="4">  <!-- size attribute controls how many options are visible without scrolling -->
+                    <option value="">Ninguém</option>
                     {% if users %}
                         {% for user in users %}
                             <option value="{{ user.id }}">{{ user.username }}</option>
@@ -58,22 +64,22 @@
                     {% else %}
                         <option value="">Membros não encontrados</option>
                     {% endif %}
-                </select>                
-            </div>          
-            <div class="mt-4 flex items-center">
-                <label for="is_completed" class="font-medium mr-2">Completo:</label>
-                <input type="checkbox" id="is_completed" name="is_completed">
-            </div>
-            
-            <!-- Botões de ação -->
-            <div class="mt-6 flex justify-end">
-                <button type="button" onclick="closeModal()" class="bg-gray-300 text-gray-700 px-4 py-2 rounded mr-2">Cancelar</button>
-                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Salvar Task</button>
-            </div>
-        </form>
-    </div>
-</div>
+                </select>
 
+                <!-- Add helper text -->
+                <small class="text-gray-500 mt-1">
+                    Pressione Ctrl (Windows) ou Command (Mac) para selecionar múltiplos usuários
+                </small>
+            
+                <!-- Botões de ação -->
+                <div class="mt-6 flex justify-end">
+                    <button type="button" onclick="closeModal()" class="bg-gray-300 text-gray-700 px-4 py-2 rounded mr-2">Cancelar</button>
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Salvar Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% block scripts %}
 <script>
 
     function closeModal() {
@@ -106,3 +112,22 @@
         }
     });   
 </script>
+{% endblock scripts %}
+{% block styles %}
+<style>
+    select[multiple] {
+        min-height: 120px;  /* Adjust height as needed */
+        padding: 8px;
+    }
+    
+    select[multiple] option {
+        padding: 8px;
+        margin: 2px 0;
+        border-radius: 4px;
+    }
+    
+    select[multiple] option:checked {
+        background-color: #e5e7eb;
+    }
+</style>
+{% endblock styles %}
