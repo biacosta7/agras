@@ -19,10 +19,16 @@
                     <label for="description" class="block font-medium">Descrição:</label>
                     <textarea id="description" name="description" class="w-full border p-2 rounded mt-1"></textarea>
                 </div>
-                <div class="mt-4">
-                    <label for="deadline" class="block font-medium">Prazo (DD/MM/AAAA HH:MM):</label>
-                    <input type="text" id="deadline" name="deadline" class="w-full border p-2 rounded mt-1" required>
-                </div>
+                <label for="deadline" class="block font-medium">Prazo:</label>
+                <div class="relative max-w-sm">
+                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                       <svg class="w-4 h-4 text-white-500 dark:text-white-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+                        </svg>
+                    </div>
+                    <input id="datepicker-format" datepicker datepicker-format="dd-mm-yyyy" type="text" class="bg-white border border-white-300 text-white-900 text-sm rounded-lg focus:ring-white-500 focus:border-white-500 block w-full ps-10 p-2.5  dark:bg-white-700 dark:border-white-600 dark:placeholder-white-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500" placeholder="Selecionar data">
+                </div>     
+                <br>
                 <div class="mt-4">
                     <label for="recurrence" class="block font-medium">Recorrência:</label>
                     <select id="recurrence" name="recurrence" class="w-full border p-2 rounded mt-1" required>
@@ -32,15 +38,6 @@
                         <option value="yearly">Anual</option>
                     </select>
                 </div>
-                <div class="mt-4">
-                    <label for="time" class="block font-medium">Período:</label>
-                    <select id="time" name="time" class="w-full border p-2 rounded mt-1" required>
-                        <option value="morning">Manhã</option>
-                        <option value="afternoon">Tarde</option>
-                        <option value="full_day">Dia todo</option>
-                    </select>
-                </div> 
-                {% comment %} remover periodo {% endcomment %}
                 <div class="mt-4">
                     <label for="priority" class="block font-medium">Prioridade:</label>
                     <select id="priority" name="priority" class="w-full border p-2 rounded mt-1" required>
@@ -74,14 +71,15 @@
                 <!-- Botões de ação -->
                 <div class="mt-6 flex justify-end">
                     <button type="button" onclick="closeModal()" class="bg-gray-300 text-gray-700 px-4 py-2 rounded mr-2">Cancelar</button>
-                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Salvar Task</button>
+                    <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Salvar Task</button>
                 </div>
             </form>
         </div>
     </div>
+
 {% block scripts %}
 <script>
-
+    
     function closeModal() {
         document.getElementById('taskModal').classList.add('hidden');
     }
