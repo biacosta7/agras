@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login as login_django, logout as logout_django
 from django.contrib.auth.decorators import login_required
 from .models import User
+from communities.models import Community
 from django.contrib import messages
 
 def create_user(request):
@@ -70,55 +71,6 @@ def create_user(request):
         else:
             messages.error(request, 'Senhas não coincidem.')
             return render(request, 'signup.html', form_data)
-        
-@login_required
-def update_user(request, user_id):
-    user = get_object_or_404(User, id=user_id)
-
-    if request.method == "GET":
-        return render(request, 'edit_user.html', {'user': user})
-    else:
-        first_name = request.POST.get('first_name')
-        username = request.POST.get('username')
-        email = request.POST.get('email')
-        city = request.POST.get('city')
-        state = request.POST.get('state')
-
-        valid_chars = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_")
-        if not set(username).issubset(valid_chars):
-            messages.error(request, 'O nome de usuário deve conter apenas letras, números ou underlines, sem espaços ou caracteres especiais.')
-            return redirect('/')
-        
-        valid_name = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
-        if not set(first_name).issubset(valid_name):
-            messages.error(request, 'O nome não deve conter números ou caracteres especiais')
-            return redirect('/')
-        
-        if '@' not in email or email.count('@') != 1:
-            messages.error(request, 'Por favor, insira um email válido')
-            return redirect('/')
-
-        if User.objects.filter(username=username).exists():
-            messages.error(request, 'Este usuário já está em uso.')
-            return redirect('/')
-
-        if User.objects.filter(email=email).exists():
-            messages.error(request, 'Já existe um usuário com este email.')
-            return redirect('/')
-
-        user.first_name = first_name
-        user.username = username
-        user.email = email
-        user.city = city
-        user.state = state
-        try:     
-            user.save()
-            messages.success(request, 'Usuário editado com sucesso.')
-        except IntegrityError:
-            messages.error('Já existe um usuário com este email.')
-            return redirect('/')
-
-        return redirect('get_all_users')
 
 @login_required
 def delete_user(request, user_id):
@@ -211,11 +163,19 @@ def forgot_password(request):
         
         
 @login_required
-def editar(request):
+def update_user(request):
     user = request.user
+    community = None
+
+    # Verifica se o usuário está em alguma comunidade, pegando a primeira comunidade associada a ele
+    if user.communities_members.exists():
+        # Se o usuário está em uma comunidade, pegamos a primeira comunidade
+        community = user.communities_members.first()
 
     if request.method == "GET":
-        return render(request, 'edit_profile.html', {'user': user})
+        # Passa o contexto de 'community' para o template se houver
+        return render(request, 'edit_profile.html', {'user': user, 'community': community})
+    
     else:
         first_name = request.POST.get('first_name')
         username = request.POST.get('username')
@@ -223,6 +183,7 @@ def editar(request):
         city = request.POST.get('city')
         state = request.POST.get('state')
 
+        # Validação dos dados recebidos
         valid_chars = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_")
         if not set(username).issubset(valid_chars):
             messages.error(request, 'O nome de usuário deve conter apenas letras, números ou underlines, sem espaços ou caracteres especiais.')
@@ -259,4 +220,4 @@ def editar(request):
             messages.error(request, 'Erro ao atualizar as credenciais. Tente novamente.')
             return redirect('edit')
 
-        return render(request, 'login.html') # Redireciona de volta à página de edição após a atualização
+        return render(request, 'login.html', {'community': community})

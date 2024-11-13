@@ -4,50 +4,110 @@
 
 {% block content %}
 
-<!-- Sidebar -->
-<div class="flex px-8 py-10 mx-auto bg-white relative">
-    <div class="bg-[#8ABF17] lg:flex xl:flex 2xl:flex sm:hidden md:hidden hidden-sm flex-col items-center rounded-[20px] w-[220px] h-[90%] fixed"> 
-        <a href="/"><img class="w-[146px] mt-12 mb-8" src="{% static 'assets/logo-branco-h.png' %}" alt="AGRAS"> </a>   
-        <div class="flex flex-col gap-y-6 mt-12 w-full px-4 flex-grow">
-            <a href="{% url 'edit' %}" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">person</span> Perfil</a>
-            <div class="flex-grow"></div>
-            <form action="{% url 'logout' %}" method="POST" class="w-full px-4 mb-12">
-                {% csrf_token %}
-                <button class="text-[14px] font-normal text-white flex items-center cursor-pointer w-full">
-                    <span class="material-icons mr-2">logout</span>Sair
-                </button>
-            </form>
-        </div>
-    </div> 
-
-    <!-- Hamburger Menu Button (mobile) -->
-    <button id="menu-btn" class="lg:hidden fixed top-4 left-4 z-20 p-2 rounded-md bg-[#8ABF17] text-white focus:outline-none">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
-    </button>
-
-    <!-- Mobile Sidebar -->
-    <div id="mobile-sidebar" class="hidden fixed top-0 left-0 w-[250px] h-full bg-[#8ABF17] z-20 transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
-        <div class="flex justify-between items-center p-4">
-            <a href="/"><img class="w-[146px]" src="{% static 'assets/logo-branco-h.png' %}" alt="AGRAS"></a>
-            <button id="close-menu" class="text-white">
-                <span class="material-icons">close</span>
-            </button>
-        </div>
-        <div class="flex flex-col gap-y-6 mt-12 w-full px-4 flex-grow">
-            <div class="flex-grow"></div>
-            <form action="{% url 'logout' %}" method="POST" class="w-full px-4 mb-12">
-                {% csrf_token %}
-                <button class="text-[14px] font-normal text-white flex items-center cursor-pointer w-full">
-                    <span class="material-icons mr-2">logout</span>Sair
-                </button>
-            </form>
+<!-- Navbar -->
+<nav class="bg-white border-b-[1px] h-[90px] border-[#8ABF17] flex justify-between items-center px-8 py-4 fixed top-0 left-0 w-full z-10 lg:flex xl:flex 2xl:flex sm:hidden md:hidden hidden-sm">
+    <div class="border-r-[1px] border-[#8ABF17] w-[218px] h-[90px] fixed "></div>
+    <div class="flex items-center">
+        <a href="/" class="flex items-center mr-20 z-20 cursor-pointer">
+            <img src="{% static 'assets/colorido-horizontal.png' %}" alt="AGRAS" class="w-[160px] mr-4">
+        </a>
+        <div class="relative"> 
+          <input type="text" placeholder="Pesquisar..." class="rounded-[8px] bg-[#F5F5F7] shadow-sm py-2 px-4 pl-10 focus:outline-none">
+          <span class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 material-icons text-[#8ABF17]">search</span>
         </div>
     </div>
+    <div class="flex items-center">
+        <div class="relative mr-6 flex items-center cursor-pointer">  
+            <span class="material-icons text-[25px]">notifications_none</span>
+            <span class="absolute top-[30%] -right-1 transform -translate-y-1/2 bg-red-500 text-white text-xs rounded-full px-1">3</span> 
+        </div>
+        <div class="flex items-center cursor-pointer z-20"> 
+            <img src="{% static 'assets/icons/profile.png' %}" alt="Foto de Perfil" class="w-8 h-8 rounded-full mr-2">
+            <div class="flex flex-col">
+                <span class="text-sm font-medium">{{ user.username }}</span> 
+                <span class="text-xs text-gray-500">{{ user.email }}</span> 
+            </div>
+        </div>
+    </div>
+</nav> 
+
+    <!-- Mobile Navbar -->
+    <nav class="bg-white border-b-[1px] border-[#8ABF17] h-[60px] flex justify-between items-center px-4 py-2 fixed top-0 left-0 w-full z-20 lg:hidden xl:hidden 2xl:hidden sm:flex md:flex">
+        <button id="mobile-menu-button" class="text-[#8ABF17] focus:outline-none">
+            <span class="material-icons">menu</span>
+        </button>
+        <a href="/" class="flex items-center">
+            <img src="{% static 'assets/colorido-horizontal.png' %}" alt="AGRAS" class="w-[100px]">
+        </a>
+        <div class="flex items-center">
+            <div class="relative mr-2 flex items-center cursor-pointer">  
+                <span class="material-icons text-[20px]">notifications_none</span>
+                <span class="absolute top-[25%] -right-1 transform -translate-y-1/2 bg-red-500 text-white text-xs rounded-full px-1">3</span> 
+            </div>
+            <img src="{% static 'assets/icons/profile.png' %}" alt="Foto de Perfil" class="w-6 h-6 rounded-full">
+        </div>
+    </nav>
+
+<!-- Sidebar -->
+<div class="bg-white top-[90px] border-r-[1px] border-[#8ABF17] w-[250px] min-h-screen lg:flex xl:flex 2xl:flex sm:hidden md:hidden hidden-sm flex-col items-center w-[250px] fixed">
+    <div class="flex flex-col gap-y-8 mt-12 w-full px-8 flex-grow">
+        <a href="" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
+            <span class="w-[23px] material-icons mr-2" alt="dashboar2">dashboard</span> Dashboard
+        </a>
+        <a href="" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
+            <span class="w-[23px] mr-2 material-icons" alt="gerenciamento">equalizer</span> Gerenciamento
+        </a>
+        <a href="{% url 'community_hub' %}" class="text-[14px] font-normal text-[#8ABF17] flex items-center cursor-pointer">
+            <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">group</span> Comunidades
+        </a>
+        <a href="" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
+            <span class="material-icons-outlined mr-2">forest</span> Areas  </a>
+        <a href="" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
+            <span class="w-[23px] mr-2 material-icons-outlined" alt="tarefas">task_alt</span> Tarefas
+        </a>
+        <form action="{% url 'logout' %}" method="POST" class="w-full mb-12">
+            {% csrf_token %}
+            <button class="mt-56 text-[14px] font-normal text-black flex items-center cursor-pointer w-full">
+                <img src="{% static 'assets/icons/sair.png' %}" class="w-[23px] mr-2"></img>Sair
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Mobile Sidebar (Hidden by default) -->
+<div id="mobile-menu" class="bg-white fixed top-0 left-0 h-full w-64 shadow-lg z-30 transform -translate-x-full transition-transform duration-300 ease-in-out lg:hidden">
+    <div class="p-[14.3px] border-b border-[#8ABF17] flex justify-between items-center">
+        <p class="flex ml-4 w-full">Menu Lateral</p>
+        <button id="mobile-menu-close-button" class="text-[#8ABF17] focus:outline-none ml-auto">
+            <span class="material-icons">close</span>
+        </button>
+    </div>
+    <div class="flex flex-col gap-y-8 mt-12 w-full px-8 flex-grow">
+        <a href="" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
+            <span class="w-[23px] material-icons mr-2" alt="dashboar2">dashboard</span> Dashboard
+        </a>
+        <a href="" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
+            <span class="w-[23px] mr-2 material-icons" alt="gerenciamento">equalizer</span> Gerenciamento
+        </a>
+        <a href="{% url 'community_hub' %}" class="text-[14px] font-normal text-[#8ABF17] flex items-center cursor-pointer">
+            <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">group</span> Comunidades
+        </a>
+        <a href="" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
+            <span class="material-icons-outlined mr-2">forest</span> Areas  </a>
+        <a href="" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
+            <span class="w-[23px] mr-2 material-icons-outlined" alt="tarefas">task_alt</span> Tarefas
+        </a>
+        <form action="{% url 'logout' %}" method="POST" class="w-full mb-12">
+            {% csrf_token %}
+            <button class="mt-64 text-[14px] font-normal text-black flex items-center cursor-pointer w-full">
+                <img src="{% static 'assets/icons/sair.png' %}" class="w-[23px] mr-2"></img>Sair
+            </button>
+        </form>
+    </div>
+</div>
     
     <!-- Main content -->
-    <div class="flex-1 p-6 lg:p-10 ml-0 lg:ml-[220px]">
+    <div class="flex-1 p-6 py-8 bg-[#FAFAFA] h-screen ml:0 lg:ml-[250px] mt-12 lg:mt-[90px]">
         {% if communities %} 
         <header class="mb-6">
             <h1 class="text-3xl lg:text-[48px] font-bold">Comunidades</h1>
@@ -101,7 +161,7 @@
          <div class="flex items-center justify-center">
              <div id="communitiesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 w-full">
                  {% for community in communities %}
-                 <div class="bg-white shadow-md rounded-[20px] overflow-hidden flex flex-col h-full">
+                 <div class="bg-white shadow-md rounded-[20px] overflow-hidden flex flex-col h-full border-[1px] border-[#8ABF17]">
                      <div class="bg-[#EFF1F3] py-12 flex items-center justify-center h-full">
                          <img class="w-[150px]" src="{% static 'assets/vertcolorido.png' %}" alt="">
                      </div>
@@ -153,25 +213,19 @@
         }
     }
 
-    // Abrir e fechar o menu
-    const menuBtn = document.getElementById('menu-btn');
-    const mobileSidebar = document.getElementById('mobile-sidebar');
-    const closeMenu = document.getElementById('close-menu');
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileMenuCloseButton = document.getElementById('mobile-menu-close-button');
 
-    menuBtn.addEventListener('click', () => {
-        mobileSidebar.classList.remove('hidden');
-        requestAnimationFrame(() => {
-            mobileSidebar.classList.add('transform', 'translate-x-0');
-        });
+
+    mobileMenuButton.addEventListener('click', () => {
+        mobileMenu.classList.remove('-translate-x-full');
+
     });
 
-    closeMenu.addEventListener('click', () => {
-        mobileSidebar.classList.remove('transform', 'translate-x-0');
-        // Espera a animação de fechamento terminar antes de adicionar a classe 'hidden'
-        mobileSidebar.addEventListener('transitionend', function handleTransitionEnd() {
-            mobileSidebar.classList.add('hidden');
-            mobileSidebar.removeEventListener('transitionend', handleTransitionEnd);
-        });
+    mobileMenuCloseButton.addEventListener('click', () => {
+        mobileMenu.classList.add('-translate-x-full');
+
     });
 </script>
 
