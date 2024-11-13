@@ -30,7 +30,7 @@
         <button type="submit" class="button" style='background-color: red; color: white;'>
             <i class="fas fa-trash"></i> Sim, deletar
         </button>
-        <a href="{% url 'area_detail' community.id area.id %}" class="button" style="background-color: green;">Cancelar</a>
+        <a href="{% url 'seedbeds:list_seedbeds' community.id %}" class="button"><i class="fas fa-list"></i>Não, cancelar</a>
     </form>
 
 {% endblock %}

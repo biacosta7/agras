@@ -29,22 +29,22 @@ def create_seedbed(request, community_id, area_id):
 
     if request.method == 'POST':
         # Obter o nome do canteiro
-        seedbed_name = request.POST.get('seedbed_name')
-        
-        if seedbed_name:  # Verifica se o nome foi fornecido
-            try:
-                # Criação do canteiro
-                Seedbed.objects.create(nome=seedbed_name, area=area)
-                messages.success(request, 'Canteiro criado com sucesso!')
-                return redirect('area_detail', community_id=community.id, area_id=area.id)  # Redireciona para a página de detalhes da área
-            except Exception as e:
-                # Caso ocorra algum erro ao criar o canteiro
-                messages.error(request, f'Erro ao criar o canteiro: {str(e)}')
+        seedbed_name = request.POST.get('seedbed_name')  # Certifique-se de que este campo está no formulário
+        if seedbed_name:
+            # Criação do canteiro
+            Seedbed.objects.create(nome=seedbed_name, area=area)
+
+            messages.success(request, 'Canteiro criado com sucesso!')
+            return redirect('area_detail', community_id=community.id, area_id=area.id)  # Redirecionar para a lista de canteiros da comunidade
         else:
             messages.error(request, 'Por favor, insira um nome válido para o canteiro.')
 
-    # Se o método não for POST, ou caso ocorra algum erro, redireciona para a página de detalhes da área
-    return redirect('area_detail', community_id=community.id, area_id=area.id)
+    context = {
+        'communities': communities,
+        'community': community,
+        'area': area,  # Adiciona a área ao contexto
+    }
+    return render(request, 'create_seedbed.html', context)
 
 @login_required
 def edit_seedbed(request, community_id, area_id, seedbed_id):

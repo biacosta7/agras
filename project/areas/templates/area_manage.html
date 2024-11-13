@@ -3,204 +3,96 @@
 {% block title %}Áreas{% endblock %}
 
 {% block content %}
-<div class="bg-white min-h-screen flex px-4 md:px-8 py-10 relative">
- <!-- Sidebar (Desktop) -->
- <div class="bg-[#8ABF17] lg:flex xl:flex 2xl:flex sm:hidden md:hidden hidden-sm flex-col items-center rounded-[20px] w-[220px] h-[90%] fixed">
-    <a href="/"><img class="w-[146px] mt-12 mb-8" src="{% static 'assets/logo-branco-h.png' %}" alt="AGRAS"> </a>
-    <div class="flex flex-col gap-y-6 mt-12 w-full px-4 flex-grow">
-        <a href="{% url 'dashboard' community.id %}" class="text-[14px] font-normal text-white flex items-center cursor-pointer"> <span class="material-icons mr-2">dashboard</span> Dashboard</a>
-        <a href="{% url 'area_manage' community.id %}" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">forest</span> Areas</a>
-        <a href="#" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">trending_up</span> Estatísticas</a>
-        <a href="{% url 'manage_community' community.id %}" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">equalizer</span> Gerenciamento</a>
-        <a href="#" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">settings</span> Configurações</a>
-        <a href="#" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">help</span> Ajuda</a>
-        <div class="flex-grow"></div>
-        <form action="{% url 'logout' %}" method="POST" class="w-full mb-12">
-            {% csrf_token %}
-            <button class="text-[14px] font-normal text-white flex items-center cursor-pointer w-full">
-                <span class="material-icons mr-2">logout</span>Sair
-            </button>
-        </form>
-    </div>
-</div>
-
-<!-- Mobile Sidebar Toggle -->
-<button id="menu-btn" class="lg:hidden fixed top-4 left-4 z-20 p-2 rounded-md bg-[#8ABF17] text-white focus:outline-none">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-    </svg>
-</button>
-
-<!-- Mobile Sidebar -->
-<div id="mobile-sidebar" class="hidden fixed top-0 left-0 w-[250px] h-full bg-[#8ABF17] z-20 transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
-    <div class="flex justify-between items-center p-4">
-        <a href="/"><img class="w-[146px]" src="{% static 'assets/logo-branco-h.png' %}" alt="AGRAS"> </a>
-        <button id="close-menu" class="text-white">
-            <span class="material-icons">close</span>
-        </button>
-    </div>
-    <div class="flex flex-col gap-y-6 mt-12 w-full px-4 flex-grow">
-        <a href="{% url 'dashboard' community.id %}" class="text-[14px] font-normal text-white flex items-center cursor-pointer"> <span class="material-icons mr-2">dashboard</span> Dashboard</a>
-        <a href="{% url 'area_manage' community.id %}" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">forest</span> Areas</a>
-        <a href="#" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">trending_up</span> Estatísticas</a>
-        <a href="{% url 'manage_community' community.id %}" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">equalizer</span> Gerenciamento</a>
-        <a href="#" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">settings</span> Configurações</a>
-        <a href="#" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">help</span> Ajuda</a>
-        <div class="flex-grow"></div>
-    </div>
-    <form action="{% url 'logout' %}" method="POST" class="w-full px-4 mb-12">
-        {% csrf_token %}
-        <button class="text-[14px] font-normal text-white flex items-center cursor-pointer w-full">
-            <span class="material-icons mr-2">logout</span>Sair
-        </button>
-    </form>
-</div>
-
-        <!-- Main content -->
-        <div class="flex-1 p-6 lg:p-10 ml-0 lg:ml-[220px]">
-
-            <div class="flex justify-between items-center">
-                <h1 class="mb-4 text-xl font-semibold">
-                    <a href="{% url 'dashboard' community.id %}" class="text-[#8ABF17] hover:underline">Dashboard &gt;</a>
-                    <a href="{% url 'area_manage' community.id %}" class="text-[#8ABF17] hover:underline">Áreas &gt;</a>
-                </h1>
-            </div>
-
-            {% if areas %}
-            <header class="mb-6">
-                <h1 class="text-3xl lg:text-[48px] font-bold mt-2">Áreas de Plantio</h1>
-                <p class="text-lg text-black font-medium">Encontre, crie e gerencie suas áreas!</p>
-            </header>
-
-            <button id="addCommunityBtn" class="bg-[#8ABF17] text-white px-6 py-3 rounded-[9px] mb-6 hover:bg-[#7cad10] hover:text-[#edf0e9]" onclick="toggleModal('create')">
-                Criar Área de Plantio
-            </button>
-            {% endif %}
-
-
-        <!-- Modal para criar area -->
-        <div id="areaModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-10">
-            <div class="bg-white px-14 py-12 rounded-[34px] w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] max-w-[596px] max-h-[663px] overflow-y-auto rounded-[32px]">
-                <h2 id="modalTitle" class="text-[24px] font-bold mb-4 text-[#8ABF17]">Nova área de plantio</h2>
-                <p class="font-medium text-[16px]">Preencha as informações abaixo para criar uma nova área</p>
-                <form id="areaForm" method="post" action="{% url 'areas:area_create' community.id %}">
+<div class="min-h-screen bg-gray">
+    <!-- Container -->
+    <div class="px-4 md:px-8 py-10 mx-auto flex flex-col lg:flex-row gap-x-8">
+        
+        <!-- Sidebar -->
+        <div class="bg-[#8ABF17] flex flex-col items-center rounded-[20px] w-full lg:w-[220px] h-auto lg:h-[850px] mb-8 lg:mb-0">
+            <a href="/"><img class="w-[146px] mt-12 mb-8" src="{% static 'assets/logo-branco-h.png' %}" alt="AGRAS"> </a>    
+            <div class="flex flex-col gap-y-6 mt-12 w-full px-4 flex-grow">
+                <a href="{% url 'dashboard' community.id %}" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">dashboard</span> Dashboard</a>
+                <a href="" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">equalizer</span> Gerenciamento</a>
+                <a href="" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">group</span> Time</a>
+                <a href="" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">trending_up</span> Estatísticas</a>
+                <a href="" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">settings</span> Configurações</a>
+                <div class="flex-grow"></div>
+                <form action="{% url 'logout' %}" method="POST" class="w-full px-4 mb-12">
                     {% csrf_token %}
-                    <div class="mb-4 mt-6">
-                        <label for="name" class="block text-sm font-medium text-gray-700">Nome*</label>
-                        <input type="text" name="name" id="name" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] h-[55px] py-2 px-3">
-                    </div>
-                    <div class="mb-4">
-                        <label for="description" class="block text-sm font-medium text-gray-700">Descrição</label>
-                        <textarea name="description" id="description" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] h-[120px] py-2 px-3"></textarea>
-                    </div>
-                    <div class="flex justify-end">
-                        <button type="button" class="mr-2 bg-white border-2 border-[#8ABF17] hover:border-[#7aab0f] text-[#8ABF17] hover:text-[#7aab0f] font-bold px-6 py-3 rounded-[9px] w-full" onclick="toggleModal('close')">Cancelar</button>
-                        <button type="submit" class="mr-2 bg-[#8ABF17] text-white font-bold px-6 py-3 hover:bg-[#7aab0f] text-[#f3f7f0] rounded-[9px] w-full">Criar</button>
-                    </div>
+                    <button class="text-[14px] font-normal text-white flex items-center cursor-pointer w-full">
+                        <span class="material-icons mr-2">logout</span>Sair
+                    </button>
                 </form>
             </div>
         </div>
-        <div class="mt-5">
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
-                {% for area in areas %}
-                <div class="bg-white border border-gray-300 shadow-sm rounded-[12px]">
-                    <img src="{% static 'assets/seedbed-pic.jpg' %}" alt="Área de plantio" class="w-full h-auto rounded-t-[12px]">
-                    <div class="p-4">
-                        
+        
+        <!-- Main content -->
+        <div class="flex-1 p-6 lg:p-10">
+            
+            <!-- Título e Barra de pesquisa -->
+            <div class="flex justify-between items-center">
+                <h1 class="mt-1 ml-5 text-xl font-semibold">
+                    <a href="{% url 'dashboard' community.id %}" class="text-green-600 hover:underline">Dashboard &gt;</a>
+                </h1>
+                <!-- Barra de pesquisa e notificação -->
+                <div class="flex items-center ml-auto mr-5">
+                    <form class="relative flex-shrink-0">
+                        <input type="text" placeholder="Buscar áreas..." class="border border-gray-300 rounded-md py-1 px-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <button type="submit" class="ml-1 absolute top-1 right-1 text-gray-500">
+                            <span class="material-icons">search</span>
+                        </button>
+                    </form>
+                    <a href="#" class="text-gray-700 pl-2 pt-1.5">
+                        <span class="material-icons">notifications</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="mt-3 flex justify-between items-center mb-4">
+                <h2 class="ml-5 text-4xl font-bold">Área de Plantio</h2> <!-- Placeholder para ocupar espaço à esquerda -->
+                <!-- Botão Criar nova Área -->
+                <a href="{% url 'create_area' community.id %}" class="mr-6 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md">
+                    Criar nova Área
+                </a>
+            </div>
+            <br>
+            <div class="ml-5 mt-5">    
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+                    {% for area in areas %}
+                    <div class="bg-white border border-gray-300 rounded-md p-4 shadow-sm">
+                        <img src="{% static 'assets/canteiro-foto.jpg' %}" alt="Área de plantio" class="w-full h-auto">
+
                         <h3 class="text-lg lg:text-xl mt-3 font-semibold">
-                            <a href="{% url 'area_detail' community.id area.id %}" class="text-[#8ABF17] hover:underline">{{ area.name }}</a>
+                            <a href="{% url 'area_detail' community.id area.id %}" class="text-blue-500 hover:underline">{{ area.name }}</a>
                         </h3>
                         <p class="text-sm lg:text-base">{{ area.description }}</p>
-        
-                        <!-- Dropdown para os canteiros -->
                         <div class="mt-2">
-                            <button class="w-full text-left bg-[#f7f7f7] p-3 rounded-[9px] text-sm lg:text-base font-medium border-2 border-[#8ABF17] focus:outline-none flex justify-between items-center transition-all transform hover:shadow-lg" onclick="toggleDropdown('seedbed-list-{{ area.id }}')">
-                                Mostrar Canteiros
-                                <span id="arrow-{{ area.id }}" class="transition-transform transform rotate-0 material-icons">arrow_drop_down</span>
-                            </button>
-                            <ul id="seedbed-list-{{ area.id }}" class="list-disc list-inside mt-2 hidden">
-                                {% for seedbed in area.seedbeds.all %}
-                                <li class="text-sm lg:text-base">
+                            <a href="{% url 'update_area' community.id area.pk %}" class="text-blue-500 hover:underline">Editar</a> | 
+                            <a href="{% url 'delete_area' community.id area.pk %}" class="text-red-500 hover:underline">Deletar</a>
+                        </div>
+
+                        <ul class="list-disc list-inside mt-2 text-sm lg:text-base">
+                            {% for seedbed in area.seedbeds.all %}
+                                <li>
                                     {{ seedbed.nome }}
                                     {% for product in seedbed.products_in_seedbed.all %}
                                         🌱
                                     {% endfor %}
                                 </li>
-                                {% empty %}
-                                <li class="text-sm lg:text-base">Nenhum canteiro cadastrado</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-        
+                            {% empty %}
+                                <li>Nenhum canteiro cadastrado</li>
+                            {% endfor %}
+                        </ul>                        
                         <div class="flex mt-5 justify-center">
-                            <a href="{% url 'area_detail' community.id area.id %}" class="inline-block bg-[#8ABF17] text-white py-2 px-4 rounded-md hover:bg-[#7cad10] font-bold focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 w-2/4 text-center w-full">
-                                Visualizar
+                            <a href="{% url 'area_detail' community.id area.id %}" class="inline-block bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 w-2/4 text-center">
+                               Visualizar
                             </a>
                         </div>
                     </div>
+                    {% endfor %}
                 </div>
-                {% empty %}
-                <div class="text-center col-span-full mt-[15vh]">
-                    <div class="flex flex-col items-center justify-center">
-                        <img src="{% static 'assets/Ativo 304x.png' %}" alt="Plantas" class="w-64 mb-4">
-                        <h1 class="font-bold text-[24px]">Nenhuma área de plantio criada</h1>
-                        <p class="font-normal text-[16px]">Clique no botão abaixo para criar áreas de plantio e visualizá-los</p>
-                        <button id="addCommunityBtn" class="mt-4 bg-[#8ABF17] text-white px-6 py-3 rounded-[9px] mb-6 hover:bg-[#7cad10] hover:text-[#edf0e9]" onclick="toggleModal('create')">
-                            Criar Área de Plantio
-                        </button>
-                    </div>
-                </div> 
-                {% endfor %}
             </div>
-        </div>     
         </div>
     </div>
 </div>
-<script>
-
-// Abrir e fechar o menu
-const menuBtn = document.getElementById('menu-btn');
-const mobileSidebar = document.getElementById('mobile-sidebar');
-const closeMenu = document.getElementById('close-menu');
-
-menuBtn.addEventListener('click', () => {
-    mobileSidebar.classList.remove('hidden');
-    requestAnimationFrame(() => {
-        mobileSidebar.classList.add('transform', 'translate-x-0');
-    });
-});
-
-closeMenu.addEventListener('click', () => {
-    mobileSidebar.classList.remove('transform', 'translate-x-0');
-    // Espera a animação de fechamento terminar antes de adicionar a classe 'hidden'
-    mobileSidebar.addEventListener('transitionend', function handleTransitionEnd() {
-        mobileSidebar.classList.add('hidden');
-        mobileSidebar.removeEventListener('transitionend', handleTransitionEnd);
-    });
-});
-
-function toggleModal(action) {
-    const areaModal = document.getElementById('areaModal'); // Corrigido o ID do modal
-
-    if (action === 'create') {
-        areaModal.classList.remove('hidden'); // Mostra o modal de criar área
-        document.getElementById('areaForm').reset(); // Limpa o formulário (opcional)
-    } else if (action === 'close') {
-        areaModal.classList.add('hidden'); // Esconde o modal de criar área
-    } 
-}
-
-function toggleDropdown(id) {
-        const dropdown = document.getElementById(id);
-        const arrow = document.getElementById('arrow-' + id.split('-')[2]);
-
-        dropdown.classList.toggle('hidden');
-        // Alterar a rotação da seta dependendo da visibilidade do dropdown
-        if (dropdown.classList.contains('hidden')) {
-            arrow.classList.remove('rotate-180');
-        } else {
-            arrow.classList.add('rotate-180');
-        }
-    }
-</script>
 {% endblock %}

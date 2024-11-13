@@ -2,177 +2,95 @@
 {% load static %}
 {% block title %}{{ area.name }}{% endblock %}
 
+{% block styles %}
+    .button {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 10px;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        color: #fff;
+        background-color: #007BFF;
+        transition: background-color 0.3s;
+    }
+    .button:hover {
+        background-color: #0056b3;
+    }
+{% endblock %}
+
+{% block page_classes %}
+    bg-gray-300 h-screen p-4
+{% endblock %}
+
 {% block content %}
-<div class="bg-white min-h-screen flex px-4 md:px-8 py-10 relative">
-    <!-- Sidebar (Desktop) -->
- <div class="bg-[#8ABF17] lg:flex xl:flex 2xl:flex sm:hidden md:hidden hidden-sm flex-col items-center rounded-[20px] w-[220px] h-[90%] fixed">
-    <a href="/"><img class="w-[146px] mt-12 mb-8" src="{% static 'assets/logo-branco-h.png' %}" alt="AGRAS"> </a>
-    <div class="flex flex-col gap-y-6 mt-12 w-full px-4 flex-grow">
-        <a href="{% url 'dashboard' community.id %}" class="text-[14px] font-normal text-white flex items-center cursor-pointer"> <span class="material-icons mr-2">dashboard</span> Dashboard</a>
-        <a href="{% url 'area_manage' community.id %}" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">forest</span> Areas</a>
-        <a href="#" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">trending_up</span> Estatísticas</a>
-        <a href="{% url 'manage_community' community.id %}" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">equalizer</span> Gerenciamento</a>
-        <a href="#" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">settings</span> Configurações</a>
-        <a href="#" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">help</span> Ajuda</a>
-        <div class="flex-grow"></div>
-        <form action="{% url 'logout' %}" method="POST" class="w-full mb-12">
-            {% csrf_token %}
-            <button class="text-[14px] font-normal text-white flex items-center cursor-pointer w-full">
-                <span class="material-icons mr-2">logout</span>Sair
-            </button>
-        </form>
-    </div>
-</div>
-
-<!-- Mobile Sidebar Toggle -->
-<button id="menu-btn" class="lg:hidden fixed top-4 left-4 z-20 p-2 rounded-md bg-[#8ABF17] text-white focus:outline-none">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-    </svg>
-</button>
-
-<!-- Mobile Sidebar -->
-<div id="mobile-sidebar" class="hidden fixed top-0 left-0 w-[250px] h-full bg-[#8ABF17] z-20 transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
-    <div class="flex justify-between items-center p-4">
-        <a href="/"><img class="w-[146px]" src="{% static 'assets/logo-branco-h.png' %}" alt="AGRAS"> </a>
-        <button id="close-menu" class="text-white">
-            <span class="material-icons">close</span>
-        </button>
-    </div>
-    <div class="flex flex-col gap-y-6 mt-12 w-full px-4 flex-grow">
-        <a href="{% url 'dashboard' community.id %}" class="text-[14px] font-normal text-white flex items-center cursor-pointer"> <span class="material-icons mr-2">dashboard</span> Dashboard</a>
-        <a href="{% url 'area_manage' community.id %}" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">forest</span> Areas</a>
-        <a href="#" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">trending_up</span> Estatísticas</a>
-        <a href="{% url 'manage_community' community.id %}" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">equalizer</span> Gerenciamento</a>
-        <a href="#" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">settings</span> Configurações</a>
-        <a href="#" class="text-[14px] font-normal text-white flex items-center cursor-pointer"><span class="material-icons mr-2">help</span> Ajuda</a>
-        <div class="flex-grow"></div>
-    </div>
-    <form action="{% url 'logout' %}" method="POST" class="w-full px-4 mb-12">
-        {% csrf_token %}
-        <button class="text-[14px] font-normal text-white flex items-center cursor-pointer w-full">
-            <span class="material-icons mr-2">logout</span>Sair
-        </button>
-    </form>
-</div>
-
-<div class="flex-1 p-6 lg:p-10 ml-0 lg:ml-[220px]">
+<div class="flex-1 p-2 lg:p-6">
     <div class="flex items-center justify-between">
-        <div class="">
-            <h1 class="mb-4 text-xl font-semibold">
-                <a href="{% url 'dashboard' community.id %}" class="text-[#8ABF17] hover:underline">Dashboard &gt;</a>
-                <a href="{% url 'area_manage' community.id %}" class="text-[#8ABF17] hover:underline">Áreas &gt;</a>
-                <a href="" class="text-[#8ABF17] hover:underline">Canteiros &gt;</a>
-            </h1>
-        </div>
-    </div>
-    {% if area.seedbeds.all%}
-
-    <div class="items-center">
-        <h2 class=" text-4xl font-bold mb-6">{{ area.name }}</h2>
-        <button id="addCommunityBtn" class="bg-[#8ABF17] text-white px-6 py-3 rounded-[9px] mb-6 hover:bg-[#7cad10] hover:text-[#edf0e9]" onclick="toggleModal('create')">
-            Criar Canteiro
-        </button>
-
-    </div>
-    {% endif %}
+        <h1 class="mt-1 ml-5 text-xl font-semibold">
+            <a href="{% url 'dashboard' community.id %}" class="text-green-600 hover:underline">Dashboard &gt;</a>
+            <a href="{% url 'area_manage' community.id %}" class="text-green-600 hover:underline">Áreas &gt;</a>
+        </h1>
         
-    <div class="container mt-5">
-        <!-- Modal para criar canteiro -->
-        <div id="areaModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-10">
-            <div class="bg-white px-14 py-12 rounded-[34px] w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] max-w-[596px] max-h-[663px] overflow-y-auto rounded-[32px]">
-                <h2 id="modalTitle" class="text-[24px] font-bold mb-4 text-[#8ABF17]">Novo canteiro</h2>
-                <p class="font-medium text-[16px]">Preencha a informação abaixo para criar um novo canteiro</p>
-                <form id="areaForm" method="post" action="{% url 'create_seedbed' community.id area.id %}">
-                    {% csrf_token %}
-                    <div class="mb-4 mt-6">
-                        <label for="name" class="block text-sm font-medium text-gray-700">Nome*</label>
-                        <input type="text" name="seedbed_name" id="seedbed_name" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] h-[55px] py-2 px-3">
-                    </div>
-                    <div class="flex justify-end">
-                        <button type="button" class="mr-2 bg-white border-2 border-[#8ABF17] hover:border-[#7aab0f] text-[#8ABF17] hover:text-[#7aab0f] font-bold px-6 py-3 rounded-[9px] w-full" onclick="toggleModal('close')">Cancelar</button>
-                        <button type="submit" class="mr-2 bg-[#8ABF17] text-white font-bold px-6 py-3 hover:bg-[#7aab0f] text-[#f3f7f0] rounded-[9px] w-full">Criar</button>
-                    </div>
-                </form>
-            </div>
+        <!-- Barra de pesquisa e ícone de notificações alinhados à direita -->
+        <div class="flex items-center ml-auto mr-5">
+            <form class="relative flex-shrink-0">
+                <input type="text" placeholder="Buscar canteiros..." class="border border-gray-300 rounded-md py-1 px-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                <button type="submit" class="ml-1 absolute top-1 right-1 text-gray-500">
+                    <span class="material-icons">search</span>
+                </button>
+            </form>
+            <a href="#" class="ml-1 text-gray-700 ml-2">
+                <span class="material-icons">notifications</span>
+            </a>
         </div>
+    </div>
 
+    <div class="mt-3 flex justify-between items-center mb-4">
+        <h2 class="ml-5 text-4xl font-bold">{{ area.name }}</h2>
+        <!-- Botão de criar novo canteiro alinhado à direita -->
+        <div class="ml-7">
+            <a href="{% url 'create_seedbed' community.id area.pk %}" class="mr-6 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md">
+                Criar novo canteiro
+            </a>
+        </div>
+    </div>
+
+    <br>
+    <div class="ml-5 container mx-auto mt-5">
+        <!-- Listagem dos canteiros -->
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
             {% for seedbed in area.seedbeds.all %}
-            <div class="bg-white border border-gray-300 rounded-[12px] shadow-sm flex flex-col justify-between">
+            <div class="bg-white border border-gray-300 rounded-md p-4 shadow-sm flex flex-col justify-between">
                 <div class="flex-grow">
-                    <img src="{% static 'assets/seedbed.jpg' %}" alt="Área de plantio" class="w-full h-auto rounded-t-[12px]">
-                    <div class="p-4">
-                        <h3 class="text-2xl font-semibold">
-                            <a href="{% url 'seedbed_detail' community.id area.pk seedbed.id %}" class="text-[#8ABF17] hover:underline">{{ seedbed.nome }}</a>
-                        </h3>
-                        <a href="{% url 'update_seedbed' community.id area.pk seedbed.id %}">Editar</a> | 
-                        <a href="{% url 'delete_seedbed' community.id area.pk seedbed.id %}">Deletar</a>
-    
-                        <!-- Listando os produtos associados ao canteiro -->
-                        <div class="mt-2">
-                            <button class="w-full text-left bg-[#f7f7f7] p-3 rounded-[9px] text-sm lg:text-base font-medium border-2 border-[#8ABF17] focus:outline-none flex justify-between items-center transition-all transform hover:shadow-lg" onclick="toggleDropdown('seedbed-list-{{ seedbed.id }}')">
-                                Mostrar Cultivos
-                                <span id="arrow-{{ seedbed.id }}" class="transition-transform transform rotate-0 material-icons">arrow_drop_down</span>
-                            </button>
-                            <ul id="seedbed-list-{{ seedbed.id }}" class="list-disc list-inside mt-4 hidden">
-                                {% for product in seedbed.products_in_seedbed.all %}
-                                    <li>{{ product.type_product.name }}</li>
-                                {% empty %}
-                                    <p class="flex justify-center items-center">Nenhum cultivo cadastrado</p>
-                                {% endfor %}
-                            </ul>
-                            <!-- Botão fixo ao fim do card -->
-                            <div class="flex mt-5 justify-center">
-                                <a href="{% url 'seedbed_detail' community.id area.pk seedbed.id %}" class="inline-block bg-[#8ABF17] text-white py-2 px-4 rounded-md hover:bg-[#7cad10] font-bold focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 w-2/4 text-center w-full">
-                                    Visualizar
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+                    <h3 class="text-2xl font-semibold">
+                        <a href="{% url 'seedbed_detail' community.id area.pk seedbed.id %}" class="text-blue-500 hover:underline">{{ seedbed.nome }}</a>
+                    </h3>
+                    <a href="{% url 'update_seedbed' community.id area.pk seedbed.id %}">Editar</a> | 
+                    <a href="{% url 'delete_seedbed' community.id area.pk seedbed.id %}">Deletar</a>
+
+                    <!-- Listando os produtos associados ao canteiro -->
+                    <br><br>
+                    <ul class="list-disc list-inside">
+                        {% for product in seedbed.products_in_seedbed.all %}
+                            <li>{{ product.type_product.name }}</li>
+                        {% empty %}
+                            <p>Nenhum cultivo cadastrado</p>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <!-- Botão fixo ao fim do card -->
+                <div class="flex mt-5 justify-center">
+                    <a href="{% url 'seedbed_detail' community.id area.pk seedbed.id %}" 
+                    class="inline-block bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 w-2/4 text-center">
+                    Visualizar
+                    </a>
                 </div>
             </div> 
             {% empty %}
-            <div class="text-center col-span-full mt-[15vh]">
-                <div class="flex flex-col items-center justify-center">
-                    <img src="{% static 'assets/Ativo 324.png' %}" alt="Plantas" class="w-64 mb-4">
-                    <h1 class="font-bold text-[24px]">Nenhum canteiro criado</h1>
-                    <p class="font-normal text-[16px]">Clique no botão abaixo para criar canteiros e visualizá-los</p>
-                    <button id="addCommunityBtn" class="mt-4 bg-[#8ABF17] text-white px-6 py-3 rounded-[9px] mb-6 hover:bg-[#7cad10] hover:text-[#edf0e9]" onclick="toggleModal('create')">
-                        Criar Canteiro
-                    </button>
-                </div>
-            </div> 
+                <p>Nenhum canteiro cadastrado</p>
             {% endfor %}
         </div>
     </div>
 </div>
-</div>
-
-<script>
-
-function toggleModal(action) {
-    const areaModal = document.getElementById('areaModal'); // Corrigido o ID do modal
-
-    if (action === 'create') {
-        areaModal.classList.remove('hidden'); // Mostra o modal de criar área
-        document.getElementById('areaForm').reset(); // Limpa o formulário (opcional)
-    } else if (action === 'close') {
-        areaModal.classList.add('hidden'); // Esconde o modal de criar área
-    } 
-}
-
-function toggleDropdown(id) {
-        const dropdown = document.getElementById(id);
-        const arrow = document.getElementById('arrow-' + id.split('-')[2]);
-
-        dropdown.classList.toggle('hidden');
-        // Alterar a rotação da seta dependendo da visibilidade do dropdown
-        if (dropdown.classList.contains('hidden')) {
-            arrow.classList.remove('rotate-180');
-        } else {
-            arrow.classList.add('rotate-180');
-        }
-    }
-</script>
 {% endblock content %}

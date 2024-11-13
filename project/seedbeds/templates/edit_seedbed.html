@@ -31,7 +31,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="form-container flex justify-center items-center flex-col h-screen">
+<div class="form-container">
     <h2 class="text-2xl font-bold">Editar Canteiro: {{ seedbed.nome }}</h2>
     
     {% if messages %}
@@ -46,10 +46,10 @@
         {% csrf_token %}
         <div class="mb-4">
             <label for="nome" class="block text-sm font-medium text-gray-700">Nome do Canteiro</label>
-            <input type="text" id="nome" name="nome" value="{{ seedbed.nome }}" class="mt-1 h-[55px] block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-500" required>
+            <input type="text" id="nome" name="nome" value="{{ seedbed.nome }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-500" required>
         </div>
         <button type="submit" class="button">Salvar Alterações</button>
-        <a href="{% url 'area_detail' community.id area.id %}" class="button" style="background-color: #ccc;">Cancelar</a>
+        <a href="{% url 'seedbed_list' community.id area.id %}" class="button" style="background-color: #ccc;">Cancelar</a>
     </form>
 </div>
 {% endblock %}
