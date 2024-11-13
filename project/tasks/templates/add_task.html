@@ -1,7 +1,7 @@
 
 
     <div id="taskModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
-        <div class="bg-white w-full max-w-lg p-6 rounded-lg shadow-lg">
+        <div class="bg-white w-full max-w-lg p-6 rounded-lg shadow-lg max-h-screen overflow-y-auto">
             <!-- Header do modal -->
             <div class="flex justify-between items-center border-b pb-3">
                 <h2 class="text-xl font-bold">Adicionar Nova Task</h2>
@@ -46,27 +46,41 @@
                         <option value="high">Alta</option>
                     </select>
                 </div>
-                <div class="mt-4">
+                <div class="mt-4 relative">
                     <label for="responsible_users" class="block font-medium">Atribuir à:</label>
-                    <select id="responsible_users" 
-                        name="responsible_users[]" 
-                        class="w-full border p-2 rounded mt-1" 
-                        multiple
-                        size="4">  <!-- size attribute controls how many options are visible without scrolling -->
-                    <option value="">Ninguém</option>
-                    {% if users %}
-                        {% for user in users %}
-                            <option value="{{ user.id }}">{{ user.username }}</option>
-                        {% endfor %}
-                    {% else %}
-                        <option value="">Membros não encontrados</option>
-                    {% endif %}
-                </select>
-
-                <!-- Add helper text -->
-                <small class="text-gray-500 mt-1">
-                    Pressione Ctrl (Windows) ou Command (Mac) para selecionar múltiplos usuários
-                </small>
+                
+                    <!-- Dropdown Trigger -->
+                    <div id="dropdownTrigger" class="w-full border p-2 rounded mt-1 cursor-pointer bg-white">
+                        <span id="dropdownText" class="text-gray-500">Selecione os membros</span>
+                    </div>
+                
+                    <!-- Dropdown Options -->
+                    <div id="dropdownOptions" class="absolute z-10 w-full border mt-1 bg-white rounded shadow-md max-h-48 overflow-y-auto hidden">        
+                        {% if users %}
+                            <div class="px-4 py-2 cursor-pointer hover:bg-blue-200">
+                                <input type="checkbox" class="mr-2" value="" user_id="Ninguém" onclick="toggleSelection(this)">
+                                <span>Ninguem</span>
+                            </div>
+                            {% for user in users %}
+                            <div class="px-4 py-2 cursor-pointer hover:bg-blue-200">
+                                <input type="checkbox" class="mr-2" value="{{ user.id }}" user_id="{{ user.first_name }}" onclick="toggleSelection(this)">
+                                <span>{{ user.first_name }}</span>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="px-4 py-2 cursor-pointer hover:bg-blue-200">
+                                <input type="checkbox" class="mr-2" value="" user_id="Membros não encontrados" onclick="toggleSelection(this)">
+                                <span>Membros não encontrados</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                
+                    <!-- Texto de ajuda -->
+                    <small class="text-gray-500 mt-1 block">
+                        Clique para abrir e selecionar membros
+                    </small>
+                </div>                
+                            
             
                 <!-- Botões de ação -->
                 <div class="mt-6 flex justify-end">
@@ -109,6 +123,32 @@
             dropdown.classList.add('hidden');
         }
     });   
+
+    const dropdownTrigger = document.getElementById("dropdownTrigger");
+    const dropdownOptions = document.getElementById("dropdownOptions");
+    const dropdownText = document.getElementById("dropdownText");
+
+    // Abre/fecha o dropdown
+    dropdownTrigger.addEventListener("click", () => {
+        dropdownOptions.classList.toggle("hidden");
+    });
+
+    // Fecha o dropdown ao clicar fora
+    document.addEventListener("click", (e) => {
+        if (!dropdownTrigger.contains(e.target) && !dropdownOptions.contains(e.target)) {
+            dropdownOptions.classList.add("hidden");
+        }
+    });
+
+    // Função para adicionar/remover seleção e atualizar o texto
+    function toggleSelection(checkbox) {
+        const selectedUsers = Array.from(document.querySelectorAll('#dropdownOptions input[type="checkbox"]:checked'))
+            .map(input => input.getAttribute("user_id"));
+
+        dropdownText.textContent = selectedUsers.length 
+            ? selectedUsers.join(", ") 
+            : "Selecione os usuários";
+    }
 </script>
 {% endblock scripts %}
 {% block styles %}
