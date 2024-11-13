@@ -59,19 +59,19 @@
                         {% if users %}
                             <!-- Opção "Ninguém" -->
                             <div class="px-4 py-2 cursor-pointer hover:bg-blue-200">
-                                <input type="checkbox" id="noOneOption" class="mr-2" value="" user_id="Ninguém" onclick="toggleSelection(this)">
+                                <input type="checkbox" id="noOneOption" class="mr-2" value="" user_name="Ninguém" onclick="toggleSelection(this)">
                                 <span>Ninguém</span>
                             </div>
                             <!-- Loop para exibir os usuários -->
                             {% for user in users %}
                             <div class="px-4 py-2 cursor-pointer hover:bg-blue-200">
-                                <input type="checkbox" class="mr-2 userOption" value="{{ user.id }}" user_id="{{ user.first_name }}" onclick="toggleSelection(this)">
+                                <input type="checkbox" class="mr-2 userOption" value="{{ user.id }}" user_name="{{ user.first_name }}" onclick="toggleSelection(this)">
                                 <span>{{ user.first_name }}</span>
                             </div>
                             {% endfor %}
                         {% else %}
                             <div class="px-4 py-2 cursor-pointer hover:bg-blue-200">
-                                <input type="checkbox" class="mr-2" value="" user_id="Membros não encontrados" onclick="toggleSelection(this)">
+                                <input type="checkbox" class="mr-2" value="" user_name="Membros não encontrados" onclick="toggleSelection(this)">
                                 <span>Membros não encontrados</span>
                             </div>
                         {% endif %}
@@ -93,7 +93,6 @@
 
 {% block scripts %}
 <script>
-    
     function closeModal() {
         document.getElementById('taskModal').classList.add('hidden');
     }
@@ -155,7 +154,7 @@
 
         // Atualiza o texto do dropdown
         const selectedUsers = Array.from(document.querySelectorAll('#dropdownOptions input[type="checkbox"]:checked'))
-            .map(input => input.getAttribute("user_id"));
+            .map(input => input.getAttribute("user_name"));
         
         dropdownText.textContent = selectedUsers.length 
             ? selectedUsers.join(", ") 
@@ -165,19 +164,86 @@
 {% endblock scripts %}
 {% block styles %}
 <style>
-    select[multiple] {
-        min-height: 120px;  /* Adjust height as needed */
-        padding: 8px;
-    }
     
-    select[multiple] option {
-        padding: 8px;
-        margin: 2px 0;
-        border-radius: 4px;
-    }
     
-    select[multiple] option:checked {
-        background-color: #e5e7eb;
+    /* Target the datepicker container */
+    .datepicker-picker {
+        background-color: #8ABF17; /* Green background */
+        color: #ffffff; /* White text */
+    }
+
+    /* Style text inside the date picker */
+    .datepicker-picker * {
+        color: #ffffff; /* White text for all elements inside */
+    }
+
+    /* Style the header */
+    .datepicker-picker .datepicker-header {
+        color: #ffffff; /* White text for header */
+    }
+
+    /* Style day, month, year elements */
+    .datepicker-picker .day,
+    .datepicker-picker .month,
+    .datepicker-picker .year {
+        color: #ffffff; /* Ensure days, months, and years are white */
+    }
+
+    /* Style the selected date */
+    .datepicker-picker .day.selected {
+        background-color: #F76711; /* Orange background for selected date */
+        color: #ffffff; /* White text on selected date */
+    }
+
+    /* Hover effect for day, month, and year elements */
+    .datepicker-picker .day:hover,
+    .datepicker-picker .month:hover,
+    .datepicker-picker .year:hover {
+        background-color: #a9bd7e; /* Light green background on hover */
+        color: #ffffff; /* White text on hover */
+    }
+
+    /* Target the datepicker controls (navigation buttons) */
+    .datepicker-controls {
+        background-color: #8ABF17; /* Green background */
+        color: #ffffff; /* White text */
+    }
+
+    /* Style the buttons inside datepicker-controls */
+    .datepicker-controls button {
+        background-color: #8ABF17; /* Green background for buttons */
+        color: #ffffff; /* White text for buttons */
+        border: none; /* Remove default borders */
+    }
+
+    /* Hover effect for buttons inside datepicker-controls */
+    .datepicker-controls button:hover {
+        background-color: #a9bd7e; /* Light green on hover */
+    }
+
+    /* Optional: Style the controls in dark mode */
+    .dark .datepicker-picker {
+        background-color: #8ABF17; /* Green background for dark mode */
+        color: #ffffff;
+    }
+
+    .dark .datepicker-controls {
+        background-color: #8ABF17; /* Green for controls in dark mode */
+        color: #ffffff;
+    }
+
+    .dark .datepicker-controls button {
+        background-color: #8ABF17; /* Green buttons in dark mode */
+        color: #ffffff; /* White text */
+    }
+
+    .dark .datepicker-controls button:hover {
+        background-color: #a9bd7e; /* Light green on hover in dark mode */
+    }
+
+    .datepicker-picker .days-of-week .day {
+        color: #8ABF17 !important; /* Cor verde clara para os dias da semana */
+        font-weight: bold; /* Deixa o texto negrito */
     }
 </style>
 {% endblock styles %}
