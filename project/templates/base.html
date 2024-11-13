@@ -19,7 +19,7 @@
 <body>
     {% include 'common/messages.html' %}
 
-    <div class="{% block page_classes %}bg-white h-screen{% endblock %}">
+    <div class="{% block page_classes %} bg-white h-screen{% endblock %}">
         {% block content %}
         {% endblock content %}
     </div>
@@ -54,6 +54,33 @@
             top: -2px; 
             color: white; 
             font-size: 10px; 
+        }
+
+        /* Scrollbar for Webkit browsers (Chrome, Safari) */
+        ::-webkit-scrollbar {
+            width: 4px; /* Largura da scrollbar */
+            height: 4px; /* Altura da scrollbar (para scroll horizontal) */
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #8ABF17; /* Cor da parte que arrasta */
+            border-radius: 4px; /* Bordas arredondadas */
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent; /* Cor do fundo da scrollbar */
+        }
+
+        /* Scrollbar for Firefox */
+        .scrollbar {
+            scrollbar-width: thin; /* Define a largura como fina */
+            scrollbar-color: #8ABF17 transparent; /* Cor do thumb e do track */
+        }
+
+        @media (max-width: 640px) { /* sm breakpoint */
+            .hidden-sm {
+                display: none;
+            }
         }
 
     {% endblock styles %}
