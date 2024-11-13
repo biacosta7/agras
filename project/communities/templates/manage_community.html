@@ -21,7 +21,7 @@
             <span class="material-icons text-[25px]">notifications_none</span>
             <span class="absolute top-[30%] -right-1 transform -translate-y-1/2 bg-red-500 text-white text-xs rounded-full px-1">3</span> 
         </div>
-        <div class="flex items-center cursor-pointer z-20"> 
+        <div id="profileNav" class="flex items-center cursor-pointer z-20"> 
             <img src="{% static 'assets/icons/profile.png' %}" alt="Foto de Perfil" class="w-8 h-8 rounded-full mr-2">
             <div class="flex flex-col">
                 <span class="text-sm font-medium">{{ user.username }}</span> 
@@ -44,7 +44,7 @@
                 <span class="material-icons text-[20px]">notifications_none</span>
                 <span class="absolute top-[25%] -right-1 transform -translate-y-1/2 bg-red-500 text-white text-xs rounded-full px-1">3</span> 
             </div>
-            <img src="{% static 'assets/icons/profile.png' %}" alt="Foto de Perfil" class="w-6 h-6 rounded-full">
+            <img id="profileNavMobile" src="{% static 'assets/icons/profile.png' %}" alt="Foto de Perfil" class="w-6 h-6 rounded-full">
         </div>
     </nav>
 
@@ -54,21 +54,21 @@
         <a href="{% url 'dashboard' community.id %}" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
             <span class="w-[23px] material-icons mr-2" alt="dashboar2">dashboard</span> Dashboard
         </a>
-        <a href="" class="text-[14px] font-normal text-[#8ABF17] flex items-center cursor-pointer">
-            <span class="w-[23px] mr-2 material-icons" alt="gerenciamento">equalizer</span> Gerenciamento
-        </a>
         <a href="{% url 'community_hub' %}" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
             <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">group</span> Comunidades
         </a>
         <a href="{% url 'area_manage' community.id %}" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
-            <span class="material-icons-outlined mr-2">forest</span> Areas  </a>
+            <span class="material-icons-outlined mr-2">forest</span> Areas de Plantio</a>
+        <a href="" class="text-[14px] font-normal text-[#8ABF17] flex items-center cursor-pointer">
+            <span class="w-[23px] mr-2 material-icons" alt="gerenciamento">equalizer</span> Gerenciamento
+        </a>
         <a href="" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
             <span class="w-[23px] mr-2 material-icons-outlined" alt="tarefas">task_alt</span> Tarefas
         </a>
         <form action="{% url 'logout' %}" method="POST" class="w-full mb-12">
             {% csrf_token %}
-            <button class="mt-56 text-[14px] font-normal text-black flex items-center cursor-pointer w-full">
-                <img src="{% static 'assets/icons/sair.png' %}" class="w-[23px] mr-2"></img>Sair
+            <button class="mt-64 text-[14px] font-normal text-black flex items-center cursor-pointer w-full">
+                <span class="w-[23px] mr-2 material-icons-outlined">logout</span>Sair
             </button>
         </form>
     </div>
@@ -86,21 +86,21 @@
         <a href="{% url 'dashboard' community.id %}" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
             <span class="w-[23px] material-icons mr-2" alt="dashboar2">dashboard</span> Dashboard
         </a>
-        <a href="" class="text-[14px] font-normal text-[#8ABF17] flex items-center cursor-pointer">
-            <span class="w-[23px] mr-2 material-icons" alt="gerenciamento">equalizer</span> Gerenciamento
-        </a>
         <a href="{% url 'community_hub' %}" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
             <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">group</span> Comunidades
         </a>
         <a href="{% url 'area_manage' community.id %}" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
-            <span class="material-icons-outlined mr-2">forest</span> Areas  </a>
+            <span class="material-icons-outlined mr-2">forest</span> Areas de Plantio </a>
+        <a href="" class="text-[14px] font-normal text-[#8ABF17] flex items-center cursor-pointer">
+            <span class="w-[23px] mr-2 material-icons" alt="gerenciamento">equalizer</span> Gerenciamento
+        </a>
         <a href="" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
             <span class="w-[23px] mr-2 material-icons-outlined" alt="tarefas">task_alt</span> Tarefas
         </a>
         <form action="{% url 'logout' %}" method="POST" class="w-full mb-12">
             {% csrf_token %}
-            <button class="mt-64 text-[14px] font-normal text-black flex items-center cursor-pointer w-full">
-                <img src="{% static 'assets/icons/sair.png' %}" class="w-[23px] mr-2"></img>Sair
+            <button class="mt-48 text-[14px] font-normal text-black flex items-center cursor-pointer w-full">
+                <span class="w-[23px] mr-2 material-icons-outlined">logout</span>Sair
             </button>
         </form>
     </div>

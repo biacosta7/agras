@@ -5,7 +5,7 @@
 {% block content %}
 <!-- Navbar -->
 <nav class="bg-white border-b-[1px] h-[90px] border-[#8ABF17] flex justify-between items-center px-8 py-4 fixed top-0 left-0 w-full z-10 lg:flex xl:flex 2xl:flex sm:hidden md:hidden hidden-sm">
-    <div class="border-r-[1px] border-[#8ABF17] w-[218px] h-[90px] fixed "></div>
+    <div class="border-r-[1px] border-[#8ABF17] w-[218px] h-[90px] fixed"></div>
     <div class="flex items-center">
         <a href="/" class="flex items-center mr-20 z-20 cursor-pointer">
             <img src="{% static 'assets/colorido-horizontal.png' %}" alt="AGRAS" class="w-[160px] mr-4">
@@ -53,21 +53,21 @@
         <a href="{% url 'dashboard' community.id %}" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
             <span class="w-[23px] material-icons mr-2" alt="dashboar2">dashboard</span> Dashboard
         </a>
-        <a href="{% url 'manage_community' community.id %}" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
-            <span class="w-[23px] mr-2 material-icons" alt="gerenciamento">equalizer</span> Gerenciamento
-        </a>
         <a href="{% url 'community_hub' %}" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
             <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">group</span> Comunidades
         </a>
         <a href="" class="text-[14px] font-normal text-[#8ABF17] flex items-center cursor-pointer">
-            <span class="material-icons-outlined mr-2">forest</span> Areas  </a>
+            <span class="material-icons-outlined mr-2">forest</span> Areas de Plantio </a>
+        <a href="{% url 'manage_community' community.id %}" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
+            <span class="w-[23px] mr-2 material-icons" alt="gerenciamento">equalizer</span> Gerenciamento
+        </a>
         <a href="" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
             <span class="w-[23px] mr-2 material-icons-outlined" alt="tarefas">task_alt</span> Tarefas
         </a>
         <form action="{% url 'logout' %}" method="POST" class="w-full mb-12">
             {% csrf_token %}
-            <button class="mt-56 text-[14px] font-normal text-black flex items-center cursor-pointer w-full">
-                <img src="{% static 'assets/icons/sair.png' %}" class="w-[23px] mr-2"></img>Sair
+            <button class="mt-64 text-[14px] font-normal text-black flex items-center cursor-pointer w-full">
+                <span class="w-[23px] mr-2 material-icons-outlined">logout</span>Sair
             </button>
         </form>
     </div>
@@ -82,29 +82,28 @@
         </button>
     </div>
     <div class="flex flex-col gap-y-8 mt-12 w-full px-8 flex-grow">
-        <a href="{% url 'dashboard' community.id %}" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
+        <a href="" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
             <span class="w-[23px] material-icons mr-2" alt="dashboar2">dashboard</span> Dashboard
-        </a>
-        <a href="{% url 'manage_community' community.id %}" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
-            <span class="w-[23px] mr-2 material-icons" alt="gerenciamento">equalizer</span> Gerenciamento
         </a>
         <a href="{% url 'community_hub' %}" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
             <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">group</span> Comunidades
         </a>
-        <a href="" class="text-[14px] font-normal text-[#8ABF17] flex items-center cursor-pointer">
-            <span class="material-icons-outlined mr-2">forest</span> Areas  </a>
+        <a href="{% url 'area_manage' community.id %}" class="text-[14px] font-normal text-[#8ABF17] flex items-center cursor-pointer">
+            <span class="material-icons-outlined mr-2">forest</span> Areas de Plantio </a>
+        <a href="{% url 'manage_community' community.id %}" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
+            <span class="w-[23px] mr-2 material-icons" alt="gerenciamento">equalizer</span> Gerenciamento
+        </a>
         <a href="" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
             <span class="w-[23px] mr-2 material-icons-outlined" alt="tarefas">task_alt</span> Tarefas
         </a>
         <form action="{% url 'logout' %}" method="POST" class="w-full mb-12">
             {% csrf_token %}
-            <button class="mt-64 text-[14px] font-normal text-black flex items-center cursor-pointer w-full">
-                <img src="{% static 'assets/icons/sair.png' %}" class="w-[23px] mr-2"></img>Sair
+            <button class="mt-48 text-[14px] font-normal text-black flex items-center cursor-pointer w-full">
+                <span class="w-[23px] mr-2 material-icons-outlined">logout</span>Sair
             </button>
         </form>
     </div>
 </div>
-    
 
         <!-- Main content -->
         <div class="flex-1 p-6 lg:p-10 ml:0 lg:ml-[250px] mt-12 lg:mt-[60px]">
@@ -112,7 +111,6 @@
             <div class="flex justify-between items-center">
                 <h1 class="mb-4 text-xl font-semibold">
                     <a href="{% url 'dashboard' community.id %}" class="text-[#8ABF17] hover:underline">Dashboard &gt;</a>
-                    <a href="{% url 'area_manage' community.id %}" class="text-[#8ABF17] hover:underline">Áreas &gt;</a>
                 </h1>
             </div>
 
@@ -193,7 +191,7 @@
                 <div class="text-center col-span-full mt-[15vh]">
                     <div class="flex flex-col items-center justify-center">
                         <img src="{% static 'assets/Ativo 304x.png' %}" alt="Plantas" class="w-64 mb-4">
-                        <h1 class="font-bold text-[24px]">Nenhuma área de plantio criada</h1>
+                        <h1 class="font-bold text-[24px]">Nenhuma área de plantio criada em {{area.name}}</h1>
                         <p class="font-normal text-[16px]">Clique no botão abaixo para criar áreas de plantio e visualizá-los</p>
                         <button id="addCommunityBtn" class="mt-4 bg-[#8ABF17] text-white px-6 py-3 rounded-[9px] mb-6 hover:bg-[#7cad10] hover:text-[#edf0e9]" onclick="toggleModal('create')">
                             Criar Área de Plantio
@@ -208,26 +206,19 @@
 
 <script>
 
-// Abrir e fechar o menu
-const menuBtn = document.getElementById('menu-btn');
-const mobileSidebar = document.getElementById('mobile-sidebar');
-const closeMenu = document.getElementById('close-menu');
+const mobileMenuButton = document.getElementById('mobile-menu-button');
+const mobileMenu = document.getElementById('mobile-menu');
+const mobileMenuCloseButton = document.getElementById('mobile-menu-close-button');
 
-menuBtn.addEventListener('click', () => {
-    mobileSidebar.classList.remove('hidden');
-    requestAnimationFrame(() => {
-        mobileSidebar.classList.add('transform', 'translate-x-0');
-    });
-});
+    mobileMenuButton.addEventListener('click', () => {
+        mobileMenu.classList.remove('-translate-x-full');
 
-closeMenu.addEventListener('click', () => {
-    mobileSidebar.classList.remove('transform', 'translate-x-0');
-    // Espera a animação de fechamento terminar antes de adicionar a classe 'hidden'
-    mobileSidebar.addEventListener('transitionend', function handleTransitionEnd() {
-        mobileSidebar.classList.add('hidden');
-        mobileSidebar.removeEventListener('transitionend', handleTransitionEnd);
     });
-});
+
+    mobileMenuCloseButton.addEventListener('click', () => {
+        mobileMenu.classList.add('-translate-x-full');
+
+    });
 
 function toggleModal(action) {
     const areaModal = document.getElementById('areaModal'); // Corrigido o ID do modal
