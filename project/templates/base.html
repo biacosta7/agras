@@ -22,6 +22,7 @@
 
     <div class="{% block page_classes %} bg-white h-screen{% endblock %}">
         {% block content %}{% endblock content %}
+    {% if request.user.is_authenticated %}
     <!-- Fundo escurecido para o modal -->
     <div id="modalBackground" class="fixed inset-0 bg-black bg-opacity-50 hidden z-20" onclick="closeHelpModal()"></div>
     
@@ -39,6 +40,7 @@
     <button onclick="openHelpModal()" id="help-button" class="fixed bottom-4 right-4 bg-[#8ABF17] text-white p-2 rounded-full shadow-md z-10 focus:outline-none">
         <span class="material-icons">help</span> 
     </button>
+    {% endif %}
 </div>
 
     </div>
