@@ -116,7 +116,7 @@
             <div class="flex items-center">
                 <span class="bg-[#4CAF50] text-white px-4 py-2 rounded-lg font-semibold">{{ community.name }}</span>
                 <button onclick="openEditModal()" class="ml-2 bg-yellow-500 text-white p-1 rounded-full hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 flex">
-                    <span class="material-icons-outlined text-sm">edit</span>
+                    <span class="material-icons-outlined">edit</span>
                 </button>
                 <button onclick="openDeleteModal()" class="ml-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 flex">
                     <span class="material-icons-outlined">delete</span>
@@ -134,7 +134,7 @@
             <tr>
                 <th class="py-2 px-4 text-left font-semibold text-gray-700">Usuário</th>
                 <th class="py-2 px-4 text-left font-semibold text-gray-700">Email</th>
-                <th class="py-2 px-4 text-left font-semibold text-gray-700">Cargo</th>
+                <th class="py-2 px-4 text-left font-semibold text-gray-700">Data de solicitação</th>
                 <th class="py-2 px-4 text-center font-semibold text-gray-700">Ações</th>
             </tr>
         </thead>
@@ -143,7 +143,7 @@
             <tr class="border-b border-gray-200 hover:bg-gray-100">
                 <td class="py-2 px-4 text-gray-800">{{ request.user }}</td>
                 <td class="py-2 px-4 text-gray-600">{{ request.user.email }}</td>
-                <td class="py-2 px-4 text-gray-600">Membro</td>
+                <td class="py-2 px-10 text-red-600">Criar Variael</td>
                 <td class="py-2 px-4 flex justify-center space-x-2">
                     <form action="{% url 'aceitar_solicitacao' request.id %}" method="post">
                         {% csrf_token %}
