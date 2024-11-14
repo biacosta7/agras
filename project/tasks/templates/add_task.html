@@ -1,5 +1,4 @@
 
-
     <div id="taskModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
         <div class="bg-white w-full max-w-lg p-6 rounded-lg shadow-lg max-h-screen overflow-y-auto">
             <!-- Header do modal -->
@@ -9,7 +8,7 @@
             </div>
             
             <!-- Conteúdo do modal (formulário de criação de task) -->
-            <form action="{{ form_url }}" method="POST">
+            <form id="addTaskForm" method="post" action="{% url 'add_task' community_id=community.id %}">
                 {% csrf_token %}
                 <div class="mt-4">
                     <label for="title" class="block font-medium">Título:</label>
@@ -22,11 +21,11 @@
                 <label for="deadline" class="block font-medium">Prazo:</label>
                 <div class="relative max-w-sm">
                     <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                       <svg class="w-4 h-4 text-white-500 dark:text-white-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                       <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                           <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
                         </svg>
                     </div>
-                    <input id="datepicker-format" datepicker datepicker-format="dd-mm-yyyy" type="text" class="bg-white border border-white-300 text-white-900 text-sm rounded-lg focus:ring-white-500 focus:border-white-500 block w-full ps-10 p-2.5  dark:bg-white-700 dark:border-white-600 dark:placeholder-white-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500" placeholder="Selecionar data">
+                    <input name="deadline" id="datepicker-format" datepicker datepicker-format="dd-mm-yyyy" type="text" class="bg-white border border-white-300 text-gray-900 text-sm rounded-lg focus:ring-white-500 focus:border-white-500 block w-full ps-10 p-2.5  dark:bg-white-700 dark:border-white-600 dark:placeholder-white-400 dark:text-gray dark:focus:ring-green-500 dark:focus:border-green-500" placeholder="Selecionar data" required>
                 </div>     
                 <br>
                 <div class="mt-4">
@@ -90,7 +89,8 @@
             </form>
         </div>
     </div>
-
+</form>
+<div id="successMessage" style="display:none;">Tarefa adicionada com sucesso!</div>
 {% block scripts %}
 <script>
     function closeModal() {

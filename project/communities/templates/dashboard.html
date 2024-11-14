@@ -268,6 +268,29 @@
         });
     });
 
+    document.getElementById('addTaskForm').onsubmit = function(event) {
+        event.preventDefault();
+        const form = event.target;
+        const formData = new FormData(form);
+
+        fetch(form.action, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+            },
+            body: formData,
+        })
+        .then(response => {
+            if (response.ok) {
+                document.getElementById('successMessage').style.display = 'block';
+                form.reset();
+                setTimeout(() => location.reload(), 1000); // Recarrega para atualizar a lista
+            } else {
+                console.error('Erro ao adicionar a tarefa.');
+            }
+        });
+    };
+
     function openModal() {
         document.getElementById('taskModal').classList.remove('hidden');
     }
@@ -275,6 +298,8 @@
     function closeModal() {
         document.getElementById('taskModal').classList.add('hidden');
     }
+
+
 </script>
 
 <style>
