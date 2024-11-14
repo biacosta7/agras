@@ -1,0 +1,200 @@
+@import url('variables.css');
+
+.save-event-popup {
+    position: absolute; /* Posicionado em relação ao .calendar */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+}
+
+.save-event-popup[hidden] {
+    display: none; /* Permite ocultar usando o atributo hidden */
+}
+
+.overlay {
+    position: absolute; /* Relativo ao .save-event-form */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 5;
+    cursor: pointer;
+    display: none; /* Começa oculto */
+}
+
+.overlay.active, .save-event-popup.active {
+    display: flex;
+}
+
+.save-event-form {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background-color: var(--days-bg-color);
+}
+
+.save-event-form-group1, .save-event-form-group2 {
+    flex: 0 0 5%;
+    display: flex;
+    align-items: center;
+    height: 15%;
+    padding: 1%;
+}
+
+.save-event-form-group1 {
+    gap: 1.5%;
+    width: 100%;
+    background-color: var(--save-event-form-group-bg-color);
+}
+
+.save-event-form-group1 button {
+    flex: 0 0 1.5rem; /* Largura fixa para os botões quadrados */
+    height: 1.5rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--calendar-title-color);
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.close-save-event-popup[hidden], .edit-event-button[hidden] {
+    display: none; /* Permite ocultar usando o atributo hidden */
+}
+
+#color-picker {
+    background-color: var(--event-day-marker-bg-color);
+}
+
+input, textarea {
+    outline: none;
+    border-radius: 0;
+    font-family: var(--calendar-title-font);
+    caret-color: blue;
+}
+
+.save-event-form-group1 input {
+    flex: 1 1 0; /* Permite que o input cresça e encolha */
+    min-width: 5rem; /* Limita o encolhimento do input para manter a legibilidade */
+    padding: 0.25rem;
+    font-size: 1.5rem;
+}
+
+.save-event-form-group1 input:focus {
+    outline: 2px solid rgb(238, 156, 4); /* Define a cor e espessura do outline */
+}
+
+.save-event-form-group2 {
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    background-color: var(--days-bg-color);
+}
+
+.save-event-popup-status {
+    color: #8b8989;;
+}
+
+.event-date-time {
+    display: inline-flex;
+    gap: 5px;
+    padding: 5px;
+    border: 1px solid #ececec;
+    border-radius: 2px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #8b8989;
+    background-color: var(--days-bg-color);
+}
+
+.event-date-time i {
+    font-size: 1rem;
+}
+
+.clock {
+    padding-left: 5px;
+}
+
+.save-event-form textarea {
+    flex: 1;
+    font-size: 1.5rem;
+    color: var(--calendar-title-color);
+    width: 98%;
+    height: 100%;
+    margin-top: 1%;
+    line-height: 1.5rem; /* Define o espaçamento entre linhas */
+    background-image: linear-gradient(to bottom, #5554546c 1px, transparent 1px); /* Linhas de caderno */
+    background-size: 100% 1.5rem; /* Ajusta o espaçamento entre as linhas */
+    background-attachment: local; /* Mantém as linhas fixas ao rolar */
+    resize: none;
+    outline: none;
+    overflow: auto;
+    background-color: var(--days-bg-color);
+    box-shadow: 0 0 0 1px var(--days-bg-color) inset;
+}
+
+.color-picker-popup {
+    position: absolute; /* Relativo ao pop-up de salvar evento */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.color-picker-popup[hidden] {
+    display: none; /* Permite ocultar usando o atributo hidden */
+}
+
+.color-picker-popup.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.color-picker-popup-square {
+    width: 35%;            /* Define a largura em 80% do elemento pai */
+    padding-top: 35%;      /* O padding-top será 80% da largura, cria um quadrado */
+    position: relative;    /* Permite que elementos filhos possam ser posicionados */
+    z-index: 15;           /* Acima do pop-up */
+    
+}
+
+.color-picker-popup-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Define 3 colunas de tamanho igual */
+    grid-template-rows: repeat(3, 1fr);    /* Define 3 linhas de tamanho igual */
+    gap: 5%;                               /* Define um espaço entre os itens */
+    padding: 5%;
+    background-color: #383838;
+}
+
+.color-picker-button {
+    width: 100%;                           /* Cada botão ocupa toda a célula */
+    height: 100%;
+    cursor: pointer;
+}
+
+/* Regra para aplicar estilos quando a altura é maior que a largura */
+@media (max-aspect-ratio: 1/1) {
+    .color-picker-popup-square {
+        width: 80%;
+        padding-top: 80%;
+    }
+}

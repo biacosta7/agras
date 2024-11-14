@@ -1,0 +1,110 @@
+@import url('variables.css');
+
+.add-event {
+    position: absolute; /* Posicionado em relação ao .calendar */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+}
+
+.add-event[hidden] {
+    display: none; /* Permite ocultar usando o atributo hidden */
+}
+
+.overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 5;
+    cursor: pointer;
+    display: none; /* Começa oculto */
+}
+
+.overlay.active, .add-event.active {
+    display: flex; /* Mostra quando ativo */
+}
+
+.event-date, .saved-events, .create-event-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.event-date, .create-event-button {
+    flex: 0 0 50px;
+    background-color: #424242;
+}
+
+.event-date {
+    color: #d6d5d5;
+}
+
+.saved-events {
+    display: flex;
+    flex-direction: column;
+    max-height: calc(50px * 4); /* Limita a altura a 4 itens */
+    overflow-y: auto;
+    background-color: #161616;
+    border: 1px solid var(--matrix-border-color);
+}
+
+.saved-event {
+    flex: 0 0 50px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 0.5%;
+    padding: 0.5% 0.5% 0.5% 2%;
+    background-color: var(--days-bg-color);
+}
+
+.event-title {
+    flex: 1;
+    font: var(--calendar-title-font);
+    color: #d6d5d5;
+}
+
+.delete-event, .conclude-event {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #d6d5d5;
+    padding: 2%;
+    background-color: var(--days-bg-color);
+}
+
+.delete-event {
+    color: red;
+}
+
+.conclude-event {
+    border-left: 1px solid var(--matrix-border-color);
+    color: green;
+}
+
+.create-event-button {
+    color: #7ABFB3;
+    cursor: pointer;
+}
+
+.create-event-button:active {
+    background-color: var(--days-clicked-bg-color);
+}
+
+/* Regra para aplicar estilos quando a altura é maior que a largura */
+@media (max-aspect-ratio: 1/1) {
+    .saved-events {
+        max-height: calc(50px * 10); /* Limita a altura a 10 itens */
+    }
+}

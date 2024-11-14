@@ -1,0 +1,57 @@
+@charset "UTF-8";
+
+:root {
+    /* Variáveis pra palheta de cor escolhida */
+    --calendar-title-color: #ececec;
+    --days-of-week-color:  #ececec;
+    --sun-color: rgb(209, 66, 47);
+    --sat-color: #057c97;
+    --days-bg-color: #0D0D0D;
+    --days-clicked-bg-color: #4b4a4a; /* Cor de fundo enquanto o dia está sendo clicado */
+    --other-days-bg-color: #424242;
+    --matrix-border-color: #5554546c;
+    --event-day-marker-bg-color : #e0d208;
+    --save-event-form-group-bg-color: #a78c08;
+    --event-add-button-bg-color: #7ABFB3;
+    
+
+    --red-marker-bg-color: #F2293A;
+    --red-form-group-bg-color: #732020;
+
+    --orange-marker-bg-color: #F28705;
+    --orange-form-group-bg-color: #944304;
+
+    --yellow-marker-bg-color: #F2E205;
+    --yellow-form-group-bg-color: #a78c08;
+
+    --green-marker-bg-color: #32A62E;
+    --green-form-group-bg-color: #067302;
+
+    --blue-marker-bg-color: #0070CE;
+    --blue-form-group-bg-color: #1D3973;
+
+    --pink-marker-bg-color: #e616e2;
+    --pink-form-group-bg-color: #720b80;
+
+    --black-marker-bg-color: #000000;
+    --black-form-group-bg-color: #262626;
+
+    --gray-marker-bg-color: #888888;
+    --gray-form-group-bg-color: #737373;
+
+    --white-marker-bg-color: #FFFFFF;
+    --white-form-group-bg-color: #D9D9D9;
+    
+
+    /* Variáveis pras fontes escolhidas */
+    --calendar-title-font: 'Roboto', sans-serif;
+    --days-font: sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    border: none;
+    box-sizing: border-box;
+    font-weight: normal; /* Remove o negrito padrão do `<th>` */
+}

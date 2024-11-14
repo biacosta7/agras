@@ -57,7 +57,7 @@ else:
     STATIC_URL = os.environ.get('DJANGO_STATIC_URL', "/static/")
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
     STATICFILES_STORAGE = ('whitenoise.storage.CompressedManifestStaticFilesStorage')
-
+    STATICFILES_DIRS = [BASE_DIR / "static"]    # Para poder usar o arquivo .css global para estilizar o template global
 
 # Application definition
 AUTH_USER_MODEL = 'users.User'

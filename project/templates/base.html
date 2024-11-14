@@ -10,6 +10,9 @@
     {% block css %}
         <link rel="stylesheet" href="{% static 'globals.css' %}">
     {% endblock css %}
+    {% block extra_css %} 
+    <!-- Área que será substituída pelo link CSS das páginas filhas -->
+    {% endblock %}
 
     <title>AGRAS | {% block title %}{% endblock %}</title>
 
