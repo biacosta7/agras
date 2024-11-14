@@ -2,14 +2,15 @@
 
 :root {
     /* Variáveis pra palheta de cor escolhida */
-    --calendar-title-color: #ececec;
+    --calendar-title-color: #8ABF17;
+    --calendar-controls-bg-color: #F76711;
     --days-of-week-color:  #ececec;
     --sun-color: rgb(209, 66, 47);
     --sat-color: #057c97;
-    --days-bg-color: #0D0D0D;
-    --days-clicked-bg-color: #4b4a4a; /* Cor de fundo enquanto o dia está sendo clicado */
-    --other-days-bg-color: #424242;
-    --matrix-border-color: #5554546c;
+    --days-bg-color: white;
+    --days-clicked-bg-color: #ffbb0031; /* Cor de fundo enquanto o dia está sendo clicado */
+    --other-days-bg-color: white;
+    --matrix-border-color: #ececec;
     --event-day-marker-bg-color : #e0d208;
     --save-event-form-group-bg-color: #a78c08;
     --event-add-button-bg-color: #7ABFB3;

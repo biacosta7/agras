@@ -256,23 +256,23 @@ export function showCalendar(month, year) {
         daysCells[i].appendChild(markersContainer);
 
         //daysCells[i].textContent = dayCounter;
+        dayNumber.style.color = 'black';
         daysCells[i].style.backgroundColor = 'var(--days-bg-color)';    // Cor de fundo
         daysCells[i].style.cursor = 'pointer';                          // Cursor apontador
 
-        const currentDayOfWeek = (i % 7);
+        //const currentDayOfWeek = (i % 7);
         // Pinta o texto dos dias de domingo com vermelho
-        if (currentDayOfWeek === 0) {
-            dayNumber.style.color = 'var(--sun-color)';
-        }
+        //if (currentDayOfWeek === 0) {
+        //    dayNumber.style.color = 'var(--sun-color)';
+        //}
         // Pinta o texto dos dias de sábado com azul
-        else if (currentDayOfWeek === 6) {
-            dayNumber.style.color = 'var(--sat-color)';
-        }
+        //else if (currentDayOfWeek === 6) {
+        //    dayNumber.style.color = 'var(--sat-color)';
+        //}
 
-        // Verifica se é o dia de hoje, se for, adiciona uma borda
+        // Verifica se é o dia de hoje, se for, adiciona um fundo diferente
         if (dayCounter === DAY && month === MONTH && year === YEAR) {
-            daysCells[i].style.border = '1px solid #899DD9';            // Borda azul clara
-            daysCells[i].style.boxShadow = '0 0 0 2px #899DD9 inset';   // Sombra interna para criar um efeito de borda ("engrossa" a borda sem afetar o layout)
+            daysCells[i].style.backgroundColor = 'var(--days-clicked-bg-color)';
         }
 
         // Verifica se tem evento, se tiver, adiciona os marcadores
