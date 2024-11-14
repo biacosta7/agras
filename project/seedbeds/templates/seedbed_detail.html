@@ -149,7 +149,13 @@
                 <br>
                 <p>
                     <span class="text-lg font-semibold mr-4">Estimativa de colheita:</span> 
-                    <span class="text-lg" id="harvest-estimate">2 de Janeiro de 2025</span>
+                    <span class="text-lg" id="harvest-estimate">
+                        {% if estimativa_colheita %}
+                            {{ estimativa_colheita }}
+                        {% else %}
+                            Data de colheita indisponível
+                        {% endif %}
+                    </span>
                 </p>
                 <br>
                 <span class="text-lg font-semibold mr-12">Tarefas:</span>

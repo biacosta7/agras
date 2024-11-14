@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from products.models import Product, TypeProduct
 from areas.models import Area
 from django.http import JsonResponse
+from dateutil.relativedelta import relativedelta
 
 
 @login_required
@@ -87,6 +88,11 @@ def delete_seedbed(request, community_id, area_id, seedbed_id):
     return render(request, 'confirm_delete.html', context)
 
 
+from dateutil.relativedelta import relativedelta
+
+from dateutil.relativedelta import relativedelta
+from django.utils.dateformat import DateFormat
+
 def seedbed_detail_view(request, community_id, area_id, seedbed_id):
     community = get_object_or_404(Community, id=community_id)
     area = get_object_or_404(Area, id=area_id, community=community)
@@ -102,12 +108,30 @@ def seedbed_detail_view(request, community_id, area_id, seedbed_id):
     else:
         selected_product = products.first() if products else None
 
+    # Verifica se o produto selecionado tem um ciclo de vida válido
+    ciclo_de_vida = 3  # Valor padrão caso o ciclo de vida não esteja definido
+    if selected_product and selected_product.type_product and selected_product.type_product.lifecycle is not None:
+        ciclo_de_vida = selected_product.type_product.lifecycle
+
+    estimativa_colheita = None
+    if selected_product and selected_product.data_plantio and ciclo_de_vida:
+        estimativa_colheita = selected_product.data_plantio + relativedelta(months=ciclo_de_vida)
+        print(f"Data Plantio: {selected_product.data_plantio}, Ciclo de Vida: {ciclo_de_vida}, Estimativa de Colheita: {estimativa_colheita}\n")
+
+    # Formatar a data antes de enviar para o template
+    if estimativa_colheita:
+        estimativa_colheita_formatada = DateFormat(estimativa_colheita).format('d \d\e F \d\e Y')
+    else:
+        estimativa_colheita_formatada = None
+
     context = {
         'community': community,
         'area': area,
         'seedbed': seedbed,
         'products': products,
-        'selected_product': selected_product,  # Assegure-se de que selected_product está incluído
+        'selected_product': selected_product,
+        'estimativa_colheita': estimativa_colheita_formatada,
     }
 
     return render(request, 'seedbed_detail.html', context)
+

@@ -5,8 +5,8 @@ from communities.models import Community
 class TypeProduct(models.Model):
     name = models.CharField(max_length=80, null=True)
     community = models.ForeignKey(Community, on_delete=models.CASCADE, related_name='type_products', null=True)
-    #ciclo de vida (quatidade em dias)
-    
+    lifecycle = models.IntegerField(null=True, blank=True)
+
     class Meta:
         unique_together = ('name', 'community')  # Garante que a combinação de nome e comunidade seja única
 

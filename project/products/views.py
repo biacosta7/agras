@@ -86,21 +86,24 @@ def create_typeproduct_view(request, community_id, area_id, seedbed_id):
 
     if request.method == 'POST':
         nome = request.POST.get('nome').capitalize()
-        
+        lifecycle = request.POST.get('lifecycle')
+
         # Verificando se o tipo de produto já existe na mesma comunidade
         if TypeProduct.objects.filter(name=nome, community=community).exists():
             messages.error(request, f'O cultivo {nome} já existe na comunidade {community.name}. Por favor, escolha um nome diferente.')
             return render(request, 'create_typeproduct.html', {'community': community, 'area_id': area_id, 'seedbed_id': seedbed_id})
 
+        # Criando o novo TypeProduct com o ciclo de vida
         typeproduct = TypeProduct.objects.create(
             name=nome,
-            community=community  # Associando o tipo de produto à comunidade
+            community=community,
+            lifecycle=lifecycle,
         )
 
         messages.success(request, f'Novo cultivo {typeproduct.name} criado com sucesso na comunidade {community.name}.')
         return redirect('seedbed_detail', community_id=community.id, area_id=area_id, seedbed_id=seedbed_id)
-    return render(request, 'create_typeproduct.html', {'community': community, 'area_id': area_id, 'seedbed_id': seedbed_id})
 
+    return render(request, 'create_typeproduct.html', {'community': community, 'area_id': area_id, 'seedbed_id': seedbed_id})
 #---------------------------------------------DIVISAO-------------------------------------------------
 def product_list_view(request, seedbed_id, community_id, area_id):
     # Obtém o canteiro com base no ID passado na URL
@@ -121,12 +124,12 @@ def product_list_view(request, seedbed_id, community_id, area_id):
  
 
 def product_detail_view(request, id):
-	obj = get_object_or_404(Product, id=id)
+    obj = get_object_or_404(Product, id=id)
 
-	context = {
-		'object': obj
-	} 
-	return render(request, "products/product_details.html", context)
+    context = {
+        'object': obj
+    } 
+    return render(request, "products/product_details.html", context)
 
 @login_required
 def product_update_view(request, community_id, area_id, seedbed_id, product_id):
