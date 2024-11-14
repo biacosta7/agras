@@ -8,14 +8,6 @@ from products.models import Product, TypeProduct
 from areas.models import Area
 from django.http import JsonResponse
 
-
-@login_required
-def list_seedbeds(request, community_id, area_id):
-    community = get_object_or_404(Community, id=community_id)
-    area = get_object_or_404(Area, id=area_id, community=community)  # Filtra pela área da comunidade
-    canteiros = Seedbed.objects.filter(area=area)  # Filtra os canteiros pela área
-    return render(request, 'list_seedbeds.html', {'canteiros': canteiros, 'community': community, 'area': area})
-
 @login_required
 def create_seedbed(request, community_id, area_id):
     user = request.user
@@ -62,8 +54,7 @@ def edit_seedbed(request, community_id, area_id, seedbed_id):
                 seedbed.save()
                 messages.success(request, 'Canteiro editado com sucesso!')
                 return redirect('area_detail', community_id=community.id, area_id=area.id)
-
-    return render(request, 'edit_seedbed.html', {'seedbed': seedbed, 'community': community, 'area': area})
+           
 
 @login_required
 def delete_seedbed(request, community_id, area_id, seedbed_id):
