@@ -43,8 +43,13 @@ def add_task(request, community_id, area_id=None, seedbed_id=None, product_id=No
             is_completed=is_completed,
             deadline=deadline,
             recurrence=recurrence,
-            status=status,
+            status='pending', 
             priority=priority,
+            community=community,
+            # area_id=area_id,
+            # seedbed_id=seedbed_id,
+            # product_id=product_id,
+            # type_product_id=type_product_id,
         )
         task.save()
 
