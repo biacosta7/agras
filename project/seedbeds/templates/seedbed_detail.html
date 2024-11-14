@@ -193,12 +193,25 @@
                 <form id="delete-product-form" method="POST" action="{% url 'product_delete' community.id area.id seedbed.id selected_product.id %}" style="display:none;">
                     {% csrf_token %}
                 </form>
-                <button type="button" class="mt-5 m-2 bg-[#F77711] p-7 text-white py-2 rounded hover:bg-[#F76711] transition duration-200" onclick="openModal()">Excluir</button>
+                <button type="button" class="mt-5 m-2 bg-[#F77711] p-7 text-white py-2 rounded hover:bg-[#F76711] transition duration-200" onclick="openModal()">
+                    Excluir
+                </button>
                 <button type="button" class="mt-5 m-2 bg-[#562A00] p-7 text-white py-2 rounded hover:bg-[#401F00] transition duration-200" onclick="openEditModal()">
                     Editar
                 </button>
+                <button type="button" class="mt-5 m-2 bg-[#F77711] p-7 text-white py-2 rounded hover:bg-[#F76711] transition duration-200" onclick="openHarvestModal()">
+                    Colher
+                </button>                
             </div>
         </div>
+        <h3>Histórico de Colheitas</h3>
+        <ul>
+            {% for harvest in selected_product.type_product.harvests.all %}
+                 <li>{{ harvest.data_colheita }}: {{ harvest.quantidade_colhida }} unidades colhidas</li>
+            {% empty %}
+                <li>Sem registros de colheita.</li>
+            {% endfor %}
+        </ul>
         {% endif %}
     
         <!-- Modal de Confirmação de Exclusão -->
@@ -245,7 +258,35 @@
 
             </div>
         </div>
-
+        <div id="harvestModal" class="modal">
+            <div class="modal-content">
+                <span class="close cursor-pointer" onclick="closeHarvestModal()">&times;</span>
+                <h1 class="mt-2 font-bold">Colher "{{ selected_product.type_product.name }}"</h1>
+        
+                <!-- Formulário de Colheita -->
+                <form id="harvest-product-form" method="POST" action="{% url 'harvest_product' community.id area.id seedbed.id selected_product.id %}">
+                    {% csrf_token %}
+                    
+                    <!-- Campo para inserir a data de colheita -->
+                    <div class="mt-4">
+                        <label for="harvest-date" class="block font-semibold">Data de Colheita:</label>
+                        <input type="date" id="harvest-date" name="harvest_date" class="w-full border border-gray-300 p-2 rounded" required>
+                    </div>
+        
+                    <!-- Campo para inserir a quantidade colhida -->
+                    <div class="mt-4">
+                        <label for="harvest-quantity" class="block font-semibold">Quantidade Colhida:</label>
+                        <input type="number" id="quantidade_colhida" name="quantidade_colhida" class="w-full border border-gray-300 p-2 rounded" required>
+                    </div>
+        
+                    <!-- Botões de ação -->
+                    <div class="mt-6 flex justify-end">
+                        <button type="button" class="bg-gray-300 text-black py-2 px-4 rounded hover:bg-gray-400 transition duration-200 mr-2" onclick="closeHarvestModal()">Cancelar</button>
+                        <button type="submit" class="bg-[#8ABF17] text-white py-2 px-4 rounded hover:bg-[#5F8C1B] transition duration-200">Salvar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 {% endif %}
@@ -280,6 +321,21 @@
         const editModal = document.getElementById('editModal');
         if (event.target === editModal) {
             closeEditModal();
+        }
+    }
+    function openHarvestModal() {
+        document.getElementById('harvestModal').style.display = 'block';
+    }
+    
+    function closeHarvestModal() {
+        document.getElementById('harvestModal').style.display = 'none';
+    }
+    
+    // Fechar o modal ao clicar fora dele
+    window.onclick = function(event) {
+        const harvestModal = document.getElementById('harvestModal');
+        if (event.target === harvestModal) {
+            closeHarvestModal();
         }
     }
 </script>
