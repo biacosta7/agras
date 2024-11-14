@@ -98,10 +98,13 @@ def community_list(request):
     is_admin_of_community = user.admin_communities.exists()
     has_communities = user_communities.exists() or is_admin_of_community
     communities = Community.objects.all()
+    user_communities_count = request.user.communities_members.count() + request.user.admin_communities.count()
 
     context = {
         'communities': communities,
         'has_communities': has_communities,
+        'user': user,
+        'user_communities_count': user_communities_count
     }
 
     return render(request, 'hub.html', context)
