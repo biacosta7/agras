@@ -58,19 +58,19 @@
                         {% if users %}
                             <!-- Opção "Ninguém" -->
                             <div class="px-4 py-2 cursor-pointer hover:bg-blue-200">
-                                <input type="checkbox" id="noOneOption" class="mr-2" value="" user_name="Ninguém" onclick="toggleSelection(this)">
+                                <input type="checkbox" id="noOneOption" class="mr-2" value="" user_name="Ninguém" onclick="toggleSelection(this)" name="responsible_users[]">
                                 <span>Ninguém</span>
                             </div>
                             <!-- Loop para exibir os usuários -->
                             {% for user in users %}
                             <div class="px-4 py-2 cursor-pointer hover:bg-blue-200">
-                                <input type="checkbox" class="mr-2 userOption" value="{{ user.id }}" user_name="{{ user.first_name }}" onclick="toggleSelection(this)">
+                                <input type="checkbox" class="mr-2 userOption" value="{{ user.id }}" user_name="{{ user.first_name }}" onclick="toggleSelection(this)" name="responsible_users[]">
                                 <span>{{ user.first_name }}</span>
                             </div>
                             {% endfor %}
                         {% else %}
                             <div class="px-4 py-2 cursor-pointer hover:bg-blue-200">
-                                <input type="checkbox" class="mr-2" value="" user_name="Membros não encontrados" onclick="toggleSelection(this)">
+                                <input type="checkbox" class="mr-2" value="" user_name="Membros não encontrados" onclick="toggleSelection(this)" name="responsible_users[]">
                                 <span>Membros não encontrados</span>
                             </div>
                         {% endif %}

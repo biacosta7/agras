@@ -15,9 +15,13 @@
             <td class="py-2 px-4">{{ task.title }}</td>
             <td class="py-2 px-4">{{ task.get_status_display }}</td>
             <td class="py-2 px-4">
-                {% for user in task.responsible_users.all %}
-                    {{ user.first_name }}{% if not forloop.last %}, {% endif %}
-                {% endfor %}
+                {% if task.responsible_users.exists %}
+                    {% for user in task.responsible_users.all %}
+                        {{ user.first_name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                {% else %}
+                    Ninguém
+                {% endif %}
             </td>
             <td class="py-2 px-4">{{ task.get_type_display }}</td>
             <td class="py-2 px-4">{{ task.deadline }}</td>
