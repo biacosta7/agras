@@ -35,7 +35,7 @@ def create_user(request):
             messages.error(request, 'Esse usuário já existe.')
             return render(request, 'signup.html', form_data)
 
-        valid_name = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+        valid_name = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ")
         if not set(first_name).issubset(valid_name):
             messages.error(request, 'O nome não deve conter números ou caracteres especiais')
             return render(request, 'signup.html', form_data)
