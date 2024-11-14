@@ -80,11 +80,6 @@ def delete_user(request, user_id):
     return redirect('get_all_users')
 
 
-@login_required
-def get_all_users(request):
-    users = User.objects.all()
-    return render(request, 'listar_usuarios.html', {'users': users})
-
 def login(request):
     if request.user.is_authenticated:
         return redirect('community_hub')
