@@ -28,8 +28,5 @@ class MembershipRequest(models.Model):
     request_date = models.DateTimeField(default=timezone.now)
     decision_date = models.DateTimeField(null=True, blank=True)
 
-    class Meta:
-        unique_together = ('user', 'community')
-
     def __str__(self):
         return f"O usuário {self.user} pediu para entrar na comunidade {self.community}"
