@@ -19,17 +19,19 @@ def add_task(request, community_id, area_id=None, seedbed_id=None, product_id=No
         title = request.POST.get('title')
         description = request.POST.get('description')
         is_completed = request.POST.get('is_completed') == 'on'
+        start_date = request.POST.get('start_date')
         deadline = request.POST.get('deadline')
         recurrence = request.POST.get('recurrence')
         priority = request.POST.get('priority')
         responsible_user_ids = request.POST.getlist('responsible_users[]')
         print(request.POST)  # Adiciona esta linha para inspecionar os dados recebidos
 
-        if not title or not deadline:
-            print('Título e data de vencimento são obrigatórios.')
+        if not title or not deadline or not start_date:
+            print('Título e data são obrigatórios.')
             return JsonResponse({'error': 'Título e data de vencimento são obrigatórios.'}, status=400)
         
         try:
+            start_date = timezone.datetime.strptime(start_date, '%d-%m-%Y')
             deadline = timezone.datetime.strptime(deadline, '%d-%m-%Y')
         except ValueError:
             print("Formato de data inválido. Use 'DD/MM/AAAA")
@@ -40,9 +42,10 @@ def add_task(request, community_id, area_id=None, seedbed_id=None, product_id=No
             title=title,
             description=description,
             is_completed=is_completed,
+            start_date = start_date,
             deadline=deadline,
             recurrence=recurrence,
-            status='pending', 
+            status='to_do', 
             priority=priority,
             community=community,
             # area_id=area_id,
