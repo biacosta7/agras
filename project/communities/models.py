@@ -1,6 +1,7 @@
 from django.db import models
 from users.models import User
 from seedbeds.models import Seedbed
+from django.utils import timezone
 
 class Community(models.Model):
     name = models.CharField(max_length=255, unique=True, null=False, blank=False)
@@ -24,7 +25,7 @@ class MembershipRequest(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='membership_requests')
     community = models.ForeignKey(Community, on_delete=models.CASCADE, related_name='membership_requests')
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
-    request_date = models.DateTimeField(auto_now_add=True)
+    request_date = models.DateTimeField(default=timezone.now)
     decision_date = models.DateTimeField(null=True, blank=True)
 
     class Meta:
