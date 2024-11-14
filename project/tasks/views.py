@@ -8,11 +8,13 @@ from areas.models import Area
 from seedbeds.models import Seedbed
 from communities.models import Community
 from django.urls import reverse
+from django.contrib import messages
 
-def add_task(request, community_id=None, area_id=None, seedbed_id=None, product_id=None, type_product_id=None):
+
+def add_task(request, community_id, area_id=None, seedbed_id=None, product_id=None, type_product_id=None):
     task_type = request.POST.get('type')
     
-    community = get_object_or_404(Community, id=community_id) if community_id else None
+    community = get_object_or_404(Community, id=community_id)
     # area = get_object_or_404(Area, id=area_id, community=community) if area_id else None
     # seedbed = get_object_or_404(Seedbed, id=seedbed_id, area=area) if seedbed_id else None
     # product = get_object_or_404(Product, id=product_id, seedbed=seedbed) if product_id else None
@@ -73,6 +75,7 @@ def add_task(request, community_id=None, area_id=None, seedbed_id=None, product_
             # Set the many-to-many relationship
             task.responsible_users.set(users)
 
+        messages.success(request, "Tarefa adicionada com sucesso!")
         # Gerar a URL para redirecionar para o dashboard, com os parâmetros necessários
         redirect_url = reverse('dashboard', kwargs={'community_id': community_id})
         return redirect(redirect_url)
@@ -105,16 +108,45 @@ def add_task(request, community_id=None, area_id=None, seedbed_id=None, product_
 
     return render(request, 'add_task.html', context)
 
-def view_tasks(request, community_id=None, area_id=None, seedbed_id=None, product_id=None, type_product_id=None):
+# def view_tasks(request, community_id=None, area_id=None, seedbed_id=None, product_id=None, type_product_id=None):
+#     tasks = Task.objects.all()
+
+#     context = {
+#         'tasks': tasks,
+#         'product_id': product_id,
+#         'community_id': community_id,
+#         'area_id': area_id,
+#         'seedbed_id': seedbed_id,
+#         'type_product_id': type_product_id,
+#     }
+
+#     return render(request, 'view_tasks.html', context)
+
+def list_tasks(request, community_id, area_id=None, seedbed_id=None, product_id=None):
+    # Filtros iniciais
     tasks = Task.objects.all()
 
-    context = {
-        'tasks': tasks,
-        'product_id': product_id,
-        'community_id': community_id,
-        'area_id': area_id,
-        'seedbed_id': seedbed_id,
-        'type_product_id': type_product_id,
-    }
+    community = get_object_or_404(Community, id=community_id)
+    tasks = tasks.filter(community=community)
 
-    return render(request, 'view_tasks.html', context)
+    # Filtrando com base no area_id, seedbed_id, e product_id (se fornecido)
+    if area_id:
+        area = get_object_or_404(Area, id=area_id)
+        tasks = tasks.filter(area=area)
+
+    if seedbed_id:
+        seedbed = get_object_or_404(Seedbed, id=seedbed_id)
+        tasks = tasks.filter(seedbed=seedbed)
+
+    if product_id:
+        product = get_object_or_404(Product, id=product_id)
+        tasks = tasks.filter(product=product)
+
+    # Passando os dados para o template
+    return render(request, 'list_task.html', {
+        'tasks': tasks,
+        'community': community,
+        'area': area if area_id else None,
+        'seedbed': seedbed if seedbed_id else None,
+        'product': product if product_id else None,
+    })
