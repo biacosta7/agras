@@ -20,7 +20,7 @@
 <body>
     {% include 'common/messages.html' %}
 
-    <div class="{% block page_classes %} bg-white h-screen{% endblock %}">
+    <div class="{% block page_classes %} bg-[#FAFAFA] h-screen{% endblock %}">
         {% block content %}{% endblock content %}
     {% if request.user.is_authenticated %}
     <!-- Fundo escurecido para o modal -->
@@ -105,6 +105,11 @@
         .scrollbar {
             scrollbar-width: thin; /* Define a largura como fina */
             scrollbar-color: #8ABF17 transparent; /* Cor do thumb e do track */
+        }
+        
+        ::selection {
+            background-color: #8ABF17;
+            color: white;
         }
 
         @media (max-width: 640px) { /* sm breakpoint */
