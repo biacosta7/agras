@@ -21,7 +21,6 @@ def add_task(request, community_id, area_id=None, seedbed_id=None, product_id=No
         is_completed = request.POST.get('is_completed') == 'on'
         deadline = request.POST.get('deadline')
         recurrence = request.POST.get('recurrence')
-        status = request.POST.get('status')
         priority = request.POST.get('priority')
         responsible_user_ids = request.POST.getlist('responsible_users[]')
         print(request.POST)  # Adiciona esta linha para inspecionar os dados recebidos
