@@ -157,18 +157,15 @@
     <div class="flex flex-col">
         <div class="flex flex-col h-full w-full">
             <div class="flex flex-col gap-2">
-                <button onclick="openModal()">Adicionar Nova Task</button>
-                <a href="{% url 'add_task' community.id %}" class="">
-                    <div class="bg-[#8ABF17] shadow-md p-6 h-[100px] rounded-[18px] text-white flex flex-row items-center lg:mt-0 cursor-pointer">
-                        <div>
-                            <p class="font-bold text-[16px] lg:text-[18px]">Criar Tarefa</p>
-                            <p class="font-medium text-[12px] lg:text-[14px]">Crie uma nova task</p>
-                        </div>
-                        <div class="ml-auto bg-[#F76711] rounded-full flex items-center justify-center w-[50px] h-[50px] lg:w-[60px] lg:h-[60px]">
-                            <span class="material-icons text-white" style="font-size: 40px; lg:font-size: 50px;">add</span>
-                        </div>
+                <button onclick="openModal()" class="bg-[#8ABF17] shadow-md p-6 h-[100px] rounded-[18px] text-white flex flex-row items-center lg:mt-0 cursor-pointer">
+                    <div>
+                        <p class="font-bold text-[16px] lg:text-[18px] text-left">Criar Tarefa</p>
+                        <p class="font-medium text-[12px] lg:text-[14px]">Crie uma nova task</p>
                     </div>
-                </a>
+                    <div class="ml-auto bg-[#F76711] rounded-full flex items-center justify-center w-[50px] h-[50px] lg:w-[60px] lg:h-[60px]">
+                        <span class="material-icons text-white" style="font-size: 40px;">add</span>
+                    </div>
+                </button>                
 
                 <a href="{% url 'list_tasks' community.id %}" class="">
                     <div class="bg-[#8ABF17] shadow-md p-6 h-[100px] rounded-[18px] text-white flex flex-row items-center lg:mt-0 cursor-pointer">
