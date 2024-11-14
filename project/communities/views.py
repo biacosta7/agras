@@ -17,17 +17,24 @@ def dashboard_view(request, community_id):
     
     # Verificação se o usuário é membro ou administrador da comunidade
     if request.user not in community.members.all() and request.user not in community.admins.all():
-        membership_request, created = MembershipRequest.objects.get_or_create(
-            user=request.user,
-            community=community,
-            defaults={'status': 'pending', 'request_date': timezone.now()}
-        )
-        
-        if created:
-            messages.info(request, 'Sua solicitação para entrar na comunidade foi enviada ao administrador.')
-        else:
-            messages.info(request, 'Você já enviou uma solicitação para esta comunidade. Aguarde a resposta do administrador.')
+        existing_request = MembershipRequest.objects.filter(user=request.user, community=community).first()
 
+        if existing_request and existing_request.status == 'rejected':
+            existing_request.delete()
+            created = True
+        elif existing_request:
+            messages.info(request, 'Você já enviou uma solicitação para esta comunidade. Aguarde a resposta do administrador.')
+            return redirect('community_hub')
+
+        if not existing_request or created:
+            MembershipRequest.objects.create(
+                user=request.user,
+                community=community,
+                status='pending',
+                request_date=timezone.now()
+            )
+            messages.info(request, 'Sua solicitação para entrar na comunidade foi enviada ao administrador.')
+        
         return redirect('community_hub')
 
     areas = Area.objects.filter(community=community)
@@ -40,6 +47,7 @@ def dashboard_view(request, community_id):
     }
 
     return render(request, 'dashboard.html', context)
+
 
 @login_required
 def manage_community(request, community_id):
@@ -167,3 +175,17 @@ def delete_community(request, pk):
     community.delete()
     messages.success(request, 'Comunidade deletada com sucesso.')
     return redirect('community_hub')
+
+@login_required
+def list_members(request, community_id):
+    community = get_object_or_404(Community, id=community_id)
+
+    members = community.members.all()
+
+    context = {
+        'community': community,
+        'members': members,
+    }
+
+    return render(request, 'list_members.html', context)
+
