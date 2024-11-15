@@ -107,9 +107,50 @@
     
 
 <!-- Main Content -->
-<div class="lg:ml-[250px] mt-12 lg:mt-[90px] bg-[#FAFAFA] w-full lg:w-auto">
-    <div class="flex justify-center items-center text-black h-screen font-bold text-xl">ESTAMOS TRABALHANDO NISSO </div>
-    </div>  
+<div class="lg:ml-[250px] mt-12 lg:mt-[90px] bg-[#FAFAFA] w-full lg:w-auto p-8">  <!-- Added padding -->
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">  <!-- Grid layout -->
+        <div class="flex flex-col gap-y-8">
+            <!-- Weather Widget -->
+        <div class="bg-white rounded-[14px] shadow-lg p-6 h-[150px]">
+            <div class="flex items-center">
+                <img src="{% static 'path/to/weather/icon.svg' %}" alt="Weather Icon" class="w-12 h-12">
+                <div class="ml-4">
+                    <div class="flex items-center">
+                        <span class="text-2xl font-semibold">18°C</span>
+                        <span class="ml-2 text-gray-600">Nublado</span>
+                    </div>
+                    <span class="text-sm text-gray-500">Recife</span>
+                </div>
+            </div>
+        </div>
+       <!-- Stats Cards -->
+       <div class="grid grid-cols-1 lgxl md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-3 gap-4">
+        <div class="bg-white rounded-[14px] shadow-lg p-4 text-center">
+            <p class="font-semibold text-lg sm:text-xl text-xl xl:text-2xl text-[#8ABF17]">11</p> 
+            <p class="font-regular text-xs sm:text-sm lg:text-base text-black">Produtos Vendidos</p>
+        </div>
+        <div class="bg-white rounded-[14px] shadow-lg p-4 text-center">
+            <p class="font-semibold text-lg sm:text-xl :text-xl xl:text-2xl text-[#562A00]">R$ 2.4k</p>
+            <p class="font-regular text-xs sm:text-sm lg:text-base text-black">Total Arrecadado</p>
+        </div>
+        <div class="bg-white rounded-[14px] shadow-lg p-4 text-center">
+            <p class="font-semibold text-lg sm:text-xl text-xl xl:text-2xl text-[#F76711]">36</p>
+            <p class="font-regular text-xs sm:text-sm lg:text-base text-black">Tarefas Concluídas</p>
+        </div>
+    </div>
+        <!-- Chart -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+             <div> <!-- Add a container for your chart -->
+                <h2 class="text-lg font-semibold mb-4">Estatísticas</h2>
+                 <!-- ... your chart code here ... -->
+             </div>
+        </div>
+    </div>
+        </div>
+
+
+ </div>
 
 
 <script>

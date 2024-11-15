@@ -121,14 +121,14 @@
                 <p class="text-lg text-black font-medium">Encontre, crie e gerencie suas áreas!</p>
             </header>
 
-            <button id="addCommunityBtn" class="bg-[#8ABF17] text-white px-6 py-3 rounded-[9px] mb-6 hover:bg-[#7cad10] hover:text-[#edf0e9]" onclick="toggleModal('create')">
+            <button id="addCommunityBtn" class="bg-[#8ABF17] text-white px-6 py-3 font-semibold rounded-[9px] mb-6 hover:bg-[#7cad10] hover:text-[#edf0e9]" onclick="toggleModal('create')">
                 Criar Área de Plantio
             </button>
             {% endif %}
 
 
         <!-- Modal para criar area -->
-        <div id="areaModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-10">
+        <div id="areaModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50">
             <div class="bg-white px-14 py-12 rounded-[34px] w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] max-w-[596px] max-h-[663px] overflow-y-auto rounded-[32px]">
                 <h2 id="modalTitle" class="text-[24px] font-bold mb-4 text-[#8ABF17]">Nova área de plantio</h2>
                 <p class="font-medium text-[16px]">Preencha as informações abaixo para criar uma nova área</p>
@@ -166,7 +166,7 @@
                             <div class="relative-wrapper relative"> {% if is_admin_of_community %}
                                 <span class="material-icons mt-3 cursor-pointer" onclick="toggleManageModal('manage', {{area.id}})">more_vert</span>
                                 <!-- Modal de gerenciamento -->
-                                <div id="manageModal-{{ area.id }}" class="hidden absolute top-8 right-0 bg-white border border-gray-300 mt-2 shadow-lg px-4 py-2 rounded-lg z-30 w-auto">
+                                <div id="manageModal-{{ area.id }}" class="hidden absolute top-8 right-0 bg-white border border-gray-300 mt-2 shadow-lg px-4 py-2 rounded-lg z-10 w-auto">
                                     <button onclick="toggleManageModal('close-manage', {{ area.id }}), {}" class="absolute top-2 right-2 text-[#F76711] material-icons-outlined">close</button>
                                     <div class="flex flex-row items-center gap-x-2"> 
                                         <button onclick="openEditModal({{area.id}})" class="bg-yellow-500 text-white p-1 rounded-full hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 flex">
@@ -250,7 +250,7 @@
                         <img src="{% static 'assets/Ativo 304x.png' %}" alt="Plantas" class="w-64 mb-4">
                         <h1 class="font-bold text-[24px]">Nenhuma área de plantio criada na comunidade {{community.name}}</h1>
                         <p class="font-normal text-[16px]">Clique no botão abaixo para criar áreas de plantio e visualizá-los</p>
-                        <button id="addCommunityBtn" class="mt-4 bg-[#8ABF17] text-white px-6 py-3 rounded-[9px] mb-6 hover:bg-[#7cad10] hover:text-[#edf0e9]" onclick="toggleModal('create')">
+                        <button id="addCommunityBtn" class="mt-4 bg-[#8ABF17] text-white font-semibold px-6 py-3 rounded-[9px] mb-6 hover:bg-[#7cad10] hover:text-[#edf0e9]" onclick="toggleModal('create')">
                             Criar Área de Plantio
                         </button>
                     </div>
