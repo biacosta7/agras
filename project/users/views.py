@@ -79,6 +79,10 @@ def delete_user(request, user_id):
     messages.success(request, 'Usuário deletado com sucesso.')
     return redirect('get_all_users')
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 240a9bf4cc8350cb41986260d7d9f2b61144a3ca
 def login(request):
     if request.user.is_authenticated:
         return redirect('community_hub')

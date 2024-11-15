@@ -25,7 +25,6 @@ urlpatterns = [
     path('comunidade/<int:community_id>/areas/detalhe/<int:area_id>/', area_views.area_detail, name='area_detail'),
 
     # URLs para canteiros dentro de uma área
-    path('comunidade/<int:community_id>/areas/<int:area_id>/canteiros/', seedbed_views.list_seedbeds, name='seedbed_list'),
     path('comunidade/<int:community_id>/areas/<int:area_id>/canteiros/criar/', seedbed_views.create_seedbed, name='create_seedbed'),
     path('comunidade/<int:community_id>/areas/<int:area_id>/canteiros/editar/<int:seedbed_id>/', seedbed_views.edit_seedbed, name='update_seedbed'),
     path('comunidade/<int:community_id>/areas/<int:area_id>/canteiros/deletar/<int:seedbed_id>/', seedbed_views.delete_seedbed, name='delete_seedbed'),

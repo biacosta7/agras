@@ -119,7 +119,7 @@
     {% if area.seedbeds.all %}
     <div class="items-center">
         <h2 class=" text-4xl font-bold mb-6">Canteiros de {{ area.name }}</h2>
-        <button id="addCommunityBtn" class="bg-[#8ABF17] text-white px-6 py-3 rounded-[9px] mb-6 hover:bg-[#7cad10] hover:text-[#edf0e9]" onclick="toggleModal('create')">
+        <button id="addCommunityBtn" class="bg-[#8ABF17] text-white px-6 py-3 rounded-[9px] font-semibold mb-6 hover:bg-[#7cad10] hover:text-[#edf0e9]" onclick="toggleModal('create')">
             Criar Canteiro
         </button>
 
@@ -128,7 +128,7 @@
         
     <div class="container mt-5">
         <!-- Modal para criar canteiro -->
-        <div id="areaModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-10">
+        <div id="areaModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50">
             <div class="bg-white px-14 py-12 rounded-[34px] w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] max-w-[596px] max-h-[663px] overflow-y-auto rounded-[32px]">
                 <h2 id="modalTitle" class="text-[24px] font-bold mb-4 text-[#8ABF17]">Novo canteiro</h2>
                 <p class="font-medium text-[16px]">Preencha a informação abaixo para criar um novo canteiro</p>
@@ -152,13 +152,62 @@
                 <div class="flex-grow">
                     <img src="{% static 'assets/seedbed.jpg' %}" alt="Área de plantio" class="w-full h-auto rounded-t-[12px]">
                     <div class="p-4">
-                        <h3 class="text-2xl font-semibold">
-                            <a href="{% url 'seedbed_detail' community.id area.pk seedbed.id %}" class="text-[#8ABF17] hover:underline">{{ seedbed.nome }}</a>
-                        </h3>
-                        <a href="{% url 'update_seedbed' community.id area.pk seedbed.id %}">Editar</a> | 
-                        <a href="{% url 'delete_seedbed' community.id area.pk seedbed.id %}">Deletar</a>
+                        <div class="flex justify-between mb-4">
+                            <h3 class="text-2xl font-semibold">
+                                <a href="{% url 'seedbed_detail' community.id area.pk seedbed.id %}" class="text-[#8ABF17] hover:underline">{{ seedbed.nome }}</a>
+                            </h3>
+                            <div class="relative-wrapper relative"> {% if is_admin_of_community %}
+                                <span class="material-icons cursor-pointer" onclick="toggleManageModal('manage', {{seedbed.id}})">more_vert</span>
+                                <!-- Modal de manage -->
+                                <div id="manageModal-{{ seedbed.id }}" class="hidden absolute top-8 right-0 bg-white border border-gray-300 shadow-lg px-4 py-2 rounded-lg z-10 w-auto">
+                                    <button onclick="toggleManageModal('close-manage', {{ seedbed.id }})" class="absolute top-2 right-2 text-[#F76711] material-icons-outlined">close</button>
+                                    <div class="flex flex-row items-center gap-x-2"> 
+                                        <button onclick="openEditModal({{ seedbed.id }})" class="bg-yellow-500 text-white p-1 rounded-full hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 flex">
+                                            <span class="material-icons-outlined">edit</span>
+                                        </button>
+                                        <button onclick="openDeleteModal({{ seedbed.id }})" class="bg-red-500 mr-5 text-white p-1 rounded-full hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 flex">
+                                            <span class="material-icons-outlined">delete</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- Modal de edição -->
+                                <div id="editModal-{{ seedbed.id }}" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
+                                    <div class="bg-white px-14 py-12 rounded-[34px] w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] max-w-[596px] max-h-[663px] overflow-y-auto rounded-[32px]">
+                                        <h2 id="modalTitle" class="text-[24px] font-bold mb-4 text-[#8ABF17]">Editar canteiro</h2>
+                                        <p class="font-medium text-[16px]">Altere as informações abaixo para editar seu canteiro</p>
+                                        <form method="POST" action="{% url 'update_seedbed' community.id area.id seedbed.id %}">
+                                            {% csrf_token %}
+                                            <div class="mb-4 mt-6">
+                                                <label for="name" class="block text-sm font-medium text-gray-700">Nome*</label>
+                                                <input type="text" name="nome" id="nome" value="{{ seedbed.nome }}" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] h-[55px] py-2 px-3">
+                                            </div>
+                                            <div class="flex justify-end">
+                                                <button type="button" onclick="closeEditModal({{ seedbed.id }})" class="mr-2 bg-white border-2 border-[#8ABF17] hover:border-[#7aab0f] text-[#8ABF17] hover:text-[#7aab0f] font-bold px-6 py-3 rounded-[9px] w-full">Cancelar</button>
+                                                <button type="submit" class="mr-2 bg-[#8ABF17] text-white font-bold px-6 py-3 rounded-[9px] hover:bg-[#7aab0f] text-[#f3f7f0] w-full">Salvar Alterações</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
     
-                        <!-- Listando os produtos associados ao canteiro -->
+                                <!-- Modal de deleção -->
+                                <div id="deleteModal-{{ seedbed.id }}" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
+                                    <div class="bg-white px-14 py-12 rounded-[34px] w-full max-w-lg">
+                                        <h3 class="text-xl font-bold mb-4 text-red-600">Excluir Canteiro</h3>
+                                        <p class="text-gray-700 mb-6">Tem certeza de que deseja excluir canteiro "{{ seedbed.nome }}"? Esta ação não pode ser desfeita.</p>
+                                        <form method="POST" action="{% url 'delete_seedbed' community.id area.id seedbed.id %}">
+                                            {% csrf_token %}
+                                            <div class="flex flex-row justify-between">
+                                                <button type="submit" class="mr-2 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 w-full font-bold">Excluir</button>
+                                                <button type="button" onclick="closeDeleteModal({{ seedbed.id }})" class="bg-white border-2 border-[#8ABF17] hover:border-[#7aab0f] text-[#8ABF17] hover:text-[#7aab0f] font-bold px-6 py-3 rounded-[9px] w-full">Cancelar</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            </div>   
+                        </div>
+    
+                        <!-- Listando os cultivos associados ao canteiro -->
                         <div class="mt-2">
                             <button class="w-full text-left bg-[#f7f7f7] p-3 rounded-[9px] text-sm lg:text-base font-medium border-2 border-[#8ABF17] focus:outline-none flex justify-between items-center transition-all transform hover:shadow-lg" onclick="toggleDropdown('seedbed-list-{{ seedbed.id }}')">
                                 Mostrar Cultivos
@@ -187,7 +236,7 @@
                     <img src="{% static 'assets/Ativo 324.png' %}" alt="Plantas" class="w-64 mb-4">
                     <h1 class="font-bold text-[24px]">Nenhum canteiro criado em {{area.name}}</h1>
                     <p class="font-normal text-[16px]">Clique no botão abaixo para criar canteiros e visualizá-los</p>
-                    <button id="addCommunityBtn" class="mt-4 bg-[#8ABF17] text-white px-6 py-3 rounded-[9px] mb-6 hover:bg-[#7cad10] hover:text-[#edf0e9]" onclick="toggleModal('create')">
+                    <button id="addCommunityBtn" class="mt-4 bg-[#8ABF17] text-white px-6 py-3 rounded-[9px] mb-6 hover:bg-[#7cad10] font-semibold hover:text-[#edf0e9]" onclick="toggleModal('create')">
                         Criar Canteiro
                     </button>
                 </div>
@@ -200,15 +249,43 @@
 
 <script>
 
-function toggleModal(action) {
-    const areaModal = document.getElementById('areaModal'); // Corrigido o ID do modal
+function toggleModal(action, seedbedId) {
+    const areaModal = document.getElementById('areaModal'); 
+    const manageModal = document.getElementById(`manageModal-${seedbedId}`);
 
     if (action === 'create') {
         areaModal.classList.remove('hidden'); // Mostra o modal de criar área
         document.getElementById('areaForm').reset(); // Limpa o formulário (opcional)
-    } else if (action === 'close') {
+    }
+    else if (action === 'close') {
         areaModal.classList.add('hidden'); // Esconde o modal de criar área
     } 
+}
+
+function toggleManageModal(action, seedbedId) {
+    const manageModal = document.getElementById(`manageModal-${seedbedId}`);
+
+    if (action === 'manage') {
+        manageModal.classList.remove('hidden');
+    } else if (action === 'close-manage') {
+        manageModal.classList.add('hidden'); 
+    }
+}
+
+function openEditModal(seedbedId) {
+    document.getElementById(`editModal-${seedbedId}`).classList.remove('hidden');
+}
+
+function closeEditModal(seedbedId) {
+    document.getElementById(`editModal-${seedbedId}`).classList.add('hidden');
+}
+
+function openDeleteModal(seedbedId) {
+    document.getElementById(`deleteModal-${seedbedId}`).classList.remove('hidden');
+}
+
+function closeDeleteModal(seedbedId) {
+    document.getElementById(`deleteModal-${seedbedId}`).classList.add('hidden');
 }
 
 function toggleDropdown(id) {

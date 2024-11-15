@@ -20,21 +20,43 @@
 <body>
     {% include 'common/messages.html' %}
 
-    <div class="{% block page_classes %} bg-white h-screen{% endblock %}">
+    <div class="{% block page_classes %} bg-[#FAFAFA] h-screen{% endblock %}">
         {% block content %}{% endblock content %}
     {% if request.user.is_authenticated %}
     <!-- Fundo escurecido para o modal -->
     <div id="modalBackground" class="fixed inset-0 bg-black bg-opacity-50 hidden z-20" onclick="closeHelpModal()"></div>
     
     <!-- Modal -->
-    <div id="helpModal" class="fixed bottom-4 right-4 bg-white px-14 py-12 rounded-[34px] w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] max-w-[596px] max-h-[663px] overflow-y-auto z-30 hidden">
-            <button onclick="closeHelpModal()" class="flex material-icons-outlined text-[#F76711]">close</button>
-            <h1 class="text-[22px] font-bold text-[#8ABF17]">IA Chat</h1>
-            <p class="text-[16px] font-normal text-black">Como posso te ajudar hoje?</p>
-
-            <input type="text" placeholder="Me pergunte qualquer coisa..." name="name" id="name" required class="mt-6 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] h-[55px] py-2 px-3">
+<div id="helpModal" class="fixed bottom-4 right-4 bg-white px-6 py-6 rounded-[16px] w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] max-w-[520px]  z-30 hidden">
+    <div class="flex justify-end">
+        <button onclick="closeHelpModal()" class="material-icons-outlined text-[#F76711]">close</button>
+      <button onclick="maximizeHelpModal()" class="material-icons-outlined text-[#8ABF17] mr-2">fullscreen</button>
 
     </div>
+
+    <h1 class="text-[22px] font-bold text-[#8ABF17]">IA Chat</h1>
+    <p class="text-[16px] font-normal text-black">Como posso te ajudar hoje?</p>
+
+    <div class="grid grid-cols-2 gap-4 mt-4">
+        <button class="border rounded-[9px] px-4 py-2 rounded-lg flex items-center">
+            <span class="material-icons-outlined text-[#F76711] mr-2">folder_open</span> Relatórios
+        </button>
+        <button class="border rounded-[9px] px-4 py-2 rounded-lg flex items-center">
+            <span class="material-icons-outlined text-[#915F10] mr-2">forum</span> Saberes
+        </button>
+        <button class="border rounded-[9px] px-4 py-2 rounded-lg flex items-center">
+            <span class="material-icons-outlined text-[#044702] mr-2">timer</span> Previsões
+        </button>
+        <button class="border rounded-[9px] px-4 py-2 rounded-lg flex items-center">
+            <span class="material-icons-outlined text-[#8ABF17] mr-2">bug_report</span> Pragas
+        </button>
+    </div>
+
+    <div class="mt-6 relative">
+        <input type="text" placeholder="Me pergunte qualquer coisa..." class="block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] h-[55px] py-2 px-3" />
+        <button class="absolute right-2 top-1/2 transform -translate-y-1/2 material-icons-outlined text-[#8ABF17]">send</button>
+    </div>
+</div>
     
     <!-- Help Button -->
     <button onclick="openHelpModal()" id="help-button" class="fixed bottom-4 right-4 bg-[#8ABF17] text-white p-2 rounded-full shadow-md z-10 focus:outline-none">
@@ -106,12 +128,23 @@
             scrollbar-width: thin; /* Define a largura como fina */
             scrollbar-color: #8ABF17 transparent; /* Cor do thumb e do track */
         }
+        
+        ::selection {
+            background-color: #8ABF17;
+            color: white;
+        }
 
         @media (max-width: 640px) { /* sm breakpoint */
             .hidden-sm {
                 display: none;
             }
         }
+
+        @media (min-width: 1280px) and (max-width: 1546px) {
+        .lgxl {
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+        }
+    }
 
     {% endblock styles %}
 </style>
