@@ -45,11 +45,7 @@ def dashboard_view(request, community_id):
         'community': community,
         'areas': areas,
         'seedbeds': seedbeds,
-<<<<<<< HEAD
-        'current_url_name': 'dashboard'
-=======
         'membership_requests': membership_requests,
->>>>>>> fde2dcf5c030926005d92c28796c75b1e7c23fbe
     }
 
     return render(request, 'dashboard.html', context)
