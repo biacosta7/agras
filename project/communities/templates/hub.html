@@ -88,36 +88,36 @@
     </div>
         
         <!-- Main content -->
-        <div class="flex-1 p-6 py-8 bg-[#FAFAFA] h-screen ml-0 lg:ml-[250px] mt-12 lg:mt-[90px] fade-down">
+        <div class="flex-1 p-6 py-8 bg-[#FAFAFA] h-screen ml-0 lg:ml-[250px] mt-12 lg:mt-[90px]">
             {% if communities %} 
-            <header class="mb-6">
+            <header class="mb-6 fade-down">
                 <h1 class="text-3xl lg:text-[48px] font-bold">Comunidades</h1>
                 <p class="text-lg text-black font-medium">Encontre, crie e gerencie seus plantios!</p>
             </header>
     
             <!-- Botão para adicionar comunidade -->
             
-            <button id="addCommunityBtn" class="mt-4 bg-[#8ABF17] text-white px-6 py-3 rounded-[9px] mb-6 hover:bg-[#7cad10] hover:text-[#edf0e9] font-semibold" onclick="toggleModal('create')">
+            <button id="addCommunityBtn" class="mt-4 bg-[#8ABF17] fade-down text-white px-6 py-3 rounded-[9px] mb-6 hover:bg-[#7cad10] hover:text-[#edf0e9] font-semibold" onclick="toggleModal('create')">
                 Criar Comunidade
             </button>
             {% endif %}
     
             {% if not has_communities %}
-            <div id="noMemberCommunityModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-                <div class="bg-white px-14 py-12 rounded-[34px] w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] max-w-[605px] max-h-[663px] overflow-y-auto rounded-[32px]">
+            <div id="noMemberCommunityModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                <div class="bg-white px-14 py-12 rounded-[34px] w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] max-w-[605px] max-h-[663px] overflow-y-auto">
                     <h2 id="modalTitle" class="text-[24px] font-bold mb-4 text-[#8ABF17]">Olá</h2>
                     <p class="font-medium text-[16px]">Notamos que você ainda não faz parte de nenhuma comunidade. Gostaria de explorar comunidades já existentes ou criar a sua própria?</p>
                         <div class="flex justify-end mt-12">
                             <button class="mr-2 bg-white border-2 border-[#8ABF17] hover:border-[#7aab0f] text-[#8ABF17] hover:text-[#7aab0f] font-bold px-6 py-3 rounded-[9px] w-full text-[16px]" onclick="toggleModal('closeNoMember')">Explorar comunidades</button>
-                            <button id="addCommunityBtn" class="mr-2 bg-[#8ABF17] text-white font-bold px-6 py-3 hover:bg-[#7aab0f] text-[#f3f7f0] rounded-[9px] w-full text-[16px]" onclick="toggleModal('create')">Criar comunidade</button>
+                            <button id="addCommunityBtn" class="mr-2 bg-[#8ABF17] font-bold px-6 py-3 hover:bg-[#7aab0f] text-[#f3f7f0] rounded-[9px] w-full text-[16px]" onclick="toggleModal('create')">Criar comunidade</button>
                         </div>
                 </div>
             </div>
             {% endif %}
     
             <!-- Modal para criar comunidade -->
-            <div id="communityModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center">
-                <div class="bg-white px-14 py-12 rounded-[34px] w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] max-w-[596px] max-h-[663px] overflow-y-auto rounded-[32px]">
+            <div id="communityModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50">
+                <div class="bg-white px-14 py-12 rounded-[34px] w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] max-w-[596px] max-h-[663px] overflow-y-auto">
                     <h2 id="modalTitle" class="text-[24px] font-bold mb-4 text-[#8ABF17]">Nova comunidade</h2>
                     <p class="font-medium text-[16px]">Preencha as informações abaixo para criar uma nova comunidade</p>
                     <form id="communityForm" method="post" action="{% url 'create_community' %}">
@@ -139,7 +139,7 @@
             </div>
             
             <!-- Cards Grid -->
-            <div class="flex flex-col items-center justify-center w-full space-y-8 bg-[#FAFAFA]">
+            <div class="flex flex-col items-center justify-center w-full space-y-8 bg-[#FAFAFA] fade-down">
                 {% if communities|length > 0 %}
                     <!-- Minhas Comunidades -->
                     <div class="w-full ">
@@ -170,7 +170,7 @@
                     </div>
     
                     <!-- Outras Comunidades -->
-                    <div class="w-full">
+                    <div class="w-full fade-down">
                         <h2 class="text-2xl font-bold text-[#8ABF17] mb-4">Outras comunidades</h2>
                         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
                             {% for community in communities %}
@@ -197,7 +197,7 @@
                         </div>
                     </div>
                 {% else %}
-                <div class="text-center col-span-full mt-[30vh]">
+                <div class="text-center col-span-full mt-[30vh] fade-down">
                     <div class="flex flex-col items-center justify-center">
                         <img src="{% static 'assets/pumpkin.png' %}" alt="Abobora" class="w-32">
                         <h1 class="font-bold text-[24px]">Nenhuma comunidade criada</h1>
