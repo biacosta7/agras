@@ -21,7 +21,9 @@
         <div class="flex items-center">
             <div class="flex items-center cursor-pointer z-20"> 
                 <a href="{% url 'edit' %}" class="flex flex-row items-center">
-                    <img src="{% static 'assets/icons/profile.png' %}" alt="Foto de Perfil" class="w-8 h-8 rounded-full mr-2">
+                    <div class="w-8 h-8 bg-gray-200 text-gray-800 flex items-center justify-center rounded-md mr-2 font-bold">
+                        {{ user.username|slice:":1"|upper }}
+                    </div>
                     <div class="flex flex-col">
                         <span class="text-sm font-medium">{{ user.username }}</span> 
                         <span class="text-xs text-gray-500">{{ user.email }}</span> 
@@ -40,7 +42,11 @@
                 <img src="{% static 'assets/colorido-horizontal.png' %}" alt="AGRAS" class="w-[100px]">
             </a>
             <div class="flex items-center">
-            <a href="{% url 'edit' %}"><img src="{% static 'assets/icons/profile.png' %}" alt="Foto de Perfil" class="w-6 h-6 rounded-full"></a>
+            <a href="{% url 'edit' %}">
+                <div class="w-8 h-8 bg-gray-200 text-gray-800 flex items-center justify-center rounded-md mr-2 font-bold">
+                    {{ user.username|slice:":1"|upper }}
+                </div>
+            </a>
         </nav>
 
     <!-- Sidebar -->
