@@ -34,7 +34,7 @@ def dashboard_view(request, community_id):
                 request_date=timezone.now()
             )
             messages.info(request, 'Sua solicitação para entrar na comunidade foi enviada ao administrador.')
-        
+            
         return redirect('community_hub')
 
     areas = Area.objects.filter(community=community)
@@ -44,6 +44,7 @@ def dashboard_view(request, community_id):
         'community': community,
         'areas': areas,
         'seedbeds': seedbeds,
+        'current_url_name': 'dashboard'
     }
 
     return render(request, 'dashboard.html', context)

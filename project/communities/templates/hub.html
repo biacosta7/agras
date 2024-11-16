@@ -3,17 +3,17 @@
 {% block title %}Comunidades{% endblock %}
 
 {% block content %}
-<div class="bg-[#FAFAFA]">
-    <!-- Navbar -->
-    <nav class="bg-white border-b-[1px] h-[90px] border-[#8ABF17] flex justify-between items-center px-8 py-4 fixed top-0 left-0 w-full z-9 lg:flex xl:flex 2xl:flex sm:hidden md:hidden hidden-sm">
-        <div class="border-r-[1px] border-[#8ABF17] w-[218px] h-[90px] fixed "></div>
+     <!-- Navbar -->
+     <nav class="bg-white border-b-[1px] h-[90px] border-[#CECECE] flex justify-between items-center px-8 py-4 fixed top-0 left-0 w-full z-10 lg:flex xl:flex 2xl:flex sm:hidden md:hidden hidden-sm">
         <div class="flex items-center">
             <a href="/" class="flex items-center mr-20 z-20 cursor-pointer">
                 <img src="{% static 'assets/colorido-horizontal.png' %}" alt="AGRAS" class="w-[160px] mr-4">
             </a>
             <div class="relative"> 
-              <input type="text" placeholder="Pesquisar..." class="rounded-[8px] bg-[#F5F5F7] shadow-sm py-2 px-4 pl-10 focus:outline-none">
-              <span class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 material-icons text-[#8ABF17]">search</span>
+            <div class="flex flex-col">
+                <h1 class="font-regular text-[20px] uppercase">Entre em uma</h1>
+                <h2 class="font-bold text-[24px] -mt-2">Comunidade</h2>
+            </div>
             </div>
         </div>
         <div class="flex items-center">
@@ -26,9 +26,9 @@
             </div>
         </div>
     </nav> 
-    
+
         <!-- Mobile Navbar -->
-        <nav class="bg-white border-b-[1px] border-[#8ABF17] h-[60px] flex justify-between items-center px-4 py-2 fixed top-0 left-0 w-full z-20 lg:hidden xl:hidden 2xl:hidden sm:flex md:flex">
+        <nav class="bg-white border-b-[1px] border-[#CECECE] h-[60px] flex justify-between items-center px-4 py-2 fixed top-0 left-0 w-full z-20 lg:hidden xl:hidden 2xl:hidden sm:flex md:flex">
             <button id="mobile-menu-button" class="text-[#8ABF17] focus:outline-none">
                 <span class="material-icons">menu</span>
             </button>
@@ -36,50 +36,59 @@
                 <img src="{% static 'assets/colorido-horizontal.png' %}" alt="AGRAS" class="w-[100px]">
             </a>
             <div class="flex items-center">
+                <div class="relative mr-6 flex items-center cursor-pointer">
+                    <span class="material-icons text-[25px] mr-[2px]">notifications_none</span>
+                    <span class="absolute top-0 right-0 -mt-1 -mr-1">
+                    <span class="animate-ping top-1 absolute inline-flex h-4 w-4 rounded-full bg-red-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-4 w-4 bg-red-500 justify-center items-center text-[12px] text-white">3</span>
+                    </span>
+                </div>
                 <img src="{% static 'assets/icons/profile.png' %}" alt="Foto de Perfil" class="w-6 h-6 rounded-full">
             </div>
         </nav>
-    
-    
+
     <!-- Sidebar -->
-    <div class="bg-white top-[90px] border-r-[1px] border-[#8ABF17] w-[250px] min-h-screen lg:flex xl:flex 2xl:flex sm:hidden md:hidden hidden-sm flex-col items-center w-[250px] fixed">
-        <div class="flex flex-col gap-y-8 mt-12 w-full px-8 flex-grow">
-            <a href="{% url 'community_hub' %}" class="text-[14px] font-normal text-[#8ABF17] flex items-center cursor-pointer">
+    <div class="bg-[#8ABF17] min-h-screen lg:flex xl:flex 2xl:flex sm:hidden md:hidden hidden-sm flex-col items-center w-[250px] fixed top-0 z-20 border-r-[1px] border-[#CECECE]">
+        <div class="border-b-[1px] border-[#CECECE] w-[250px] h-[90px] fixed"></div>
+        <a href="/" class="px-8 py-8 mr-4 cursor-pointer">
+            <img src="{% static 'assets/logo-branco-h.png' %}" alt="AGRAS" class="w-[160px]">
+        </a>
+        <div class="flex flex-col gap-y-8 mt-12 w-full text-white">  <!-- Text color changed to white -->
+            <a href="{% url 'community_hub' %}" class="px-8 text-[14px] font-normal flex items-center cursor-pointer {% if request.resolver_match.url_name == 'community_hub' %}bg-white text-[#8ABF17] py-3 font-medium{% endif %}"> 
                 <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">group</span> Comunidades
             </a>
-            <form action="{% url 'logout' %}" method="POST" class="w-full mb-12">
-                {% csrf_token %}
-                <button class="mt-[30rem] text-[14px] font-normal text-black flex items-center cursor-pointer w-full">
-                    <span class="w-[23px] mr-2 material-icons-outlined">logout</span>Sair
-                </button>
-            </form>
         </div>
+        <form action="{% url 'logout' %}" method="POST" class="w-full mb-12 absolute bottom-0 left-0">
+            {% csrf_token %}
+            <button class="px-8 text-[14px] font-normal text-white flex items-center cursor-pointer w-full py-3 hover:bg-white hover:text-[#8ABF17] transition-colors duration-300"> <!-- Improved logout button styling -->
+                <span class="w-[23px] mr-2 material-icons-outlined">logout</span>Sair
+            </button>
+        </form>
     </div>
-    
-    
-        <!-- Mobile Sidebar (Hidden by default) -->
-    <div id="mobile-menu" class="bg-white fixed top-0 left-0 h-full w-64 shadow-lg z-30 transform -translate-x-full transition-transform duration-300 ease-in-out lg:hidden">
-        <div class="p-[14.3px] border-b border-[#8ABF17] flex justify-between items-center">
-            <p class="flex ml-4 w-full">Menu Lateral</p>
+
+    <!-- Mobile Sidebar (Hidden by default) -->
+    <div id="mobile-menu" class="bg-[#8ABF17] fixed top-0 left-0 h-full w-64 shadow-lg z-20 transform -translate-x-full transition-transform duration-300 ease-in-out lg:hidden border-r-[1px] border-[#CECECE]">
+        <div class="p-[14.3px] border-b border-[#CECECE] flex justify-between items-center">
+            <p class="flex ml-4 w-full text-white font-semibold">Menu Lateral</p>
             <button id="mobile-menu-close-button" class="text-[#8ABF17] focus:outline-none ml-auto">
                 <span class="material-icons">close</span>
             </button>
         </div>
-        <div class="flex flex-col gap-y-8 mt-12 w-full px-8 flex-grow">
-            <a href="{% url 'community_hub' %}" class="text-[14px] font-normal text-[#8ABF17] flex items-center cursor-pointer">
+        <div class="flex flex-col gap-y-8 mt-12 w-full text-white">  <!-- Text color changed to white -->
+            <a href="{% url 'community_hub' %}" class="px-8 text-[14px] font-normal flex items-center cursor-pointer {% if request.resolver_match.url_name == 'community_hub' %}bg-white text-[#8ABF17] py-3 font-medium{% endif %}"> 
                 <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">group</span> Comunidades
             </a>
-            <form action="{% url 'logout' %}" method="POST" class="w-full mb-12">
-                {% csrf_token %}
-                <button class="mt-[20rem] text-[14px] font-normal text-black flex items-center cursor-pointer w-full">
-                    <span class="w-[23px] mr-2 material-icons-outlined">logout</span>Sair
-                </button>
-            </form>
         </div>
+        <form action="{% url 'logout' %}" method="POST" class="w-full mb-12 absolute bottom-0 left-0">
+            {% csrf_token %}
+            <button class="px-8 text-[14px] font-normal text-white flex items-center cursor-pointer w-full py-3 hover:bg-white hover:text-[#8ABF17] transition-colors duration-300"> <!-- Improved logout button styling -->
+                <span class="w-[23px] mr-2 material-icons-outlined">logout</span>Sair
+            </button>
+        </form>
     </div>
         
         <!-- Main content -->
-        <div class="flex-1 p-6 py-8 bg-[#FAFAFA] h-screen ml-0 lg:ml-[250px] mt-12 lg:mt-[90px]">
+        <div class="flex-1 p-6 py-8 bg-[#FAFAFA] h-screen ml-0 lg:ml-[250px] mt-12 lg:mt-[90px] fade-down">
             {% if communities %} 
             <header class="mb-6">
                 <h1 class="text-3xl lg:text-[48px] font-bold">Comunidades</h1>
@@ -200,8 +209,6 @@
                 </div>
                 {% endif %}
             </div>
-        </div>
-    </div>
     
     <script>
         function toggleModal(action) {
