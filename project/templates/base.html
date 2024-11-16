@@ -23,7 +23,8 @@
     <div class="{% block page_classes %} bg-[#FAFAFA] h-screen{% endblock %}">
     {% block content %}{% endblock content %}
     {% if request.user.is_authenticated %}
-    {% if request.path != '/comunidades/' %}
+    {% if request.path != '/comunidades/' and request.resolver_match.url_name != 'edit' %}
+
     <!-- Navbar -->
     <nav class="bg-white border-b-[1px] h-[90px] border-[#CECECE] flex justify-between items-center px-8 py-4 fixed top-0 left-0 w-full z-10 lg:flex xl:flex 2xl:flex sm:hidden md:hidden hidden-sm">
         <div class="flex items-center">
@@ -38,19 +39,45 @@
             </div>
         </div>
         <div class="flex items-center">
-            <div class="relative mr-6 flex items-center cursor-pointer">
+            <div class="relative mr-6 flex items-center cursor-pointer" onclick="toggleDesktopNotificationMenu()">
                 <span class="material-icons text-[25px] mr-[2px]">notifications_none</span>
                 <span class="absolute top-0 right-0 -mt-1 -mr-1">
                 <span class="animate-ping top-1 absolute inline-flex h-4 w-4 rounded-full bg-red-400 opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-4 w-4 bg-red-500 justify-center items-center text-[12px] text-white">3</span>
+                <span class="relative inline-flex rounded-full h-4 w-4 bg-red-500 justify-center items-center text-[12px] text-white">{{membership_requests|length}}</span>
                 </span>
             </div>
-            <div class="flex items-center cursor-pointer z-20"> 
-                <img src="{% static 'assets/icons/profile.png' %}" alt="Foto de Perfil" class="w-8 h-8 rounded-full mr-2">
-                <div class="flex flex-col">
-                    <span class="text-sm font-medium">{{ user.username }}</span> 
-                    <span class="text-xs text-gray-500">{{ user.email }}</span> 
-                </div>
+                <!-- Dropdown Menu de Notificação -->
+                <div id="desktopNotificationMenu" class="hidden absolute right-10 top-[75px] border-[#CECECE] border w-80 z-50 bg-white shadow-lg rounded-lg">
+                    <div class="p-4">
+                        <h3 class="font-semibold text-gray-700 mb-3">Notificações</h3>
+                        <div class="border-t border-[#8ABF17] mt-2">
+                            {% for request in membership_requests %}
+                                <!-- Notificação Individual com Link -->
+                                <a href="{% url 'manage_community' request.community.id %}" class="block">
+                                    <div class="flex items-center py-2 hover:bg-gray-100">
+                                        <img src="{% static 'assets/icons/profile.png' %}" alt="Foto de Perfil" class="w-10 h-10 rounded-full mr-3">
+                                        <div>
+                                            <p class="font-medium text-gray-800">{{ request.user }}</p>
+                                            <p class="text-sm text-gray-600">{{ request.user.email }}</p>
+                                            <p class="text-xs text-gray-500">Solicitado em: {{ request.request_date|date:"d/m/Y H:i" }}</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            {% empty %}
+                                <p class="py-4 text-center text-gray-600">Não há novas solicitações.</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>   
+
+                <div class="flex items-center cursor-pointer z-20"> 
+                <a href="{% url 'edit' %}" class="flex flex-row items-center">
+                    <img src="{% static 'assets/icons/profile.png' %}" alt="Foto de Perfil" class="w-8 h-8 rounded-full mr-2">
+                    <div class="flex flex-col">
+                        <span class="text-sm font-medium">{{ user.username }}</span> 
+                        <span class="text-xs text-gray-500">{{ user.email }}</span> 
+                    </div>
+                </a>
             </div>
         </div>
     </nav> 
@@ -64,21 +91,44 @@
                 <img src="{% static 'assets/colorido-horizontal.png' %}" alt="AGRAS" class="w-[100px]">
             </a>
             <div class="flex items-center">
-                <div class="relative mr-6 flex items-center cursor-pointer">
+                <div class="relative mr-6 flex items-center cursor-pointer" onclick="toggleMobileNotificationMenu()">
                     <span class="material-icons text-[25px] mr-[2px]">notifications_none</span>
                     <span class="absolute top-0 right-0 -mt-1 -mr-1">
                     <span class="animate-ping top-1 absolute inline-flex h-4 w-4 rounded-full bg-red-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-4 w-4 bg-red-500 justify-center items-center text-[12px] text-white">3</span>
+                    <span class="relative inline-flex rounded-full h-4 w-4 bg-red-500 justify-center items-center text-[12px] text-white">{{membership_requests|length}}</span>
                     </span>
                 </div>
-                <img src="{% static 'assets/icons/profile.png' %}" alt="Foto de Perfil" class="w-6 h-6 rounded-full">
+                <a href="{% url 'edit' %}"><img src="{% static 'assets/icons/profile.png' %}" alt="Foto de Perfil" class="w-6 h-6 rounded-full"></a>
             </div>
+            <!-- Dropdown Menu de Notificação -->
+            <div id="mobileNotificationMenu" class="hidden absolute right-10 top-[75px] border-[#CECECE] border w-80 z-50 bg-white shadow-lg rounded-lg">
+                <div class="p-4">
+                    <h3 class="font-semibold text-gray-700 mb-3">Notificações</h3>
+                    <div class="border-t border-[#8ABF17] mt-2">
+                        {% for request in membership_requests %}
+                            <!-- Notificação Individual com Link -->
+                            <a href="{% url 'manage_community' request.community.id %}" class="block">
+                                <div class="flex items-center py-2 hover:bg-gray-100">
+                                    <img src="{% static 'assets/icons/profile.png' %}" alt="Foto de Perfil" class="w-10 h-10 rounded-full mr-3">
+                                    <div>
+                                        <p class="font-medium text-gray-800">{{ request.user }}</p>
+                                        <p class="text-sm text-gray-600">{{ request.user.email }}</p>
+                                        <p class="text-xs text-gray-500">Solicitado em: {{ request.request_date|date:"d/m/Y H:i" }}</p>
+                                    </div>
+                                </div>
+                            </a>
+                        {% empty %}
+                            <p class="py-4 text-center text-gray-600">Não há novas solicitações.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>  
         </nav>
 
     <!-- Sidebar -->
     <div class="bg-[#8ABF17] min-h-screen lg:flex xl:flex 2xl:flex sm:hidden md:hidden hidden-sm flex-col items-center w-[250px] fixed top-0 z-20 border-r-[1px] border-[#CECECE]">
         <div class="border-b-[1px] border-[#CECECE] w-[250px] h-[90px] fixed"></div>
-        <a href="/" class="px-8 py-8 mr-4 cursor-pointer">
+        <a href="/" class="px-8 py-8 mr-4 z-20 cursor-pointer">
             <img src="{% static 'assets/logo-branco-h.png' %}" alt="AGRAS" class="w-[160px]">
         </a>
         <div class="flex flex-col gap-y-8 mt-12 w-full text-white">  <!-- Text color changed to white -->
@@ -107,7 +157,7 @@
     <div id="mobile-menu" class="bg-[#8ABF17] fixed top-0 left-0 h-full w-64 shadow-lg z-20 transform -translate-x-full transition-transform duration-300 ease-in-out lg:hidden border-r-[1px] border-[#CECECE]">
         <div class="p-[14.3px] border-b border-[#CECECE] flex justify-between items-center">
             <p class="flex ml-4 w-full text-white font-semibold">Menu Lateral</p>
-            <button id="mobile-menu-close-button" class="text-[#8ABF17] focus:outline-none ml-auto">
+            <button id="mobile-menu-close-button" class="text-white focus:outline-none ml-auto">
                 <span class="material-icons">close</span>
             </button>
         </div>
@@ -132,8 +182,6 @@
             </button>
         </form>
     </div>
-    {% endif %}
-
 
     <!-- Fundo escurecido para o modal -->
     <div id="modalBackground" class="fixed inset-0 bg-black bg-opacity-50 hidden z-20" onclick="closeHelpModal()"></div>
@@ -174,6 +222,7 @@
     <button onclick="openHelpModal()" id="help-button" class="fixed bottom-4 right-4 bg-[#8ABF17] text-white p-2 rounded-full shadow-md z-10 focus:outline-none">
         <span class="material-icons">help</span> 
     </button>
+    {% endif %}
     {% endif %}
 </div>
 
@@ -293,19 +342,18 @@
 
 <script>
     const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const mobileMenuCloseButton = document.getElementById('mobile-menu-close-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileMenuCloseButton = document.getElementById('mobile-menu-close-button');
     
+    mobileMenuButton.addEventListener('click', () => {
+    mobileMenu.classList.remove('-translate-x-full');
     
-        mobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.remove('-translate-x-full');
+    });
     
-        });
+    mobileMenuCloseButton.addEventListener('click', () => {
+    mobileMenu.classList.add('-translate-x-full');
     
-        mobileMenuCloseButton.addEventListener('click', () => {
-            mobileMenu.classList.add('-translate-x-full');
-    
-        });
+    });
         
     const togglePassword = document.getElementById('togglePassword');
     const passwordInput = document.getElementById('password');
@@ -318,6 +366,48 @@
             ? "{% static 'assets/eye-fill.svg' %}" 
             : "{% static 'assets/eye-slash-fill.svg' %}";
 });
+
+
+function toggleDesktopNotificationMenu() {
+    const menu = document.getElementById('desktopNotificationMenu');
+    const outsideClickListener = function(event) {
+        if (!menu.contains(event.target)) {
+            menu.classList.add('hidden');
+            document.removeEventListener('click', outsideClickListener); // Remove o listener após fechar
+        }
+    };
+
+    if (menu.classList.contains('hidden')) {
+        menu.classList.remove('hidden');
+        setTimeout(() => {  // Pequeno atraso para garantir que o listener seja adicionado *após* o menu abrir
+            document.addEventListener('click', outsideClickListener);
+        }, 0); 
+    } else {
+        menu.classList.add('hidden');
+        document.removeEventListener('click', outsideClickListener); // Remove o listener se já estava aberto e foi clicado no ícone para fechar
+    }
+}
+
+function toggleMobileNotificationMenu() {
+    const menu = document.getElementById('mobileNotificationMenu');
+    const outsideClickListener = function(event) {
+        if (!menu.contains(event.target)) {
+            menu.classList.add('hidden');
+            document.removeEventListener('click', outsideClickListener);
+        }
+    };
+
+    if (menu.classList.contains('hidden')) {
+        menu.classList.remove('hidden');
+        setTimeout(() => {
+            document.addEventListener('click', outsideClickListener);
+        }, 0);
+    } else {
+        menu.classList.add('hidden');
+        document.removeEventListener('click', outsideClickListener);
+    }
+}
+
 
 // Para o campo de confirmar senha
 const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');

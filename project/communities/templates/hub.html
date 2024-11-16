@@ -18,11 +18,13 @@
         </div>
         <div class="flex items-center">
             <div class="flex items-center cursor-pointer z-20"> 
-                <img src="{% static 'assets/icons/profile.png' %}" alt="Foto de Perfil" class="w-8 h-8 rounded-full mr-2">
-                <div class="flex flex-col">
-                    <span class="text-sm font-medium">{{ user.username }}</span> 
-                    <span class="text-xs text-gray-500">{{ user.email }}</span> 
-                </div>
+                <a href="{% url 'edit' %}" class="flex flex-row items-center">
+                    <img src="{% static 'assets/icons/profile.png' %}" alt="Foto de Perfil" class="w-8 h-8 rounded-full mr-2">
+                    <div class="flex flex-col">
+                        <span class="text-sm font-medium">{{ user.username }}</span> 
+                        <span class="text-xs text-gray-500">{{ user.email }}</span> 
+                    </div>
+                </a>
             </div>
         </div>
     </nav> 
@@ -36,21 +38,14 @@
                 <img src="{% static 'assets/colorido-horizontal.png' %}" alt="AGRAS" class="w-[100px]">
             </a>
             <div class="flex items-center">
-                <div class="relative mr-6 flex items-center cursor-pointer">
-                    <span class="material-icons text-[25px] mr-[2px]">notifications_none</span>
-                    <span class="absolute top-0 right-0 -mt-1 -mr-1">
-                    <span class="animate-ping top-1 absolute inline-flex h-4 w-4 rounded-full bg-red-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-4 w-4 bg-red-500 justify-center items-center text-[12px] text-white">3</span>
-                    </span>
-                </div>
-                <img src="{% static 'assets/icons/profile.png' %}" alt="Foto de Perfil" class="w-6 h-6 rounded-full">
+                <a href="{% url 'edit' %}"><img src="{% static 'assets/icons/profile.png' %}" alt="Foto de Perfil" class="w-6 h-6 rounded-full"></a>
             </div>
         </nav>
 
     <!-- Sidebar -->
     <div class="bg-[#8ABF17] min-h-screen lg:flex xl:flex 2xl:flex sm:hidden md:hidden hidden-sm flex-col items-center w-[250px] fixed top-0 z-20 border-r-[1px] border-[#CECECE]">
         <div class="border-b-[1px] border-[#CECECE] w-[250px] h-[90px] fixed"></div>
-        <a href="/" class="px-8 py-8 mr-4 cursor-pointer">
+        <a href="/" class="px-8 py-8 mr-4 z-20 cursor-pointer">
             <img src="{% static 'assets/logo-branco-h.png' %}" alt="AGRAS" class="w-[160px]">
         </a>
         <div class="flex flex-col gap-y-8 mt-12 w-full text-white">  <!-- Text color changed to white -->
@@ -70,7 +65,7 @@
     <div id="mobile-menu" class="bg-[#8ABF17] fixed top-0 left-0 h-full w-64 shadow-lg z-20 transform -translate-x-full transition-transform duration-300 ease-in-out lg:hidden border-r-[1px] border-[#CECECE]">
         <div class="p-[14.3px] border-b border-[#CECECE] flex justify-between items-center">
             <p class="flex ml-4 w-full text-white font-semibold">Menu Lateral</p>
-            <button id="mobile-menu-close-button" class="text-[#8ABF17] focus:outline-none ml-auto">
+            <button id="mobile-menu-close-button" class="text-white focus:outline-none ml-auto">
                 <span class="material-icons">close</span>
             </button>
         </div>
