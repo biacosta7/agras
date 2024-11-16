@@ -39,15 +39,16 @@ def dashboard_view(request, community_id):
 
     areas = Area.objects.filter(community=community)
     seedbeds = Seedbed.objects.filter(area__community=community)
+    membership_requests = MembershipRequest.objects.filter(community=community, status='pending')
 
     context = {
         'community': community,
         'areas': areas,
         'seedbeds': seedbeds,
+        'membership_requests': membership_requests,
     }
 
     return render(request, 'dashboard.html', context)
-
 
 @login_required
 def manage_community(request, community_id):
