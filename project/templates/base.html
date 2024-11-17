@@ -16,6 +16,7 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 </head>
 <body>
     {% include 'common/messages.html' %}
@@ -140,23 +141,35 @@
         <a href="/" class="px-8 py-8 mr-4 z-20 cursor-pointer">
             <img src="{% static 'assets/logo-branco-h.png' %}" alt="AGRAS" class="w-[160px]">
         </a>
-        <div class="flex flex-col gap-y-8 mt-12 w-full text-white">  <!-- Text color changed to white -->
+        <div class="flex flex-col gap-y-8 mt-12 w-full text-white">
             <a href="{% url 'community_hub' %}" class="px-8 text-[14px] font-normal flex items-center cursor-pointer {% if request.resolver_match.url_name == 'community_hub' %}bg-white text-[#8ABF17] py-3 font-medium{% endif %}"> 
                 <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">group</span> Comunidades
             </a>
-            <a href="{% url 'dashboard' community.id %}" class="px-8 text-[14px] font-normal flex items-center cursor-pointer w-full {% if request.resolver_match.url_name == 'dashboard' %}bg-white text-[#8ABF17] py-3 font-medium{% endif %}"> 
-                <span class="w-[23px] material-icons mr-2" alt="dashboar2">dashboard</span> Dashboard
+            <a href="{% url 'dashboard' community.id %}" class="relative px-8 text-[14px] font-normal flex items-center cursor-pointer w-full {% if request.resolver_match.url_name == 'dashboard' %}bg-white text-[#5F8C1B] py-3 font-medium{% endif %}"> 
+                <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">dashboard</span> 
+                <span class="flex-grow">Dasboard</span>
+                {% if request.resolver_match.url_name == 'dashboard' %}
+                    <div class="w-[5px] bg-[#5F8C1B] absolute left-0 top-0 bottom-0"></div>
+                {% endif %}
             </a>
-            <a href="{% url 'area_manage' community.id %}" class="px-8  text-[14px] font-normal flex items-center cursor-pointer {% if request.resolver_match.url_name == 'area_manage' or request.resolver_match.url_name == 'area_detail' or request.resolver_match.url_name == 'seedbed_detail' %}bg-white text-[#8ABF17] py-3 font-medium{% endif %}">
-                <span class="material-icons-outlined mr-2">forest</span> Áreas de Plantio
+            <a href="{% url 'area_manage' community.id %}" class="px-8 relative text-[14px] font-normal flex items-center cursor-pointer {% if request.resolver_match.url_name == 'area_manage' or request.resolver_match.url_name == 'area_detail' or request.resolver_match.url_name == 'seedbed_detail' %}bg-white text-[#5F8C1B] py-3 font-medium{% endif %}">
+                <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">forest</span> 
+                <span class="flex-grow">Áreas de Plantio</span>
+                {% if request.resolver_match.url_name == 'area_manage' or request.resolver_match.url_name == 'area_detail' or request.resolver_match.url_name == 'seedbed_detail' %}
+                    <div class="w-[5px] bg-[#5F8C1B] absolute left-0 top-0 bottom-0"></div>
+                {% endif %}
             </a>
-            <a href="{% url 'manage_community' community.id %}" class="px-8  text-[14px] font-normal flex items-center cursor-pointer {% if request.resolver_match.url_name == 'manage_community' %}bg-white text-[#8ABF17] py-3 font-medium{% endif %}">  <!-- Conditional styling -->
-                <span class="w-[23px] mr-2 material-icons" alt="gerenciamento">equalizer</span> Gerenciamento
-            </a>
+            <a href="{% url 'manage_community' community.id %}" class="px-8 relative text-[14px] font-normal flex items-center cursor-pointer {% if request.resolver_match.url_name == 'manage_community' %}bg-white text-[#5F8C1B] py-3 font-medium{% endif %}"> 
+                <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">equalizer</span> 
+                <span class="flex-grow">Gerenciamento</span>
+                {% if request.resolver_match.url_name == 'manage_community' %}
+                    <div class="w-[5px] bg-[#5F8C1B] absolute left-0 top-0 bottom-0"></div>
+                {% endif %}            </a>
         </div>
-        <form action="{% url 'logout' %}" method="POST" class="w-full mb-12 absolute bottom-0 left-0">
+        <form action="{% url 'logout' %}" method="POST" class="group w-full mb-12 absolute bottom-0 left-0">
             {% csrf_token %}
-            <button class="px-8 text-[14px] font-normal text-white flex items-center cursor-pointer w-full py-3 hover:bg-white hover:text-[#8ABF17] transition-colors duration-300"> <!-- Improved logout button styling -->
+            <div class="w-1 bg-[#5F8C1B] absolute left-0 top-0 bottom-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <button class="px-8 text-[14px] font-normal text-white flex items-center cursor-pointer w-full py-3 hover:bg-white hover:text-[#5F8C1B] transition-colors duration-300">
                 <span class="w-[23px] mr-2 material-icons-outlined">logout</span>Sair
             </button>
         </form>
@@ -174,19 +187,31 @@
             <a href="{% url 'community_hub' %}" class="px-8 text-[14px] font-normal flex items-center cursor-pointer {% if request.resolver_match.url_name == 'community_hub' %}bg-white text-[#8ABF17] py-3 font-medium{% endif %}"> 
                 <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">group</span> Comunidades
             </a>
-            <a href="{% url 'dashboard' community.id %}" class="px-8 text-[14px] font-normal flex items-center cursor-pointer w-full {% if request.resolver_match.url_name == 'dashboard' %}bg-white text-[#8ABF17] py-3 font-medium{% endif %}"> 
-                <span class="w-[23px] material-icons mr-2" alt="dashboar2">dashboard</span> Dashboard
+            <a href="{% url 'dashboard' community.id %}" class="relative px-8 text-[14px] font-normal flex items-center cursor-pointer w-full {% if request.resolver_match.url_name == 'dashboard' %}bg-white text-[#5F8C1B] py-3 font-medium{% endif %}"> 
+                <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">dashboard</span> 
+                <span class="flex-grow">Dasboard</span>
+                {% if request.resolver_match.url_name == 'dashboard' %}
+                    <div class="w-[5px] bg-[#5F8C1B] absolute left-0 top-0 bottom-0"></div>
+                {% endif %}
             </a>
-            <a href="{% url 'area_manage' community.id %}" class="px-8  text-[14px] font-normal flex items-center cursor-pointer {% if request.resolver_match.url_name == 'area_manage' or request.resolver_match.url_name == 'area_detail' or request.resolver_match.url_name == 'seedbed_detail' %}bg-white text-[#8ABF17] py-3 font-medium{% endif %}">
-                <span class="material-icons-outlined mr-2">forest</span> Áreas de Plantio
+            <a href="{% url 'area_manage' community.id %}" class="px-8 relative text-[14px] font-normal flex items-center cursor-pointer {% if request.resolver_match.url_name == 'area_manage' or request.resolver_match.url_name == 'area_detail' or request.resolver_match.url_name == 'seedbed_detail' %}bg-white text-[#5F8C1B] py-3 font-medium{% endif %}">
+                <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">forest</span> 
+                <span class="flex-grow">Áreas de Plantio</span>
+                {% if request.resolver_match.url_name == 'area_manage' or request.resolver_match.url_name == 'area_detail' or request.resolver_match.url_name == 'seedbed_detail' %}
+                    <div class="w-[5px] bg-[#5F8C1B] absolute left-0 top-0 bottom-0"></div>
+                {% endif %}
             </a>
-            <a href="{% url 'manage_community' community.id %}" class="px-8  text-[14px] font-normal flex items-center cursor-pointer {% if request.resolver_match.url_name == 'manage_community' %}bg-white text-[#8ABF17] py-3 font-medium{% endif %}">  <!-- Conditional styling -->
-                <span class="w-[23px] mr-2 material-icons" alt="gerenciamento">equalizer</span> Gerenciamento
-            </a>
+            <a href="{% url 'manage_community' community.id %}" class="px-8 relative text-[14px] font-normal flex items-center cursor-pointer {% if request.resolver_match.url_name == 'manage_community' %}bg-white text-[#5F8C1B] py-3 font-medium{% endif %}"> 
+                <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">equalizer</span> 
+                <span class="flex-grow">Gerenciamento</span>
+                {% if request.resolver_match.url_name == 'manage_community' %}
+                    <div class="w-[5px] bg-[#5F8C1B] absolute left-0 top-0 bottom-0"></div>
+                {% endif %}            </a>
         </div>
-        <form action="{% url 'logout' %}" method="POST" class="w-full mb-12 absolute bottom-0 left-0">
+        <form action="{% url 'logout' %}" method="POST" class="group w-full mb-12 absolute bottom-0 left-0">
             {% csrf_token %}
-            <button class="px-8 text-[14px] font-normal text-white flex items-center cursor-pointer w-full py-3 hover:bg-white hover:text-[#8ABF17] transition-colors duration-300"> <!-- Improved logout button styling -->
+            <div class="w-1 bg-[#5F8C1B] absolute left-0 top-0 bottom-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <button class="px-8 text-[14px] font-normal text-white flex items-center cursor-pointer w-full py-3 hover:bg-white hover:text-[#5F8C1B] transition-colors duration-300">
                 <span class="w-[23px] mr-2 material-icons-outlined">logout</span>Sair
             </button>
         </form>
@@ -239,13 +264,16 @@
 </body>
 <style>
     {% block styles %}
-
     #help-button { /* Style the help button */
             width: 40px; /* Adjust size as needed */
             height: 40px;
             display: flex; /* Center the icon */
             align-items: center;
             justify-content: center;
+        }
+
+        input, textarea {
+        caret-color: #8ABF17; /* Troca a cor do cursor para vermelho */
         }
         
         body {

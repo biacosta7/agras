@@ -3,6 +3,11 @@
 {% block title %}Comunidades{% endblock %}
 
 {% block content %}
+<style>
+     input::placeholder {
+            font-size: 13.5px; /* Adjust this value as needed */
+        }
+</style>
      <!-- Navbar -->
      <nav class="bg-white border-b-[1px] h-[90px] border-[#CECECE] flex justify-between items-center px-8 py-4 fixed top-0 left-0 w-full z-10 lg:flex xl:flex 2xl:flex sm:hidden md:hidden hidden-sm">
         <div class="flex items-center">
@@ -55,13 +60,18 @@
             <img src="{% static 'assets/logo-branco-h.png' %}" alt="AGRAS" class="w-[160px]">
         </a>
         <div class="flex flex-col gap-y-8 mt-12 w-full text-white">  <!-- Text color changed to white -->
-            <a href="{% url 'community_hub' %}" class="px-8 text-[14px] font-normal flex items-center cursor-pointer {% if request.resolver_match.url_name == 'community_hub' %}bg-white text-[#8ABF17] py-3 font-medium{% endif %}"> 
-                <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">group</span> Comunidades
-            </a>
+            <a href="{% url 'community_hub' %}" class="px-8 text-[14px] font-normal flex items-center cursor-pointer group relative py-3 {% if request.resolver_match.url_name == 'community_hub' %}bg-white text-[#5F8C1B] font-medium{% endif %}"> 
+            <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">group</span> 
+            <span class="flex-grow">Comunidades</span>
+            {% if request.resolver_match.url_name == 'community_hub' %}
+                <div class="w-1 bg-[#5F8C1B] absolute left-0 top-0 bottom-0"></div>
+            {% endif %}
+        </a>
         </div>
-        <form action="{% url 'logout' %}" method="POST" class="w-full mb-12 absolute bottom-0 left-0">
+        <form action="{% url 'logout' %}" method="POST" class="group w-full mb-12 absolute bottom-0 left-0">
             {% csrf_token %}
-            <button class="px-8 text-[14px] font-normal text-white flex items-center cursor-pointer w-full py-3 hover:bg-white hover:text-[#8ABF17] transition-colors duration-300"> <!-- Improved logout button styling -->
+            <div class="w-1 bg-[#5F8C1B] absolute left-0 top-0 bottom-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <button class="px-8 text-[14px] font-normal text-white flex items-center cursor-pointer w-full py-3 hover:bg-white hover:text-[#5F8C1B] transition-colors duration-300">
                 <span class="w-[23px] mr-2 material-icons-outlined">logout</span>Sair
             </button>
         </form>
@@ -76,31 +86,41 @@
             </button>
         </div>
         <div class="flex flex-col gap-y-8 mt-12 w-full text-white">  <!-- Text color changed to white -->
-            <a href="{% url 'community_hub' %}" class="px-8 text-[14px] font-normal flex items-center cursor-pointer {% if request.resolver_match.url_name == 'community_hub' %}bg-white text-[#8ABF17] py-3 font-medium{% endif %}"> 
-                <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">group</span> Comunidades
+            <a href="{% url 'community_hub' %}" class="px-8 text-[14px] font-normal flex items-center cursor-pointer group relative py-3 {% if request.resolver_match.url_name == 'community_hub' %}bg-white text-[#5F8C1B] font-medium{% endif %}"> 
+                <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">group</span> 
+                <span class="flex-grow">Comunidades</span>
+                {% if request.resolver_match.url_name == 'community_hub' %}
+                    <div class="w-1 bg-[#5F8C1B] absolute left-0 top-0 bottom-0"></div>
+                {% endif %}
             </a>
-        </div>
-        <form action="{% url 'logout' %}" method="POST" class="w-full mb-12 absolute bottom-0 left-0">
-            {% csrf_token %}
-            <button class="px-8 text-[14px] font-normal text-white flex items-center cursor-pointer w-full py-3 hover:bg-white hover:text-[#8ABF17] transition-colors duration-300"> <!-- Improved logout button styling -->
-                <span class="w-[23px] mr-2 material-icons-outlined">logout</span>Sair
-            </button>
-        </form>
+            </div>
+            <form action="{% url 'logout' %}" method="POST" class="group w-full mb-12 absolute bottom-0 left-0">
+                {% csrf_token %}
+                <div class="w-1 bg-[#5F8C1B] absolute left-0 top-0 bottom-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <button class="px-8 text-[14px] font-normal text-white flex items-center cursor-pointer w-full py-3 hover:bg-white hover:text-[#5F8C1B] transition-colors duration-300">
+                    <span class="w-[23px] mr-2 material-icons-outlined">logout</span>Sair
+                </button>
+            </form>
     </div>
         
         <!-- Main content -->
         <div class="flex-1 p-6 py-8 bg-[#FAFAFA] h-screen ml-0 lg:ml-[250px] mt-12 lg:mt-[90px]">
             {% if communities %} 
-            <header class="mb-6 fade-down">
-                <h1 class="text-3xl lg:text-[48px] font-bold">Comunidades</h1>
-                <p class="text-lg text-black font-medium">Encontre, crie e gerencie seus plantios!</p>
-            </header>
-    
-            <!-- Botão para adicionar comunidade -->
+            <div class="flex md:flex-row flex-col justify-between mt-4">
+                <header class="mb-6">
+                    <h1 class="text-[44px] lg:text-[48px] font-semibold mt-2 ">Comunidades</h1>
+                </header>
             
-            <button id="addCommunityBtn" class="mt-4 bg-[#8ABF17] fade-down text-white px-6 py-3 rounded-[9px] mb-6 hover:bg-[#7cad10] hover:text-[#edf0e9] font-semibold" onclick="toggleModal('create')">
-                Criar Comunidade
-            </button>
+                <div class="flex flex-row items-center space-x-6">
+                    <div class="relative max-w-[411px]"> 
+                        <input type="text" placeholder="Pesquise por comunidades..." class="w-full rounded-[8px] bg-[#F5F5F7] shadow-sm py-2 px-4 pl-10 focus:outline-none">
+                        <span class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 material-icons text-[#8ABF17] cursor-pointer">search</span>
+                    </div>
+                    <button id="addCommunityBtn" class="bg-[#8ABF17] text-white font-semibold flex items-center justify-center rounded-[9px] hover:bg-[#7cad10] hover:text-[#edf0e9] h-[50px] px-4" onclick="toggleModal('create')">
+                        <span class="text-3xl items-center mr-2">+</span> Criar
+                    </button>
+                </div>
+            </div>
             {% endif %}
     
             {% if not has_communities %}
@@ -148,7 +168,7 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
                             {% for community in communities %}
                                 {% if community in user.communities_members.all or community in user.admin_communities.all %}
-                                <div class="bg-white shadow-md rounded-[20px] overflow-hidden flex flex-col h-[420px] w-full border-[1px] border-[#8ABF17]">
+                                <div class="bg-white shadow-lg rounded-[20px] overflow-hidden flex flex-col h-[420px] w-full">
                                     <div class="bg-[#EFF1F3] py-12 flex items-center justify-center h-full">
                                         <img class="w-[150px]" src="{% static 'assets/vertcolorido.png' %}" alt="">
                                     </div>
@@ -176,7 +196,7 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
                             {% for community in communities %}
                                 {% if community not in user.communities_members.all and community not in user.admin_communities.all %}
-                                <div class="bg-white shadow-md rounded-[20px] overflow-hidden flex flex-col h-[420px] w-full border-[1px] border-[#8ABF17] mb-12">
+                                <div class="bg-white shadow-lg rounded-[20px] overflow-hidden flex flex-col h-[420px] w-full mb-12">
                                     <div class="bg-[#EFF1F3] py-12 flex items-center justify-center h-full">
                                         <img class="w-[150px]" src="{% static 'assets/vertcolorido.png' %}" alt="">
                                     </div>

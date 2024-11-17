@@ -3,24 +3,29 @@
 {% block title %}Áreas{% endblock %}
 
 {% block content %}
+<style>
+    input::placeholder {
+           font-size: 13.5px; /* Adjust this value as needed */
+       }
+</style>
         <!-- Main content -->
         <div class="flex-1 p-6 fade-down lg:p-10 ml:0 lg:ml-[250px] mt-12 lg:mt-[60px]">
-
-            <div class="flex justify-between items-center">
-                <h1 class="mb-4 text-xl font-semibold">
-                    <a href="{% url 'dashboard' community.id %}" class="text-[#8ABF17] hover:underline">Dashboard &gt;</a>
-                </h1>
-            </div>
-
             {% if areas %}
-            <header class="mb-6">
-                <h1 class="text-3xl lg:text-[48px] font-bold mt-2">Áreas de Plantio</h1>
-                <p class="text-lg text-black font-medium">Encontre, crie e gerencie suas áreas!</p>
-            </header>
-
-            <button id="addCommunityBtn" class="bg-[#8ABF17] text-white px-6 py-3 font-semibold rounded-[9px] mb-6 hover:bg-[#7cad10] hover:text-[#edf0e9]" onclick="toggleModal('create')">
-                Criar Área de Plantio
-            </button>
+            <div class="flex md:flex-row flex-col justify-between mt-4">
+                <header class="mb-6">
+                    <h1 class="text-[44px] lg:text-[48px] font-semibold mt-2 ">Áreas <span class="font-medium">de Plantio</span></h1>
+                </header>
+            
+                <div class="flex flex-row items-center space-x-6">
+                    <div class="relative max-w-[411px]"> 
+                        <input type="text" placeholder="Pesquise por áreas..." class="w-full rounded-[8px] bg-[#F5F5F7] shadow-sm py-2 px-4 pl-10 focus:outline-none">
+                        <span class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 material-icons text-[#8ABF17] cursor-pointer">search</span>
+                    </div>
+                    <button id="addArea" class="bg-[#8ABF17] text-white font-semibold flex items-center justify-center rounded-[9px] hover:bg-[#7cad10] hover:text-[#edf0e9] h-[50px] px-4" onclick="toggleModal('create')">
+                        <span class="text-3xl items-center mr-2">+</span> Criar
+                    </button>
+                </div>
+            </div>
             {% endif %}
 
 
