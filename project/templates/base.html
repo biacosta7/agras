@@ -43,7 +43,9 @@
             <div class="relative mr-6 flex items-center cursor-pointer" onclick="toggleDesktopNotificationMenu()">
                 <span class="material-icons text-[25px] mr-[2px]">notifications_none</span>
                 <span class="absolute top-0 right-0 -mt-1 -mr-1">
+                {% if membership_requests|length > 0 %}
                 <span class="animate-ping top-1 absolute inline-flex h-4 w-4 rounded-full bg-red-400 opacity-75"></span>
+                {% endif %}
                 <span class="relative inline-flex rounded-full h-4 w-4 bg-red-500 justify-center items-center text-[12px] text-white">{{membership_requests|length}}</span>
                 </span>
             </div>
