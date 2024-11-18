@@ -380,50 +380,37 @@
 </style>
 
 <script>
-    const mobileMenuButton = document.getElementById('mobile-menu-button');
-    const mobileMenu = document.getElementById('mobile-menu');
-    const mobileMenuCloseButton = document.getElementById('mobile-menu-close-button');
+const mobileMenuButton = document.getElementById('mobile-menu-button');
+const mobileMenu = document.getElementById('mobile-menu');
+const mobileMenuCloseButton = document.getElementById('mobile-menu-close-button');
     
-    mobileMenuButton.addEventListener('click', () => {
-    mobileMenu.classList.remove('-translate-x-full');
+mobileMenuButton.addEventListener('click', () => {
+mobileMenu.classList.remove('-translate-x-full');
     
-    });
-    
-    mobileMenuCloseButton.addEventListener('click', () => {
-    mobileMenu.classList.add('-translate-x-full');
-    
-    });
-        
-    const togglePassword = document.getElementById('togglePassword');
-    const passwordInput = document.getElementById('password');
-
-    togglePassword.addEventListener('click', () => {
-        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-        passwordInput.setAttribute('type', type);
-    
-        togglePassword.src = type === 'text' 
-            ? "{% static 'assets/eye-fill.svg' %}" 
-            : "{% static 'assets/eye-slash-fill.svg' %}";
 });
-
+    
+mobileMenuCloseButton.addEventListener('click', () => {
+mobileMenu.classList.add('-translate-x-full');
+    
+});
 
 function toggleDesktopNotificationMenu() {
     const menu = document.getElementById('desktopNotificationMenu');
     const outsideClickListener = function(event) {
         if (!menu.contains(event.target)) {
             menu.classList.add('hidden');
-            document.removeEventListener('click', outsideClickListener); // Remove o listener após fechar
+            document.removeEventListener('click', outsideClickListener); 
         }
     };
 
     if (menu.classList.contains('hidden')) {
         menu.classList.remove('hidden');
-        setTimeout(() => {  // Pequeno atraso para garantir que o listener seja adicionado *após* o menu abrir
+        setTimeout(() => {  
             document.addEventListener('click', outsideClickListener);
         }, 0); 
     } else {
         menu.classList.add('hidden');
-        document.removeEventListener('click', outsideClickListener); // Remove o listener se já estava aberto e foi clicado no ícone para fechar
+        document.removeEventListener('click', outsideClickListener); 
     }
 }
 
@@ -447,20 +434,6 @@ function toggleMobileNotificationMenu() {
     }
 }
 
-
-// Para o campo de confirmar senha
-const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
-const confirmPasswordInput = document.getElementById('confirm_password');
-
-toggleConfirmPassword.addEventListener('click', () => {
-    const type = confirmPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-    confirmPasswordInput.setAttribute('type', type);
-    
-    toggleConfirmPassword.src = type === 'text' 
-        ? "{% static 'assets/eye-fill.svg' %}" 
-        : "{% static 'assets/eye-slash-fill.svg' %}";
-});
-
 function openHelpModal() {
     document.getElementById('modalBackground').classList.remove('hidden');
     document.getElementById('helpModal').classList.remove('hidden');
@@ -470,5 +443,22 @@ function closeHelpModal() {
     document.getElementById('modalBackground').classList.add('hidden');
     document.getElementById('helpModal').classList.add('hidden');
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+      const passwordFields = document.querySelectorAll('.password-toggle');
+
+      passwordFields.forEach(field => {
+        const input = field.querySelector('input[type="password"]');
+        const eyeIcon = field.querySelector('img');
+
+        eyeIcon.addEventListener('click', function() {
+          const type = input.type === 'password' ? 'text' : 'password';
+          input.type = type;
+          eyeIcon.src = type === 'text' 
+            ? "{% static 'assets/eye-fill.svg' %}" 
+            : "{% static 'assets/eye-slash-fill.svg' %}";
+        });
+      });
+    });
 </script>
 </html>
