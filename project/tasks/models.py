@@ -7,7 +7,7 @@ from areas.models import Area
 class Task(models.Model):
 
     STATUS_CHOICES = [
-        ('to_do', 'A Fazer'),
+        ('to_do', 'Pendente'),
         ('in_progress', 'Em Progresso'),
         ('completed', 'Concluída'),
     ]
@@ -44,6 +44,7 @@ class Task(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     is_completed = models.BooleanField(default=False)
+    start_date = models.DateField(blank=True, null=True)
     deadline = models.DateField()
     recurrence = models.CharField(max_length=10, choices=RECURRENCE_CHOICES)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='to-do', null=True)

@@ -325,18 +325,28 @@
     <div class="flex flex-col">
         <div class="flex flex-col h-full w-full">
             <div class="flex flex-col gap-2">
-                <button onclick="openModal()">Adicionar Nova Task</button>
-                <a href="{% url 'add_task' community.id %}" class="">
+                <button onclick="openModal()" class="bg-[#8ABF17] shadow-md p-6 h-[100px] rounded-[18px] text-white flex flex-row items-center lg:mt-0 cursor-pointer">
+                    <div>
+                        <p class="font-bold text-[16px] lg:text-[18px] text-left">Criar Tarefa</p>
+                        <p class="font-medium text-[12px] lg:text-[14px]">Crie uma nova task</p>
+                    </div>
+                    <div class="ml-auto bg-[#F76711] rounded-full flex items-center justify-center w-[50px] h-[50px] lg:w-[60px] lg:h-[60px]">
+                        <span class="material-icons text-white" style="font-size: 40px;">add</span>
+                    </div>
+                </button>                
+
+                <a href="{% url 'list_tasks' community.id %}" class="">
                     <div class="bg-[#8ABF17] shadow-md p-6 h-[100px] rounded-[18px] text-white flex flex-row items-center lg:mt-0 cursor-pointer">
                         <div>
-                            <p class="font-bold text-[16px] lg:text-[18px]">Criar Tarefa</p>
-                            <p class="font-medium text-[12px] lg:text-[14px]">Crie uma nova task</p>
+                            <p class="font-bold text-[16px] lg:text-[18px]">Visualizar Tarefas</p>
+                            <p class="font-medium text-[12px] lg:text-[14px]">Veja a lista de tarefas</p>
                         </div>
                         <div class="ml-auto bg-[#F76711] rounded-full flex items-center justify-center w-[50px] h-[50px] lg:w-[60px] lg:h-[60px]">
                             <span class="material-icons text-white" style="font-size: 40px; lg:font-size: 50px;">add</span>
                         </div>
                     </div>
                 </a>
+
                 <a href="{% url 'area_manage' community.id %}" class="">
                     <div class="bg-[#8ABF17] shadow-md p-6 h-[100px] rounded-[18px] text-white flex flex-row items-center lg:mt-0 cursor-pointer">
                         <div>
@@ -376,6 +386,7 @@
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/pt-br.js'></script>
 <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script> {% comment %} script do calendario do adicionar task {% endcomment %}
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -424,6 +435,29 @@
         });
     });
 
+    document.getElementById('addTaskForm').onsubmit = function(event) {
+        event.preventDefault();
+        const form = event.target;
+        const formData = new FormData(form);
+
+        fetch(form.action, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+            },
+            body: formData,
+        })
+        .then(response => {
+            if (response.ok) {
+                document.getElementById('successMessage').style.display = 'block';
+                form.reset();
+                setTimeout(() => location.reload(), 1000); // Recarrega para atualizar a lista
+            } else {
+                console.error('Erro ao adicionar a tarefa.');
+            }
+        });
+    };
+
     function openModal() {
         document.getElementById('taskModal').classList.remove('hidden');
     }
@@ -431,6 +465,8 @@
     function closeModal() {
         document.getElementById('taskModal').classList.add('hidden');
     }
+
+
 </script>
 
 <style>

@@ -1,7 +1,6 @@
 
-
     <div id="taskModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
-        <div class="bg-white w-full max-w-lg p-6 rounded-lg shadow-lg">
+        <div class="bg-white w-full max-w-lg p-6 rounded-lg shadow-lg max-h-screen overflow-y-auto">
             <!-- Header do modal -->
             <div class="flex justify-between items-center border-b pb-3">
                 <h2 class="text-xl font-bold">Adicionar Nova Task</h2>
@@ -9,7 +8,7 @@
             </div>
             
             <!-- Conteúdo do modal (formulário de criação de task) -->
-            <form action="{{ form_url }}" method="POST">
+            <form id="addTaskForm" method="post" action="{% url 'add_task' community_id=community.id %}">
                 {% csrf_token %}
                 <div class="mt-4">
                     <label for="title" class="block font-medium">Título:</label>
@@ -19,19 +18,28 @@
                     <label for="description" class="block font-medium">Descrição:</label>
                     <textarea id="description" name="description" class="w-full border p-2 rounded mt-1"></textarea>
                 </div>
-                <label for="deadline" class="block font-medium">Prazo:</label>
+                <label for="start_date" class="mt-4 block font-medium">Data de início:</label>
                 <div class="relative max-w-sm">
                     <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                       <svg class="w-4 h-4 text-white-500 dark:text-white-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                       <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                           <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
                         </svg>
                     </div>
-                    <input id="datepicker-format" datepicker datepicker-format="dd-mm-yyyy" type="text" class="bg-white border border-white-300 text-white-900 text-sm rounded-lg focus:ring-white-500 focus:border-white-500 block w-full ps-10 p-2.5  dark:bg-white-700 dark:border-white-600 dark:placeholder-white-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500" placeholder="Selecionar data">
+                    <input name="start_date" id="start-date-format" datepicker datepicker-format="dd-mm-yyyy" type="text" class="bg-white border border-white-300 text-gray-900 text-sm rounded-lg focus:ring-white-500 focus:border-white-500 block w-full ps-10 p-2.5  dark:bg-white-700 dark:border-white-600 dark:placeholder-white-400 dark:text-gray dark:focus:ring-green-500 dark:focus:border-green-500" placeholder="Selecionar data" required>
+                </div>
+                <label for="deadline" class="mt-4 block font-medium">Prazo:</label>
+                <div class="relative max-w-sm">
+                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                       <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+                        </svg>
+                    </div>
+                    <input name="deadline" id="deadline-format" datepicker datepicker-format="dd-mm-yyyy" type="text" class="bg-white border border-white-300 text-gray-900 text-sm rounded-lg focus:ring-white-500 focus:border-white-500 block w-full ps-10 p-2.5  dark:bg-white-700 dark:border-white-600 dark:placeholder-white-400 dark:text-gray dark:focus:ring-green-500 dark:focus:border-green-500" placeholder="Selecionar data" required>
                 </div>     
-                <br>
                 <div class="mt-4">
                     <label for="recurrence" class="block font-medium">Recorrência:</label>
                     <select id="recurrence" name="recurrence" class="w-full border p-2 rounded mt-1" required>
+                        <option value="">Não possui</option>
                         <option value="daily">Diário</option>
                         <option value="weekly">Semanal</option>
                         <option value="monthly">Mensal</option>
@@ -46,40 +54,54 @@
                         <option value="high">Alta</option>
                     </select>
                 </div>
-                <div class="mt-4">
+                <div class="mt-4 relative">
                     <label for="responsible_users" class="block font-medium">Atribuir à:</label>
-                    <select id="responsible_users" 
-                        name="responsible_users[]" 
-                        class="w-full border p-2 rounded mt-1" 
-                        multiple
-                        size="4">  <!-- size attribute controls how many options are visible without scrolling -->
-                    <option value="">Ninguém</option>
-                    {% if users %}
-                        {% for user in users %}
-                            <option value="{{ user.id }}">{{ user.username }}</option>
-                        {% endfor %}
-                    {% else %}
-                        <option value="">Membros não encontrados</option>
-                    {% endif %}
-                </select>
-
-                <!-- Add helper text -->
-                <small class="text-gray-500 mt-1">
-                    Pressione Ctrl (Windows) ou Command (Mac) para selecionar múltiplos usuários
-                </small>
-            
+                
+                    <!-- Dropdown Trigger -->
+                    <div id="dropdownTrigger" class="w-full border p-2 rounded mt-1 cursor-pointer bg-white">
+                        <span id="dropdownText" class="text-gray-500">Selecione os membros</span>
+                    </div>
+                
+                    <!-- Dropdown Options -->
+                    <div id="dropdownOptions" class="absolute z-10 w-full border mt-1 bg-white rounded shadow-md max-h-48 overflow-y-auto hidden">
+                        {% if users %}
+                            <!-- Opção "Ninguém" -->
+                            <div class="px-4 py-2 cursor-pointer hover:bg-blue-200">
+                                <input type="checkbox" id="noOneOption" class="mr-2" value="" user_name="Ninguém" onclick="toggleSelection(this)" name="responsible_users[]">
+                                <span>Ninguém</span>
+                            </div>
+                            <!-- Loop para exibir os usuários -->
+                            {% for user in users %}
+                            <div class="px-4 py-2 cursor-pointer hover:bg-blue-200">
+                                <input type="checkbox" class="mr-2 userOption" value="{{ user.id }}" user_name="{{ user.first_name }}" onclick="toggleSelection(this)" name="responsible_users[]">
+                                <span>{{ user.first_name }}</span>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="px-4 py-2 cursor-pointer hover:bg-blue-200">
+                                <input type="checkbox" class="mr-2" value="" user_name="Membros não encontrados" onclick="toggleSelection(this)" name="responsible_users[]">
+                                <span>Membros não encontrados</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                
+                    <!-- Texto de ajuda -->
+                    <small class="text-gray-500 mt-1 block">
+                        Clique para abrir e selecionar membros
+                    </small>
+                </div>           
                 <!-- Botões de ação -->
                 <div class="mt-6 flex justify-end">
                     <button type="button" onclick="closeModal()" class="bg-gray-300 text-gray-700 px-4 py-2 rounded mr-2">Cancelar</button>
-                    <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Salvar Task</button>
+                    <button type="submit" class="bg-[#8ABF17] text-white px-4 py-2 rounded hover:bg-[#b4e250]">Salvar Task</button>
                 </div>
             </form>
         </div>
     </div>
-
+</form>
+<div id="successMessage" style="display:none;">Tarefa adicionada com sucesso!</div>
 {% block scripts %}
 <script>
-    
     function closeModal() {
         document.getElementById('taskModal').classList.add('hidden');
     }
@@ -109,23 +131,138 @@
             dropdown.classList.add('hidden');
         }
     });   
+
+    const dropdownTrigger = document.getElementById("dropdownTrigger");
+    const dropdownOptions = document.getElementById("dropdownOptions");
+    const dropdownText = document.getElementById("dropdownText");
+    const noOneOption = document.getElementById("noOneOption");
+
+    // Abre/fecha o dropdown
+    dropdownTrigger.addEventListener("click", () => {
+        dropdownOptions.classList.toggle("hidden");
+    });
+
+    // Fecha o dropdown ao clicar fora
+    document.addEventListener("click", (e) => {
+        if (!dropdownTrigger.contains(e.target) && !dropdownOptions.contains(e.target)) {
+            dropdownOptions.classList.add("hidden");
+        }
+    });
+
+    // Função para adicionar/remover seleção e atualizar o texto
+    function toggleSelection(checkbox) {
+        const userOptions = document.querySelectorAll(".userOption");
+
+        if (checkbox === noOneOption && checkbox.checked) {
+            // Desmarca todos os outros checkboxes ao selecionar "Ninguém"
+            userOptions.forEach(option => option.checked = false);
+        } else if (checkbox !== noOneOption && checkbox.checked) {
+            // Desmarca "Ninguém" se qualquer outra opção for selecionada
+            noOneOption.checked = false;
+        }
+
+        // Atualiza o texto do dropdown
+        const selectedUsers = Array.from(document.querySelectorAll('#dropdownOptions input[type="checkbox"]:checked'))
+            .map(input => input.getAttribute("user_name"));
+        
+        dropdownText.textContent = selectedUsers.length 
+            ? selectedUsers.join(", ") 
+            : "Selecione os membros";
+    }
+    // Initialize the date pickers
+    document.addEventListener('DOMContentLoaded', function() {
+        const datepickerElements = document.querySelectorAll('[datepicker]');
+        datepickerElements.forEach(element => {
+            new Datepicker(element, {
+                format: 'dd-mm-yyyy'
+            });
+        });
+    });
+
 </script>
 {% endblock scripts %}
 {% block styles %}
 <style>
-    select[multiple] {
-        min-height: 120px;  /* Adjust height as needed */
-        padding: 8px;
-    }
     
-    select[multiple] option {
-        padding: 8px;
-        margin: 2px 0;
-        border-radius: 4px;
-    }
     
-    select[multiple] option:checked {
-        background-color: #e5e7eb;
+    /* Target the datepicker container */
+    .datepicker-picker {
+        background-color: #8ABF17; /* Green background */
+        color: #ffffff; /* White text */
+    }
+
+    /* Style text inside the date picker */
+    .datepicker-picker * {
+        color: #ffffff; /* White text for all elements inside */
+    }
+
+    /* Style the header */
+    .datepicker-picker .datepicker-header {
+        color: #ffffff; /* White text for header */
+    }
+
+    /* Style day, month, year elements */
+    .datepicker-picker .day,
+    .datepicker-picker .month,
+    .datepicker-picker .year {
+        color: #ffffff; /* Ensure days, months, and years are white */
+    }
+
+    /* Style the selected date */
+    .datepicker-picker .day.selected {
+        background-color: #F76711; /* Orange background for selected date */
+        color: #ffffff; /* White text on selected date */
+    }
+
+    /* Hover effect for day, month, and year elements */
+    .datepicker-picker .day:hover,
+    .datepicker-picker .month:hover,
+    .datepicker-picker .year:hover {
+        background-color: #a9bd7e; /* Light green background on hover */
+        color: #ffffff; /* White text on hover */
+    }
+
+    /* Target the datepicker controls (navigation buttons) */
+    .datepicker-controls {
+        background-color: #8ABF17; /* Green background */
+        color: #ffffff; /* White text */
+    }
+
+    /* Style the buttons inside datepicker-controls */
+    .datepicker-controls button {
+        background-color: #8ABF17; /* Green background for buttons */
+        color: #ffffff; /* White text for buttons */
+        border: none; /* Remove default borders */
+    }
+
+    /* Hover effect for buttons inside datepicker-controls */
+    .datepicker-controls button:hover {
+        background-color: #a9bd7e; /* Light green on hover */
+    }
+
+    /* Optional: Style the controls in dark mode */
+    .dark .datepicker-picker {
+        background-color: #8ABF17; /* Green background for dark mode */
+        color: #ffffff;
+    }
+
+    .dark .datepicker-controls {
+        background-color: #8ABF17; /* Green for controls in dark mode */
+        color: #ffffff;
+    }
+
+    .dark .datepicker-controls button {
+        background-color: #8ABF17; /* Green buttons in dark mode */
+        color: #ffffff; /* White text */
+    }
+
+    .dark .datepicker-controls button:hover {
+        background-color: #a9bd7e; /* Light green on hover in dark mode */
+    }
+
+    .datepicker-picker .days-of-week .day {
+        color: #8ABF17 !important; /* Cor verde clara para os dias da semana */
+        font-weight: bold; /* Deixa o texto negrito */
     }
 </style>
 {% endblock styles %}
