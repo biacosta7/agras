@@ -8,7 +8,7 @@
     --sun-color: rgb(209, 66, 47);
     --sat-color: #057c97;
     --days-bg-color: white;
-    --days-clicked-bg-color: #ffbb0031; /* Cor de fundo enquanto o dia está sendo clicado */
+    --days-clicked-bg-color: #ffbb001c; /* Cor de fundo enquanto o dia está sendo clicado */
     --other-days-bg-color: white;
     --matrix-border-color: #ececec;
     --event-day-marker-bg-color : #e0d208;

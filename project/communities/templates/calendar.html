@@ -1,0 +1,157 @@
+<section class="calendar">
+    <!-- Tabela com os dias do mês -->
+    <table class="month">
+        <caption class="calendar-header">
+            <div class="calendar-controls">
+                <button class="previous-month">&#60;</button>
+                <button class="next-month">&#62;</button>
+            </div>
+            <span class="calendar-title">?? de 20??</span>
+        </caption>
+        <thead>
+            <!-- Todas as 7 colunas -->
+            <tr class="days-of-the-week-columns">
+                <th class="days-of-the-week">dom.</th>
+                <th class="days-of-the-week">seg.</th>
+                <th class="days-of-the-week">ter.</th>
+                <th class="days-of-the-week">qua.</th>
+                <th class="days-of-the-week">qui.</th>
+                <th class="days-of-the-week">sex.</th>
+                <th class="days-of-the-week">sab.</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Todas as 6 linhas -->
+            <tr class="days-line">
+                <td class="days">?</td>
+                <td class="days">?</td>
+                <td class="days">?</td>
+                <td class="days">?</td>
+                <td class="days">?</td>
+                <td class="days">?</td>
+                <td class="days">?</td>
+            </tr>
+            <tr class="days-line">
+                <td class="days">?</td>
+                <td class="days">?</td>
+                <td class="days">?</td>
+                <td class="days">?</td>
+                <td class="days">?</td>
+                <td class="days">?</td>
+                <td class="days">?</td>
+            </tr>
+            <tr class="days-line">
+                <td class="days">?</td>
+                <td class="days">?</td>
+                <td class="days">?</td>
+                <td class="days">?</td>
+                <td class="days">?</td>
+                <td class="days">?</td>
+                <td class="days">?</td>
+            </tr>
+            <tr class="days-line">
+                <td class="days">?</td>
+                <td class="days">?</td>
+                <td class="days marked-day">?</td>
+                <td class="days">?</td>
+                <td class="days">?</td>
+                <td class="days">?</td>
+                <td class="days marked-day">?</td>
+            </tr>
+            <tr class="days-line">
+                <td class="days">?</td>
+                <td class="days">?</td>
+                <td class="days">?</td>
+                <td class="days">?</td>
+                <td class="days">?</td>
+                <td class="days">?</td>
+                <td class="days">?</td>
+            </tr>
+            <tr class="days-line">
+                <td class="days">?</td>
+                <td class="days">?</td>
+                <td class="days">?</td>
+                <td class="days">?</td>
+                <td class="days">?</td>
+                <td class="days">?</td>
+                <td class="days">?</td>
+            </tr>
+        </tbody>
+    </table>
+    <!-- Pop-up que lista os eventos do dia clicado e que permite criar um novo evento -->
+    <aside class="add-event" aria-labelledby="popup-title" role="dialog" hidden>
+        <span class="event-date">?? de 20??</span>
+        <div class="saved-events">
+            <!-- Os que não tiverem marcadores de evento devem conter apenas 1 span vazio desse -->
+            <span class="saved-event"></span>
+            <!-- Deve-se adicionar esses spans dinamicamente via JS
+            <span class="saved-event">
+                <h3 class="event-title">Regar Hortaliças</h3>
+                <button class="material-icons delete-event">close</button>
+                <button class="material-icons conclude-event">check</button> 
+            </span>
+            <span class="saved-event">
+                <h3 class="event-title">Adubar Tomateiras</h3>
+                <button class="material-icons delete-event">close</button>
+                <button class="material-icons conclude-event">check</button>
+            </span>
+            <span class="saved-event">
+                <h3 class="event-title">Controlar Pragas no Milho</h3>
+                <button class="material-icons delete-event">close</button>
+                <button class="material-icons conclude-event">check</button>
+            </span>
+             -->
+        </div> 
+        <button type="submit" class="create-event-button">Criar</button>
+    </aside>
+    <!-- Pop-up para salvar um novo evento no dia que foi clicado -->
+    <aside class="save-event-popup" aria-label="Save Event Popup" hidden>
+        <!-- action="/salvar-evento" method="post" -->
+        <form class="save-event-form">
+            <!-- Grupo de ações do evento -->
+            <div class="save-event-form-group1">
+                <!-- Botão para fechar o pop-up, visível apenas após o salvamento -->
+                <button type="button" class="material-icons close-save-event-popup" aria-label="Voltar" hidden>arrow_back</button>
+                <!-- Botão para salvar o evento, visível apenas enquanto está editando -->
+                <button type="submit" class="material-icons save-event-button" aria-label="Salvar evento">check</button>
+                <!-- Campo de título do evento: visível em modo de edição e substituído por texto fixo após o salvamento -->
+                <input type="text" name="event-name" id="event-name" maxlength="50" placeholder="Título" aria-labelledby="event-name-label" autocomplete="off" required>
+                <h3 class="event-name" id="event-name-label" hidden>?</h3>
+                <!-- Botão para escolher cor, visível apenas enquanto está editando -->
+                <button type="button" id="color-picker" aria-label="Escolher cor"></button>
+                <!-- Botão de editar, visível apenas após salvar o evento -->
+                <button type="button" class="material-icons edit-event-button" aria-label="Editar evento" hidden>edit</button>
+                <!-- Botão de limpar, visível apenas enquanto está editando -->
+                <button type="reset" class="material-icons clear-event-button" aria-label="Limpar campos">backspace</button>
+            </div>
+            <!-- Seção de data e hora do evento -->
+            <div class="save-event-form-group2">
+                <span class="save-event-popup-status">Editando</span>
+                <span class="event-date-time">
+                    <i class="material-icons" aria-hidden="true">event</i> <!-- Ícone de calendário -->
+                    <p aria-label="Data do Evento">??/??/20???</p> <!-- Data do dia clicado -->
+                    <i class="material-icons clock" aria-hidden="true">access_time</i> <!-- Ícone de relógio -->
+                    <p aria-label="Horário do Evento">?</p> <!-- Período do evento (manhã, tarde, dia todo) -->
+                </span>
+            </div>
+            <!-- Campo de descrição do evento: visível em modo de edição e substituído por texto fixo após o salvamento -->
+            <textarea name="event-description" id="event-description" placeholder="Descrição" aria-labelledby="event-description-label" autocomplete="off" required></textarea>
+            <p class="event-description" id="event-description-label" hidden>?</p>
+        </form>
+        <aside class="color-picker-popup" hidden>
+            <div class="color-picker-popup-square">
+                <div class="color-picker-popup-content">
+                    <button type="button" style="background-color: var(--red-marker-bg-color);" class="color-picker-button"></button>
+                    <button type="button" style="background-color: var(--orange-marker-bg-color);" class="color-picker-button"></button>
+                    <button type="button" style="background-color: var(--yellow-marker-bg-color);" class="color-picker-button"></button>
+                    <button type="button" style="background-color: var(--green-marker-bg-color);" class="color-picker-button"></button>
+                    <button type="button" style="background-color: var(--blue-marker-bg-color);" class="color-picker-button"></button>
+                    <button type="button" style="background-color: var(--pink-marker-bg-color);" class="color-picker-button"></button>
+                    <button type="button" style="background-color: var(--black-marker-bg-color);" class="color-picker-button"></button>
+                    <button type="button" style="background-color: var(--gray-marker-bg-color);" class="color-picker-button"></button>
+                    <button type="button" style="background-color: var(--white-marker-bg-color);" class="color-picker-button"></button>
+                </div>
+            </div>
+        </aside>
+    </aside>
+</section>

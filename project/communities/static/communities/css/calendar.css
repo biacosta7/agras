@@ -37,6 +37,11 @@ main {
     border-radius: 10%;
     font-size: 1em;
     cursor: pointer;
+    transition: box-shadow 0.3s ease; /* Suaviza a transição da sombra */
+}
+
+.previous-month:active, .next-month:active {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 1); /* Adiciona a sombra quando clicado */
 }
 
 .month {
@@ -78,7 +83,7 @@ main {
 
 .days {
     padding: 5px;
-    color: #F5F5F7;
+    color: #d5d7da;
     background-color: var(--days-bg-color);
 }
 
