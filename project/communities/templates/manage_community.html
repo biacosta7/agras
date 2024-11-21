@@ -100,12 +100,10 @@
 </div>
 
 <script>
-// FILTRANDO OS MEMBROS COM BASE NA PESQUISA
 function searchMembers() {
     const searchInput = document.getElementById("searchInput").value.toLowerCase();
     const rows = document.querySelectorAll("#membersList tr");
 
-    // Loop ocultando os membros
     rows.forEach(row => {
         const username = row.getAttribute("data-username").toLowerCase();
         const email = row.getAttribute("data-email").toLowerCase();
