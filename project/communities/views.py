@@ -40,12 +40,14 @@ def dashboard_view(request, community_id):
     areas = Area.objects.filter(community=community)
     seedbeds = Seedbed.objects.filter(area__community=community)
     membership_requests = MembershipRequest.objects.filter(community=community, status='pending')
+    users = community.members.all().union(community.admins.all()) if community else None
 
     context = {
         'community': community,
         'areas': areas,
         'seedbeds': seedbeds,
         'membership_requests': membership_requests,
+        'users': users
     }
 
     return render(request, 'dashboard.html', context)
