@@ -8,6 +8,7 @@ class TypeProduct(models.Model):
     community = models.ForeignKey(Community, on_delete=models.CASCADE, related_name='type_products', null=True)
     lifecycle = models.IntegerField(null=True, blank=True)
     total_colhido = models.IntegerField(default=0)
+    actions_interval = models.JSONField(default=dict)  # Exemplo de dicionário: {"irrigação": 5, "poda": 10, "manejo": 7}
 
     class Meta:
         unique_together = ('name', 'community')  # Garante que a combinação de nome e comunidade seja única
@@ -18,6 +19,15 @@ class TypeProduct(models.Model):
     def atualizar_produtividade(self, quantidade_colhida):
         # Atualiza a quantidade total colhida
         self.total_colhido += quantidade_colhida
+        self.save()
+    
+    def get_action_interval(self, action_name):
+        """Retorna o intervalo da ação solicitada"""
+        return self.actions_interval.get(action_name)
+
+    def add_action_interval(self, action_name, interval):
+        """Adiciona ou atualiza o intervalo de uma ação"""
+        self.actions_interval[action_name] = interval
         self.save()
 
 class Product(models.Model):

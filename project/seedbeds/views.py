@@ -9,6 +9,9 @@ from areas.models import Area
 from django.http import JsonResponse
 from dateutil.relativedelta import relativedelta
 from django.utils import timezone
+from dateutil.relativedelta import relativedelta
+from django.utils.dateformat import DateFormat
+from datetime import timedelta
 
 @login_required
 def list_seedbeds(request, community_id, area_id):
@@ -87,12 +90,6 @@ def delete_seedbed(request, community_id, area_id, seedbed_id):
     }
     return render(request, 'confirm_delete.html', context)
 
-
-from dateutil.relativedelta import relativedelta
-
-from dateutil.relativedelta import relativedelta
-from django.utils.dateformat import DateFormat
-
 def seedbed_detail_view(request, community_id, area_id, seedbed_id):
     community = get_object_or_404(Community, id=community_id)
     area = get_object_or_404(Area, id=area_id, community=community)
@@ -123,7 +120,16 @@ def seedbed_detail_view(request, community_id, area_id, seedbed_id):
         estimativa_colheita_formatada = DateFormat(estimativa_colheita).format('d \d\e F \d\e Y')
     else:
         estimativa_colheita_formatada = None
-    
+    actions_interval = None
+    next_actions_dates = {}
+    if selected_product and selected_product.type_product and selected_product.type_product.actions_interval:
+        actions_interval = selected_product.type_product.actions_interval
+        for action, days in actions_interval.items():
+            next_action_date = timezone.now() + timedelta(days=days)
+            while next_action_date <= timezone.now():
+                next_action_date += timedelta(days=days)
+            next_actions_dates[action] = next_action_date
+
     if request.method == 'POST' and 'quantidade_colhida' in request.POST:
         quantidade_colhida = int(request.POST.get('quantidade_colhida', 0))
         if selected_product and selected_product.type_product:
@@ -143,8 +149,9 @@ def seedbed_detail_view(request, community_id, area_id, seedbed_id):
         'products': products,
         'selected_product': selected_product,
         'estimativa_colheita': estimativa_colheita_formatada,
+        'next_actions_dates': next_actions_dates,
     }
-
+    print("Dicionario: ", actions_interval)
     return render(request, 'seedbed_detail.html', context)
 
 def harvest_product_view(request, community_id, area_id, seedbed_id, product_id):

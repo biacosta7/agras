@@ -161,10 +161,15 @@
                 <span class="text-lg font-semibold mr-12">Tarefas:</span>
                 <div id="to-do-list">
                     <ul class="list-disc ml-5">
-                        <li>Regar</li>
-                        <li>Fertilizar</li>
+                        {% if next_actions_dates %}
+                            {% for action, date in next_actions_dates.items %}
+                                <li>{{ action }} - Próxima atividade: {{ date|date:"d \d\e F \d\e Y" }}</li>
+                            {% endfor %}
+                        {% else %}
+                            <li>Sem atividades programadas.</li>
+                        {% endif %}
                     </ul>
-                </div>
+                </div>         
                 <p>
                     <a href="#" id="read-more" onclick="toggleToDo()" 
                     class="mt-3 ml-1 text-[#5F8C1B] font-semibold hover:text-[#8ABF17] transition duration-200 inline-block">
@@ -181,7 +186,7 @@
                 <br>
                 <p>
                     <span class="text-lg font-semibold mr-2">Produção esperada: </span>
-                    <span class="text-lg" id="expected-production">100</span>
+                    <span class="text-lg" id="expected-production">{{ selected_product.quantidade }}</span>
                 </p>
                 <br>
                 <p> 

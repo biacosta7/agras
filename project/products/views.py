@@ -87,6 +87,17 @@ def create_typeproduct_view(request, community_id, area_id, seedbed_id):
     if request.method == 'POST':
         nome = request.POST.get('nome').capitalize()
         lifecycle = request.POST.get('lifecycle')
+        irrigacao = request.POST.get('irrigacao')
+        poda = request.POST.get('poda')
+        manejo = request.POST.get('manejo')
+
+        actions_interval = {}
+        if irrigacao:
+            actions_interval["irrigação"] = int(irrigacao)
+        if poda:
+            actions_interval["poda"] = int(poda)
+        if manejo:
+            actions_interval["manejo"] = int(manejo)
 
         # Verificando se o tipo de produto já existe na mesma comunidade
         if TypeProduct.objects.filter(name=nome, community=community).exists():
@@ -98,6 +109,7 @@ def create_typeproduct_view(request, community_id, area_id, seedbed_id):
             name=nome,
             community=community,
             lifecycle=lifecycle,
+            actions_interval=actions_interval,
         )
 
         messages.success(request, f'Novo cultivo {typeproduct.name} criado com sucesso na comunidade {community.name}.')
