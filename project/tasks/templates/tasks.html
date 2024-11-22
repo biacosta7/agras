@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Tarefas {{ community.name }}{% endblock %}
+
+{% block content %}
+<div class="flex-grow fade-down px-4 lg:px-8 py-10 ml:0 lg:ml-[250px] mt-12 lg:mt-[90px]">
+    <div class="flex md:flex-row flex-col justify-between mt-4">
+        <header class="mb-6">
+            <h1 class="text-[44px] lg:text-[48px] font-semibold mt-2 ">Gerenciar <span class="font-medium">tarefas</span></h1>
+        </header>
+        
+        <div class="flex flex-row items-center space-x-6">
+            <div class="relative max-w-[411px]"> 
+                <input type="text" placeholder="Pesquise por tarefas..." class="w-full rounded-[8px] bg-[#F5F5F7] shadow-sm py-2 px-4 pl-10 focus:outline-none">
+                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 material-icons text-[#8ABF17] cursor-pointer">search</span>
+            </div>
+            <button id="addArea" class="bg-[#8ABF17] text-white font-semibold flex items-center justify-center rounded-[9px] hover:bg-[#7cad10] hover:text-[#edf0e9] h-[50px] px-4" onclick="toggleModal('create')">
+                <span class="text-3xl items-center mr-2">+</span> Adicionar Tarefa
+            </button>
+        </div>
+        
+        <!-- Modal para criar tarefas -->
+        <div id="areaModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50">
+            <div class="bg-white px-16 py-12 rounded-xl w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] max-w-[596px] max-h-[663px] overflow-y-auto">
+              <h2 id="modalTitle" class="text-2xl font-bold mb-4 text-[#8ABF17]">Adicionar Tarefa</h2>
+              <p class="font-medium text-lg mb-4">Preencha os espaços abaixo para criar uma nova tarefa:</p>
+          
+              <form action="{% url 'task_page' community.id %}" method="post">
+            {% csrf_token %}
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="title" class="text-sm font-medium text-gray-700 mb-1 flex"><span class="material-icons text-[#8ABF17] items-center text-[18px] mr-1">title</span>Título Tarefa*</label>
+                    <input id="title" name="title" class="w-full border h-[41px] border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] py-2 px-3 resize-y" required></input>
+                </div>
+                <div>
+                    <label for="description" class="text-sm font-medium text-gray-700 mb-1 flex"><span class="material-icons text-[#8ABF17] items-center text-[18px] mr-1">description</span>Descrição*</label>
+                    <textarea id="description" name="description" class="w-full border h-[41px] border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] py-2 px-3 resize-y" required></textarea>
+                </div>
+                <div>
+                  <label for="local" class="text-sm font-medium text-gray-700 mb-1 flex"><span class="material-icons text-[#8ABF17] items-center text-[18px] mr-1">location_on</span>Local</label>
+                  <select id="local" name="local" class="w-full border border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] py-2 px-3" required>
+                    <option value="">Escolher...</option>
+                    {% for value, place in place_choices %}
+                    <option class="" value="{{value}}">{{place}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div>
+                  <label for="start_date" class="text-sm font-medium text-gray-700 mb-1 flex"><span class="material-icons text-[#8ABF17] items-center text-[18px] mr-1">schedule</span>Data Inicial</label>
+                  <input type="date" id="start_date" name="start_date" class="w-full border border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] py-2 px-3" placeholder="" required>
+                </div>
+                <div>
+                  <label for="priority" class="text-sm font-medium text-gray-700 mb-1 flex"><span class="material-icons text-[#8ABF17] items-center text-[18px] mr-1">error</span>Prioridade</label>
+                  <select id="priority" name="priority" class="w-full border border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] py-2 px-3" required>
+                    <option value="">Escolher...</option>
+                   {% for value, priority in priority_choices %} 
+                   <option class="" value="{{value}}">{{priority}}</option>
+                   {% endfor %}
+                  </select>
+                </div>
+                <div>
+                  <label for="final_date" class="text-sm font-medium text-gray-700 mb-1 flex"><span class="material-icons text-[#8ABF17] items-center text-[18px] mr-1">schedule</span>Data Final</label>
+                  <input type="date" id="final_date" name="final_date" class="w-full border border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] py-2 px-3" placeholder="" required>
+                </div>
+                <div >
+                  <label for="responsible_users" class="text-sm font-medium text-gray-700 mb-1 flex"> <span class="material-icons text-[#8ABF17] items-center text-[18px] mr-1">person</span> Responsável</label>
+                  <div>
+                    <select id="responsible_users" name="responsible_users[]" multiple>
+                        {% for member in community.members.all %}
+                            <option value="{{ member.id }}">{{ member.username }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                </div>
+                <div>
+                  <label for="status" class="text-sm font-medium text-gray-700 mb-1 flex"><span class="material-icons text-[#8ABF17] items-center text-[18px] mr-1">radio_button_checked</span>Status</label>
+                  <select id="status" name="status" class="w-full border border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] py-2 px-3">
+                    <option value="pendente">Pendente</option>
+                    {% for value, status in status_choices%}
+                    <option class="" value="{{value}}">{{status}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="flex mt-6">
+                <button type="button" class="bg-white border-2 border-[#8ABF17] hover:border-[#7aab0f] text-[#8ABF17] hover:text-[#7aab0f] font-bold px-6 py-3 rounded-md mr-2 w-full" onclick="toggleModal('close')">Cancelar</button>
+                <button type="submit" class="bg-[#8ABF17] text-white font-bold px-6 py-3 hover:bg-[#7aab0f] rounded-md w-full">Criar</button>
+              </div>
+            </form>
+            </div>
+        </div>
+    </div>
+    <br/>
+    {% for task in tasks %}
+    Title: {{ task.title }} <br>
+    Description: {{ task.description }} <br>
+    Is Completed: {{ task.is_completed }} <br>
+    Start Date: {{ task.start_date }} <br>
+    Final Date: {{ task.final_date }} <br>
+    Status: {{ task.get_status_display }} <br>  <!-- Use get_status_display to get the human-readable value -->
+    Priority: {{ task.get_priority_display }} <br> <!-- Use get_priority_display for the human-readable value -->
+    Local: {{ task.get_local_display }} <br>  <!-- Use get_local_display -->
+    Community: {{ task.community }} <br>
+    Area: {{ task.area }} <br>
+    Seedbed: {{ task.seedbed }} <br>
+    Type Product: {{ task.type_product }} <br>
+    Product: {{ task.product }} <br>
+    Responsible Users:
+    {% for user in task.responsible_users.all %}
+        {{ user.username }}   <!-- Assuming you want to display the username -->
+    {% endfor %}
+  
+    <hr>  <!-- Separator between tasks -->
+{% endfor %}
+</div>
+
+<link rel="stylesheet" href="{% static 'virtual-selector/virtual-select.min.css' %}">
+<script src="{% static 'virtual-selector/virtual-select.min.js' %}"></script>
+
+<script>
+    
+    document.addEventListener('DOMContentLoaded', function() { // Garante que o DOM esteja carregado
+            VirtualSelect.init({
+                ele: '#responsible_users',
+                placeholder: 'Selecione os responsáveis',
+                search: true,
+                multiple: true,
+                noOptionsText: 'Nenhum usuário encontrado',
+                selectAllText: 'Selecionar todos',
+                selectedTextFormat: 'count > 2'
+            });
+        });
+
+function toggleModal(action) {
+    const areaModal = document.getElementById('areaModal'); 
+
+    if (action === 'create') {
+        areaModal.classList.remove('hidden'); // Mostra o modal de criar área
+        document.getElementById('areaForm').reset(); 
+    } 
+    else if (action === 'close') {
+        areaModal.classList.add('hidden'); // Esconde o modal de criar área
+        manageModal.classList.add('hidden'); 
+    } 
+}
+
+</script>
+
+
+{% endblock %}
+
+
