@@ -4,7 +4,7 @@ from .models import Task
 from products.models import Product, TypeProduct
 from areas.models import Area
 from seedbeds.models import Seedbed
-from communities.models import Community
+from communities.models import Community, MembershipRequest
 from django.contrib import messages
 from users.models import User
 
@@ -59,7 +59,7 @@ def task_page(request, community_id):
 
 
     tasks = Task.objects.filter(community=community) # Buscando as tarefas depois do processamento do POST
-
+    membership_requests = MembershipRequest.objects.filter(community=community, status='pending')
     context = {
         'tasks': tasks,
         'community': community,
@@ -67,7 +67,8 @@ def task_page(request, community_id):
         'all_seedbeds': all_seedbeds_in_specific_area,
         'status_choices': Task.STATUS_CHOICES,
         'priority_choices': Task.PRIORITY,
-        'place_choices': Task.TYPE_CHOICES
+        'place_choices': Task.TYPE_CHOICES,
+        'membership_requests': membership_requests,
     }
     return render(request, 'tasks.html', context)
 
@@ -77,7 +78,7 @@ def list_tasks(request, community_id, area_id=None, seedbed_id=None, product_id=
 
     community = get_object_or_404(Community, id=community_id)
     tasks = tasks.filter(community=community)
-
+    membership_requests = MembershipRequest.objects.filter(community=community, status='pending')
     # Filtrando com base no area_id, seedbed_id, e product_id (se fornecido)
     if area_id:
         area = get_object_or_404(Area, id=area_id)
@@ -98,4 +99,5 @@ def list_tasks(request, community_id, area_id=None, seedbed_id=None, product_id=
         'area': area if area_id else None,
         'seedbed': seedbed if seedbed_id else None,
         'product': product if product_id else None,
+        'membership_requests': membership_requests,
     })
