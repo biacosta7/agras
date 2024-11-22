@@ -8,3 +8,4 @@ gunicorn
 whitenoise
 selenium
 google-generativeai
+azure-cognitiveservices-speech

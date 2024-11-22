@@ -6,6 +6,17 @@ from areas.models import Area
 from communities.models import Community, MembershipRequest
 from seedbeds.models import Seedbed
 from django.utils import timezone
+import azure.cognitiveservices.speech as speechsdk
+import os
+from django.http import HttpResponse
+import json
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+import logging
+from django.http import JsonResponse
+
+logger = logging.getLogger(__name__)
+
 
 @login_required
 def home_view(request):
@@ -195,3 +206,83 @@ def list_members(request, community_id):
 
     return render(request, 'list_members.html', context)
 
+
+def read_page(request):
+    try:
+        if request.method == 'POST':
+            data = json.loads(request.body)
+            text = data.get('text')
+            url = data.get('url')
+            
+            logger.info(f"Received request from URL: {url}")
+            
+            if not text:
+                logger.error("No text provided in request")
+                return JsonResponse({'error': 'No text provided'}, status=400)
+
+            speech_key = os.getenv('AZURE_SPEECH_KEY')
+            speech_region = os.getenv('AZURE_SPEECH_REGION')
+            
+            if not speech_key or not speech_region:
+                logger.error("Azure credentials not properly configured")
+                return JsonResponse({
+                    'error': 'Speech service not properly configured'
+                }, status=500)
+
+            try:
+                speech_config = speechsdk.SpeechConfig(
+                    subscription=speech_key, 
+                    region=speech_region
+                )
+                # Set Brazilian Portuguese language and voice
+                speech_config.speech_synthesis_language = "pt-BR"
+                speech_config.speech_synthesis_voice_name = "pt-BR-BrendaNeural"  # Female voice
+                # Alternative voices:
+                # "pt-BR-AntonioNeural" for male voice
+                # "pt-BR-BrendaNeural" for another female voice
+                
+                audio_config = speechsdk.audio.AudioOutputConfig(use_default_speaker=True)
+                
+                synthesizer = speechsdk.SpeechSynthesizer(
+                    speech_config=speech_config, 
+                    audio_config=audio_config
+                )
+                
+                logger.info("Azure speech service configured successfully")
+                
+                result = synthesizer.speak_text_async(text).get()
+                
+                if result.reason == speechsdk.ResultReason.SynthesizingAudioCompleted:
+                    logger.info("Speech synthesis completed successfully")
+                    audio_data = result.audio_data
+                    return HttpResponse(
+                        audio_data, 
+                        content_type='audio/wav'
+                    )
+                else:
+                    logger.error(f"Speech synthesis failed: {result.reason}")
+                    return JsonResponse({
+                        'error': 'Speech synthesis failed'
+                    }, status=500)
+                    
+            except Exception as azure_error:
+                logger.error(f"Azure service error: {str(azure_error)}")
+                return JsonResponse({
+                    'error': 'Speech service error'
+                }, status=500)
+        else:
+            logger.warning(f"Invalid request method: {request.method}")
+            return JsonResponse({
+                'error': 'Method not allowed'
+            }, status=405)
+            
+    except json.JSONDecodeError as json_error:
+        logger.error(f"JSON decode error: {str(json_error)}")
+        return JsonResponse({
+            'error': 'Invalid JSON in request'
+        }, status=400)
+    except Exception as e:
+        logger.error(f"Unexpected error in read_page: {str(e)}")
+        return JsonResponse({
+            'error': 'Internal server error'
+        }, status=500)

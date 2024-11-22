@@ -85,10 +85,205 @@
              </div>
         </div>
     </div>
+
+    <div class="flex flex-col">
+        <div class="flex flex-col h-full w-full">
+            <div class="flex flex-col gap-2">
+                <button onclick="openModal()" class="bg-[#8ABF17] shadow-md p-6 h-[100px] rounded-[18px] text-white flex flex-row items-center lg:mt-0 cursor-pointer">
+                    <div>
+                        <p class="font-bold text-[16px] lg:text-[18px] text-left">Criar Tarefa</p>
+                        <p class="font-medium text-[12px] lg:text-[14px]">Crie uma nova task</p>
+                    </div>
+                    <div class="ml-auto bg-[#F76711] rounded-full flex items-center justify-center w-[50px] h-[50px] lg:w-[60px] lg:h-[60px]">
+                        <span class="material-icons text-white" style="font-size: 40px;">add</span>
+                    </div>
+                </button>                
+
+                <a href="{% url 'list_tasks' community.id %}" class="">
+                    <div class="bg-[#8ABF17] shadow-md p-6 h-[100px] rounded-[18px] text-white flex flex-row items-center lg:mt-0 cursor-pointer">
+                        <div>
+                            <p class="font-bold text-[16px] lg:text-[18px]">Visualizar Tarefas</p>
+                            <p class="font-medium text-[12px] lg:text-[14px]">Veja a lista de tarefas</p>
+                        </div>
+                        <div class="ml-auto bg-[#F76711] rounded-full flex items-center justify-center w-[50px] h-[50px] lg:w-[60px] lg:h-[60px]">
+                            <span class="material-icons text-white" style="font-size: 40px; lg:font-size: 50px;">add</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="{% url 'area_manage' community.id %}" class="">
+                    <div class="bg-[#8ABF17] shadow-md p-6 h-[100px] rounded-[18px] text-white flex flex-row items-center lg:mt-0 cursor-pointer">
+                        <div>
+                            <p class="font-bold text-[16px] lg:text-[18px]">Criar Tarefa</p>
+                            <p class="font-medium text-[12px] lg:text-[14px]">Crie uma nova task</p>
+                        </div>
+                        <div class="ml-auto bg-[#F76711] rounded-full flex items-center justify-center w-[50px] h-[50px] lg:w-[60px] lg:h-[60px]">
+                            <span class="material-icons text-white" style="font-size: 40px; lg:font-size: 50px;">add</span>
+                        </div>
+                    </div>
+                </a>
+                <a href="{% url 'area_manage' community.id %}" class="">
+                    <div class="bg-[#8ABF17] shadow-md p-6 h-[100px] rounded-[18px] text-white flex flex-row items-center lg:mt-0 cursor-pointer">
+                        <div>
+                            <p class="font-bold text-[16px] lg:text-[18px]">Criar Tarefa</p>
+                            <p class="font-medium text-[12px] lg:text-[14px]">Crie uma nova task</p>
+                        </div>
+                        <div class="ml-auto bg-[#F76711] rounded-full flex items-center justify-center w-[50px] h-[50px] lg:w-[60px] lg:h-[60px]">
+                            <span class="material-icons text-white" style="font-size: 40px; lg:font-size: 50px;">add</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="bg-[#F5F5F7] shadow-md rounded-[23px] mt-6 h-full p-6">
+                <h1 class="text-[#F7833F] font-bold text-xl">Precisa de ajuda?</h1>
+            </div>
+        </div>
+    </div>
+    {% include 'add_task.html' %}
+
 </div>
 
+<!-- Adicione o CSS do FullCalendar -->
+<link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/pt-br.js'></script>
+<script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script> {% comment %} script do calendario do adicionar task {% endcomment %}
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 
- </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Inicialização do calendário
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: 'pt-br',
+            headerToolbar: {
+                left: 'prev,next',
+                center: 'title',
+                right: ''
+            },
+        });
+        calendar.render();
+
+        // Personalização dos botões do calendário
+        const buttons = document.querySelectorAll('.fc-prev-button, .fc-next-button, .fc-today-button');
+        buttons.forEach(button => {
+            button.style.backgroundColor = '#F76711';
+            button.style.color = 'white';
+            button.style.border = 'none';
+            button.style.padding = '0.5rem 1rem'; // Adicionado padding
+            button.style.borderRadius = '0.25rem'; // Adicionado border-radius
+        });
+    });
+
+    // Abrir e fechar o menu
+    const menuBtn = document.getElementById('menu-btn');
+    const mobileSidebar = document.getElementById('mobile-sidebar');
+    const closeMenu = document.getElementById('close-menu');
+
+    menuBtn.addEventListener('click', () => {
+        mobileSidebar.classList.remove('hidden');
+        requestAnimationFrame(() => {
+            mobileSidebar.classList.add('transform', 'translate-x-0');
+        });
+    });
+
+    closeMenu.addEventListener('click', () => {
+        mobileSidebar.classList.remove('transform', 'translate-x-0');
+        // Espera a animação de fechamento terminar antes de adicionar a classe 'hidden'
+        mobileSidebar.addEventListener('transitionend', function handleTransitionEnd() {
+            mobileSidebar.classList.add('hidden');
+            mobileSidebar.removeEventListener('transitionend', handleTransitionEnd);
+        });
+    });
+
+    document.getElementById('addTaskForm').onsubmit = function(event) {
+        event.preventDefault();
+        const form = event.target;
+        const formData = new FormData(form);
+
+        fetch(form.action, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+            },
+            body: formData,
+        })
+        .then(response => {
+            if (response.ok) {
+                document.getElementById('successMessage').style.display = 'block';
+                form.reset();
+                setTimeout(() => location.reload(), 1000); // Recarrega para atualizar a lista
+            } else {
+                console.error('Erro ao adicionar a tarefa.');
+            }
+        });
+    };
+
+    function openModal() {
+        document.getElementById('taskModal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+        document.getElementById('taskModal').classList.add('hidden');
+    }
+
+
+</script>
+
+<style>
+    /* Estilos gerais do calendário */
+    .fc {
+        font-family: sans-serif; /* Fonte mais moderna */
+    }
+
+    .fc-toolbar-title {
+        text-transform: uppercase;
+        font-weight: bold;
+        color: #8ABF17;
+        font-size: 1.2rem; /* Tamanho da fonte maior */
+    }
+
+    .fc-event {
+        font-size: 0.9em;
+        padding: 0.5em; /* Espaçamento interno nos eventos */
+        border-radius: 0.25rem; /* Cantos arredondados nos eventos*/
+    }
+    .fc-daygrid-event { /* altura dos eventos */
+        height: 1.5em;
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+        .fc-header-toolbar {
+            font-size: 0.8rem; /* Fonte menor em telas menores */
+        }
+
+        .fc-toolbar-chunk {
+            display: flex;
+            flex-wrap: wrap; /* Permite que os botões quebrem a linha */
+            justify-content: center;
+        }
+
+        .fc-prev-button, .fc-next-button, .fc-today-button {
+            padding: 0.25rem 0.5rem; /* Padding menor em telas menores*/
+        }
+
+        .fc-daygrid-event {
+            font-size: 0.75em; /* Fonte dos eventos menor */
+        }
+    }
+    #calendar {
+       max-width: 90%; /* Ocupar 90% da largura disponível */
+        margin: 20px auto; /* Margem superior/inferior de 20px e centralizado */
+        width: 95%; /* Largura de 95% */
+        max-width: 800px; /* Largura máxima de 800px */
+        margin: 0 auto; /* Centraliza o calendário */
+    }
+
+
+
+</style>
 {% endblock %}
 
 

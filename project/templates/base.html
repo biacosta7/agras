@@ -74,6 +74,9 @@
                         </div>
                     </div>
                 </div>   
+                <button id="readPageButton">Ler Página</button>
+                <button id="pauseButton" disabled>Pausar</button>
+                <button id="restartButton" disabled>Reinciar</button>
 
                 <div class="flex items-center cursor-pointer z-20"> 
                     <a href="{% url 'edit' %}" class="flex flex-row items-center">
@@ -375,10 +378,29 @@
         transform: translateX(0);
     }
     }
+    button {
+        margin: 5px;
+        padding: 8px 16px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        background-color: #fff;
+        cursor: pointer;
+    }
+    
+    button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    
+    button:hover:not(:disabled) {
+        background-color: #f0f0f0;
+    }    
 
     {% endblock styles %}
 </style>
 
+{% block scripts %}
+<script src="{% static 'js/reader.js' %}"></script>
 <script>
 const mobileMenuButton = document.getElementById('mobile-menu-button');
 const mobileMenu = document.getElementById('mobile-menu');
@@ -461,4 +483,5 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
 </script>
+{% endblock scripts %}
 </html>
