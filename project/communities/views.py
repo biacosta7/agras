@@ -138,7 +138,7 @@ def create_community(request):
         )
 
         community.admins.add(creator)
-
+        community.members.add(creator)
         messages.success(request, 'Comunidade cadastrada com sucesso.')
         return redirect('community_hub')
 
