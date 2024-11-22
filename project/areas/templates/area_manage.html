@@ -1,6 +1,6 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load static %}
-{% block title %}Áreas{% endblock %}
+{% block title %}Áreas{% endblock %}""
 
 {% block content %}
 <style>
@@ -150,7 +150,7 @@
                 <div class="text-center col-span-full mt-[15vh]">
                     <div class="flex flex-col items-center justify-center">
                         <img src="{% static 'assets/Ativo 304x.png' %}" alt="Plantas" class="w-64 mb-4">
-                        <h1 class="font-bold text-[24px]">Nenhuma área de plantio criada na comunidade {{community.name}}</h1>
+                        <h1 class="font-bold text-[24px]">Nenhuma área de plantio criada na comunidade "{{community.name}}"</h1>
                         <p class="font-normal text-[16px]">Clique no botão abaixo para criar áreas de plantio e visualizá-los</p>
                         <button id="addCommunityBtn" class="mt-4 bg-[#8ABF17] text-white font-semibold px-6 py-3 rounded-[9px] mb-6 hover:bg-[#7cad10] hover:text-[#edf0e9]" onclick="toggleModal('create')">
                             Criar Área de Plantio
