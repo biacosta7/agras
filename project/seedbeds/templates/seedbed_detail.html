@@ -211,12 +211,13 @@
         </div>
         <h3>Histórico de Colheitas</h3>
         <ul>
-            {% for harvest in selected_product.type_product.harvests.all %}
-                 <li>{{ harvest.data_colheita }}: {{ harvest.quantidade_colhida }} unidades colhidas</li>
+            {% for product in selected_product.type_product.products.all %}
+                <li>{{ product.data_colheita }}: {{ product.quantidade_colhida }} unidades colhidas</li>
             {% empty %}
                 <li>Sem registros de colheita.</li>
             {% endfor %}
         </ul>
+
         {% endif %}
     
         <!-- Modal de Confirmação de Exclusão -->
@@ -247,13 +248,6 @@
                             value="{{ selected_product.quantidade }}" required>
                     </div>
 
-                    <!-- Campo para editar data de plantio -->
-                    <div class="mt-4">
-                        <label for="edit-data-plantio" class="block font-semibold">Data de Plantio:</label>
-                        <input type="date" id="edit-data-plantio" name="data_plantio" class="w-full border border-gray-300 p-2 rounded" 
-                            value="{{ selected_product.data_plantio|date:'Y-m-d' }}" required>
-                    </div>
-
                     <!-- Botões de ação -->
                     <div class="mt-6 flex justify-end">
                         <button type="button" class="bg-gray-300 text-black py-2 px-4 rounded hover:bg-gray-400 transition duration-200 mr-2" onclick="closeEditModal()">Cancelar</button>
@@ -269,13 +263,13 @@
                 <h1 class="mt-2 font-bold">Colher "{{ selected_product.type_product.name }}"</h1>
         
                 <!-- Formulário de Colheita -->
-                <form id="harvest-product-form" method="POST" action="{% url 'harvest_product' community.id area.id seedbed.id selected_product.id %}">
+                <form id="harvest-product-form" method="POST" action="{% url 'seedbed_detail' community.id area.id seedbed.id %}">
                     {% csrf_token %}
                     
                     <!-- Campo para inserir a data de colheita -->
                     <div class="mt-4">
                         <label for="harvest-date" class="block font-semibold">Data de Colheita:</label>
-                        <input type="date" id="harvest-date" name="harvest_date" class="w-full border border-gray-300 p-2 rounded" required>
+                        <input type="date" id="harvest_date" name="harvest_date" class="w-full border border-gray-300 p-2 rounded" required>
                     </div>
         
                     <!-- Campo para inserir a quantidade colhida -->

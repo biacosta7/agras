@@ -31,11 +31,12 @@ class TypeProduct(models.Model):
         self.save()
 
 class Product(models.Model):
-    type_product = models.ForeignKey(TypeProduct, on_delete=models.CASCADE, null=True)
+    type_product = models.ForeignKey(TypeProduct, on_delete=models.CASCADE, related_name='products', null=True)
     seedbed = models.ForeignKey(Seedbed, on_delete=models.CASCADE, related_name='products_in_seedbed', null=True, blank=True)  
-    
-    data_plantio = models.DateField()
+    data_plantio = models.DateField(default=timezone.now)
     quantidade = models.IntegerField(default=1)
+    quantidade_colhida = models.IntegerField(default=0, null=True, blank=True)
+    data_colheita = models.DateField(null =True, blank = True)  # Campo para a data da colheita
 
     def get_absolute_url(self):
         return f"/products/{self.id}/"
@@ -43,12 +44,3 @@ class Product(models.Model):
     @property
     def name_type_product(self):
         return self.type_product.name
-
-class Harvest(models.Model):
-    type_product = models.ForeignKey(TypeProduct, on_delete=models.CASCADE, related_name='harvests')
-    seedbed = models.ForeignKey(Seedbed, on_delete=models.CASCADE, related_name='harvests', null=True, blank=True)
-    quantidade_colhida = models.IntegerField(null = True, blank = True)  # Campo para a quantidade colhida
-    data_colheita = models.DateTimeField(default=timezone.now)  # Campo para a data da colheita
-
-    def __str__(self):
-        return f"{self.quantidade_colhida} unidades de {self.type_product.name} colhidas em {self.data_colheita}"

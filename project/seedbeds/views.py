@@ -4,14 +4,14 @@ from seedbeds.models import Seedbed
 from communities.models import Community  
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from products.models import Product, TypeProduct, Harvest
+from products.models import Product, TypeProduct
 from areas.models import Area
 from django.http import JsonResponse
 from dateutil.relativedelta import relativedelta
 from django.utils import timezone
 from dateutil.relativedelta import relativedelta
 from django.utils.dateformat import DateFormat
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 @login_required
 def list_seedbeds(request, community_id, area_id):
@@ -132,16 +132,18 @@ def seedbed_detail_view(request, community_id, area_id, seedbed_id):
 
     if request.method == 'POST' and 'quantidade_colhida' in request.POST:
         quantidade_colhida = int(request.POST.get('quantidade_colhida', 0))
+        data_colheita_input = request.POST.get('harvest_date')
         if selected_product and selected_product.type_product:
+            if selected_product.quantidade_colhida is None:
+                selected_product.quantidade_colhida = 0
             # Criando uma nova colheita
-            Harvest.objects.create(
-                type_product=selected_product.type_product,
-                seedbed=seedbed,
-                quantidade_colhida=quantidade_colhida,
-                data_colheita=timezone.now()
-
-            )
+            selected_product.quantidade_colhida += quantidade_colhida
+            if data_colheita_input:
+                data_colheita = datetime.strptime(data_colheita_input, "%Y-%m-%d").date()
+                selected_product.data_colheita = data_colheita
+            selected_product.save()
             messages.success(request, f'{quantidade_colhida} unidades colhidas registradas para o tipo {selected_product.type_product.name}.')
+            print(f"{quantidade_colhida}")
     context = {
         'community': community,
         'area': area,
@@ -154,24 +156,24 @@ def seedbed_detail_view(request, community_id, area_id, seedbed_id):
     print("Dicionario: ", actions_interval)
     return render(request, 'seedbed_detail.html', context)
 
-def harvest_product_view(request, community_id, area_id, seedbed_id, product_id):
-    # Carrega as instâncias da comunidade, área, canteiro e produto
-    community = get_object_or_404(Community, id=community_id)
-    area = get_object_or_404(Area, id=area_id, community=community)
-    seedbed = get_object_or_404(Seedbed, id=seedbed_id, area=area)
-    product = get_object_or_404(Product, id=product_id, seedbed=seedbed)
+# def harvest_product_view(request, community_id, area_id, seedbed_id, product_id):
+#     # Carrega as instâncias da comunidade, área, canteiro e produto
+#     community = get_object_or_404(Community, id=community_id)
+#     area = get_object_or_404(Area, id=area_id, community=community)
+#     seedbed = get_object_or_404(Seedbed, id=seedbed_id, area=area)
+#     product = get_object_or_404(Product, id=product_id, seedbed=seedbed)
 
-    if request.method == 'POST':
-        quantidade_colhida = int(request.POST.get('quantidade_colhida', 0))
-        if product and product.type_product:
-            # Cria uma nova colheita
-            Harvest.objects.create(
-                type_product=product.type_product,
-                seedbed=seedbed,
-                quantidade_colhida=quantidade_colhida,
-                data_colheita=timezone.now()
-            )
-            messages.success(request, f'{quantidade_colhida} unidades colhidas registradas para o tipo {product.type_product.name}.')
+#     if request.method == 'POST':
+#         quantidade_colhida = int(request.POST.get('quantidade_colhida', 0))
+#         if product and product.type_product:
+#             # Cria uma nova colheita
+#             Product.objects.create(
+#                 type_product=product.type_product,
+#                 seedbed=seedbed,
+#                 quantidade_colhida=quantidade_colhida,
+#                 data_colheita=timezone.now()
+#             )
+#             messages.success(request, f'{quantidade_colhida} unidades colhidas registradas para o tipo {product.type_product.name}.')
 
-    # Redireciona de volta para a página de detalhes do canteiro após salvar a colheita
-    return redirect('seedbed_detail', community_id=community.id, area_id=area.id, seedbed_id=seedbed.id)
+#     # Redireciona de volta para a página de detalhes do canteiro após salvar a colheita
+#     return redirect('seedbed_detail', community_id=community.id, area_id=area.id, seedbed_id=seedbed.id)

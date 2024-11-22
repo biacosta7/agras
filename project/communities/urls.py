@@ -30,7 +30,7 @@ urlpatterns = [
     path('comunidade/<int:community_id>/areas/<int:area_id>/canteiros/editar/<int:seedbed_id>/', seedbed_views.edit_seedbed, name='update_seedbed'),
     path('comunidade/<int:community_id>/areas/<int:area_id>/canteiros/deletar/<int:seedbed_id>/', seedbed_views.delete_seedbed, name='delete_seedbed'),
     path('comunidade/<int:community_id>/areas/<int:area_id>/canteiros/<int:seedbed_id>/produtos/detalhes/', seedbed_views.seedbed_detail_view, name='seedbed_detail'),
-    path('community/<int:community_id>/area/<int:area_id>/seedbed/<int:seedbed_id>/harvest/<int:product_id>/',seedbed_views.harvest_product_view, name='harvest_product'),
+    # path('community/<int:community_id>/area/<int:area_id>/seedbed/<int:seedbed_id>/harvest/<int:product_id>/',seedbed_views.harvest_product_view, name='harvest_product'),
     # URLs para produtos dentro de um canteiro
     path('comunidade/<int:community_id>/areas/<int:area_id>/canteiros/<int:seedbed_id>/produtos/', product_views.product_list_view, name='product_list'),
     path('comunidades/comunidade/<int:community_id>/areas/<int:area_id>/canteiros/<int:seedbed_id>/produtos/cadastrar/', product_views.create_typeproduct_view, name='create_typeproduct'),
