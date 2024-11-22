@@ -1,110 +1,75 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponseBadRequest
-from django.utils import timezone
+from django.shortcuts import redirect, render, get_object_or_404
+from django.db import IntegrityError
 from .models import Task
-from users.models import User
 from products.models import Product, TypeProduct
 from areas.models import Area
 from seedbeds.models import Seedbed
 from communities.models import Community
-from django.urls import reverse
 from django.contrib import messages
-from django.http import JsonResponse
+from users.models import User
 
-def add_task(request, community_id, area_id=None, seedbed_id=None, product_id=None, type_product_id=None):
+def task_page(request, community_id):
     community = get_object_or_404(Community, id=community_id)
-    users = community.members.all().union(community.admins.all()) if community else None
-
-    if request.method == 'POST':
+    all_areas_in_specific_community = Area.objects.filter(community=community)
+    all_seedbeds_in_specific_area = Seedbed.objects.filter(area__in=all_areas_in_specific_community)
+    
+    if request.method == "POST":
         title = request.POST.get('title')
         description = request.POST.get('description')
-        is_completed = request.POST.get('is_completed') == 'on'
+        local = request.POST.get('local')
         start_date = request.POST.get('start_date')
-        deadline = request.POST.get('deadline')
-        recurrence = request.POST.get('recurrence')
+        final_date = request.POST.get('final_date')
         priority = request.POST.get('priority')
-        responsible_user_ids = request.POST.getlist('responsible_users[]')
-        print(request.POST)  # Adiciona esta linha para inspecionar os dados recebidos
-
-        if not title or not deadline or not start_date:
-            print('Título e data são obrigatórios.')
-            return JsonResponse({'error': 'Título e data de vencimento são obrigatórios.'}, status=400)
+        status = request.POST.get('status')
+        responsible_users_raw = request.POST.get('responsible_users[]', '')
+        responsible_users_ids = responsible_users_raw.split(',') if responsible_users_raw else []
         
+        if start_date > final_date:
+            messages.error(request, "A data final não pode ser antes da data inicial.")
+            return redirect('task_page', community_id=community_id)
+
         try:
-            start_date = timezone.datetime.strptime(start_date, '%d-%m-%Y')
-            deadline = timezone.datetime.strptime(deadline, '%d-%m-%Y')
+            responsible_users_ids = [int(id.strip()) for id in responsible_users_ids]
         except ValueError:
-            print("Formato de data inválido. Use 'DD/MM/AAAA")
-            return JsonResponse({'error': "Formato de data inválido. Use 'DD/MM/AAAA'."}, status=400)
+            messages.error(request, "IDs inválidos fornecidos para usuários responsáveis.")
+            responsible_users_ids = []
 
-        # Cria a tarefa
-        task = Task(
-            title=title,
-            description=description,
-            is_completed=is_completed,
-            start_date = start_date,
-            deadline=deadline,
-            recurrence=recurrence,
-            status='to_do', 
-            priority=priority,
-            community=community,
-            # area_id=area_id,
-            # seedbed_id=seedbed_id,
-            # product_id=product_id,
-            # type_product_id=type_product_id,
-        )
-        task.save()
+        if not description or not local or not start_date or not priority or not status or not responsible_users_ids:
+            messages.error(request, 'Todos os campos são obrigatórios.')
+        else:
+            try:
+                task = Task.objects.create(
+                    title=title,
+                    community=community, 
+                    description=description,
+                    local=local,
+                    start_date=start_date,
+                    final_date= final_date,
+                    priority=priority,
+                    status=status,
+                )
 
-        # Configura o relacionamento many-to-many para usuários responsáveis
-        if responsible_user_ids:
-            user_ids = [int(uid) for uid in responsible_user_ids if uid]
-            users = User.objects.filter(id__in=user_ids)
-            task.responsible_users.set(users)
+                responsible_users = User.objects.filter(id__in=responsible_users_ids)
+                task.responsible_users.set(responsible_users)
 
-        # Resposta AJAX de sucesso
-        messages.success(request, "Tarefa adicionada com sucesso!")
-        return JsonResponse({'success': 'Tarefa adicionada com sucesso!'})
+                messages.success(request, 'Tarefa criada com sucesso.')
+                return redirect('task_page', community_id=community_id)
+            except Exception as e:
+                messages.error(request, f'Erro ao criar tarefa: {e}')
 
-    # Geração da URL para o formulário
-    kwargs = {key: val for key, val in [
-        ('community_id', community_id),
-        ('area_id', area_id),
-        ('seedbed_id', seedbed_id),
-        ('product_id', product_id),
-        ('type_product_id', type_product_id)
-    ] if val is not None}
 
-    form_url = reverse('add_task', kwargs=kwargs)
+    tasks = Task.objects.filter(community=community) # Buscando as tarefas depois do processamento do POST
 
-    # Renderiza o modal de formulário via AJAX
     context = {
-        'form_url': form_url,
-        'product_id': product_id,
-        'community_id': community_id,
-        'area_id': area_id,
-        'seedbed_id': seedbed_id,
-        'type_product_id': type_product_id,
-        'users': users
+        'tasks': tasks,
+        'community': community,
+        'all_areas': all_areas_in_specific_community,
+        'all_seedbeds': all_seedbeds_in_specific_area,
+        'status_choices': Task.STATUS_CHOICES,
+        'priority_choices': Task.PRIORITY,
+        'place_choices': Task.TYPE_CHOICES
     }
-
-    if request.is_ajax():
-        return render(request, 'add_task.html', context)
-
-    return render(request, 'dashboard.html', context)
-
-# def view_tasks(request, community_id=None, area_id=None, seedbed_id=None, product_id=None, type_product_id=None):
-#     tasks = Task.objects.all()
-
-#     context = {
-#         'tasks': tasks,
-#         'product_id': product_id,
-#         'community_id': community_id,
-#         'area_id': area_id,
-#         'seedbed_id': seedbed_id,
-#         'type_product_id': type_product_id,
-#     }
-
-#     return render(request, 'view_tasks.html', context)
+    return render(request, 'tasks.html', context)
 
 def list_tasks(request, community_id, area_id=None, seedbed_id=None, product_id=None):
     # Filtros iniciais
