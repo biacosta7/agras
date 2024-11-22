@@ -45,12 +45,7 @@ urlpatterns = [
     path("comunidade/<int:community_id>/<int:user_id>/perguntar/", chat_views.ask_question, name="ask_question"),
 
     # tasks
-    path('comunidade/<int:community_id>/areas/<int:area_id>/canteiros/<int:seedbed_id>/cultivo/<int:product_id>/adicionar_task/', tasks_views.add_task, name='add_task'),
-        path('add_task/', tasks_views.add_task, name='add_task'),  # Nenhum ID
-    path('add_task/<int:community_id>/', tasks_views.add_task, name='add_task'),  # Somente community_id
-    path('add_task/<int:community_id>/<int:area_id>/', tasks_views.add_task, name='add_task'),  # community_id e area_id
-    path('add_task/<int:community_id>/<int:area_id>/<int:seedbed_id>/', tasks_views.add_task, name='add_task'),  # community_id, area_id e seedbed_id
-    path('add_task/<int:community_id>/<int:area_id>/<int:seedbed_id>/<int:product_id>/', tasks_views.add_task, name='add_task'),  # community_id, area_id, seedbed_id e product_id
+    path('comunidade/<int:community_id>/tarefas', tasks_views.task_page, name='task_page'),
     path('tasks/<int:community_id>/', tasks_views.list_tasks, name='list_tasks'),
 
 ]
