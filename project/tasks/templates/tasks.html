@@ -6,24 +6,25 @@
 <div class="flex-1 p-6 fade-down lg:p-10 ml:0 lg:ml-[250px] mt-12 lg:mt-[60px]">
     <div class="flex md:flex-row flex-col justify-between mt-4">
              
-{% include 'modal_create_task.html' %}
-{% include 'modal_edit_task.html' %}
+        {% include 'modal_create_task.html' %}
+        {% include 'modal_edit_task.html' %}
             
-{% if tasks %}  
-    <header class="mb-6">
-        <h1 class="text-[44px] lg:text-[48px] font-semibold mt-2 ">Gerenciar <span class="font-medium">tarefas</span></h1>
-    </header>
+        {% if tasks %}  
+        <header class="mb-6">
+            <h1 class="text-[44px] lg:text-[48px] font-semibold mt-2 ">Gerenciar <span class="font-medium">tarefas</span></h1>
+        </header>
         
-    <div class="flex flex-row items-center space-x-6">
-        <div class="relative max-w-[411px]"> 
-            <input type="text" placeholder="Pesquise por tarefas..." class="w-full rounded-[8px] bg-[#F5F5F7] shadow-sm py-2 px-4 pl-10 focus:outline-none">
-            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 material-icons text-[#8ABF17] cursor-pointer">search</span>
+        <div class="flex flex-row items-center space-x-6">
+            <div class="relative max-w-[411px]"> 
+                <input type="text" placeholder="Pesquise por tarefas..." class="w-full rounded-[8px] bg-[#F5F5F7] shadow-sm py-2 px-4 pl-10 focus:outline-none">
+                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 material-icons text-[#8ABF17] cursor-pointer">search</span>
+            </div>
+            <button id="addArea" class="bg-[#8ABF17] text-white font-semibold flex items-center justify-center rounded-[9px]  hover:bg-[#7cad10] hover:text-[#edf0e9] h-[50px] px-4" onclick="toggleModal('create')">
+                <span class="text-3xl items-center mr-2">+</span> Adicionar Tarefa
+            </button>
         </div>
-        <button id="addArea" class="bg-[#8ABF17] text-white font-semibold flex items-center justify-center rounded-[9px]  hover:bg-[#7cad10] hover:text-[#edf0e9] h-[50px] px-4" onclick="toggleModal('create')">
-            <span class="text-3xl items-center mr-2">+</span> Adicionar Tarefa
-        </button>
     </div>
-</div>
+    
     <div class="w-full overflow-x-auto">
       <div class="rounded-lg overflow-hidden">
         <div class="bg-[#FAFAFA] text-black font-normal py-2 flex items-center justify-between">
@@ -79,7 +80,11 @@
                     <span class="material-icons text-[#F76711] align-middle">trending_flat</span>
                 {% endif %}
                     <span>{{ task.priority }}</span>
-                    
+                    </td>
+                    <td class="px-6 py-4 text-black">
+                        <button class="bg-[#8ABF17] text-white font-semibold flex items-center justify-center rounded-[9px] hover:bg-[#7cad10] hover:text-[#edf0e9] h-[40px] px-4 mt-2">
+                            Consultar
+                        </button>
                     </td>
                     <td class="px-6 py-4 text-black">
                         <div class="flex items-center gap-1">
@@ -94,7 +99,6 @@
                             {% endif %}
                         </div>
                     </td>
-                    
                 </tr>
                 {%endfor%}
                 </tbody>
