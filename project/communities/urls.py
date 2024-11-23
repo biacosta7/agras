@@ -46,6 +46,7 @@ urlpatterns = [
 
     # tasks
     path('comunidade/<int:community_id>/tarefas', tasks_views.task_page, name='task_page'),
-    path('tasks/<int:community_id>/', tasks_views.list_tasks, name='list_tasks'),
+    path('comunidade/<int:community_id>/tarefas/editar/<int:task_id>', tasks_views.edit_task, name='edit_task'),
+    path('comunidade/<int:community_id>/tarefas/excluir/<int:task_id>', tasks_views.delete_task, name='delete_task'),
 
 ]
