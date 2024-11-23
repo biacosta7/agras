@@ -148,7 +148,7 @@
                 </p>
                 <br>
                 <p>
-                    <span class="text-lg font-semibold mr-4">Estimativa de colheita:</span> 
+                    <span class="text-lg font-semibold mr-12">Previsão de colheita</span>
                     <span class="text-lg" id="harvest-estimate">
                         {% if estimativa_colheita %}
                             {{ estimativa_colheita }}
@@ -156,6 +156,7 @@
                             Data de colheita indisponível
                         {% endif %}
                     </span>
+
                 </p>
                 <br>
                 <span class="text-lg font-semibold mr-12">Tarefas:</span>
@@ -186,7 +187,13 @@
                 <br>
                 <p>
                     <span class="text-lg font-semibold mr-2">Produção esperada: </span>
-                    <span class="text-lg" id="expected-production">{{ selected_product.quantidade }}</span>
+                    <p>
+                        {% if previsao_colheita %}
+                            {{ previsao_colheita }} unidades.
+                        {% else %}
+                            Nenhuma previsão disponível.
+                        {% endif %}
+                    </p>
                 </p>
                 <br>
                 <p> 

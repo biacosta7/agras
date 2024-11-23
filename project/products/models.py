@@ -9,6 +9,7 @@ class TypeProduct(models.Model):
     lifecycle = models.IntegerField(null=True, blank=True)
     total_colhido = models.IntegerField(default=0)
     actions_interval = models.JSONField(default=dict)  # Exemplo de dicionário: {"irrigação": 5, "poda": 10, "manejo": 7}
+    taxa_colheita = models.FloatField(default=1.0)
 
     class Meta:
         unique_together = ('name', 'community')  # Garante que a combinação de nome e comunidade seja única
@@ -37,6 +38,7 @@ class Product(models.Model):
     quantidade = models.IntegerField(default=1)
     quantidade_colhida = models.IntegerField(default=0, null=True, blank=True)
     data_colheita = models.DateField(null =True, blank = True)  # Campo para a data da colheita
+    #is_harvested = models.BooleanField(default=False)  # Novo campo
 
     def get_absolute_url(self):
         return f"/products/{self.id}/"

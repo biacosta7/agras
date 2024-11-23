@@ -12,6 +12,7 @@ from django.utils import timezone
 from dateutil.relativedelta import relativedelta
 from django.utils.dateformat import DateFormat
 from datetime import timedelta, datetime
+from django.db.models import Sum, F
 
 @login_required
 def list_seedbeds(request, community_id, area_id):
@@ -113,37 +114,47 @@ def seedbed_detail_view(request, community_id, area_id, seedbed_id):
     estimativa_colheita = None
     if selected_product and selected_product.data_plantio and ciclo_de_vida:
         estimativa_colheita = selected_product.data_plantio + relativedelta(months=ciclo_de_vida)
-        print(f"Data Plantio: {selected_product.data_plantio}, Ciclo de Vida: {ciclo_de_vida}, Estimativa de Colheita: {estimativa_colheita}\n")
 
     # Formatar a data antes de enviar para o template
-    if estimativa_colheita:
-        estimativa_colheita_formatada = DateFormat(estimativa_colheita).format('d \d\e F \d\e Y')
-    else:
-        estimativa_colheita_formatada = None
-    actions_interval = None
-    next_actions_dates = {}
-    if selected_product and selected_product.type_product and selected_product.type_product.actions_interval:
-        actions_interval = selected_product.type_product.actions_interval
-        for action, days in actions_interval.items():
-            next_action_date = timezone.now() + timedelta(days=days)
-            while next_action_date <= timezone.now():
-                next_action_date += timedelta(days=days)
-            next_actions_dates[action] = next_action_date
+    estimativa_colheita_formatada = (
+        DateFormat(estimativa_colheita).format('d \d\e F \d\e Y') if estimativa_colheita else None
+    )
+
+    # Previsão de colheita
+    previsao_colheita = None
+    if selected_product and selected_product.type_product:
+        tipo_produto = selected_product.type_product
+        # Obtém o último produto colhido do mesmo tipo
+        ultima_colheita = Product.objects.filter(
+            type_product=tipo_produto, quantidade_colhida__isnull=False
+        ).order_by('-data_colheita').first()
+
+        if ultima_colheita and ultima_colheita.quantidade and ultima_colheita.quantidade_colhida:
+            # Calcula a taxa com base na última colheita
+            ultima_taxa = ultima_colheita.quantidade_colhida / ultima_colheita.quantidade
+            # Previsão com base na quantidade plantada atual
+            previsao_colheita = round(ultima_taxa * selected_product.quantidade)
 
     if request.method == 'POST' and 'quantidade_colhida' in request.POST:
         quantidade_colhida = int(request.POST.get('quantidade_colhida', 0))
         data_colheita_input = request.POST.get('harvest_date')
+
         if selected_product and selected_product.type_product:
             if selected_product.quantidade_colhida is None:
                 selected_product.quantidade_colhida = 0
-            # Criando uma nova colheita
+            
+            # Atualizar quantidade colhida
             selected_product.quantidade_colhida += quantidade_colhida
+
             if data_colheita_input:
                 data_colheita = datetime.strptime(data_colheita_input, "%Y-%m-%d").date()
                 selected_product.data_colheita = data_colheita
+            #selected_product.is_harvested = True
             selected_product.save()
-            messages.success(request, f'{quantidade_colhida} unidades colhidas registradas para o tipo {selected_product.type_product.name}.')
-            print(f"{quantidade_colhida}")
+
+            # Atualizar taxa de colheita do tipo de produto
+            messages.success(request, f'{quantidade_colhida} unidades colhidas registradas para o tipo {tipo_produto.name}.')
+
     context = {
         'community': community,
         'area': area,
@@ -151,9 +162,8 @@ def seedbed_detail_view(request, community_id, area_id, seedbed_id):
         'products': products,
         'selected_product': selected_product,
         'estimativa_colheita': estimativa_colheita_formatada,
-        'next_actions_dates': next_actions_dates,
+        'previsao_colheita': previsao_colheita,
     }
-    print("Dicionario: ", actions_interval)
     return render(request, 'seedbed_detail.html', context)
 
 # def harvest_product_view(request, community_id, area_id, seedbed_id, product_id):
