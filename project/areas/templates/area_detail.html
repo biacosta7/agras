@@ -103,7 +103,7 @@
                                                 <button type="button" onclick="closeDeleteModal({{ seedbed.id }})" class="bg-white border-2 border-[#8ABF17] hover:border-[#7aab0f] text-[#8ABF17] hover:text-[#7aab0f] font-bold px-6 py-3 rounded-[9px] w-full">Cancelar</button>
                                             </div>
                                         </form>
-                                    </div>
+                                    </div> 
                                 </div>
                             {% endif %}
                             </div>   
@@ -136,7 +136,7 @@
             <div class="text-center col-span-full mt-[15vh]">
                 <div class="flex flex-col items-center justify-center">
                     <img src="{% static 'assets/Ativo 324.png' %}" alt="Plantas" class="w-64 mb-4">
-                    <h1 class="font-bold text-[24px]">Nenhum canteiro criado em {{area.name}}</h1>
+                    <h1 class="font-bold text-[24px]">Nenhum canteiro criado em "{{area.name}}"</h1>
                     <p class="font-normal text-[16px]">Clique no botão abaixo para criar canteiros e visualizá-los</p>
                     <button id="addCommunityBtn" class="mt-4 bg-[#8ABF17] text-white px-6 py-3 rounded-[9px] mb-6 hover:bg-[#7cad10] font-semibold hover:text-[#edf0e9]" onclick="toggleModal('create')">
                         Criar Canteiro
