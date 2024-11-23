@@ -14,12 +14,10 @@ def task_page(request, community_id):
     all_seedbeds_in_specific_area = Seedbed.objects.filter(area__in=all_areas_in_specific_community)
     
     if request.method == "POST":
-        title = request.POST.get('title')
         description = request.POST.get('description')
         local = request.POST.get('local')
         start_date = request.POST.get('start_date')
         final_date = request.POST.get('final_date')
-        priority = request.POST.get('priority')
         status = request.POST.get('status')
         responsible_users_raw = request.POST.get('responsible_users[]', '')
         responsible_users_ids = responsible_users_raw.split(',') if responsible_users_raw else []
@@ -31,7 +29,7 @@ def task_page(request, community_id):
     
         responsible_users_ids = [int(id.strip()) for id in responsible_users_ids]
         
-        if not description or not local or not start_date or not priority or not status or not responsible_users_ids:
+        if not description or not local or not start_date or not status or not responsible_users_ids:
             messages.error(request, 'Todos os campos são obrigatórios.')
         else:
             local_type = None
@@ -44,13 +42,11 @@ def task_page(request, community_id):
                 local_id = local.replace('seedbed_', '')
             try:
                 task = Task.objects.create(
-                    title=title,
                     community=community, 
                     description=description,
                     local=local_type,
                     start_date=start_date,
                     final_date= final_date,
-                    priority=priority,
                     status=status,
                 )
 
@@ -85,7 +81,6 @@ def task_page(request, community_id):
         'all_areas': all_areas_in_specific_community,
         'all_seedbeds': all_seedbeds_in_specific_area,
         'status_choices': Task.STATUS_CHOICES,
-        'priority_choices': Task.PRIORITY,
     }
     return render(request, 'tasks.html', context)
 
@@ -100,12 +95,10 @@ def edit_task(request, community_id, task_id):
 
     # Verifica se a requisição é POST para atualizar a tarefa
     if request.method == 'POST':
-        title = request.POST.get('title')
         description = request.POST.get('description')
         local = request.POST.get('local')
         start_date = request.POST.get('start_date')
         final_date = request.POST.get('final_date')
-        priority = request.POST.get('priority')
         status = request.POST.get('status')
         responsible_users_raw = request.POST.getlist('responsible_users[]')  # Usando getlist para múltiplos valores
 
@@ -115,7 +108,7 @@ def edit_task(request, community_id, task_id):
             return redirect('task_page', community_id=community_id)
 
         # Verifica se os campos obrigatórios foram preenchidos
-        if not description or not local or not start_date or not priority or not status or not responsible_users_raw:
+        if not description or not local or not start_date or not status or not responsible_users_raw:
             messages.error(request, 'Todos os campos são obrigatórios.')
             return redirect('task_page', community_id=community_id)
 
@@ -139,12 +132,10 @@ def edit_task(request, community_id, task_id):
                 local_id = local.replace('seedbed_', '')
 
 
-            task.title = title
             task.description = description
             task.local = local_type
             task.start_date = start_date
             task.final_date = final_date
-            task.priority = priority
             task.status = status
 
             if local_type == 'area':
@@ -170,7 +161,6 @@ def edit_task(request, community_id, task_id):
         'task': task,
         'community': Community.objects.get(id=community_id),
         'status_choices': Task.STATUS_CHOICES,
-        'priority_choices': Task.PRIORITY,
         'responsible_user_ids': [user.id for user in task.responsible_users.all()],
         'all_seedbeds': Seedbed.objects.all(),
         'all_areas': Area.objects.all(),
