@@ -8,11 +8,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    
     {% block css %}
         <link rel="stylesheet" href="{% static 'globals.css' %}">
-        <link rel="stylesheet" href="{% static 'tasks/css/variables.css' %}">
-        <link rel="stylesheet" href="{% static 'tasks/css/calendar.css' %}">
     {% endblock css %}
+
+    {% block extra_css %}
+    <!-- Para incluir o CSS das apps -->
+    {% endblock extra_css %}
 
     <title>AGRAS | {% block title %}{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
