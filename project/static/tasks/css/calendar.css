@@ -1,15 +1,6 @@
 @import url('variables.css');
 
 /* Supondo */
-main {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100vw;
-    height: 100vh;
-}
-
-/* Supondo */
 .calendar {
     position: relative; /* O pop-up de adicionar evento no calendário é posicionado em relação a ele */
     display: flex;
@@ -87,7 +78,7 @@ main {
     background-color: var(--days-bg-color);
 }
 
-tbody {
+.claendar-body {
     display: flex;
     flex-direction: column;
     height: 100%; /* Garante que o tbody ocupe a altura restante */
