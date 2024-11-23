@@ -1,21 +1,31 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db import IntegrityError
 from .models import Area
-from communities.models import Community
+from communities.models import Community, MembershipRequest
 from seedbeds.models import Seedbed
 from products.models import Product, TypeProduct
 from django.contrib import messages
 
 # View para listar as áreas
 def area_manage(request, community_id):
-    # Recupera a comunidade correspondente ao ID fornecido
     community = get_object_or_404(Community, id=community_id)
-    # Recupera todas as áreas que pertencem à comunidade
-    areas = community.areas.all()  # Usa o related_name 'areas' definido no modelo Area
-    #Verifica se o usuario logado é admin
+    
+    # áreas que pertencem à comunidade
+    areas = community.areas.all()
+    
+    # Recupera as solicitações pendentes para a comunidade
+    membership_requests = MembershipRequest.objects.filter(community=community, status='pending')
+
+    # Verifica se o usuário logado é admin
     is_admin_of_community = request.user.admin_communities.exists()
 
-    return render(request, 'area_manage.html', {'areas': areas, 'community': community, 'is_admin_of_community': is_admin_of_community})
+    return render(request, 'area_manage.html', {
+        'areas': areas,
+        'community': community,
+        'membership_requests': membership_requests,
+        'is_admin_of_community': is_admin_of_community,
+    })
+
 
 # View para criar uma nova área
 def area_create(request, communities_id):
@@ -85,6 +95,7 @@ def area_delete(request, community_id, pk):
 
     return render(request, 'area_manage.html', {'area': area})
 
+
 def area_detail(request, community_id, area_id):
     community = get_object_or_404(Community, id=community_id)
     area = get_object_or_404(Area, id=area_id, community=community)
@@ -92,10 +103,13 @@ def area_detail(request, community_id, area_id):
     # Recuperando os canteiros (seedbeds) associados à área
     seedbeds = Seedbed.objects.filter(area=area)
 
+    membership_requests = MembershipRequest.objects.filter(community=community, status='pending')
+
     context = {
         'community': community,
         'area': area,
         'seedbeds': seedbeds,
+        'membership_requests': membership_requests,
         'is_admin_of_community': is_admin_of_community
     }
     return render(request, 'area_detail.html', context)

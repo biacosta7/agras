@@ -4,7 +4,7 @@ from .models import Task
 from products.models import Product, TypeProduct
 from areas.models import Area
 from seedbeds.models import Seedbed
-from communities.models import Community
+from communities.models import Community, MembershipRequest
 from django.contrib import messages
 from users.models import User
 
