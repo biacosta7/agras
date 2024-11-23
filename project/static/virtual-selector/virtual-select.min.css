@@ -465,7 +465,7 @@
   display: block;
 }
 .vscomp-wrapper.has-error .vscomp-toggle-button {
-  border-color: #b00020;
+  border-color: #5F8C1B;
 }
 .vscomp-wrapper.show-value-as-tags .vscomp-toggle-button {
   padding: 4px 22px 0 10px;
