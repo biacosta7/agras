@@ -5,7 +5,7 @@
     class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
     <div
         class="bg-white px-14 py-12 rounded-[34px] w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] max-w-[596px] max-h-[663px] overflow-y-auto rounded-[32px]">
-        <h2 id="modalTitle" class="text-[24px] font-bold mb-4 text-[#8ABF17]">Editar Tarefa {{task.id}}</h2>
+        <h2 id="modalTitle" class="text-[24px] font-bold mb-4 text-[#8ABF17]">Editar Tarefa</h2>
         <p class="font-medium text-[16px] mb-4">Altere as informações abaixo para editar sua tarefa</p>
         <form method="POST" action="{% url 'edit_task' community.id task.id %}">
             {% csrf_token %}
