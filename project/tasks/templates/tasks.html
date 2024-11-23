@@ -41,7 +41,6 @@
             <th scope="col" class="px-6 py-3">Status</th>
             <th scope="col" class="px-6 py-3">Local</th>
             <th scope="col" class="px-6 py-3">Prazo</th>
-            <th scope="col" class="px-6 py-3">Prioridade</th>
             <th scope="col" class="px-6 py-3">Materiais</th>
             <th scope="col" class="px-6 py-3">Responsável</th>
         </tr>
@@ -64,23 +63,12 @@
                 {{task.status}}
                 </span>
                 {% endif %}
-                
                     </td>
                     <td class="px-6 py-4 text-black">{% if task.local == 'seedbed' %}<span class="font-bold">{{ task.area }}</span>
                     <br/> {{ task.seedbed }} {% else %} {{ task.area }} {% endif %}</td>   
                     <td class="px-6 py-4 text-black">{% if task.days_left > 0 %} {{task.days_left}} dias restantes {% elif task.days_left == 0%} 
                         <p class="font-semibold text-[#F76711]">Hoje</p> {% else %} <p class="font-semibold text-red-700 uppercase">expirado</p></td> 
                         {%endif%}
-                    <td class="px-6 py-4 text-black">
-                {% if task.priority == 'Baixa' %}
-                    <span class="material-icons text-[#562A00] align-middle">trending_down</span>
-                {% elif task.priority == 'Alta' %}
-                    <span class="material-icons text-red-700 align-middle">trending_up</span>
-                {% else %}
-                    <span class="material-icons text-[#F76711] align-middle">trending_flat</span>
-                {% endif %}
-                    <span>{{ task.priority }}</span>
-                    </td>
                     <td class="px-6 py-4 text-black">
                         <button class="bg-[#8ABF17] text-white font-semibold flex items-center justify-center rounded-[9px] hover:bg-[#7cad10] hover:text-[#edf0e9] h-[40px] px-4 mt-2">
                             Consultar
