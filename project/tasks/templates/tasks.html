@@ -106,7 +106,7 @@ Tarefas {{ community.name }}{% endblock %}
                   >{{ task.area }}</span
                 >
                 <br />
-                {{ task.seedbed }} {% else %} {{ task.area }} {% endif %}
+                {{ task.seedbed }} {% else %} <p class='font-bold'> {{ task.area }} </p> {% endif %}
               </td>
               <td class="px-6 py-4 text-black">
                 {% if task.days_left > 0 %} {{task.days_left}} dias restantes 
