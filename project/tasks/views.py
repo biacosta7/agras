@@ -1,4 +1,4 @@
-from django.utils import timezone
+from django.utils.timezone import now
 from django.shortcuts import redirect, render, get_object_or_404
 from .models import Task
 from products.models import Product, TypeProduct
@@ -18,6 +18,7 @@ def task_page(request, community_id):
         local = request.POST.get('local')
         start_date = request.POST.get('start_date')
         final_date = request.POST.get('final_date')
+        materials = request.POST.get('materials')
         status = request.POST.get('status')
         responsible_users_raw = request.POST.get('responsible_users[]', '')
         responsible_users_ids = responsible_users_raw.split(',') if responsible_users_raw else []
@@ -43,6 +44,7 @@ def task_page(request, community_id):
             try:
                 task = Task.objects.create(
                     community=community, 
+                    materials=materials,
                     description=description,
                     local=local_type,
                     start_date=start_date,
@@ -70,7 +72,7 @@ def task_page(request, community_id):
     tasks = Task.objects.filter(community=community) 
     membership_requests = MembershipRequest.objects.filter(community=community, status='pending')
 
-    today = timezone.now().date()  
+    today = now().date() 
     for task in tasks:
         if task.final_date:
             days_left = (task.final_date - today).days
@@ -98,11 +100,12 @@ def edit_task(request, community_id, task_id):
     # Verifica se a requisição é POST para atualizar a tarefa
     if request.method == 'POST':
         description = request.POST.get('description')
+        materials = request.POST.get('materials')
         local = request.POST.get('local')
         start_date = request.POST.get('start_date')
         final_date = request.POST.get('final_date')
         status = request.POST.get('status')
-        responsible_users_raw = request.POST.getlist('responsible_users[]')  # Usando getlist para múltiplos valores
+        responsible_users_raw = request.POST.getlist('responsible_users[]') 
 
         # Verificando se a data final é posterior à data inicial
         if start_date > final_date:
@@ -133,7 +136,7 @@ def edit_task(request, community_id, task_id):
                 local_type = 'seedbed'
                 local_id = local.replace('seedbed_', '')
 
-
+            task.materials = materials
             task.description = description
             task.local = local_type
             task.start_date = start_date

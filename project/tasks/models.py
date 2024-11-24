@@ -3,7 +3,6 @@ from products.models import Product, TypeProduct
 from seedbeds.models import Seedbed
 from communities.models import Community
 from areas.models import Area
-from django.utils import timezone
 
 class Task(models.Model):
 
@@ -14,7 +13,8 @@ class Task(models.Model):
     ]
     
     RECURRENCE_CHOICES = [
-        ('daily', 'Diário'),
+        ('unique', 'Única'),    
+        ('daily', 'Diária'),
         ('weekly', 'Semanal'),
         ('monthly', 'Mensal'),
         ('yearly', 'Anual'),
@@ -35,15 +35,14 @@ class Task(models.Model):
     product = models.ForeignKey(Product, related_name='product_tasks', on_delete=models.CASCADE, null=True, blank=True)
     
     local = models.CharField(max_length=15, choices=TYPE_CHOICES, default='community')
-    description = models.TextField(blank=True, null=True)
+    description = models.TextField(blank=False, null=False)
     is_completed = models.BooleanField(default=False)
-    
+    materials = models.TextField(blank=False, null=False)
     start_date = models.DateField(blank=False, null=True)
-    
-    final_date = models.DateField(null=True, blank=True)
-
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='to_do', null=True)
-    responsible_users = models.ManyToManyField('users.User', blank=True)
+    final_date = models.DateField(null=False, blank=True)
+    recurrence = models.CharField(max_length=10, choices=RECURRENCE_CHOICES, default='unique', null=False)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='to_do', null=False)
+    responsible_users = models.ManyToManyField('users.User', blank=False)
     
     def __str__(self):
         return f"{self.title} ({self.get_type_display()}) - {'Finalizada' if self.is_completed else 'Pendente'}"

@@ -1,144 +1,203 @@
-{% extends "base.html" %}
-{% load static %}
-{% block title %}Tarefas {{ community.name }}{% endblock %}
-
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'tasks/css/variables.css' %}">
-<link rel="stylesheet" href="{% static 'tasks/css/calendar.css' %}">
-{% endblock extra_css %}
-
-{% block content %}
+{% extends "base.html" %} {% load static %} {% block title %}Tarefas {{
+community.name }}{% endblock %} {% block extra_css %}
+<link rel="stylesheet" href="{% static 'tasks/css/variables.css' %}" />
+<link rel="stylesheet" href="{% static 'tasks/css/calendar.css' %}" />
+{% endblock extra_css %} {% block content %}
 <div class="flex-1 p-6 fade-down lg:p-10 ml:0 lg:ml-[250px] mt-12 lg:mt-[60px]">
-    <div class="flex md:flex-row flex-col justify-between mt-4">
-             
-        {% include 'modal_create_task.html' %}
-        {% include 'modal_edit_task.html' %}
-            
-        {% if tasks %}  
-        <header class="mb-6">
-            <h1 class="text-[44px] lg:text-[48px] font-semibold mt-2 ">Gerenciar <span class="font-medium">tarefas</span></h1>
-        </header>
-        
-        <div class="flex flex-row items-center space-x-6">
-            <div class="relative max-w-[411px]"> 
-                <input type="text" placeholder="Pesquise por tarefas..." class="w-full rounded-[8px] bg-[#F5F5F7] shadow-sm py-2 px-4 pl-10 focus:outline-none">
-                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 material-icons text-[#8ABF17] cursor-pointer">search</span>
-            </div>
-            <button id="addArea" class="bg-[#8ABF17] text-white font-semibold flex items-center justify-center rounded-[9px]  hover:bg-[#7cad10] hover:text-[#edf0e9] h-[50px] px-4" onclick="toggleModal('create')">
-                <span class="text-3xl items-center mr-2">+</span> Adicionar Tarefa
-            </button>
-        </div>
-    </div>
+  <div class="flex md:flex-row flex-col justify-between mt-4">
+    {% include 'modal_create_task.html' %} {% include 'modal_edit_task.html' %}
+    {% if tasks %}
+    <header class="mb-6">
+      <h1 class="text-[44px] lg:text-[48px] font-semibold mt-2">
+        Gerenciar <span class="font-medium">tarefas</span>
+      </h1>
+    </header>
     
-    <div class="w-full overflow-x-auto">
-      <div class="rounded-lg overflow-hidden">
-        <div class="bg-[#FAFAFA] text-black font-normal py-2 flex items-center justify-between">
-            <div class="flex items-center">
-                <button id="btnList" class="flex items-center" onclick="showView('list')"><span class="material-icons mr-2 text-[17px]">list</span> <p class="text-[16px]">Lista</p></button>
-                <button id="btnCalendar" class="flex items-center" onclick="showView('calendar')"><span class="material-icons mx-4 text-[17px] mr-2">calendar_today</span><p class="text-[16px]">Calendário</p></button>
-            </div>
+    <div class="flex flex-row items-center space-x-6">
+      <div class="relative max-w-[411px]">
+        <input
+          type="text"
+          placeholder="Pesquise por tarefas..."
+          class="w-full rounded-[8px] bg-[#F5F5F7] shadow-sm py-2 px-4 pl-10 focus:outline-none"
+        />
+        <span
+          class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 material-icons text-[#8ABF17] cursor-pointer"
+          >search</span
+        >
+      </div>
+      <button
+        id="addArea"
+        class="bg-[#8ABF17] text-white font-semibold flex items-center justify-center rounded-[9px] hover:bg-[#7cad10] hover:text-[#edf0e9] h-[50px] px-4"
+        onclick="toggleModal('create')"
+      >
+        <span class="text-3xl items-center mr-2">+</span> Adicionar Tarefa
+      </button>
+    </div>
+  </div>
+
+  <div class="w-full overflow-x-auto">
+    <div class="rounded-lg">
+      <div
+        class="bg-[#FAFAFA] text-black font-normal py-2 flex items-center justify-between"
+      >
+        <div class="flex items-center">
+          <button
+            id="btnList"
+            class="flex items-center"
+            onclick="showView('list')"
+          >
+            <span class="material-icons mr-2 text-[17px]">list</span>
+            <p class="text-[16px]">Lista</p>
+          </button>
+          <button
+            id="btnCalendar"
+            class="flex items-center"
+            onclick="showView('calendar')"
+          >
+            <span class="material-icons mx-4 text-[17px] mr-2"
+              >calendar_today</span
+            >
+            <p class="text-[16px]">Calendário</p>
+          </button>
         </div>
-        <div id="listView" class="">
-        <table class="w-full text-sm text-left">
-        <thead class="text-xs text-[#5F8C1B] uppercase bg-gray-50 border-t-4 border-[#5F8C1B] border-b-4 border-b-[#D3D3D3]">
-        <tr>
-            <th scope="col" class="px-6 py-3">Descrição</th>
-            <th scope="col" class="px-6 py-3">Status</th>
-            <th scope="col" class="px-6 py-3">Local</th>
-            <th scope="col" class="px-6 py-3">Prazo</th>
-            <th scope="col" class="px-6 py-3">Materiais</th>
-            <th scope="col" class="px-6 py-3">Responsável</th>
-        </tr>
-        </thead>
-            <tbody>
+      </div>
+      <div id="listView" class="">
+        <table class="w-full text-sm text-left table-auto">
+          <thead
+            class="text-xs text-[#5F8C1B] uppercase bg-gray-50 border-t-4 border-[#5F8C1B] border-b-4 border-b-[#D3D3D3]"
+          >
+            <tr>
+              <th scope="col" class="px-6 py-3">Descrição</th>
+              <th scope="col" class="px-[50px] py-3">Status</th>
+              <th scope="col" class="px-6 py-3">Local</th>
+              <th scope="col" class="px-6 py-3">Prazo</th>
+              <th scope="col" class="px-[38px] py-3">Materiais</th>
+              <th scope="col" class="px-6 py-3">Responsável</th>
+            </tr>
+          </thead>
+          <tbody>
             {% for task in tasks %}
-            <tr class="bg-[#FAFAFA] border-b border-t border-[#D3D3D3] cursor-pointer hover:scale-[1.02] hover:shadow-md transition-all duration-300" onclick="toggleEditTaskModal({{ task.id }})">
-                <td class="px-6 py-4 text-black">{{task.description}}</td>
-                <td class="px-6 py-4 text-black">
-            {% if task.status == 'Pendente' %}
+            <tr
+              class="bg-[#FAFAFA] border-b border-t border-[#D3D3D3] cursor-pointer hover:scale-[1.02] hover:shadow-md transition-all duration-300"
+              onclick="toggleEditTaskModal({{ task.id }})"
+            >
+              <td class="px-6 py-4 text-black capitalize">
+                {{task.description}}
+              </td>
+              <td class="px-6 py-4 text-black">
+                {% if task.status == 'Pendente' %}
                 <span class="bg-red-700 px-2 py-1 rounded-full text-white">
-                    {{task.status}}
+                  {{task.status}}
                 </span>
-            {% elif task.status == 'Progresso' %}
-                    <span class="bg-[#562A00] px-2 py-1 rounded-full text-white">
-                {{task.status}}
+                {% elif task.status == 'Progresso' %}
+                <span class="bg-[#562A00] px-2 py-1 rounded-full text-white text-nowrap">
+                  Em {{task.status}}
                 </span>
                 {% else %}
-                    <span class="bg-[#5F8C1B] px-2 py-1 rounded-full text-white">
-                {{task.status}}
+                <span class="bg-[#5F8C1B] px-2 py-1 rounded-full text-white">
+                  {{task.status}}
                 </span>
                 {% endif %}
-                    </td>
-                    <td class="px-6 py-4 text-black">{% if task.local == 'seedbed' %}<span class="font-bold">{{ task.area }}</span>
-                    <br/> {{ task.seedbed }} {% else %} {{ task.area }} {% endif %}</td>   
-                    <td class="px-6 py-4 text-black">{% if task.days_left > 0 %} {{task.days_left}} dias restantes {% elif task.days_left == 0%} 
-                        <p class="font-semibold text-[#F76711]">Hoje</p> {% else %} <p class="font-semibold text-red-700 uppercase">expirado</p></td> 
-                        {%endif%}
-                    <td class="px-6 py-4 text-black">
-                        <button class="bg-[#8ABF17] text-white font-semibold flex items-center justify-center rounded-[9px] hover:bg-[#7cad10] hover:text-[#edf0e9] h-[40px] px-4 mt-2">
-                            Consultar
-                        </button>
-                    </td>
-                    <td class="px-6 py-4 text-black">
-                        <div class="flex items-center gap-1">
-                            {% for user in task.responsible_users.all|slice:":3" %}
-                                <div class="w-8 h-8 bg-[#8ABF17] text-[#FFFFFF] flex items-center justify-center rounded-md mr-2 font-bold relative"
-                                     data-name="{{ user.username }}" title="{{ user.first_name }}" style="z-index: 1; margin-left: -4px;">
-                                    {{ user.username|slice:":1"|upper }}
-                                </div>
-                            {% endfor %}
-                            {% if task.responsible_users.count > 3 %}
-                                <span class="text-sm font-medium text-blue-500">+ {{ task.responsible_users.count|add:"-3" }} outros</span>
-                            {% endif %}
-                        </div>
-                    </td>
-                </tr>
-                {%endfor%}
-                </tbody>
-            </table>
-          </div>
-          <div id="calendarView" class="border-t-4 border-[#5F8C1B]">
-            {% include 'calendar.html' %}
-          </div>
+              </td>
+              <td class="px-6 py-4 text-black capitalize">
+                {% if task.local == 'seedbed' %}<span class="font-bold"
+                  >{{ task.area }}</span
+                >
+                <br />
+                {{ task.seedbed }} {% else %} {{ task.area }} {% endif %}
+              </td>
+              <td class="px-6 py-4 text-black">
+                {% if task.days_left > 0 %} {{task.days_left}} dias restantes 
+                {% elif task.days_left == 0 %}
+                <p class="font-semibold text-[#F76711]">Hoje</p>
+                {% else %}
+                <p class="font-semibold text-red-700 uppercase">expirado</p>
+              </td>
+              {%endif%}
+              <td class="px-6 py-4 text-black">
+                <button
+                  class="bg-[#8ABF17] text-white font-semibold flex items-center justify-center rounded-[9px] hover:bg-[#7cad10] hover:text-[#edf0e9] h-[40px] px-4 mt-2"
+                >
+                  Consultar
+                </button>
+              </td>
+              <td class="px-6 py-4 text-black">
+                <div class="flex items-center gap-1">
+                  {% for user in task.responsible_users.all|slice:":3" %}
+                  <div
+                    class="w-8 h-8 bg-[#8ABF17] text-[#FFFFFF] flex items-center justify-center rounded-md mr-2 font-bold relative"
+                    data-name="{{ user.username }}"
+                    title="{{ user.first_name }}"
+                    style="z-index: 1; margin-left: -4px"
+                  >
+                    {{ user.username|slice:":1"|upper }}
+                  </div>
+                  {% endfor %} {% if task.responsible_users.count > 3 %}
+                  <span class="text-sm font-medium text-blue-500"
+                    >+ {{ task.responsible_users.count|add:"-3" }} outros</span
+                  >
+                  {% endif %}
+                </div>
+              </td>
+            </tr>
+            {%endfor%}
+          </tbody>
+        </table>
       </div>
-      {%else%}
-      <div class="text-center w-full mt-[15vh]">
-        <div class="flex flex-col items-center justify-center w-full">
-            <img src="{% static 'assets/esqueci-novo.png' %}" alt="Plantas" class="w-64 mb-4">
-            <h1 class="font-bold text-[24px]">Nenhuma tarefa criada na comunidade "{{community.name}}"</h1>
-            <p class="font-normal text-[16px]">Clique no botão abaixo para criar tarefas e visualizá-las</p>
-            <button id="addArea" class="bg-[#8ABF17] text-white font-semibold flex items-center justify-center rounded-[9px] mt-2 hover:bg-[#7cad10] hover:text-[#edf0e9] h-[50px] px-4" onclick="toggleModal('create')">
-                <span class="text-3xl items-center mr-2">+</span> Adicionar Tarefa
-            </button>
-        </div>
-    </div> 
-      {%endif%}
+      <div id="calendarView" class="border-t-4 border-[#5F8C1B]">
+        {% include 'calendar.html' %}
+      </div>
+    </div>
+    {%else%}
+    <div class="text-center w-full mt-[15vh]">
+      <div class="flex flex-col items-center justify-center w-full">
+        <img
+          src="{% static 'assets/esqueci-novo.png' %}"
+          alt="Plantas"
+          class="w-64 mb-4"
+        />
+        <h1 class="font-bold text-[24px]">
+          Nenhuma tarefa criada na comunidade "{{community.name}}"
+        </h1>
+        <p class="font-normal text-[16px]">
+          Clique no botão abaixo para criar tarefas e visualizá-las
+        </p>
+        <button
+          id="addArea"
+          class="bg-[#8ABF17] text-white font-semibold flex items-center justify-center rounded-[9px] mt-2 hover:bg-[#7cad10] hover:text-[#edf0e9] h-[50px] px-4"
+          onclick="toggleModal('create')"
+        >
+          <span class="text-3xl items-center mr-2">+</span> Adicionar Tarefa
+        </button>
+      </div>
+    </div>
+    {%endif%}
   </div>
 </div>
 <script type="module" src="{% static 'tasks/js/showCalendar.js' %}"></script>
 <script>
-function showView(view) {
-    const listView = document.getElementById('listView');
-    const calendarView = document.getElementById('calendarView');
-    const btnList = document.getElementById('btnList');
-    const btnCalendar = document.getElementById('btnCalendar');
+  function showView(view) {
+    const listView = document.getElementById("listView");
+    const calendarView = document.getElementById("calendarView");
+    const btnList = document.getElementById("btnList");
+    const btnCalendar = document.getElementById("btnCalendar");
 
-    if (view === 'list') {
-        listView.style.display = 'flex'; // Corrigido para 'style.display'
-        calendarView.style.display = 'none';
+    if (view === "list") {
+      listView.style.display = "flex"; // Corrigido para 'style.display'
+      calendarView.style.display = "none";
 
-        btnList.classList.add('font-bold');
-        btnCalendar.classList.remove('font-bold');
-    } else if (view === 'calendar') {
-        listView.style.display = 'none';
-        calendarView.style.display = 'block';
+      btnList.classList.add("font-bold");
+      btnCalendar.classList.remove("font-bold");
+    } else if (view === "calendar") {
+      listView.style.display = "none";
+      calendarView.style.display = "block";
 
-        btnList.classList.remove('font-bold');
-        btnCalendar.classList.add('font-bold');
+      btnList.classList.remove("font-bold");
+      btnCalendar.classList.add("font-bold");
     }
-}
+  }
 
-showView('list');
+  showView("list");
 </script>
 
 {% endblock %}
