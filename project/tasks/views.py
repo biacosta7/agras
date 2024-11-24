@@ -16,6 +16,7 @@ def task_page(request, community_id):
     if request.method == "POST":
         description = request.POST.get('description')
         local = request.POST.get('local')
+        recurrence = request.POST.get('recurrence')
         start_date = request.POST.get('start_date')
         final_date = request.POST.get('final_date')
         materials = request.POST.get('materials')
@@ -50,6 +51,7 @@ def task_page(request, community_id):
                     start_date=start_date,
                     final_date= final_date,
                     status=status,
+                    recurrence=recurrence
                 )
 
                 if local_type == 'area':
@@ -84,6 +86,7 @@ def task_page(request, community_id):
         'all_areas': all_areas_in_specific_community,
         'all_seedbeds': all_seedbeds_in_specific_area,
         'status_choices': Task.STATUS_CHOICES,
+        'recurrences': Task.RECURRENCE_CHOICES,
         'membership_requests' : membership_requests,
     }
     return render(request, 'tasks.html', context)
@@ -105,6 +108,7 @@ def edit_task(request, community_id, task_id):
         start_date = request.POST.get('start_date')
         final_date = request.POST.get('final_date')
         status = request.POST.get('status')
+        recurrence = request.POST.get('recurrence')
         responsible_users_raw = request.POST.getlist('responsible_users[]') 
 
         # Verificando se a data final é posterior à data inicial
@@ -142,6 +146,7 @@ def edit_task(request, community_id, task_id):
             task.start_date = start_date
             task.final_date = final_date
             task.status = status
+            task.recurrence = recurrence
 
             if local_type == 'area':
                 task.area_id = int(local_id)
@@ -166,6 +171,7 @@ def edit_task(request, community_id, task_id):
         'task': task,
         'community': Community.objects.get(id=community_id),
         'status_choices': Task.STATUS_CHOICES,
+        'recurrences': Task.RECURRENCE_CHOICES,
         'responsible_user_ids': [user.id for user in task.responsible_users.all()],
         'all_seedbeds': Seedbed.objects.all(),
         'all_areas': Area.objects.all(),
