@@ -1,8 +1,10 @@
-{% extends "base.html" %} {% load static %} {% block title %}Tarefas {{
-community.name }}{% endblock %} {% block extra_css %}
+{% extends "base.html" %} {% load static %} {% block title %}
+Tarefas {{ community.name }}{% endblock %} 
+{% block extra_css %}
 <link rel="stylesheet" href="{% static 'tasks/css/variables.css' %}" />
 <link rel="stylesheet" href="{% static 'tasks/css/calendar.css' %}" />
-{% endblock extra_css %} {% block content %}
+{% endblock extra_css %}
+{% block content %}
 <div class="flex-1 p-6 fade-down lg:p-10 ml:0 lg:ml-[250px] mt-12 lg:mt-[60px]">
   <div class="flex md:flex-row flex-col justify-between mt-4">
     {% include 'modal_create_task.html' %} {% include 'modal_edit_task.html' %}
