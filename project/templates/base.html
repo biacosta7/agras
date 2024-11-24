@@ -74,11 +74,9 @@
                         </div>
                     </div>
                 </div>   
-                <div class="audio-controls">
-                    <button id="readPageButton" class="audio-btn">Read Page</button>
-                    <button id="pauseButton" class="audio-btn" >Pause</button>
-                    <button id="restartButton" class="audio-btn" >Restart</button>
-                </div>                
+                <button id="readPageButton">Ler Página</button>
+                <button id="pauseButton" disabled>Pausar</button>
+                <button id="restartButton" disabled>Reinciar</button>
 
                 <div class="flex items-center cursor-pointer z-20"> 
                     <a href="{% url 'edit' %}" class="flex flex-row items-center">
@@ -380,26 +378,21 @@
         transform: translateX(0);
     }
     }
-    .audio-controls {
-        display: flex;
-        gap: 10px;
-        margin: 10px 0;
-    }
-    
-    .audio-btn {
+    button {
+        margin: 5px;
         padding: 8px 16px;
-        border: 1px solid #ccc;
         border-radius: 4px;
+        border: 1px solid #ccc;
+        background-color: #fff;
         cursor: pointer;
-        background-color: white;
     }
     
-    .audio-btn:disabled {
+    button:disabled {
         opacity: 0.5;
         cursor: not-allowed;
     }
     
-    .audio-btn:not(:disabled):hover {
+    button:hover:not(:disabled) {
         background-color: #f0f0f0;
     }    
 

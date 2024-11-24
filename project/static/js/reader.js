@@ -1,32 +1,24 @@
 document.addEventListener("DOMContentLoaded", () => {
     const readButton = document.getElementById("readPageButton");
-    let currentAudio = null;
     let isPlaying = false;
+    let currentAudio = null;
 
     if (readButton) {
         readButton.addEventListener("click", async () => {
             try {
-                // Caso já tenha um áudio carregado
-                if (currentAudio) {
-                    if (isPlaying) {
-                        console.log("Pausing audio...");
-                        currentAudio.pause(); // Pausar o áudio
-                        isPlaying = false;
-                        readButton.textContent = 'Read Page';
-                    } else {
-                        console.log("Resuming audio...");
-                        await currentAudio.play(); // Retomar o áudio
-                        isPlaying = true;
-                        readButton.textContent = 'Stop';
-                    }
-                    return; // Encerrar o processamento
+                // If audio is playing, stop it
+                if (isPlaying && currentAudio) {
+                    currentAudio.pause();
+                    currentAudio = null;
+                    isPlaying = false;
+                    return;
                 }
 
-                // Desabilitar botão durante o processamento
+                // Disable button during processing
                 readButton.disabled = true;
                 readButton.textContent = 'Processing...';
 
-                // Obter o texto visível na página
+                // Get only visible text content
                 const visibleText = Array.from(document.body.querySelectorAll('*'))
                     .filter(element => {
                         const style = window.getComputedStyle(element);
@@ -36,43 +28,33 @@ document.addEventListener("DOMContentLoaded", () => {
                     .join(' ')
                     .trim();
 
-                console.log("Visible text fetched:", visibleText);
-
-                // Fazer requisição para o servidor
                 const response = await fetch("/comunidades/read-page/", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "X-CSRFToken": getCookie('csrftoken'),
+                        "X-CSRFToken": getCookie('csrftoken')
                     },
                     body: JSON.stringify({ 
                         text: visibleText, 
-                        url: window.location.href,
-                    }),
+                        url: window.location.href 
+                    })
                 });
 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
-                console.log("Audio response received.");
-
-                // Criar áudio a partir do Blob
                 const blob = await response.blob();
                 const audioUrl = URL.createObjectURL(blob);
                 currentAudio = new Audio(audioUrl);
 
-                // Configurar evento para quando o áudio terminar
+                // Clean up previous audio URL
                 currentAudio.onended = () => {
-                    console.log("Audio ended.");
+                    URL.revokeObjectURL(audioUrl);
                     isPlaying = false;
                     readButton.textContent = 'Read Page';
-                    URL.revokeObjectURL(audioUrl); // Revogar URL
-                    currentAudio = null; // Limpar referência
                 };
 
-                // Reproduzir áudio
-                console.log("Starting audio playback...");
                 await currentAudio.play();
                 isPlaying = true;
                 readButton.textContent = 'Stop';
@@ -82,6 +64,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 alert("Failed to process audio. Please try again.");
             } finally {
                 readButton.disabled = false;
+                if (!isPlaying) {
+                    readButton.textContent = 'Read Page';
+                }
             }
         });
     }
