@@ -1,167 +1,422 @@
 {% load static %}
 <!-- Modal para criar tarefas  -->
-<div id="areaModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50">
-    <div
-        class="bg-white px-16 py-12 rounded-xl w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] max-w-[596px] max-h-[663px] overflow-y-auto">
-        <h2 id="modalTitle" class="text-2xl font-bold mb-4 text-[#8ABF17]">Adicionar Tarefa</h2>
-        <p class="font-medium text-lg mb-4">Preencha os espaços abaixo para criar uma nova tarefa:</p>
+<div
+  id="areaModal"
+  class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50"
+>
+  <div
+    class="bg-white px-16 py-12 rounded-xl w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] max-w-[596px] max-h-[663px] overflow-y-auto"
+  >
+    <h2 id="modalTitle" class="text-2xl font-bold mb-4 text-[#8ABF17]">
+      Adicionar Tarefa
+    </h2>
+    <p class="font-medium text-lg mb-4">
+      Preencha os espaços abaixo para criar uma nova tarefa:
+    </p>
 
-        <form id="form" action="{% url 'task_page' community.id %}" method="post">
-            {% csrf_token %}
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- Descricao  -->
-                <div>
-                    <label for="description" class="text-sm font-medium text-gray-700 mb-1 flex"><span
-                            class="material-icons text-[#8ABF17] items-center text-[18px] mr-1">description</span>Descrição*</label>
-                    <textarea id="description" name="description"
-                        class="max-w-[468px] w-full border h-[41px] border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] py-2 px-3 resize-y"
-                        required></textarea>
-                </div>
-                <!-- Data de Inicio  -->
-                <div>
-                    <label for="start_date" class="text-sm font-medium text-gray-700 mb-1 flex"><span
-                            class="material-icons text-[#8ABF17] items-center text-[18px] mr-1">schedule</span>Data
-                        Inicial</label>
-                    <input type="date" id="start_date" name="start_date"
-                        class="w-full border border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] py-2 px-3"
-                        placeholder="" required>
-                </div>
-                <!-- Data Final  -->
-                <div>
-                    <label for="final_date" class="text-sm font-medium text-gray-700 mb-1 flex"><span
-                            class="material-icons text-[#8ABF17] items-center text-[18px] mr-1">schedule</span>Data
-                        Final</label>
-                    <input type="date" id="final_date" name="final_date"
-                        class="w-full border border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] py-2 px-3"
-                        placeholder="" required>
-                </div>
-                <!-- Local  -->
-                <div>
-                    <label for="local" class="text-sm font-medium text-gray-700 mb-1 flex">
-                        <span class="material-icons text-[#8ABF17] items-center text-[18px] mr-1">location_on</span>
-                        Local
-                    </label>
-                    <select id="local" name="local" required>
-                        <option value="" selected disabled hidden>Selecione o Local</option>
-                        {% for place in all_seedbeds %}
-                        <option value="seedbed_{{place.id}}">Canteiro - {{place}}</option>
-                        {% endfor %}
-                        {% for place in all_areas %}
-                        <option value="area_{{place.id}}">Área - {{place}}</option>
-                        {% endfor %}
-                    </select>
-                    <input type="hidden" name="local_type" id="local_type" value="">
-                </div>
-                <!-- Responsavel  -->
-                <div>
-                    <label for="responsible_users" class="text-sm font-medium text-gray-700 mb-1 flex"> <span
-                            class="material-icons text-[#8ABF17] items-center text-[18px] mr-1">person</span>
-                        Responsável</label>
-                    <div>
-                        <select id="responsible_users" name="responsible_users[]" multiple required>
-                            {% for member in community.members.all %}
-                            <option value="{{ member.id }}">{{ member.username }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                </div>
-                <!-- Status  -->
-                <div>
-                    <label for="status" class="text-sm font-medium text-gray-700 mb-1 flex"><span
-                            class="material-icons text-[#8ABF17] items-center text-[18px] mr-1">radio_button_checked</span>Status</label>
-                    <select id="status" name="status" class="" required>
-                        <option value="" selected disabled hidden>Selecione o Status</option>
-                        {% for value, status in status_choices%}
-                        <option class="" value="{{status}}">{{status}}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <!-- Materiais  -->
-            </div>
-            <div>
-                <label for="material" class="text-sm font-medium text-gray-700 mb-1 mt-2 flex"><span
-                        class="material-icons text-[#8ABF17] items-center text-[18px] mr-1">handyman</span>Materiais*</label>
-                <textarea id="materials" name="materials"
-                    class="w-full border h-[80px] border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] py-2 px-3 resize-y"></textarea>
-            </div>
-            <div class="flex mt-6">
-                <button type="button"
-                    class="bg-white border-2 border-[#8ABF17] hover:border-[#7aab0f] text-[#8ABF17] hover:text-[#7aab0f] font-bold px-6 py-3 rounded-md mr-2 w-full"
-                    onclick="toggleModal('close')">Cancelar</button>
-                <button type="submit"
-                    class="bg-[#8ABF17] text-white font-bold px-6 py-3 hover:bg-[#7aab0f] rounded-md w-full">Criar</button>
-            </div>
-        </form>
-    </div>
+    <form id="form" action="{% url 'task_page' community.id %}" method="post">
+      {% csrf_token %}
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Descricao  -->
+        <div>
+          <label
+            for="description"
+            class="text-sm font-medium text-gray-700 mb-1 flex"
+            ><span
+              class="material-icons text-[#8ABF17] items-center text-[18px] mr-1"
+              >description</span
+            >Descrição*</label
+          >
+          <textarea
+            id="description"
+            name="description"
+            class="max-w-[468px] w-full border h-[41px] border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] py-2 px-3 resize-y"
+            required
+          ></textarea>
+        </div>
+        <!-- Data de Inicio  -->
+        <div>
+          <label
+            for="start_date"
+            class="text-sm font-medium text-gray-700 mb-1 flex"
+            ><span
+              class="material-icons text-[#8ABF17] items-center text-[18px] mr-1"
+              >schedule</span
+            >Data Inicial</label
+          >
+          <input
+            type="date"
+            id="start_date"
+            name="start_date"
+            class="w-full border border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] py-2 px-3"
+            placeholder=""
+            required
+          />
+        </div>
+        <!-- Data Final  -->
+        <div>
+          <label
+            for="final_date"
+            class="text-sm font-medium text-gray-700 mb-1 flex"
+            ><span
+              class="material-icons text-[#8ABF17] items-center text-[18px] mr-1"
+              >schedule</span
+            >Data Final</label
+          >
+          <input
+            type="date"
+            id="final_date"
+            name="final_date"
+            class="w-full border border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] py-2 px-3"
+            placeholder=""
+            required
+          />
+        </div>
+        <!-- Frequencia -->
+        <div>
+            <label for="recurrence" class="text-sm font-medium text-gray-700 mb-1 flex">
+                <span class="material-icons text-[#8ABF17] items-center text-[18px] mr-1">update</span>
+                Frequência
+            </label>
+            <select id="recurrence" name="recurrence" required>
+                <option value="" selected disabled hidden>Selecione a Frequência</option>
+                {% for value, recurrence in recurrences %}
+                <option class="" value="{{recurrence}}">{{recurrence}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <!-- Local  -->
+        <div>
+          <label
+            for="local"
+            class="text-sm font-medium text-gray-700 mb-1 flex"
+          >
+            <span
+              class="material-icons text-[#8ABF17] items-center text-[18px] mr-1"
+              >location_on</span
+            >
+            Local
+          </label>
+          <select id="local" name="local" required>
+            <option value="" selected disabled hidden>Selecione o Local</option>
+            {% for place in all_seedbeds %}
+            <option value="seedbed_{{place.id}}">Canteiro - {{place}}</option>
+            {% endfor %} {% for place in all_areas %}
+            <option value="area_{{place.id}}">Área - {{place}}</option>
+            {% endfor %}
+          </select>
+          <input type="hidden" name="local_type" id="local_type" value="" />
+        </div>
+        <!-- Responsavel  -->
+        <div>
+          <label
+            for="responsible_users"
+            class="text-sm font-medium text-gray-700 mb-1 flex"
+          >
+            <span
+              class="material-icons text-[#8ABF17] items-center text-[18px] mr-1"
+              >person</span
+            >
+            Responsável</label
+          >
+          <div>
+            <select
+              id="responsible_users"
+              name="responsible_users[]"
+              multiple
+              required
+            >
+              {% for member in community.members.all %}
+              <option value="{{ member.id }}">{{ member.username }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <!-- Status  -->
+        <div>
+          <label
+            for="status"
+            class="text-sm font-medium text-gray-700 mb-1 flex"
+            ><span
+              class="material-icons text-[#8ABF17] items-center text-[18px] mr-1"
+              >radio_button_checked</span
+            >Status</label
+          >
+          <select id="status" name="status" class="" required>
+            <option value="" selected disabled hidden>
+              Selecione o Status
+            </option>
+            {% for value, status in status_choices%}
+            <option class="" value="{{status}}">{{status}}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <!-- Materiais  -->
+        <div>
+          <label
+            for="material"
+            class="text-sm font-medium text-gray-700 mb-1 flex"
+            ><span
+              class="material-icons text-[#8ABF17] items-center text-[18px] mr-1"
+              >handyman</span
+            >Materiais*</label
+          >
+          <textarea
+            id="materials"
+            name="materials"
+            class="w-full border h-[80px] border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] py-2 px-3 resize-y"
+            required
+          ></textarea>
+        </div>
+      </div>
+      <div class="flex mt-6">
+        <button
+          type="button"
+          class="bg-white border-2 border-[#8ABF17] hover:border-[#7aab0f] text-[#8ABF17] hover:text-[#7aab0f] font-bold px-6 py-3 rounded-md mr-2 w-full"
+          onclick="toggleModal('close')"
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          class="bg-[#8ABF17] text-white font-bold px-6 py-3 hover:bg-[#7aab0f] rounded-md w-full"
+        >
+          Criar
+        </button>
+      </div>
+    </form>
+  </div>
 </div>
-<link rel="stylesheet" href="{% static 'virtual-selector/virtual-select.min.css' %}">
+<link
+  rel="stylesheet"
+  href="{% static 'virtual-selector/virtual-select.min.css' %}"
+/>
 <script src="{% static 'virtual-selector/virtual-select.min.js' %}"></script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () { // Garante que o DOM esteja carregado
-        VirtualSelect.init({
-            ele: '#responsible_users',
-            placeholder: 'Selecione os responsáveis',
-            search: true,
-            multiple: true,
-            noOptionsText: 'Nenhum usuário encontrado',
-            selectAllText: 'Selecionar todos',
-            selectedTextFormat: 'count > 2'
-        });
+    document.addEventListener("DOMContentLoaded", function () {
+  
+      // Adiciona os métodos showError e clearError ao protótipo do VirtualSelect
+      VirtualSelect.prototype.showError = function(message) {
+          this.isValid = false;
+          // Adicione uma classe ao wrapper para estilizar o erro
+          this.$wrapper.classList.add('vs-error');
+  
+  
+          // Crie um elemento para a mensagem de erro (ou use um já existente)
+          let errorMessageElement = this.$wrapper.nextElementSibling;
+          if (!errorMessageElement || !errorMessageElement.classList.contains('vs-error-message')) {
+              errorMessageElement = document.createElement('div');
+              errorMessageElement.classList.add('vs-error-message');
+              this.$wrapper.parentNode.insertBefore(errorMessageElement, this.$wrapper.nextSibling);
+          }
+          errorMessageElement.textContent = message;
+  
+  
+      }
+  
+      VirtualSelect.prototype.clearError = function() {
+          this.isValid = true;
+          this.$wrapper.classList.remove('vs-error');
+  
+  
+          const errorMessageElement = this.$wrapper.nextElementSibling;
+          if (errorMessageElement && errorMessageElement.classList.contains('vs-error-message')) {
+             errorMessageElement.remove();
+          }
+      }
+  
+  
+      VirtualSelect.init({
+        ele: "#responsible_users",
+        placeholder: "Selecione os responsáveis",
+        search: true,
+        multiple: true,
+        noOptionsText: "Nenhum usuário encontrado",
+        selectAllText: "Selecionar todos",
+        selectedTextFormat: "count > 2",
+      });
+
+
+      VirtualSelect.init({
+        ele: "#recurrence",
+        placeholder: "Selecione a Frequência",
+        search: true,
+        noOptionsText: "Nenhuma frequência encontrada",
+      });
+
+      VirtualSelect.init({
+        ele: "#status",
+        placeholder: "Selecione o Status",
+        search: true,
+        noOptionsText: "Nenhum status encontrado",
+        selectAllText: "Selecionar todos",
+        selectedTextFormat: "count > 2",
+      });
+  
+      VirtualSelect.init({
+        ele: "#local",
+        placeholder: "Selecione o Local",
+        multiple: false,
+        search: true,
+        noOptionsText: "Nenhum local encontrado",
+      });
+  
+  
+  
+      document.getElementById('form').addEventListener('submit', function(event) {
+          let isValid = true;
+  
+          const localSelect = document.getElementById('local').virtualSelect;
+          const responsibleUsersSelect = document.getElementById('responsible_users').virtualSelect;
+          const statusSelect = document.getElementById('status').virtualSelect;
+          const frequencySelect = document.getElementById('recurrence').virtualSelect
+          const materialsTextarea = document.getElementById('materials');
+          const descriptionTextarea = document.getElementById('description');
+          const startDateInput = document.getElementById('start_date');
+          const finalDateInput = document.getElementById('final_date');
+  
+  
+  
+          if (!localSelect.selectedValues.length) {
+             localSelect.showError("Local é obrigatório");
+             isValid = false;
+          } else {
+             localSelect.clearError();
+          }
+
+          if (!frequencySelect.selectedValues.length) {
+            frequencySelect.showError("Frequência é obrigatória");
+             isValid = false;
+          } else {
+             localSelect.clearError();
+          }
+  
+          if (!responsibleUsersSelect.selectedValues.length) {
+              responsibleUsersSelect.showError("Responsável é obrigatório");
+              isValid = false;
+          } else {
+              responsibleUsersSelect.clearError();
+          }
+  
+          if (!statusSelect.selectedValues.length) {
+              statusSelect.showError("Status é obrigatório");
+              isValid = false;
+          } else {
+             statusSelect.clearError();
+          }
+  
+  
+          if (!materialsTextarea.value.trim()) {
+            showError(materialsTextarea, 'Materiais são obrigatórios');
+            isValid = false;
+          } else {
+            clearError(materialsTextarea);
+          }
+  
+          if (!descriptionTextarea.value.trim()) {
+            showError(descriptionTextarea, 'Descrição é obrigatória');
+            isValid = false;
+          } else {
+            clearError(descriptionTextarea);
+          }
+  
+  
+          if (!startDateInput.value.trim()) {
+            showError(startDateInput, 'Data inicial é obrigatória');
+            isValid = false;
+          } else {
+             clearError(startDateInput);
+          }
+  
+  
+           if (!finalDateInput.value.trim()) {
+            showError(finalDateInput, 'Data final é obrigatória');
+            isValid = false;
+          } else {
+             clearError(finalDateInput);
+          }
+  
+  
+  
+          if (!isValid) {
+              event.preventDefault();
+          }
+      });
+  
+  
+      document.querySelector("#local").addEventListener("change", function () {
+          const selectedValue = this.value;
+          let localType = "";
+          let id = "";
+  
+          if (selectedValue.startsWith("seedbed_")) {
+            localType = "seedbed";
+            id = selectedValue.replace("seedbed_", "");
+          } else if (selectedValue.startsWith("area_")) {
+            localType = "area";
+            id = selectedValue.replace("area_", "");
+          }
+  
+          document.querySelector("#local_type").value = localType;
+      });
+  
     });
-
-    document.addEventListener('DOMContentLoaded', function () { // Garante que o DOM esteja carregado
-        VirtualSelect.init({
-            ele: '#status',
-            placeholder: 'Selecione o Status',
-            search: true,
-            noOptionsText: 'Nenhum status encontrado',
-            selectAllText: 'Selecionar todos',
-            selectedTextFormat: 'count > 2'
-        });
-    });
-
-
-    document.addEventListener('DOMContentLoaded', function () {
-        // Inicializa o VirtualSelect
-        VirtualSelect.init({
-            ele: '#local',
-            placeholder: 'Selecione o Local',
-            multiple: false, // Apenas uma seleção permitida
-            search: true, // Habilita busca
-            noOptionsText: 'Nenhum local encontrado' // Mensagem para lista vazia
-        });
-
-        // Adiciona evento 'change' no elemento
-        document.querySelector('#local').addEventListener('change', function () {
-            const selectedValue = this.value; // Obtém o valor selecionado
-            let localType = '';
-            let id = '';
-
-            // Determina o tipo com base no prefixo do valor
-            if (selectedValue.startsWith('seedbed_')) {
-                localType = 'seedbed';
-                id = selectedValue.replace('seedbed_', '');
-            } else if (selectedValue.startsWith('area_')) {
-                localType = 'area';
-                id = selectedValue.replace('area_', '');
-            }
-
-            // Atualiza o campo hidden
-            document.querySelector('#local_type').value = localType;
-        });
-    });
-
-
+  
+  
     function toggleModal(action) {
-        const areaModal = document.getElementById('areaModal');
-
-        if (action === 'create') {
-            areaModal.classList.remove('hidden'); // Mostra o modal de criar área
-        }
-        else if (action === 'close') {
-            areaModal.classList.add('hidden'); // Esconde o modal de criar área
-            manageModal.classList.add('hidden');
+        const areaModal = document.getElementById("areaModal");
+  
+        if (action === "create") {
+          areaModal.classList.remove("hidden");
+        } else if (action === "close") {
+          areaModal.classList.add("hidden");
         }
     }
-</script>
+  
+      // Funções auxiliares para exibir/limpar erros em elementos de formulário padrão
+      function showError(input, message) {
+            const formControl = input.parentElement;
+            formControl.className = 'error';
+            const small = formControl.querySelector('small');
+            if(small){ // Adiciona a verificação aqui
+                 small.innerText = message;
+            }
+          }
+  
+  
+          function clearError(input) {
+            const formControl = input.parentElement;
+            formControl.className = '';
+             const small = formControl.querySelector('small');
+             if(small){
+                   small.innerText = '';
+             }
+  
+          }
+  </script>
+  
+  <style>
+  /* Estilos para Virtual Select com erro */
+  .vs-error .vs-input {
+      border-color: red !important;
+  }
+  
+  /* Estilos para a mensagem de erro do Virtual Select */
+  .vs-error-message {
+      color: red;
+      font-size: 12px;
+      margin-top: 4px;
+  }
+  
+  /* Estilos para inputs padrão com erro */
+  .error {
+    border: 1px solid red;
+  }
+  
+  .error small {
+    color: red;
+    display: block;
+    margin-top: 5px;
+  }
+  </style>
