@@ -1,3 +1,12 @@
+function renderMarkdown(markdownText) {
+    // Converte o texto Markdown para HTML
+    const rawHtml = marked.parse(markdownText);
+    
+    // Sanitiza o HTML gerado para remover qualquer conteúdo malicioso
+    return DOMPurify.sanitize(rawHtml);
+}
+
+
 // Chat functionality
 document.addEventListener('DOMContentLoaded', function() {
     const chatInput = document.querySelector('#helpModal input[type="text"]');
@@ -68,10 +77,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 : 'bg-gray-100 text-black'
         }`;
         messageDiv.style.maxWidth = '80%';
-        messageDiv.textContent = text;
+        
+        if (sender === 'bot') {
+            // Renderiza o texto do bot como Markdown e sanitiza
+            messageDiv.innerHTML = renderMarkdown(text);
+        } else {
+            // Para mensagens do usuário, mostra o texto diretamente
+            messageDiv.textContent = text;
+        }
+        
         messagesContainer.appendChild(messageDiv);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }
+    }      
 
     // Event listeners
     sendButton.addEventListener('click', () => {
@@ -122,6 +139,18 @@ style.textContent = `
     
     #helpModal.max-h-screen {
         transition: all 0.3s ease-in-out;
+    }
+
+    .message.bot p {
+    margin-bottom: 10px;
+    }
+
+    .message.bot ul {
+        padding-left: 20px;
+    }
+
+    .message.bot li {
+        margin-bottom: 5px;
     }
 `;
 document.head.appendChild(style);

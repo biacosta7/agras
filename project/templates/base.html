@@ -399,8 +399,9 @@
     const userId = "{{ user_id }}";
     const askQuestionUrl = "{% url 'ask_question' community_id user_id %}";
 </script>
-
 <script src="{% static 'chat/chat.js' %}"></script>
+ <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> {% comment %} markdown do chatbot {% endcomment %}
+ <script src="https://cdn.jsdelivr.net/npm/dompurify@2.4.3/dist/purify.min.js"></script> {% comment %} para segurança na inserção do html da IA {% endcomment %}
 <script>
     console.log('communityId:', communityId, 'userId:', userId);
 
