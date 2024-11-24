@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
         try {
             // Usando as variáveis communityId e userId passadas do Django
-            const response = await fetch(`/comunidade/${communityId}/${userId}/perguntar/`, {
+            const response = await fetch(askQuestionUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

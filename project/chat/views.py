@@ -18,9 +18,6 @@ def ask_question(request, community_id, user_id):
         try:
             data = json.loads(request.body)
             text = data.get('text', '')
-            
-            # Log de depuração
-            print(f"Received text: {text}")
 
             # Inicializa o modelo de IA e inicia o chat
             model = genai.GenerativeModel("gemini-pro")
@@ -36,9 +33,6 @@ def ask_question(request, community_id, user_id):
             response_data = {
                 "text": response.text,
             }
-
-            # Log de depuração
-            print(f"Bot response: {response.text}")
 
             return JsonResponse({"data": response_data})
         except Exception as e:

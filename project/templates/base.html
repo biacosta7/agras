@@ -397,6 +397,7 @@
 <script type="text/javascript">
     const communityId = "{{ community_id }}";
     const userId = "{{ user_id }}";
+    const askQuestionUrl = "{% url 'ask_question' community_id user_id %}";
 </script>
 
 <script src="{% static 'chat/chat.js' %}"></script>
