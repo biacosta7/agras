@@ -3,6 +3,7 @@ from products.models import Product, TypeProduct
 from seedbeds.models import Seedbed
 from communities.models import Community
 from areas.models import Area
+from django.utils import timezone
 
 class Task(models.Model):
 
@@ -26,13 +27,6 @@ class Task(models.Model):
         ('product', 'Cultivo'),
         ('type_product', 'Tipo Cultivo'),
     ]
-
-    PRIORITY = [
-        ('low', 'Baixa'),
-        ('medium', 'Média'),
-        ('high', 'Alta'),
-    ]
-
     
     community = models.ForeignKey(Community, related_name='community_tasks', on_delete=models.CASCADE, null=True, blank=True)
     area = models.ForeignKey(Area, related_name='area_tasks', on_delete=models.CASCADE, null=True, blank=True)
@@ -41,15 +35,15 @@ class Task(models.Model):
     product = models.ForeignKey(Product, related_name='product_tasks', on_delete=models.CASCADE, null=True, blank=True)
     
     local = models.CharField(max_length=15, choices=TYPE_CHOICES, default='community')
-    title = models.CharField(max_length=255, blank=False, null=True)
     description = models.TextField(blank=True, null=True)
     is_completed = models.BooleanField(default=False)
-    start_date = models.DateField(blank=False, null=False)
-    final_date = models.DateField(blank=False, null=False)
-    # recurrence = models.CharField(max_length=10, choices=RECURRENCE_CHOICES)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='to-do', null=True)
+    
+    start_date = models.DateField(blank=False, null=True)
+    
+    final_date = models.DateField(null=True, blank=True)
+
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='to_do', null=True)
     responsible_users = models.ManyToManyField('users.User', blank=True)
-    priority = models.CharField(max_length=15, choices=PRIORITY, default='low')
     
     def __str__(self):
         return f"{self.title} ({self.get_type_display()}) - {'Finalizada' if self.is_completed else 'Pendente'}"

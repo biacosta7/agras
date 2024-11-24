@@ -32,67 +32,68 @@
     
     <div class="w-full overflow-x-auto">
       <div class="rounded-lg overflow-hidden">
-          <div class="bg-[#FAFAFA] text-black font-normal py-2 flex items-center justify-between">
-              <div class="flex items-center">
-                  <button id="btnList" class="flex items-center" onclick="showView('list')"><span class="material-icons mr-2 text-[17px]">list</span> <p class="text-[16px]">Lista</p></button>
-                  <button id="btnCalendar" class="flex items-center" onclick="showView('calendar')"><span class="material-icons mx-4 text-[17px] mr-2">calendar_today</span><p class="text-[16px]">Calendário</p></button>
-              </div>
-          </div>
-          <div id="listView" class="">
-            <table class="w-full text-sm text-left">
-                <thead class="text-xs text-[#5F8C1B] uppercase bg-gray-50 border-t-4 border-[#5F8C1B] border-b-4 border-b-[#D3D3D3]">
-                    <tr>
-                        <th scope="col" class="px-6 py-3">Título</th>
-                        <th scope="col" class="px-6 py-3">Descrição</th>
-                        <th scope="col" class="px-6 py-3">Status</th>
-                        <th scope="col" class="px-6 py-3">Local</th>
-                        <th scope="col" class="px-6 py-3">Prazo</th>
-                        <th scope="col" class="px-6 py-3">Prioridade</th>
-                        <th scope="col" class="px-6 py-3">Responsável</th>
-                    </tr>
-                </thead>
-                <tbody>
-                  {% for task in tasks %}
-                    <tr class="bg-[#FAFAFA] border-b border-t border-[#D3D3D3] cursor-pointer hover:scale-[1.02] hover:shadow-md transition-all duration-300" onclick="toggleEditTaskModal({{ task.id }})">
-                        <td class="px-6 py-4 text-black">{{task.title}}</td>
-                        <td class="px-6 py-4 text-black">{{task.description}}</td>
-                        <td class="px-6 py-4 text-black">
-                          {% if task.status == 'Pendente' %}
-                          <span class="bg-red-700 px-2 py-1 rounded-full text-white">
-                              {{task.status}}
-                          </span>
-                          {% elif task.status == 'Progresso' %}
-                          <span class="bg-[#562A00] px-2 py-1 rounded-full text-white">
-                              {{task.status}}
-                          </span>
-                          {% else %}
-                          <span class="bg-[#5F8C1B] px-2 py-1 rounded-full text-white">
-                              {{task.status}}
-                          </span>
-                          {% endif %}
-                      </td>
-                        <td class="px-6 py-4 text-black">{% if task.local == 'seedbed' %} <span class="font-bold">{{ task.area }}</span> <br/> {{ task.seedbed }} {% else %} {{ task.local }} {% endif %}</td>
-                        <td class="px-6 py-4 text-black">{% if task.days_left > 0 %} {{task.days_left}} dias restantes {% elif task.days_left == 0%} <p class="font-semibold text-[#F76711]">Hoje</p> {% else %} <p class="font-semibold text-red-700 uppercase">expirado</p></td> {%endif%}
-                        <td class="px-6 py-4 text-black">
-                          {% if task.priority == 'Baixa' %}
-                              <span class="material-icons text-[#562A00] align-middle">trending_down</span>
-                          {% elif task.priority == 'Alta' %}
-                              <span class="material-icons text-red-700 align-middle">trending_up</span>
-                          {% else %}
-                              <span class="material-icons text-[#F76711] align-middle">trending_flat</span>
-                          {% endif %}
-                          <span>{{ task.priority }}</span>
-                      </td>
-                        <div class="relative">
-                          <td class="px-6 py-4 text-black" id="responsibleusers">
-                            {% for user in task.responsible_users.all %}
-                             <div class="w-8 h-8 bg-[#8ABF17] text-[#FFFFFF] flex items-center justify-center rounded-md mr-2 font-bold"
-                              data-name="{{ user.username }}" title="{{ user.first_name }}">
-                               {{ user.username|slice:":1"|upper }} </div> {% endfor %}</td>
-                          <div id="tooltip" class="absolute bg-[#8ABF17] text-white text-xs px-2 py-1 rounded-md hidden mt-1" style="white-space: nowrap;"></div>
-                      </div>
-                    </tr>
-                  {%endfor%}
+        <div class="bg-[#FAFAFA] text-black font-normal py-2 flex items-center justify-between">
+            <div class="flex items-center">
+                <button id="btnList" class="flex items-center" onclick="showView('list')"><span class="material-icons mr-2 text-[17px]">list</span> <p class="text-[16px]">Lista</p></button>
+                <button id="btnCalendar" class="flex items-center" onclick="showView('calendar')"><span class="material-icons mx-4 text-[17px] mr-2">calendar_today</span><p class="text-[16px]">Calendário</p></button>
+            </div>
+        </div>
+        <div id="listView" class="">
+        <table class="w-full text-sm text-left">
+        <thead class="text-xs text-[#5F8C1B] uppercase bg-gray-50 border-t-4 border-[#5F8C1B] border-b-4 border-b-[#D3D3D3]">
+        <tr>
+            <th scope="col" class="px-6 py-3">Descrição</th>
+            <th scope="col" class="px-6 py-3">Status</th>
+            <th scope="col" class="px-6 py-3">Local</th>
+            <th scope="col" class="px-6 py-3">Prazo</th>
+            <th scope="col" class="px-6 py-3">Materiais</th>
+            <th scope="col" class="px-6 py-3">Responsável</th>
+        </tr>
+        </thead>
+            <tbody>
+            {% for task in tasks %}
+            <tr class="bg-[#FAFAFA] border-b border-t border-[#D3D3D3] cursor-pointer hover:scale-[1.02] hover:shadow-md transition-all duration-300" onclick="toggleEditTaskModal({{ task.id }})">
+                <td class="px-6 py-4 text-black">{{task.description}}</td>
+                <td class="px-6 py-4 text-black">
+            {% if task.status == 'Pendente' %}
+                <span class="bg-red-700 px-2 py-1 rounded-full text-white">
+                    {{task.status}}
+                </span>
+            {% elif task.status == 'Progresso' %}
+                    <span class="bg-[#562A00] px-2 py-1 rounded-full text-white">
+                {{task.status}}
+                </span>
+                {% else %}
+                    <span class="bg-[#5F8C1B] px-2 py-1 rounded-full text-white">
+                {{task.status}}
+                </span>
+                {% endif %}
+                    </td>
+                    <td class="px-6 py-4 text-black">{% if task.local == 'seedbed' %}<span class="font-bold">{{ task.area }}</span>
+                    <br/> {{ task.seedbed }} {% else %} {{ task.area }} {% endif %}</td>   
+                    <td class="px-6 py-4 text-black">{% if task.days_left > 0 %} {{task.days_left}} dias restantes {% elif task.days_left == 0%} 
+                        <p class="font-semibold text-[#F76711]">Hoje</p> {% else %} <p class="font-semibold text-red-700 uppercase">expirado</p></td> 
+                        {%endif%}
+                    <td class="px-6 py-4 text-black">
+                        <button class="bg-[#8ABF17] text-white font-semibold flex items-center justify-center rounded-[9px] hover:bg-[#7cad10] hover:text-[#edf0e9] h-[40px] px-4 mt-2">
+                            Consultar
+                        </button>
+                    </td>
+                    <td class="px-6 py-4 text-black">
+                        <div class="flex items-center gap-1">
+                            {% for user in task.responsible_users.all|slice:":3" %}
+                                <div class="w-8 h-8 bg-[#8ABF17] text-[#FFFFFF] flex items-center justify-center rounded-md mr-2 font-bold relative"
+                                     data-name="{{ user.username }}" title="{{ user.first_name }}" style="z-index: 1; margin-left: -4px;">
+                                    {{ user.username|slice:":1"|upper }}
+                                </div>
+                            {% endfor %}
+                            {% if task.responsible_users.count > 3 %}
+                                <span class="text-sm font-medium text-blue-500">+ {{ task.responsible_users.count|add:"-3" }} outros</span>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {%endfor%}
                 </tbody>
             </table>
           </div>
@@ -139,6 +140,5 @@ function showView(view) {
 
 showView('list');
 </script>
-
 
 {% endblock %}
