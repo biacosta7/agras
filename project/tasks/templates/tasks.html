@@ -109,16 +109,28 @@ Tarefas {{ community.name }}{% endblock %}
                 {{ task.seedbed }} {% else %} <p class='font-bold'> {{ task.area }} </p> {% endif %}
               </td>
               <td class="px-6 py-4 text-black">
-                <p class="-ml-6"> {% if task.days_left == 1 %} {{task.days_left}} dias restantes </p> <p class="-ml-3 text-xs"> Tarefa {{task.recurrence}} </p> 
-                <p class="-ml-6"> {% elif task.days_left == 7 %} {{task.days_left}} dias restantes </p> <p class="-ml-4 text-xs"> Tarefa {{task.recurrence}} </p> 
-                <p class="-ml-6"> {% elif task.days_left == 30 %} {{task.days_left}} dias restantes </p> <p class="-ml-1 text-xs"> Tarefa {{task.recurrence}} </p> 
-                <p class="-ml-8"> {% elif task.days_left == 365 %} {{task.days_left}} dias restantes </p> <p class="-ml-1 text-xs"> Tarefa {{task.recurrence}} </p> 
-                {% elif task.days_left == 0 %}
-                <p class="font-semibold text-[#F76711]">Hoje <p class="-ml-5 text-xs"> Tarefa {{task.recurrence}} </p></p>
-                {% else %}
-                <p class="font-semibold text-red-700 uppercase">expirado</p>
+                <div class="flex flex-col space-y-1">
+                  {% if task.days_left == 1 %}
+                    <p class="ml-0 ">{{ task.days_left }} dia restante</p>
+                    <p class="text-xs text-gray-500">Tarefa {{ task.recurrence }}</p>
+                  {% elif task.days_left == 7 %}
+                    <p class="ml-0">{{ task.days_left }} dias restantes</p>
+                    <p class="text-xs text-gray-500">Tarefa {{ task.recurrence }}</p>
+                  {% elif task.days_left == 30 %}
+                    <p class="ml-0 ">{{ task.days_left }} dias restantes</p>
+                    <p class="text-xs text-gray-500">Tarefa {{ task.recurrence }}</p>
+                  {% elif task.days_left == 365 %}
+                    <p class="ml-0 ">{{ task.days_left }} dias restantes</p>
+                    <p class="text-xs text-gray-500">Tarefa {{ task.recurrence }}</p>
+                  {% elif task.days_left == 0 %}
+                    <p class="font-semibold text-[#F76711]">Hoje
+                      <p class="ml-0 text-xs text-gray-500">Tarefa {{ task.recurrence }}</p>
+                    </p>
+                  {% else %}
+                    <p class="font-semibold text-red-700 uppercase">Expirado</p>
+                  {% endif %}
+                </div>
               </td>
-              {%endif%}
               <td class="px-6 py-4 text-black">
                 <button
                   class="bg-[#8ABF17] text-white font-semibold flex items-center justify-center rounded-[9px] hover:bg-[#7cad10] hover:text-[#edf0e9] h-[40px] px-4 mt-2"
@@ -181,6 +193,9 @@ Tarefas {{ community.name }}{% endblock %}
 </div>
 <script type="module" src="{% static 'tasks/js/showCalendar.js' %}"></script>
 <script>
+
+  console.clear();
+
   function showView(view) {
     const listView = document.getElementById("listView");
     const calendarView = document.getElementById("calendarView");
