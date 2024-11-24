@@ -2,10 +2,10 @@
 
 /* Supondo */
 .calendar {
-    position: relative; /* O pop-up de adicionar evento no calendário é posicionado em relação a ele */
-    /*display: flex;*/
-    align-items: center;
-    justify-content: center;
+    /*position: relative; /* O pop-up de adicionar evento no calendário é posicionado em relação a ele */
+    display: flex;
+    /*align-items: center;*/
+    /*justify-content: center;*/
     width: 100%;
     height: 100%;
     overflow-y: hidden; /* Impede rolagem vertical */
@@ -13,26 +13,27 @@
 }
 
 .calendar-controls {
-    position: absolute; /* Relativo ao .calendar-header */
+    /*position: absolute; /* Relativo ao .calendar-header */
     display: flex;
     align-items: center;
     justify-content: start;
-    width: 100%;
+    gap: 4px;
 }
 
 .previous-month, .next-month {
-    width: 50px;
+    width: 40px;
     color: white;
     background-color: var(--calendar-controls-bg-color);
     border: none;
-    border-radius: 10%;
-    font-size: 2em;
+    border-radius: 20%;
+    font-size: 1.5em;
+    font-weight: bold;
     cursor: pointer;
     transition: box-shadow 0.3s ease; /* Suaviza a transição da sombra */
 }
 
 .previous-month:active, .next-month:active {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 1); /* Adiciona a sombra quando clicado */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Adiciona a sombra quando clicado */
 }
 
 .month {
@@ -51,10 +52,10 @@
 
 .calendar-title {
     font-family: var(--calendar-title-font);
-    font-size: 2em;
+    font-size: 1.5em;
     font-weight: bold;
-    text-transform: uppercase;
-    color: var(--calendar-title-color);
+    /*text-transform: uppercase;*/
+    color: white;
 }
 
 .days-of-the-week-columns {
@@ -126,4 +127,37 @@
     height: 24px;
     border-radius: 50%;
     background-color: var(--yellow-marker-bg-color);
+}
+
+.list-tasks-aside {
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+}
+
+.list-tasks-aside-header {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    width: 100%;
+    padding: 3% 6% 3% 6%;
+    background-color: var(--calendar-title-color);
+}
+
+.list-tasks-aside-section {
+    display: flex;
+    align-items: start;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 5%;
+    background-color: #FAFAFA;
+}
+
+.warning-to-select-a-day {
+    margin: auto;
+    padding: 15%;
+    text-align: center;
+    font-style: italic;
+    color: #7D7D7D;
 }
