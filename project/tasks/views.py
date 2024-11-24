@@ -68,6 +68,7 @@ def task_page(request, community_id):
 
 
     tasks = Task.objects.filter(community=community) 
+    membership_requests = MembershipRequest.objects.filter(community=community, status='pending')
 
     today = timezone.now().date()  
     for task in tasks:
@@ -81,6 +82,7 @@ def task_page(request, community_id):
         'all_areas': all_areas_in_specific_community,
         'all_seedbeds': all_seedbeds_in_specific_area,
         'status_choices': Task.STATUS_CHOICES,
+        'membership_requests' : membership_requests,
     }
     return render(request, 'tasks.html', context)
 
