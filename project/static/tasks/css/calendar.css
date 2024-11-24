@@ -80,7 +80,7 @@
     width: 100px;
     border: 1px solid var(--matrix-border-color); /* Borda para um efeito de matriz */
     font-size: 1.5em;
-    color: #d5d7da;
+    color: #b9babb;
     background-color: var(--days-bg-color);
 }
 
@@ -98,7 +98,7 @@
 .marked-day {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    /*justify-content: space-between;*/
 }
 
 .day-number, .markers-container {
@@ -112,16 +112,18 @@
 
 .markers-container {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(1, 1fr);
     row-gap: 3px;
-    column-gap: 1px;
+    column-gap: 6px;
     grid-auto-flow: column dense; /* Preenche colunas da esquerda para a direita */
-    margin-left: auto;
+    /*margin-left: auto;*/
+    margin-right: auto;
 }
 
 .marker {
-    width: 7px;
-    height: 7px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
     background-color: var(--yellow-marker-bg-color);
 }

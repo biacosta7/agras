@@ -65,6 +65,7 @@ export function addMarker(markersContainer, color) {
     // Define a cor do marcador com base no evento
     marker.style.backgroundColor = color;
 
+    /*
     const markersNumber = markersContainer.children.length;
     // Preenche a segunda linha do grid primeiro, depois a primeira
     if (markersNumber < 4) {
@@ -73,6 +74,7 @@ export function addMarker(markersContainer, color) {
     else {
         marker.style.gridArea = `1 / ${markersNumber - 3}`; // Linha 1, coluna 1 a 4
     }
+    */
 
     markersContainer.appendChild(marker);
 }

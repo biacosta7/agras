@@ -27,9 +27,27 @@ export const calendarState = {
             end_date: new Date(2024, 11, 14),
             recurrence: "daily",
             priority: "medium",
-            color: "var(--blue-marker-bg-color)"
+            color: "var(--dark-green-color)"
         },
         // Adicione outros eventos aqui
+        {
+            title: "Exemplo de Tarefa",
+            description: "Descrição da tarefa",
+            start_date: new Date(2024, 10, 15),
+            end_date: new Date(2024, 11, 14),
+            recurrence: "weekly",
+            priority: "medium",
+            color: "var(--dark-orange-color)"
+        },
+        {
+            title: "Exemplo de Tarefa",
+            description: "Descrição da tarefa",
+            start_date: new Date(2024, 11, 1),
+            end_date: new Date(2024, 11, 7),
+            recurrence: "daily",
+            priority: "medium",
+            color: "var(--dark-brown-color)"
+        },
     ]
 };
 
@@ -220,8 +238,8 @@ export function showCalendar(month, year) {
         const eventsForDay = getEventsForDay(dayCounter, month, year);
         if (eventsForDay.length > 0) {
             daysCells[i].classList.add('marked-day');
-            // Adiciona até 8 marcadores
-            for (let j = 0; j < Math.min(eventsForDay.length, 8); j++) {
+            // Adiciona até 2 marcadores
+            for (let j = 0; j < Math.min(eventsForDay.length, 2); j++) {
                 addMarker(markersContainer, eventsForDay[j].color);
             }
         }
@@ -233,6 +251,7 @@ export function showCalendar(month, year) {
         dayCounter++;
     }
 
+
     // Preenche as células restantes com os primeiros dias próximo mês
     let nextDayCounter = 1;
     for (let i = dayOfWeek + daysInMonth; i < daysCells.length; i++) {
@@ -240,6 +259,7 @@ export function showCalendar(month, year) {
         daysCells[i].style.backgroundColor = 'var(--other-days-bg-color)';    // Cor do próximo mês
         nextDayCounter++;
     }
+
 }
 
 function updateCalendar(newMonth, newYear) {
