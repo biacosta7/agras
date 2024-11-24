@@ -393,7 +393,16 @@
     {% endblock styles %}
 </style>
 
+
+<script type="text/javascript">
+    const communityId = "{{ community_id }}";
+    const userId = "{{ user_id }}";
+</script>
+
+<script src="{% static 'chat/chat.js' %}"></script>
 <script>
+    console.log('communityId:', communityId, 'userId:', userId);
+
 const mobileMenuButton = document.getElementById('mobile-menu-button');
 const mobileMenu = document.getElementById('mobile-menu');
 const mobileMenuCloseButton = document.getElementById('mobile-menu-close-button');

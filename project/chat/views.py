@@ -4,30 +4,47 @@ from .models import ChatBot
 from django.http import HttpResponseRedirect, JsonResponse
 import google.generativeai as genai
 import os
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_protect
+import json
 
 # Configura a API do Gemini com a chave de API
 genai.configure(api_key=os.environ["API_KEY"])
 
+@csrf_protect
 @login_required
 def ask_question(request, community_id, user_id):
     if request.method == "POST":
-        text = request.POST.get("text")
-        
-        # Inicializa o modelo de IA e inicia o chat
-        model = genai.GenerativeModel("gemini-pro")
-        chat = model.start_chat()
-        
-        # Envia a pergunta para a IA e recebe a resposta
-        response = chat.send_message(text)
-        user = request.user
-        
-        # Salva a interação no banco de dados
-        ChatBot.objects.create(text_input=text, gemini_output=response.text, user=user)
+        try:
+            data = json.loads(request.body)
+            text = data.get('text', '')
+            
+            # Log de depuração
+            print(f"Received text: {text}")
 
-        response_data = {
-            "text": response.text,
-        }
-        return JsonResponse({"data": response_data})
+            # Inicializa o modelo de IA e inicia o chat
+            model = genai.GenerativeModel("gemini-pro")
+            chat = model.start_chat()
+            
+            # Envia a pergunta para a IA e recebe a resposta
+            response = chat.send_message(text)
+            user = request.user
+            
+            # Salva a interação no banco de dados
+            ChatBot.objects.create(text_input=text, gemini_output=response.text, user=user)
+
+            response_data = {
+                "text": response.text,
+            }
+
+            # Log de depuração
+            print(f"Bot response: {response.text}")
+
+            return JsonResponse({"data": response_data})
+        except Exception as e:
+            # Log de erro
+            print(f"Error processing request: {e}")
+            return JsonResponse({"error": "An error occurred while processing your request."}, status=500)
     else:
         return HttpResponseRedirect(
             reverse("chat", args=[community_id, user_id])
@@ -46,3 +63,4 @@ def chat(request, community_id, user_id):
         "community_id": community_id,
         "user_id": user_id
     })
+
