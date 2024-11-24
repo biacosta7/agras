@@ -237,9 +237,6 @@ def read_page(request):
                 # Set Brazilian Portuguese language and voice
                 speech_config.speech_synthesis_language = "pt-BR"
                 speech_config.speech_synthesis_voice_name = "pt-BR-BrendaNeural"  # Female voice
-                # Alternative voices:
-                # "pt-BR-AntonioNeural" for male voice
-                # "pt-BR-BrendaNeural" for another female voice
                 
                 audio_config = speechsdk.audio.AudioOutputConfig(use_default_speaker=True)
                 
