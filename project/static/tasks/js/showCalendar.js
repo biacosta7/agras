@@ -48,6 +48,15 @@ export const calendarState = {
             priority: "medium",
             color: "var(--dark-brown-color)"
         },
+        {
+            title: "Exemplo de Tarefa",
+            description: "Descrição da tarefa",
+            start_date: new Date(2024, 11, 21),
+            end_date: new Date(2025, 12, 21),
+            recurrence: "monthly",
+            priority: "medium",
+            color: "var(--dark-orange-color)"
+        },
     ]
 };
 
@@ -160,7 +169,7 @@ export function showCalendar(month, year) {
     const daysInPreviousMonth = getDaysInMonth(year, month - 1);    // Total de dias no mês anterior
 
     // Atualiza o título do calendário com o mês e o ano
-    calendarTitle.textContent = `${getMonthName(month)} de ${year}`;
+    calendarTitle.textContent = `${getMonthName(month)} ${year}`;
 
     let dayCounter = 1;
 
