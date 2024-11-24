@@ -97,15 +97,21 @@ def seedbed_detail_view(request, community_id, area_id, seedbed_id):
     seedbed = get_object_or_404(Seedbed, id=seedbed_id, area=area)
 
     # Obtém a lista de produtos associados ao canteiro
-    products = seedbed.products_in_seedbed.all()
+    active_products = seedbed.products_in_seedbed.filter(
+        data_colheita__isnull=True,
+    )
+    print("All products in seedbed:", seedbed.products_in_seedbed.all().values('id', 'type_product__name', 'data_colheita', 'quantidade_colhida'))
+    print("Active products:", active_products)
+    # If you also want to track harvested products separately
 
     # Verifica se um produto foi selecionado a partir do dropdown
+    # Handle product selection from dropdown (only from active products)
     selected_product_id = request.GET.get('product_id')
     if selected_product_id:
-        selected_product = products.filter(id=selected_product_id).first()
+        selected_product = active_products.filter(id=selected_product_id).first()
     else:
-        selected_product = products.first() if products else None
-
+        selected_product = active_products.first() if active_products else None
+    
     # Verifica se o produto selecionado tem um ciclo de vida válido
     ciclo_de_vida = 3  # Valor padrão caso o ciclo de vida não esteja definido
     if selected_product and selected_product.type_product and selected_product.type_product.lifecycle is not None:
@@ -159,10 +165,11 @@ def seedbed_detail_view(request, community_id, area_id, seedbed_id):
         'community': community,
         'area': area,
         'seedbed': seedbed,
-        'products': products,
+        'products': active_products,  # This will show only non-harvested products
         'selected_product': selected_product,
         'estimativa_colheita': estimativa_colheita_formatada,
         'previsao_colheita': previsao_colheita,
+        'active_products': active_products,
     }
     return render(request, 'seedbed_detail.html', context)
 

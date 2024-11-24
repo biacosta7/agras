@@ -64,7 +64,6 @@ def create_product_view(request, seedbed_id, community_id, area_id):
                 data_plantio=planting_date
             )
             messages.success(request, f'Produto {product.type_product.name} cadastrado com sucesso no canteiro {seedbed.nome}.')
-
         except ValidationError as e:
             messages.error(request, f"Erro de validação: {e}")
 
@@ -167,13 +166,10 @@ def product_update_view(request, community_id, area_id, seedbed_id, product_id):
         })
 
     else:
-        data_plantio = request.POST.get('data_plantio')
         quantidade = request.POST.get('quantidade')
 
         # Verificação de campos obrigatórios
         errors = []
-        if not data_plantio:
-            errors.append("O campo 'Data de plantio' é obrigatório.")
         if not quantidade:
             errors.append("O campo 'Quantidade' é obrigatório.")
         elif not quantidade.isdigit():
@@ -185,7 +181,6 @@ def product_update_view(request, community_id, area_id, seedbed_id, product_id):
             return redirect('product_update', community_id=community_id, area_id=area_id, seedbed_id=seedbed_id, product_id=product_id)
 
         # Atualizar os dados do produto mantendo o tipo de produto original
-        product.data_plantio = data_plantio
         product.quantidade = int(quantidade)  # Converte para int
         product.save()
         messages.success(request, 'Cultivo editado com sucesso.')

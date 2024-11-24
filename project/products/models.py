@@ -38,11 +38,36 @@ class Product(models.Model):
     quantidade = models.IntegerField(default=1)
     quantidade_colhida = models.IntegerField(default=0, null=True, blank=True)
     data_colheita = models.DateField(null =True, blank = True)  # Campo para a data da colheita
-    #is_harvested = models.BooleanField(default=False)  # Novo campo
 
+    def is_harvested(self):
+        """Verifica se o cultivo foi colhido (baseado na quantidade colhida ou na data de colheita)."""
+        return self.quantidade_colhida >= self.quantidade or self.data_colheita is not None
+    
     def get_absolute_url(self):
         return f"/products/{self.id}/"
 
     @property
     def name_type_product(self):
         return self.type_product.name
+    
+    def __str__(self):
+        return f"{self.type_product.name} ({self.data_plantio})"
+    
+class Harvest(models.Model):
+    # Atributo que define a categoria de colheita, ex: "colhidos", "pendentes"
+    name = models.CharField(max_length=100)
+    
+    # Relacionamento com o produto
+    products_in_seedbed = models.ManyToManyField(Product, related_name='harvests')
+
+    def harvested_products(self):
+        """Retorna os produtos já colhidos."""
+        return self.products_in_seedbed.filter(quantidade_colhida__gt=0)  # Ou pode usar o campo data_colheita
+    
+    def pending_harvest_products(self):
+        """Retorna os produtos que ainda não foram colhidos."""
+        return self.products_in_seedbed.filter(quantidade_colhida=0)
+    
+    def __str__(self):
+        return self.name
+    

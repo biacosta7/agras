@@ -95,7 +95,7 @@
     <div class="flex items-center justify-center">
         <div class="text-center flex-1">
             <ul class="flex flex-wrap list-none justify-center">
-                {% for product in seedbed.products_in_seedbed.all %}
+                {% for product in active_products %}
                     <li class="flex flex-col items-center mr-12 mb-4">
                         <a href="?product_id={{ product.id }}">
                             <img src="{% static 'assets/small-plant.png' %}" alt="Área de plantio" class="w-16 h-16 mb-1">
@@ -129,8 +129,10 @@
                             <option value="{{ product.id }}" {% if selected_product and selected_product.id == product.id %}selected{% endif %}>
                                 {{ product.type_product.name }}
                             </option>
+                        {% empty %}
+                            <option value="">Nenhum cultivo disponível</option>
                         {% endfor %}
-                    </select>
+                    </select>      
                     <button type="submit" class="bg-[#8ABF17] text-white py-2 px-4 rounded hover:bg-[#5F8C1B] transition duration-200 ml-4">
                         Ver Detalhes
                     </button>
@@ -245,8 +247,10 @@
                 <h1 class="mt-2 font-bold">Editar Cultivo "{{ selected_product.type_product.name }}"</h1>
 
                <!-- Formulário de Edição -->
-                <form id="edit-product-form" method="POST" action="{% url 'product_update' community.id area.id seedbed.id selected_product.id %}">
-                    {% csrf_token %}
+               {% if selected_product %}
+                    <form id="edit-product-form" method="POST" action="{% url 'product_update' community.id area.id seedbed.id selected_product.id %}">
+                        {% csrf_token %}
+                {% endif %}
                     
                     <!-- Campo para editar quantidade -->
                     <div class="mt-4">
