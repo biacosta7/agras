@@ -53,5 +53,5 @@ urlpatterns = [
     path('add_task/<int:community_id>/<int:area_id>/<int:seedbed_id>/', tasks_views.add_task, name='add_task'),  # community_id, area_id e seedbed_id
     path('add_task/<int:community_id>/<int:area_id>/<int:seedbed_id>/<int:product_id>/', tasks_views.add_task, name='add_task'),  # community_id, area_id, seedbed_id e product_id
     path('tasks/<int:community_id>/', tasks_views.list_tasks, name='list_tasks'),
-
+    path('get_tasks/', tasks_views.get_tasks, name='get_tasks'),
 ]

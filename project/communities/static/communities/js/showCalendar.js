@@ -1,7 +1,9 @@
 // Importa as novas funções que criei para manipular datas
 import { getDayOfWeek, getDaysInMonth, getMonthName } from './newDateFunctions.js';
 // Importa a função de exibição do pop-up de adicionar evento no calendário
-import { openCreateEventPopup } from './createEvent.js';
+import { listAllEvents } from './listEvents.js';
+// Importa a função de pegar os eventos do dia e de adicionar marcadores nos dias com eventos
+import { getEventsForDay, addMarker } from './markDays.js'
 
 // Constantes globais para armazenar a data atual (hoje)
 const currentDate = new Date();
@@ -19,12 +21,13 @@ export const calendarState = {
     dayEvents: [
         // Exemplo de evento
         {
-            title: "Exemplo de Evento",
-            description: "Descrição do evento",
-            start_date: new Date(2024, 11, 15),  // 15 de novembro de 2024
-            frequency: "weekly",
-            end_date: new Date(2026, 12, 14),
-            color: "var(--green-marker-bg-color)"
+            title: "Exemplo de Tarefa",
+            description: "Descrição da tarefa",
+            start_date: new Date(2024, 10, 15),
+            end_date: new Date(2024, 11, 14),
+            recurrence: "daily",
+            priority: "medium",
+            color: "var(--blue-marker-bg-color)"
         },
         // Adicione outros eventos aqui
     ]
@@ -108,10 +111,13 @@ function handleDayClick(event) {
     // Remover a cor de fundo ao soltar o botão do mouse
     function handleMouseUp() {
         event.target.style.backgroundColor = 'var(--days-bg-color)'; // Volta à cor original
-        // Abre o pop-up
-        openCreateEventPopup();
-        // Listas o eventos do dia clicado
-        //listAllEvents();
+        
+        // Atualiza o estado com o dia selecionado
+        calendarState.selectedDayElement = event.target;
+        calendarState.day = parseInt(event.target.querySelector('.day-number').textContent);
+        // Lista os eventos do dia clicado
+        listAllEvents(calendarState.day, calendarState.month, calendarState.year);
+        
         // Remove os event listeners após o clique
         event.target.removeEventListener('mouseup', handleMouseUp);
         event.target.removeEventListener('mouseleave', handleMouseLeave);
@@ -126,74 +132,6 @@ function handleDayClick(event) {
 
     event.target.addEventListener('mouseup', handleMouseUp);
     event.target.addEventListener('mouseleave', handleMouseLeave);
-}
-
-// Função para adicionar marcadores de evento 
-function addMarker(markersContainer, color) {
-    const marker = document.createElement("span");
-    marker.classList.add("marker");
-
-    // Define a cor do marcador com base no evento
-    marker.style.backgroundColor = color;
-
-    const markersNumber = markersContainer.children.length;
-    // Preenche a segunda linha do grid primeiro, depois a primeira
-    if (markersNumber < 4) {
-        marker.style.gridArea = `2 / ${markersNumber + 1}`; // Linha 2, coluna 1 a 4
-    } 
-    else {
-        marker.style.gridArea = `1 / ${markersNumber - 3}`; // Linha 1, coluna 1 a 4
-    }
-
-    markersContainer.appendChild(marker);
-}
-
-function getEventsForDay(day, month, year) {
-    // Filtra os eventos armazenados no calendário
-    return calendarState.dayEvents.filter(event => {
-        const eventDate = event.start_date;
-        const eventEndDate = event.end_date; // Adicionando a data de fim do evento
-        const currentDate = new Date(year, month, day);
-
-        // Verifica se o evento começa no dia atual
-        if (eventDate.getFullYear() === year && eventDate.getMonth() === month && eventDate.getDate() === day) {
-            if (eventEndDate) {
-                // Se a data de fim existe, verifica se o dia atual está dentro do intervalo
-                return currentDate >= eventDate && currentDate <= eventEndDate;
-            } else {
-                return true; // Para eventos sem data de fim, considera o evento como válido
-            }
-        }
-
-        // Implementação para eventos recorrentes
-        if (eventEndDate && (currentDate < eventDate || currentDate > eventEndDate)) {
-            return false; // Se a data atual não está dentro do intervalo de repetição, descarta
-        }
-
-        if (event.frequency === "daily") {
-            return true; // Eventos diários ocorrem todos os dias
-
-        } else if (event.frequency === "weekly") {
-            // Eventos semanais: verifica se o dia da semana é o mesmo e a diferença em semanas é exata
-            const daysDifference = Math.floor((currentDate - eventDate) / (1000 * 60 * 60 * 24));
-            return currentDate.getDay() === eventDate.getDay() && daysDifference % 7 === 0;
-
-        } else if (event.frequency === "biweekly") {
-            // Eventos quinzenais (a cada duas semanas): mesmo dia da semana e diferença em semanas é par
-            const daysDifference = Math.floor((currentDate - eventDate) / (1000 * 60 * 60 * 24));
-            return currentDate.getDay() === eventDate.getDay() && (daysDifference / 7) % 2 === 0;
-
-        } else if (event.frequency === "monthly") {
-            // Eventos mensais: ocorre no mesmo dia do mês
-            return eventDate.getDate() === day;
-
-        } else if (event.frequency === "yearly") {
-            // Eventos anuais: ocorre no mesmo dia e mês
-            return eventDate.getMonth() === month && eventDate.getDate() === day;
-        }
-
-        return false; // Para eventos não recorrentes que não se encaixam nas condições
-    });
 }
 
 export function showCalendar(month, year) {
@@ -310,6 +248,13 @@ function updateCalendar(newMonth, newYear) {
     showCalendar(newMonth, newYear);    // Atualiza o calendário com os novos valores de mês e ano
 }
 
+// Função para criar uma data local a partir de uma string no formato 'yyyy-mm-dd'
+function parseDateWithoutTimezone(dateString) {
+    if (!dateString) return null; // Retorna null se a string for inválida
+    const [year, month, day] = dateString.split('-').map(Number);
+    return new Date(year, month - 1, day); // Mês no JavaScript é 0-indexado
+}
+
 function main() {
     // Evento de clique pro botão anterior
     previousButton.addEventListener('click', () => {
@@ -333,8 +278,28 @@ function main() {
         updateCalendar(calendarState.month, calendarState.year); // Atualiza o calendário
     });
 
-    // Inicializa o calendário na primeira chamada com o mês e o ano atuais
-    showCalendar(MONTH, YEAR);
+    // Pega todas as tarefas do banco de dados e inicializa o calendário
+    fetch('/comunidades/get_tasks/')
+    .then(response => response.json())
+    .then(data => {
+        // Atualiza o dayEvents com as tarefas do servidor
+        calendarState.dayEvents = data.tasks
+        .filter(task => task.start_date) // Filtra as tarefas com start_date não nulo
+        .map(task => ({
+            title: task.title,
+            description: task.description,
+            start_date: parseDateWithoutTimezone(task.start_date),
+            end_date: task.end_date ? parseDateWithoutTimezone(task.end_date) : null,
+            recurrence: task.recurrence,
+            priority: task.priority,
+            color: task.color
+        }));
+
+        console.log(calendarState.dayEvents)
+        // Inicializa o calendário na primeira chamada com o mês e o ano atuais
+        showCalendar(calendarState.month, calendarState.year);
+    })
+    .catch(error => console.error('Erro ao carregar as tarefas:', error));
 }
 
 // Chama a função main ao carregar o script

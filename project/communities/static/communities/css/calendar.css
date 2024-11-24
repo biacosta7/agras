@@ -126,5 +126,6 @@ tbody {
 .marker {
     width: 7px;
     height: 7px;
+    border-radius: 50%;
     background-color: var(--yellow-marker-bg-color);
 }

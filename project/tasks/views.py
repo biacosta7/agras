@@ -11,6 +11,45 @@ from django.urls import reverse
 from django.contrib import messages
 from django.http import JsonResponse
 
+# Para o calendário
+from django.core.serializers import serialize
+from django.forms.models import model_to_dict
+
+def get_tasks(request):
+    # Verifica se o usuário está autenticado
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'Usuário não autenticado.'}, status=401)
+
+    # Obtém o usuário que está visualizando o calendário
+    user = request.user
+
+    # Filtra as tarefas atribuídas ao usuário
+    tasks = Task.objects.filter(responsible_users=user)
+
+    tasks_list = []
+    for task in tasks:
+        tasks_list.append({
+            'title': task.title,
+            'description': task.description,
+            'start_date': task.start_date.strftime('%Y-%m-%d') if task.start_date else None,
+            'end_date': task.deadline.strftime('%Y-%m-%d') if task.deadline else None,
+            'recurrence': task.recurrence,
+            'priority': task.priority,
+            # Mapear prioridade para cor
+            'color': map_priority_to_color(task.priority)
+        })
+
+    return JsonResponse({'tasks': tasks_list})
+
+def map_priority_to_color(priority):
+    color_mapping = {
+        'low': 'var(--green-marker-bg-color)',
+        'medium': 'var(--yellow-marker-bg-color)',
+        'high': 'var(--red-marker-bg-color)',
+    }
+    return color_mapping.get(priority, 'var(--blue-marker-bg-color)')
+
+
 def add_task(request, community_id, area_id=None, seedbed_id=None, product_id=None, type_product_id=None):
     community = get_object_or_404(Community, id=community_id)
     users = community.members.all().union(community.admins.all()) if community else None
