@@ -33,7 +33,7 @@
                     <label for="final_date-{{ task.id }}" class="text-sm font-medium text-gray-700 mb-1 flex"><span
                             class="material-icons text-[#8ABF17] items-center text-[18px] mr-1">schedule</span>Data
                         Final <span class="text-xs flex items-center justify-center ml-1">- apenas leitura </span> </label>
-                    <input type="date" id="final_date-{{ task.id }}" value="{{ task.final_date }}"
+                    <input type="date" id="final_date-{{ task.id }}" value="{{ task.final_date|date:'Y-m-d' }}"
                         name="final_date"
                         class="w-full border border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] py-2 px-3"
                         placeholder="" readonly>
@@ -137,7 +137,7 @@
 
 <script>
     function toggleEditTaskModal(taskId) {
-        let modal = document.getElementById(`editTaskModal-${taskId}`); // Corrigido aqui
+        let modal = document.getElementById(`editTaskModal-${taskId}`); 
         if (modal) {
             modal.classList.remove('hidden');
         } else {
