@@ -9,12 +9,17 @@
     --sat-color: #057c97;
     --days-bg-color: white;
     --days-clicked-bg-color: #ffbb001c; /* Cor de fundo enquanto o dia está sendo clicado */
-    --other-days-bg-color: white;
+    --other-days-bg-color: #F2F2F2;
     --matrix-border-color: #ececec;
     --event-day-marker-bg-color : #e0d208;
     --save-event-form-group-bg-color: #a78c08;
     --event-add-button-bg-color: #7ABFB3;
     
+    /* Cores do novo design */
+    --dark-green-color: #5F8C1B;
+    --dark-brown-color: #562A00;
+    --dark-orange-color: #F76711;
+    --dark-gray-color: #A2A2A2;
 
     --red-marker-bg-color: #F2293A;
     --red-form-group-bg-color: #732020;

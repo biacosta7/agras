@@ -3,7 +3,7 @@
 /* Supondo */
 .calendar {
     position: relative; /* O pop-up de adicionar evento no calendário é posicionado em relação a ele */
-    display: flex;
+    /*display: flex;*/
     align-items: center;
     justify-content: center;
     width: 100%;
@@ -21,12 +21,12 @@
 }
 
 .previous-month, .next-month {
-    width: 10%;
+    width: 50px;
     color: white;
     background-color: var(--calendar-controls-bg-color);
     border: none;
     border-radius: 10%;
-    font-size: 1em;
+    font-size: 2em;
     cursor: pointer;
     transition: box-shadow 0.3s ease; /* Suaviza a transição da sombra */
 }
@@ -46,11 +46,12 @@
 .calendar-header {
     position: relative;
     padding-bottom: 16px;
+    background-color: white;
 }
 
 .calendar-title {
     font-family: var(--calendar-title-font);
-    font-size: 1em;
+    font-size: 2em;
     font-weight: bold;
     text-transform: uppercase;
     color: var(--calendar-title-color);
@@ -62,18 +63,23 @@
 
 .days-of-the-week, .days {
     flex: 1; /* Divide igualmente as colunas */
-    border: 1px solid var(--matrix-border-color); /* Borda para um efeito de matriz */
 }
 
 .days-of-the-week {
+    padding: 1%;
     font-family: var(--days-font);
     font-weight: bold;
-    color: black;
-    background-color: var(--other-days-bg-color);
+    font-size: 1.2em;
+    color: var(--dark-green-color);
+    background-color: white;
 }
 
 .days {
+    height: 100px;
     padding: 5px;
+    width: 100px;
+    border: 1px solid var(--matrix-border-color); /* Borda para um efeito de matriz */
+    font-size: 1.5em;
     color: #d5d7da;
     background-color: var(--days-bg-color);
 }
