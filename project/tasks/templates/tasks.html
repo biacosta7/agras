@@ -88,42 +88,44 @@ Tarefas {{ community.name }}{% endblock %}
               <div class="relative">
                 <td class="px-6 py-4 relative">
                   {% if task.status == 'Pendente' %}
-                    <span class="bg-red-700 px-2 py-1 rounded-full text-white cursor-pointer"  id="status-dropdown-{{ task.id }}" onclick="openStatusDropdown({{task.id}})">
-                      {{ task.status }}
-                    </span>
-                  {% elif task.status == 'Progresso' %}
-                    <span class="bg-[#562A00] px-2 py-1 -ml-3 rounded-full text-white cursor-pointer text-nowrap"  id="status-dropdown-{{ task.id }}" onclick="openStatusDropdown({{task.id}})">
-                      Em {{ task.status }}
+                  <span class="bg-red-700 px-2 py-1 rounded-full text-white cursor-pointer text-nowrap inline-flex items-center justify-center" id="status-dropdown-{{ task.id }}" onclick="openStatusDropdown({{task.id}})">
+                    <span class="material-icons mr-2 text-[18px]">radio_button_unchecked</span> {{ task.status }}
+                  </span>
+                  {% elif task.status == 'Progresso' %} 
+                    <span class="bg-[#562A00] px-2 py-1 -ml-3 rounded-full text-white cursor-pointer text-nowrap inline-flex items-center justify-center"  id="status-dropdown-{{ task.id }}" onclick="openStatusDropdown({{task.id}})">
+                      <span class="material-icons mr-2 text-[18px]">pending_actions</span> Em {{ task.status }}
                     </span>
                   {% else %}
-                    <span class="bg-[#5F8C1B] px-2 py-1 rounded-full cursor-pointer text-white"  id="status-dropdown-{{ task.id }}" onclick="openStatusDropdown({{task.id}})">
-                      {{ task.status }}
+                    <span class="bg-[#5F8C1B] px-2 py-1 rounded-full cursor-pointer text-white text-nowrap inline-flex items-center justify-center"  id="status-dropdown-{{ task.id }}" onclick="openStatusDropdown({{task.id}})">
+                      <span class="material-icons-outlined mr-2 text-[18px]">check_circle</span> {{ task.status }}
                     </span>
                   {% endif %}
-                  <div id="statusModal-{{ task.id }}" class="hidden absolute top-full left-0 -mt-4 -ml-6 z-10 w-48 bg-white rounded-lg shadow-lg border border-gray-200">
+                  <div id="statusModal-{{ task.id }}" class="hidden absolute top-full left-0 -mt-4 z-50 w-42 rounded-lg shadow-lg border border-gray-200 bg-white">
                     <form method="POST" id="status-form-{{ task.id }}" action="{% url 'edit_task_status' community.id task.id %}" class="p-4">
-                      {% csrf_token %}
-                      <label for="status_change" class="block text-sm font-medium text-gray-700 mb-2">
-                        Alterar Status
-                      </label>
-                      <select
-                        id="status_change"
-                        name="status"
-                        class="w-full bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-md focus:ring-[#5F8C1B] focus:border-[#5F8C1B] p-2.5"
-                        onchange="submitStatusForm({{ task.id }})"
-                        required
-                      >
-                        <option value="" selected disabled hidden>Selecione...</option>
-                        {% for value, status in status_choices %}
-                        <option value="{{ status }}" {% if task.status == status %}selected{% endif %}>
-                          {{ status }}
-                        </option>
-                        {% endfor %}
-                      </select>
+                        {% csrf_token %}
+                        <span class="block text-sm font-medium text-gray-700 mb-2">Alterar Status</span> 
+                        <div class="flex flex-col space-y-2">
+                            {% for value, status in status_choices %}
+                            <button type="button" 
+                                    class="relative w-full text-left p-2 rounded-md transition-colors hover:bg-gray-100 focus:outline-none {% if task.status == status %}bg-gray-200{% endif %}"
+                                    onclick="changeStatus({{ task.id }}, '{{ status }}')">
+                                <span class="flex items-center gap-2"> 
+                                  <span class="material-icons-outlined text-gray-600 {% if task.status == status %}text-current{% endif %}">
+                                    {% if status == 'Pendente' %}radio_button_unchecked{% elif status == 'Progresso' %}pending_actions{% elif status == 'Concluída' %}check_circle{% endif %}
+                                  </span>
+                                  <span class="{% if status == 'Pendente' %}text-red-700{% elif status == 'Progresso' %}text-amber-800{% elif status == 'Concluída' %}text-green-700{% endif %} font-medium">
+                                    {{ status }}
+                                  </span>
+                                </span>
+                             
+                            </button>
+                                {% if not forloop.last %}
+                                    <hr class="border-t border-gray-200 my-1">
+                                {% endif %}
+                            {% endfor %}
+                        </div>
                     </form>
-                  </div>
-                </td>
-              </div>
+                </div>
               <td class="px-6 py-4 text-black capitalize">
                 {% if task.local == 'seedbed' %}<span class="font-bold"
                   >{{ task.area }}</span
@@ -221,15 +223,18 @@ Tarefas {{ community.name }}{% endblock %}
     const modal = document.getElementById(`statusModal-${taskId}`);
     const allDropdowns = document.querySelectorAll('[id^="statusModal-"]');
   
+    // Fecha todos os dropdowns
     allDropdowns.forEach(dropdown => {
       if (dropdown !== modal) {
         dropdown.classList.add('hidden');
       }
     });
   
+    // Alterna o estado do dropdown clicado
     modal.classList.toggle('hidden');
   }
   
+  // Fecha o dropdown quando clicar fora
   document.addEventListener('click', function(event) {
     const dropdowns = document.querySelectorAll('[id^="statusModal-"]');
     dropdowns.forEach(dropdown => {
@@ -239,10 +244,26 @@ Tarefas {{ community.name }}{% endblock %}
     });
   });
   
-  function submitStatusForm(taskId) {
+  // Submete o formulário de status com o valor da opção selecionada
+  function changeStatus(taskId, status) {
     const form = document.getElementById(`status-form-${taskId}`);
+    
+    // Cria ou encontra o campo hidden para o status
+    let statusInput = form.querySelector('input[name="status"]');
+    if (!statusInput) {
+      statusInput = document.createElement('input');
+      statusInput.type = 'hidden';
+      statusInput.name = 'status';
+      form.appendChild(statusInput);
+    }
+  
+    // Define o valor do status no input hidden
+    statusInput.value = status;
+  
+    // Submete o formulário
     form.submit();
   }
+
   function showView(view) {
     const listView = document.getElementById("listView");
     const calendarView = document.getElementById("calendarView");
