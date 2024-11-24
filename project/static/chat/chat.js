@@ -31,14 +31,13 @@ document.addEventListener('DOMContentLoaded', function() {
     async function sendMessage(text) {
         if (!text) return;
     
-        // Log para verificar o texto enviado
         console.log('Sending message:', text);
     
-        // Create and append user message
+        // Cria e adiciona a mensagem do usuário no chat
         appendMessage(text, 'user');
     
         try {
-            // Usando as variáveis communityId e userId passadas do Django
+            // Adiciona o contexto ao payload da mensagem
             const response = await fetch(askQuestionUrl, {
                 method: 'POST',
                 headers: {
@@ -47,7 +46,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     'X-Requested-With': 'XMLHttpRequest'
                 },
                 body: JSON.stringify({
-                    text: text
+                    text: text,
+                    user_context: userContext // Adiciona o contexto ao corpo da requisição
                 })
             });
     
@@ -60,14 +60,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 appendMessage('Desculpe, ocorreu um erro ao processar sua solicitação.', 'bot');
             }
         } catch (error) {
-            //console.error('Error:', error);
+            console.error('Error:', error);
             appendMessage('Desculpe, ocorreu um erro ao processar sua solicitação.', 'bot');
         }
     
         chatInput.value = '';
-    }
-    
-    
+    }    
+      
     // Append message to chat
     function appendMessage(text, sender) {
         const messageDiv = document.createElement('div');
