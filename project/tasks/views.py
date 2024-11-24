@@ -1,3 +1,5 @@
+from datetime import timedelta
+from django.utils import timezone
 from django.utils.timezone import now
 from django.shortcuts import redirect, render, get_object_or_404
 from .models import Task
@@ -7,6 +9,27 @@ from seedbeds.models import Seedbed
 from communities.models import Community, MembershipRequest
 from django.contrib import messages
 from users.models import User
+
+def calculate_final_date(start_date, recurrence):   
+    today = now().date()  # Obtém a data atual
+    if recurrence == 'Única':
+        final_date = start_date
+    elif recurrence == 'Diária':
+        final_date = start_date + timedelta(days=1)
+    elif recurrence == 'Semanal':
+        weeks_diff = (today - start_date).days // 7
+        final_date = start_date + timedelta(weeks=(weeks_diff + 1))
+    elif recurrence == 'Mensal':
+        if start_date.month < 12:
+            final_date = start_date.replace(month=start_date.month + 1)
+        else:
+            final_date = start_date.replace(month=1, year=start_date.year + 1)
+    elif recurrence == 'Anual':
+        final_date = start_date.replace(year=start_date.year + 1)
+    else:
+        final_date = None
+
+    return final_date
 
 def task_page(request, community_id):
     community = get_object_or_404(Community, id=community_id)
@@ -18,7 +41,8 @@ def task_page(request, community_id):
         local = request.POST.get('local')
         recurrence = request.POST.get('recurrence')
         start_date = request.POST.get('start_date')
-        final_date = request.POST.get('final_date')
+        start_date = timezone.datetime.strptime(start_date, "%Y-%m-%d").date()
+        final_date = calculate_final_date(start_date, recurrence)
         materials = request.POST.get('materials')
         status = request.POST.get('status')
         responsible_users_raw = request.POST.get('responsible_users[]', '')
@@ -111,18 +135,11 @@ def edit_task(request, community_id, task_id):
         recurrence = request.POST.get('recurrence')
         responsible_users_raw = request.POST.getlist('responsible_users[]') 
 
-        # Verificando se a data final é posterior à data inicial
-        if start_date > final_date:
-            messages.error(request, "A data final não pode ser antes da data inicial.")
-            return redirect('task_page', community_id=community_id)
-
-        # Verifica se os campos obrigatórios foram preenchidos
         if not description or not local or not start_date or not status or not responsible_users_raw:
             messages.error(request, 'Todos os campos são obrigatórios.')
             return redirect('task_page', community_id=community_id)
 
         try:
-            # Converte os IDs dos responsáveis para inteiros
             responsible_users_ids = [int(user_id) for user_id in responsible_users_raw]
 
             # Validando se todos os IDs são válidos
@@ -139,6 +156,12 @@ def edit_task(request, community_id, task_id):
             elif local.startswith('seedbed_'):
                 local_type = 'seedbed'
                 local_id = local.replace('seedbed_', '')
+            # Convertendo a start_date para formato de data
+            start_date = timezone.datetime.strptime(start_date, "%Y-%m-%d").date()
+
+            # Calculando a final_date com base na recorrência
+            final_date = calculate_final_date(start_date, recurrence)
+
 
             task.materials = materials
             task.description = description
