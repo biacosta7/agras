@@ -121,6 +121,23 @@ def delete_task(request, community_id, task_id):
     messages.success(request, "Tarefa excluída com sucesso.")
     return redirect('task_page', community_id=community_id)
 
+def edit_only_status(request, community_id, task_id):
+    task = get_object_or_404(Task, pk=task_id)
+
+    if request.method == 'POST':
+        status = request.POST.get('status')
+
+    try:
+        task.status = status
+        messages.success(request, f'Status da tarefa "{task.description}"  atualizado com sucesso.')
+        task.save()
+        return redirect('task_page', community_id=community_id)
+    except ValueError as e:
+        messages.error(request, f'Erro de valor: {e}')
+    except Exception as e:
+        messages.error(request, f'Erro ao atualizar tarefa: {e}')
+    
+
 def edit_task(request, community_id, task_id):
     task = get_object_or_404(Task, pk=task_id)
 
