@@ -69,12 +69,12 @@ Tarefas {{ community.name }}{% endblock %}
             class="text-xs text-[#5F8C1B] uppercase bg-gray-50 border-t-4 border-[#5F8C1B] border-b-4 border-b-[#D3D3D3]"
           >
             <tr>
-              <th scope="col" class="px-6 py-3">Descrição</th>
-              <th scope="col" class="px-[50px] py-3">Status</th>
-              <th scope="col" class="px-6 py-3">Local</th>
-              <th scope="col" class="px-6 py-3">Prazo</th>
-              <th scope="col" class="px-[38px] py-3">Materiais</th>
-              <th scope="col" class="px-6 py-3">Responsável</th>
+              <th scope="col" class="px-6 py-3 font-bold">Descrição</th>
+              <th scope="col" class="px-[50px] py-3 font-bold">Status</th>
+              <th scope="col" class="px-6 py-3 font-bold">Local</th>
+              <th scope="col" class="px-6 py-3 font-bold">Prazo</th>
+              <th scope="col" class="px-[38px] py-3 font-bold">Materiais</th>
+              <th scope="col" class="px-6 py-3 font-bold">Responsável</th>
             </tr>
           </thead>
           <tbody>
@@ -109,9 +109,12 @@ Tarefas {{ community.name }}{% endblock %}
                 {{ task.seedbed }} {% else %} <p class='font-bold'> {{ task.area }} </p> {% endif %}
               </td>
               <td class="px-6 py-4 text-black">
-                {% if task.days_left > 0 %} {{task.days_left}} dias restantes 
+                <p class="-ml-6"> {% if task.days_left == 1 %} {{task.days_left}} dias restantes </p> <p class="-ml-3 text-xs"> Tarefa {{task.recurrence}} </p> 
+                <p class="-ml-6"> {% elif task.days_left == 7 %} {{task.days_left}} dias restantes </p> <p class="-ml-4 text-xs"> Tarefa {{task.recurrence}} </p> 
+                <p class="-ml-6"> {% elif task.days_left == 30 %} {{task.days_left}} dias restantes </p> <p class="-ml-1 text-xs"> Tarefa {{task.recurrence}} </p> 
+                <p class="-ml-8"> {% elif task.days_left == 365 %} {{task.days_left}} dias restantes </p> <p class="-ml-1 text-xs"> Tarefa {{task.recurrence}} </p> 
                 {% elif task.days_left == 0 %}
-                <p class="font-semibold text-[#F76711]">Hoje</p>
+                <p class="font-semibold text-[#F76711]">Hoje <p class="-ml-5 text-xs"> Tarefa {{task.recurrence}} </p></p>
                 {% else %}
                 <p class="font-semibold text-red-700 uppercase">expirado</p>
               </td>

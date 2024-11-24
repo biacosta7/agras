@@ -63,13 +63,14 @@
               >schedule</span
             >Data Final</label
           >
+          <p class="ml-1 -mt-1 text-[10px]"> Apenas para leitura</p>
           <input
             type="date"
             id="final_date"
             name="final_date"
             class="w-full border border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] py-2 px-3"
-            placeholder=""
-            required
+            value="{{ task.final_date }}"
+            readonly
           />
         </div>
         <!-- Frequencia -->
@@ -271,12 +272,6 @@
           const responsibleUsersSelect = document.getElementById('responsible_users').virtualSelect;
           const statusSelect = document.getElementById('status').virtualSelect;
           const frequencySelect = document.getElementById('recurrence').virtualSelect
-          const materialsTextarea = document.getElementById('materials');
-          const descriptionTextarea = document.getElementById('description');
-          const startDateInput = document.getElementById('start_date');
-          const finalDateInput = document.getElementById('final_date');
-  
-  
   
           if (!localSelect.selectedValues.length) {
              localSelect.showError("Local é obrigatório");
@@ -289,7 +284,7 @@
             frequencySelect.showError("Frequência é obrigatória");
              isValid = false;
           } else {
-             localSelect.clearError();
+            frequencySelect.clearError();
           }
   
           if (!responsibleUsersSelect.selectedValues.length) {
@@ -305,40 +300,7 @@
           } else {
              statusSelect.clearError();
           }
-  
-  
-          if (!materialsTextarea.value.trim()) {
-            showError(materialsTextarea, 'Materiais são obrigatórios');
-            isValid = false;
-          } else {
-            clearError(materialsTextarea);
-          }
-  
-          if (!descriptionTextarea.value.trim()) {
-            showError(descriptionTextarea, 'Descrição é obrigatória');
-            isValid = false;
-          } else {
-            clearError(descriptionTextarea);
-          }
-  
-  
-          if (!startDateInput.value.trim()) {
-            showError(startDateInput, 'Data inicial é obrigatória');
-            isValid = false;
-          } else {
-             clearError(startDateInput);
-          }
-  
-  
-           if (!finalDateInput.value.trim()) {
-            showError(finalDateInput, 'Data final é obrigatória');
-            isValid = false;
-          } else {
-             clearError(finalDateInput);
-          }
-  
-  
-  
+
           if (!isValid) {
               event.preventDefault();
           }
