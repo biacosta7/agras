@@ -11,6 +11,7 @@ from django.http import HttpResponse
 from azure.storage.blob import BlobServiceClient, generate_blob_sas, BlobSasPermissions
 from datetime import datetime, timedelta
 import os
+from django.utils.timezone import now
 
 @login_required
 def home_view(request):
@@ -204,7 +205,7 @@ def generate_sas_url(blob_name):
     account_name = os.getenv('AZURE_ACCOUNT_NAME')
     account_key = os.getenv('AZURE_ACCOUNT_KEY')
     container_name = os.getenv('AZURE_CONTAINER', 'media')
-    current_time = timezone.now()
+    current_time = now()
 
     sas_token = generate_blob_sas(
         account_name=account_name,
