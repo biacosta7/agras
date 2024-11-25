@@ -21,8 +21,11 @@ def ask_question(request, community_id, user_id):
             text = data.get('text', '')
             user_context = data.get('user_context', {})
 
+            products_raw = request.POST.get('cultivos[]', '')
+
+            products = products_raw.split(', ') if products_raw else []
+
             # Obtém os cultivos selecionados
-            products = user_context.get('products', [])
             type_products = TypeProduct.objects.filter(community=community_id).values_list('name', flat=True)
 
             # Construir o prompt
@@ -37,8 +40,8 @@ def ask_question(request, community_id, user_id):
                 f"Tente não fazer grandes parágrafos, reparta, se possível, os textos, para uma leitura mais fluída quando tiver muitas informações de fato necessárias."
                 f"Não mencione a inexistência de cultivos selecionados, nem as informações que você não possui, tente me ajudar com as informacoes que eu te passei.",
                 f"Para eu selecionar cultivos, devo clicar em 'Utilizades' localizado acima."
-                f"Na primeira interação não faça grandes textos. Se eu só te der uma saldação, seja breve e educado, perguntando o que desejo e como você pode me ajudar."
-                
+                f"Na primeira interação, apenas se não for uma saudação, não faça grandes textos. Se eu só te der uma saldação, seja breve e educado, perguntando o que desejo e como você pode me ajudar."
+                f"Mesmo que seja a primeira interação, se o prompt for apenas: 'Cultivos selecionados: (lista de cultivos não vazia aqui)', não responda saudações, reponda apenas utilidades ou saberes populares ou dicas sobre os cultivos selecionados."
             )
 
             # IA responde ao prompt

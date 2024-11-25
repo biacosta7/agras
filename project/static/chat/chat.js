@@ -7,15 +7,8 @@ function renderMarkdown(markdownText) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    setTimeout(function() {
-        const selectElement = document.getElementById('cultivos');
-        console.log(selectElement); // Verifique se o selectElement está presente
-
-        if (!selectElement) {
-            console.error("Elemento de cultivos não encontrado.");
-            return;
-        }
-
+    setTimeout(function () {
+        // Inicialize o VirtualSelect
         VirtualSelect.init({
             ele: '#cultivos',
             placeholder: 'Selecione os cultivos',
@@ -25,9 +18,9 @@ document.addEventListener('DOMContentLoaded', function () {
             selectAllText: 'Selecionar todos',
             selectedTextFormat: 'count > 2'
         });
-    }, 100); 
-});
 
+    }, 100);
+});
 
 
 // Chat functionality
@@ -59,29 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Function to handle submission of selected cultivos and send the request to the chatbot
-    async function submitCultivos() {
-        // Seleciona o elemento de cultivos
-        const selectElement = document.getElementById('cultivos');
-    
-        // Verifica se o selectElement existe e se possui opções selecionadas
-        if (!selectElement) {
-            alert("O elemento de cultivos não foi encontrado ou não está configurado corretamente.");
-            return;
-        }
-    
-        // Captura as opções selecionadas
-        const selectedCultivos = selectElement;
-
-        console.log(selectedCultivos);
-    
-        if (selectedCultivos.length === 0) {
-            alert("Por favor, selecione pelo menos um cultivo!");
-            return;
-        }
-    
-        const text = "Cultivos selecionados: " + selectedCultivos.join(", ");
-        console.log(text);
-    
+    async function submitCultivos(selectedCultivos) {
         try {
             const response = await fetch(askQuestionUrl, {
                 method: "POST",
@@ -91,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     'X-Requested-With': 'XMLHttpRequest'
                 },
                 body: JSON.stringify({
-                    text: text,
+                    text: "Cultivos selecionados: " + selectedCultivos,
                     user_context: {
                         products: selectedCultivos, // Envia os cultivos selecionados
                     },
@@ -110,8 +81,29 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error("Erro:", error);
             alert("Erro ao enviar os cultivos. Tente novamente.");
         }
-    }    
+    }
 
+    // Função de submit dos cultivos selecionados
+    document.getElementById("submit-cultivos").addEventListener("click", function () {
+        // Use getSelectedOptions() para obter os valores selecionados
+        const selectedOptions = document.querySelector('#cultivos').getSelectedOptions();
+        console.log("Opções selecionadas:", selectedOptions); // Veja o retorno
+
+        if (!selectedOptions || selectedOptions.length === 0) {
+            alert("Por favor, selecione pelo menos um cultivo!");
+            return;
+        }
+
+        // Extrai os valores das opções selecionadas
+        const selectedCultivos = selectedOptions.map(option => option.value);
+        
+        const text = "Cultivos selecionados: " + selectedCultivos;
+        console.log(text);
+
+        // Envie os cultivos selecionados para o backend
+        submitCultivos(selectedCultivos);
+    });
+    
     // Function to send a message in the chat
     async function sendMessage(text) {
         if (!text) return;
@@ -201,6 +193,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         return cookieValue;
     }
+    
 });
 
 // Add CSS styles
