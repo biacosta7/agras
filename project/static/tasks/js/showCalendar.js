@@ -101,29 +101,38 @@ function toggleDaySelection(dayElement) {
     if (isSelected) {
         dayElement.style.backgroundColor = 'var(--days-bg-color)';
         dayElement.classList.remove('selected-day');
-        // Remove o dia do estado
-        calendarState.selectedDays = calendarState.selectedDays.filter(
-            (selectedDay) => selectedDay !== parseInt(dayElement.textContent)
-        );
+
+        // Remove o dia do estado apenas se ele está em `calendarState.selectedDays`
+        const dayNumber = parseInt(dayElement.textContent);
+        if (calendarState.selectedDays.includes(dayNumber)) {
+            calendarState.selectedDays = calendarState.selectedDays.filter(
+                (selectedDay) => selectedDay !== dayNumber
+            );
+        }
     } else {
         dayElement.style.backgroundColor = 'var(--green-agras-color)';
         dayElement.classList.add('selected-day');
-        // Adiciona o dia ao estado
-        calendarState.selectedDays.push(parseInt(dayElement.textContent));
+
+        // Adiciona ao estado apenas se for um dia marcado com eventos
+        if (dayElement.classList.contains('marked-day')) {
+            calendarState.selectedDays.push(parseInt(dayElement.textContent));
+        }
     }
 }
 
 // Função para listar os eventos dos dias selecionados
 function listSelectedDaysEvents() {
     if (calendarState.selectedDays.length === 0) {
-        console.log("Nenhum dia selecionado.");
+        console.log("Nenhum dia com evento selecionado.");
     } else {
-        console.log("Dias selecionados:", calendarState.selectedDays);
+        console.log("Dias com eventos selecionados:", calendarState.selectedDays);
         calendarState.selectedDays.forEach((day) => {
             console.log(`Listando eventos para ${day}/${calendarState.month}/${calendarState.year}`);
         });
     }
 }
+
+
 
 
 export function showCalendar(month, year) {

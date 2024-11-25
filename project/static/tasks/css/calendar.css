@@ -26,8 +26,7 @@
     background-color: var(--calendar-controls-bg-color);
     border: none;
     border-radius: 20%;
-    font-size: 1.5vw;
-    font-weight: bold;
+    font-size: 2vw;
     cursor: pointer;
     transition: box-shadow 0.3s ease; /* Suaviza a transição da sombra */
 }
@@ -76,9 +75,9 @@
 }
 
 .days {
-    height: 140px;
+    width: 8vw;
+    height: 8vw;
     padding: 5px;
-    width: 140px;
     border: 1px solid var(--matrix-border-color); /* Borda para um efeito de matriz */
     font-size: 1.5em;
     color: #b9babb;
@@ -133,7 +132,7 @@
 .extra-tasks {
     margin-top: auto;
     padding-left: 5%;
-    font-size: 0.7em;
+    font-size: 0.8vw;
     font-weight: bold;
     color: black;
     pointer-events: none;
