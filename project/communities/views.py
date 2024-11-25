@@ -204,6 +204,7 @@ def generate_sas_url(blob_name):
     account_name = os.getenv('AZURE_ACCOUNT_NAME')
     account_key = os.getenv('AZURE_ACCOUNT_KEY')
     container_name = os.getenv('AZURE_CONTAINER', 'media')
+    current_time = timezone.now()
 
     sas_token = generate_blob_sas(
         account_name=account_name,
@@ -211,7 +212,7 @@ def generate_sas_url(blob_name):
         container_name=container_name,
         blob_name=blob_name,
         permission=BlobSasPermissions(read=True),
-        expiry=datetime.now(timezone.utc) + timedelta(hours=1)  # Define a validade da URL
+        expiry=current_time + timedelta(hours=1)  # Define a validade da URL
     )
 
     url = f"https://{account_name}.blob.core.windows.net/{container_name}/{blob_name}?{sas_token}"
