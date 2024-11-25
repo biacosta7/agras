@@ -8,6 +8,9 @@ from seedbeds.models import Seedbed
 from django.utils import timezone
 from .models import ImageUpload
 from django.http import HttpResponse
+from azure.storage.blob import BlobServiceClient, generate_blob_sas, BlobSasPermissions
+from datetime import datetime, timedelta
+import os
 
 @login_required
 def home_view(request):
@@ -197,9 +200,25 @@ def list_members(request, community_id):
 
     return render(request, 'list_members.html', context)
 
+def generate_sas_url(blob_name):
+    account_name = os.getenv('AZURE_ACCOUNT_NAME')
+    account_key = os.getenv('AZURE_ACCOUNT_KEY')
+    container_name = os.getenv('AZURE_CONTAINER', 'media')
+
+    sas_token = generate_blob_sas(
+        account_name=account_name,
+        account_key=account_key,
+        container_name=container_name,
+        blob_name=blob_name,
+        permission=BlobSasPermissions(read=True),
+        expiry=datetime.now(timezone.utc) + timedelta(hours=1)  # Define a validade da URL
+    )
+
+    url = f"https://{account_name}.blob.core.windows.net/{container_name}/{blob_name}?{sas_token}"
+    return url
+
 def image_upload_view(request):
-    image_url = None  # Variável para armazenar a URL da imagem
-    
+    image_url = None
     if request.method == 'POST' and request.FILES.get('image'):
         title = request.POST.get('title', 'Untitled')
         image = request.FILES['image']
@@ -208,8 +227,7 @@ def image_upload_view(request):
         new_image = ImageUpload.objects.create(title=title, image=image)
         new_image.save()
 
-        # Obter a URL da imagem para exibir
-        image_url = new_image.image.url
-        print(image_url)
+        # Gerar a URL SAS para a imagem
+        image_url = generate_sas_url(new_image.image.name)
 
     return render(request, 'upload.html', {'image_url': image_url})
