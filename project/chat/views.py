@@ -1,37 +1,64 @@
-from django.shortcuts import render, reverse
+from django.shortcuts import get_object_or_404, render, reverse
 from django.contrib.auth.decorators import login_required
+from products.models import TypeProduct
 from .models import ChatBot
 from django.http import HttpResponseRedirect, JsonResponse
 import google.generativeai as genai
 import os
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_protect
+import json
 
 # Configura a API do Gemini com a chave de API
 genai.configure(api_key=os.environ["API_KEY"])
 
+@csrf_protect
 @login_required
 def ask_question(request, community_id, user_id):
     if request.method == "POST":
-        text = request.POST.get("text")
-        
-        # Inicializa o modelo de IA e inicia o chat
-        model = genai.GenerativeModel("gemini-pro")
-        chat = model.start_chat()
-        
-        # Envia a pergunta para a IA e recebe a resposta
-        response = chat.send_message(text)
-        user = request.user
-        
-        # Salva a interação no banco de dados
-        ChatBot.objects.create(text_input=text, gemini_output=response.text, user=user)
+        try:
+            data = json.loads(request.body)
+            text = data.get('text', '')
+            user_context = data.get('user_context', {})
 
-        response_data = {
-            "text": response.text,
-        }
-        return JsonResponse({"data": response_data})
+            # Obtém os cultivos selecionados
+            products = user_context.get('products', [])
+            type_products = TypeProduct.objects.filter(community=community_id).values_list('name', flat=True)
+
+            # Construir o prompt
+            prompt = (
+                f"Se meu nome não for 'None', me chame pelo meu nome (com letras iniciais maiúsculas): {user_context.get('user_name')}.\n"
+                f"Condições climáticas: {user_context.get('climate')}.\n"
+                #f"Localização: {user_context.get('location')}.\n"
+                f"Cultivos da comunidade: {', '.join(list(type_products))}.\n"
+                f"Interesses: {user_context.get('interests')}.\n\n"
+                f"Pergunta: {text}",
+                f"Cultivos selecionados: {', '.join(products)}. Por favor, se houver cultivos selecionados, forneça utilidades, saberes populares ou dicas sobre os cultivos selecionados. Caso contrário, fale sobre as outras coisas, como como você pode me ajudar no meu contexto de agricultura.",
+                f"Tente não fazer grandes parágrafos, reparta, se possível, os textos, para uma leitura mais fluída quando tiver muitas informações de fato necessárias."
+                f"Não mencione a inexistência de cultivos selecionados, nem as informações que você não possui, tente me ajudar com as informacoes que eu te passei.",
+                f"Para eu selecionar cultivos, devo clicar em 'Utilizades' localizado acima."
+                f"Na primeira interação não faça grandes textos. Se eu só te der uma saldação, seja breve e educado, perguntando o que desejo e como você pode me ajudar."
+                
+            )
+
+            # IA responde ao prompt
+            model = genai.GenerativeModel("gemini-pro")
+            chat = model.start_chat()
+            response = chat.send_message(prompt)
+
+            # Salvar interação no banco de dados
+            ChatBot.objects.create(
+                text_input=text,
+                gemini_output=response.text,
+                user=request.user
+            )
+
+            return JsonResponse({"data": {"text": response.text}})
+        except Exception as e:
+            print(f"Error processing request: {e}")
+            return JsonResponse({"error": f"An error occurred: {str(e)}"}, status=500)
     else:
-        return HttpResponseRedirect(
-            reverse("chat", args=[community_id, user_id])
-        )
+        return HttpResponseRedirect(reverse("chat", args=[community_id, user_id]))
 
 @login_required
 def chat(request, community_id, user_id):
@@ -39,10 +66,11 @@ def chat(request, community_id, user_id):
     
     # Filtra as interações do usuário atual
     chats = ChatBot.objects.filter(user=user)
-    
+
     # Renderiza o template com o histórico de chat e os IDs
     return render(request, "chat_bot.html", {
         "chats": chats,
         "community_id": community_id,
-        "user_id": user_id
+        "user_id": user_id,
     })
+

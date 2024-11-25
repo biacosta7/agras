@@ -248,19 +248,27 @@
     <p class="text-[16px] font-normal text-black">Como posso te ajudar hoje?</p>
 
     <div class="grid grid-cols-2 gap-4 mt-4">
-        <button class="border rounded-[9px] px-4 py-2 rounded-lg flex items-center">
-            <span class="material-icons-outlined text-[#F76711] mr-2">folder_open</span> Relatórios
+        <button id="toggle-utilities" class="border rounded-[9px] px-4 py-2 rounded-lg flex items-center">
+            <span class="material-icons-outlined text-[#915F10] mr-2">forum</span> Utilidades
         </button>
         <button class="border rounded-[9px] px-4 py-2 rounded-lg flex items-center">
-            <span class="material-icons-outlined text-[#915F10] mr-2">forum</span> Saberes
-        </button>
-        <button class="border rounded-[9px] px-4 py-2 rounded-lg flex items-center">
-            <span class="material-icons-outlined text-[#044702] mr-2">timer</span> Previsões
-        </button>
-        <button class="border rounded-[9px] px-4 py-2 rounded-lg flex items-center">
-            <span class="material-icons-outlined text-[#8ABF17] mr-2">bug_report</span> Pragas
+            <span class="material-icons-outlined text-[#8ABF17] mr-2">bug_report</span> Organismos
         </button>
     </div>
+    <div id="utilities-section" class="hidden mt-10">
+        <p class="text-lg font-semibold mb-2">Você está buscando informações sobre qual(is) Cultivo(s)?</p>
+        <p class="mb-4">Selecione abaixo os cultivos que você deseja:</p>
+        <!-- Seção de Cultivos -->
+        {% csrf_token %}
+        <select id="cultivos" name="cultivos[]" multiple required>
+            {% for cultivo in type_products %}
+            <option value="{{ cultivo.name }}">{{ cultivo.name }}</option>
+            {% empty %}
+            <option value="">Nenhum cultivo disponível</option>
+            {% endfor %}
+        </select>
+        <button id="submit-cultivos" class="bg-[#8ABF17] text-white font-bold px-6 py-3 hover:bg-[#7aab0f] rounded-md w-full">Buscar</button>
+    </div>    
 
     <div class="mt-6 relative">
         <input type="text" placeholder="Me pergunte qualquer coisa..." class="block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] h-[55px] py-2 px-3" />
@@ -392,6 +400,28 @@
 
     {% endblock styles %}
 </style>
+
+{% if community_id and user_id %}
+<script type="text/javascript">
+    const userContext = {
+        community_id: {{ community_id }},
+        user_id: {{ user_id }},
+        user_name: "{{ user_name }}",
+        location: "Pernambuco",
+        //user_climate: "{{ user_climate }}",
+        //type_products: {{ type_products|safe }},
+    };
+    const csrfToken = "{{ csrf_token }}";
+    const askQuestionUrl = "{% url 'ask_question' community_id user_id %}";
+    console.log(userContext);
+</script>
+{% endif %}
+<script src="{% static 'chat/chat.js' %}"></script>
+ <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> {% comment %} markdown do chatbot {% endcomment %}
+ <script src="https://cdn.jsdelivr.net/npm/dompurify@2.4.3/dist/purify.min.js"></script> {% comment %} para segurança na inserção do html da IA {% endcomment %}
+
+ <link rel="stylesheet" href="{% static 'virtual-selector/virtual-select.min.css' %}">
+<script src="{% static 'virtual-selector/virtual-select.min.js' %}"></script>
 
 <script>
 const mobileMenuButton = document.getElementById('mobile-menu-button');
