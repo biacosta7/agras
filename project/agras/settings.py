@@ -18,8 +18,8 @@ if NOT_PROD:
     # SECURITY WARNING: don't run with debug turned on in production!
     DEBUG = True
     # SECURITY WARNING: keep the secret key used in production secret!
-    SECRET_KEY = 'django-insecure-pati6-&4n7tnx**0u$jl@g2)*d9-$s5a+n5=ps^29adk2^-#(@'
-    API_KEY='AIzaSyC2pCVgR3wzXaEaT2uDw73syf6B3LONiEg'
+    SECRET_KEY = os.getenv('SECRET_KEY')
+    API_KEY=os.getenv('API_KEY')
     ALLOWED_HOSTS = ['localhost', '127.0.0.1']
     DATABASES = {
         'default': {
@@ -62,9 +62,9 @@ else:
     STATICFILES_STORAGE = ('whitenoise.storage.CompressedManifestStaticFilesStorage')
 
     # Configurações do Azure Blob Storage
-    AZURE_ACCOUNT_NAME = '<NOME_DA_SUA_CONTA>'
-    AZURE_ACCOUNT_KEY = '<CHAVE_DA_CONTA>'
-    AZURE_CONTAINER = 'media'
+    AZURE_CONTAINER = os.getenv('AZURE_CONTAINER', 'media')
+    AZURE_ACCOUNT_NAME = os.getenv('AZURE_ACCOUNT_NAME')
+    AZURE_ACCOUNT_KEY = os.getenv('AZURE_ACCOUNT_KEY')
 
     # Configurar backend de armazenamento para arquivos de mídia
     DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
