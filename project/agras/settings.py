@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+from storages.backends.azure_storage import AzureStorage
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -18,6 +19,7 @@ if NOT_PROD:
     DEBUG = True
     # SECURITY WARNING: keep the secret key used in production secret!
     SECRET_KEY = 'django-insecure-pati6-&4n7tnx**0u$jl@g2)*d9-$s5a+n5=ps^29adk2^-#(@'
+    API_KEY='AIzaSyC2pCVgR3wzXaEaT2uDw73syf6B3LONiEg'
     ALLOWED_HOSTS = ['localhost', '127.0.0.1']
     DATABASES = {
         'default': {
@@ -29,7 +31,10 @@ if NOT_PROD:
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
     STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 else:
+    API_KEY=os.getenv('API_KEY')
     SECRET_KEY = os.getenv('SECRET_KEY')
     DEBUG = os.getenv('DEBUG', '0').lower() in ['true', 't', '1']
     ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(' ')
@@ -56,6 +61,19 @@ else:
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
     STATICFILES_STORAGE = ('whitenoise.storage.CompressedManifestStaticFilesStorage')
 
+    # Configurações do Azure Blob Storage
+    AZURE_ACCOUNT_NAME = '<NOME_DA_SUA_CONTA>'
+    AZURE_ACCOUNT_KEY = '<CHAVE_DA_CONTA>'
+    AZURE_CONTAINER = 'media'
+
+    # Configurar backend de armazenamento para arquivos de mídia
+    DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
+    AZURE_LOCATION = AZURE_CONTAINER
+
+    # Configurar URL para acesso aos arquivos
+    MEDIA_URL = f'https://{AZURE_ACCOUNT_NAME}.blob.core.windows.net/{AZURE_CONTAINER}/'
+    
+
 
 # Application definition
 AUTH_USER_MODEL = 'users.User'
@@ -75,6 +93,8 @@ INSTALLED_APPS = [
     'products',
     'seedbeds',
     'areas',
+    'chat',
+    'tasks',
     "whitenoise.runserver_nostatic",
 ]
 
@@ -102,12 +122,15 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'chat.context_processors.chat_messages',
             ],
         },
     },
 ]
 
 WSGI_APPLICATION = 'agras.wsgi.application'
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators

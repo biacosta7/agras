@@ -6,3 +6,8 @@ python-dotenv
 psycopg2-binary
 gunicorn
 whitenoise
+selenium
+google-generativeai
+Pillow
+django-storages[azure]~=1.14.2
+azure-storage-blob~=12.18.0

@@ -1,56 +1,49 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404
-from seedbeds.models import Seedbed
-from communities.models import Community  
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from seedbeds.models import Seedbed
+from communities.models import Community, MembershipRequest
 from products.models import Product, TypeProduct
 from areas.models import Area
-from django.http import JsonResponse
 
-
-@login_required
-def list_seedbeds(request, community_id, area_id):
-    community = get_object_or_404(Community, id=community_id)
-    area = get_object_or_404(Area, id=area_id, community=community)  # Filtra pela área da comunidade
-    canteiros = Seedbed.objects.filter(area=area)  # Filtra os canteiros pela área
-    return render(request, 'list_seedbeds.html', {'canteiros': canteiros, 'community': community, 'area': area})
 
 @login_required
 def create_seedbed(request, community_id, area_id):
-    user = request.user
-    communities = user.communities_members.all()  # Obtém todas as comunidades do usuário
-
-    # Obter a comunidade específica selecionada
     community = get_object_or_404(Community, id=community_id)
-
-    # Tenta obter a área específica, evitando MultipleObjectsReturned
     area = get_object_or_404(Area, id=area_id, community=community)
+    membership_requests = MembershipRequest.objects.filter(community=community, status='pending')
 
     if request.method == 'POST':
-        # Obter o nome do canteiro
-        seedbed_name = request.POST.get('seedbed_name')  # Certifique-se de que este campo está no formulário
+        seedbed_name = request.POST.get('seedbed_name')
         if seedbed_name:
-            # Criação do canteiro
-            Seedbed.objects.create(nome=seedbed_name, area=area)
-
-            messages.success(request, 'Canteiro criado com sucesso!')
-            return redirect('area_detail', community_id=community.id, area_id=area.id)  # Redirecionar para a lista de canteiros da comunidade
+            if Seedbed.objects.filter(nome=seedbed_name, area=area).exists():
+                messages.error(request, 'Já existe um canteiro com esse nome nesta área. Por favor, escolha outro nome.')
+            else:
+                try:
+                    Seedbed.objects.create(nome=seedbed_name, area=area)
+                    messages.success(request, 'Canteiro criado com sucesso!')
+                    return redirect('area_detail', community_id=community.id, area_id=area.id)
+                except Exception as e:
+                    messages.error(request, f'Erro ao criar o canteiro: {str(e)}')
         else:
             messages.error(request, 'Por favor, insira um nome válido para o canteiro.')
 
     context = {
-        'communities': communities,
         'community': community,
-        'area': area,  # Adiciona a área ao contexto
+        'area': area,
+        'membership_requests': membership_requests,
     }
     return render(request, 'create_seedbed.html', context)
+
 
 @login_required
 def edit_seedbed(request, community_id, area_id, seedbed_id):
     community = get_object_or_404(Community, id=community_id)
     area = get_object_or_404(Area, id=area_id, community=community)
     seedbed = get_object_or_404(Seedbed, id=seedbed_id, area=area)
+    membership_requests = MembershipRequest.objects.filter(community=community, status='pending')
 
     if request.method == 'POST':
         nome = request.POST.get('nome')
@@ -63,51 +56,54 @@ def edit_seedbed(request, community_id, area_id, seedbed_id):
                 messages.success(request, 'Canteiro editado com sucesso!')
                 return redirect('area_detail', community_id=community.id, area_id=area.id)
 
-    return render(request, 'edit_seedbed.html', {'seedbed': seedbed, 'community': community, 'area': area})
+    context = {
+        'community': community,
+        'area': area,
+        'seedbed': seedbed,
+        'membership_requests': membership_requests,
+    }
+    return render(request, 'edit_seedbed.html', context)
+
 
 @login_required
 def delete_seedbed(request, community_id, area_id, seedbed_id):
-    # Buscando o canteiro e a comunidade correspondente
     community = get_object_or_404(Community, id=community_id)
     area = get_object_or_404(Area, id=area_id, community=community)
     seedbed = get_object_or_404(Seedbed, id=seedbed_id, area=area)
+    membership_requests = MembershipRequest.objects.filter(community=community, status='pending')
 
     if request.method == 'POST':
-        seedbed.delete()  # Deletando o canteiro
+        seedbed.delete()
         messages.success(request, 'Canteiro deletado com sucesso!')
-        # Redirecionando para a lista de canteiros, passando o ID da comunidade
-        return redirect('area_detail', community_id=community_id, area_id=area_id)
-    
-    # Caso não seja POST, renderizar uma página de confirmação
+        return redirect('area_detail', community_id=community.id, area_id=area.id)
+
     context = {
         'seedbed': seedbed,
         'community': community,
-        'area': area
+        'area': area,
+        'membership_requests': membership_requests,
     }
     return render(request, 'confirm_delete.html', context)
 
 
+@login_required
 def seedbed_detail_view(request, community_id, area_id, seedbed_id):
     community = get_object_or_404(Community, id=community_id)
     area = get_object_or_404(Area, id=area_id, community=community)
     seedbed = get_object_or_404(Seedbed, id=seedbed_id, area=area)
+    membership_requests = MembershipRequest.objects.filter(community=community, status='pending')
 
-    # Obtém a lista de produtos associados ao canteiro
     products = seedbed.products_in_seedbed.all()
-
-    # Verifica se um produto foi selecionado a partir do dropdown
     selected_product_id = request.GET.get('product_id')
-    if selected_product_id:
-        selected_product = products.filter(id=selected_product_id).first()
-    else:
-        selected_product = products.first() if products else None
+    selected_product = products.filter(id=selected_product_id).first() if selected_product_id else products.first()
 
     context = {
         'community': community,
         'area': area,
         'seedbed': seedbed,
         'products': products,
-        'selected_product': selected_product,  # Assegure-se de que selected_product está incluído
+        'selected_product': selected_product,
+        'membership_requests': membership_requests,
     }
 
     return render(request, 'seedbed_detail.html', context)

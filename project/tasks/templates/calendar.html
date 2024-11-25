@@ -1,0 +1,98 @@
+<section class="calendar">
+    {{community.id}}
+    <br/>
+    {% for task in tasks %}
+    {{task.title}} | {{task.id}} |
+        <br/>
+    {%endfor%}
+  <!-- Tabela com os dias do mês -->
+  <table class="month">
+    
+    <thead class="calendar-head">
+      <!-- Todas as 7 colunas -->
+      <tr class="days-of-the-week-columns">
+        <th class="days-of-the-week">Domingo</th>
+        <th class="days-of-the-week">Segunda</th>
+        <th class="days-of-the-week">Terça</th>
+        <th class="days-of-the-week">Quarta</th>
+        <th class="days-of-the-week">Quinta</th>
+        <th class="days-of-the-week">Sexta</th>
+        <th class="days-of-the-week">Sábado</th>
+      </tr>
+    </thead>
+    <tbody class="calendar-body">
+      <!-- Todas as 6 linhas -->
+      <tr class="days-line">
+        <td class="days">?</td>
+        <td class="days">?</td>
+        <td class="days">?</td>
+        <td class="days">?</td>
+        <td class="days">?</td>
+        <td class="days">?</td>
+        <td class="days">?</td>
+      </tr>
+      <tr class="days-line">
+        <td class="days">?</td>
+        <td class="days">?</td>
+        <td class="days">?</td>
+        <td class="days">?</td>
+        <td class="days">?</td>
+        <td class="days">?</td>
+        <td class="days">?</td>
+      </tr>
+      <tr class="days-line">
+        <td class="days">?</td>
+        <td class="days">?</td>
+        <td class="days">?</td>
+        <td class="days">?</td>
+        <td class="days">?</td>
+        <td class="days">?</td>
+        <td class="days">?</td>
+      </tr>
+      <tr class="days-line">
+        <td class="days">?</td>
+        <td class="days">?</td>
+        <td class="days">?</td>
+        <td class="days">?</td>
+        <td class="days">?</td>
+        <td class="days">?</td>
+        <td class="days">?</td>
+      </tr>
+      <tr class="days-line">
+        <td class="days">?</td>
+        <td class="days">?</td>
+        <td class="days">?</td>
+        <td class="days">?</td>
+        <td class="days">?</td>
+        <td class="days">?</td>
+        <td class="days">?</td>
+      </tr>
+      <!--
+      <tr class="days-line">
+        <td class="days">?</td>
+        <td class="days">?</td>
+        <td class="days">?</td>
+        <td class="days">?</td>
+        <td class="days">?</td>
+        <td class="days">?</td>
+        <td class="days">?</td>
+      </tr>
+      -->
+    </tbody>
+  </table>
+  <!-- Seção para listar as tarefas -->
+  <aside class="list-tasks-aside">
+    <header class="list-tasks-aside-header">
+      <caption class="calendar-header">
+        <span class="calendar-title">?? de 20??</span>
+        <div class="calendar-controls">
+          <button class="material-icons previous-month">chevron_left</button>
+          <button class="material-icons next-month">chevron_right</button>
+        </div>
+    </header>
+    <section class="list-tasks-aside-section">
+      <div class="warning-to-select-a-day">Selecione um ou mais dias para visualizar as tarefas previstas para cada.</div>
+    </section>
+    </caption>
+  </aside>
+</section>

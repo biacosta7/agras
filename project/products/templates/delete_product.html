@@ -35,16 +35,19 @@
     </style>
 </head>
 <body>
-    <h1>Tem certeza que deseja deletar o cultivo "{{ product.type_product.name }}"?</h1>
-    <p>Essa ação não pode ser desfeita.</p>
+    <div class="flex-1 p-6 fade-down lg:p-10 ml:0 lg:ml-[250px] mt-12 lg:mt-[60px]"> 
+        
+        <h1>Tem certeza que deseja deletar o cultivo "{{ product.type_product.name }}"?</h1>
+        <p>Essa ação não pode ser desfeita.</p>
+        
+        <!-- Botão para confirmar a exclusão -->
+        <form action="{% url 'product:product-delete' community.id seedbed.id product.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="button button-confirm">Deletar</button>
+        </form>
     
-    <!-- Botão para confirmar a exclusão -->
-    <form action="{% url 'product:product-delete' community.id seedbed.id product.id %}" method="post">
-        {% csrf_token %}
-        <button type="submit" class="button button-confirm">Deletar</button>
-    </form>
-
-    <!-- Botão para cancelar e voltar à lista -->
-    <a href="{% url 'product:product_list' community.id seedbed.id %}" class="button button-cancel">Cancelar</a>
+        <!-- Botão para cancelar e voltar à lista -->
+        <a href="{% url 'product:product_list' community.id seedbed.id %}" class="button button-cancel">Cancelar</a>
+    </div>
 </body>
 </html>
