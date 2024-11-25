@@ -6,6 +6,30 @@ function renderMarkdown(markdownText) {
     return DOMPurify.sanitize(rawHtml);
 }
 
+document.addEventListener('DOMContentLoaded', function () {
+    setTimeout(function() {
+        const selectElement = document.getElementById('cultivos');
+        console.log(selectElement); // Verifique se o selectElement está presente
+
+        if (!selectElement) {
+            console.error("Elemento de cultivos não encontrado.");
+            return;
+        }
+
+        VirtualSelect.init({
+            ele: '#cultivos',
+            placeholder: 'Selecione os cultivos',
+            search: true,
+            multiple: true,
+            noOptionsText: 'Nenhum cultivo encontrado',
+            selectAllText: 'Selecionar todos',
+            selectedTextFormat: 'count > 2'
+        });
+    }, 100); 
+});
+
+
+
 // Chat functionality
 document.addEventListener('DOMContentLoaded', function() {
     const chatInput = document.querySelector('#helpModal input[type="text"]');
@@ -36,36 +60,46 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Function to handle submission of selected cultivos and send the request to the chatbot
     async function submitCultivos() {
-        // Captura as opções selecionadas
+        // Seleciona o elemento de cultivos
         const selectElement = document.getElementById('cultivos');
-        const selectedCultivos = Array.from(selectElement.selectedOptions).map(option => option.value);
+    
+        // Verifica se o selectElement existe e se possui opções selecionadas
+        if (!selectElement) {
+            alert("O elemento de cultivos não foi encontrado ou não está configurado corretamente.");
+            return;
+        }
+    
+        // Captura as opções selecionadas
+        const selectedCultivos = selectElement;
 
+        console.log(selectedCultivos);
+    
         if (selectedCultivos.length === 0) {
             alert("Por favor, selecione pelo menos um cultivo!");
             return;
         }
+    
         const text = "Cultivos selecionados: " + selectedCultivos.join(", ");
         console.log(text);
-
+    
         try {
             const response = await fetch(askQuestionUrl, {
                 method: "POST",
                 headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': getCookie('csrftoken'),
-                        'X-Requested-With': 'XMLHttpRequest'
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({
+                    text: text,
+                    user_context: {
+                        products: selectedCultivos, // Envia os cultivos selecionados
                     },
-                    body: JSON.stringify({
-                        text: text,
-                        user_context: userContext, // Adiciona o contexto ao corpo da requisição
-                        user_context: {
-                            products: selectedCultivos, // Envia os cultivos selecionados
-                        },
-                    }),
+                }),
             });
-
+    
             const data = await response.json();
-        
+    
             if (data.data && data.data.text) {
                 appendMessage(data.data.text, 'bot');
             } else if (data.error) {
@@ -76,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error("Erro:", error);
             alert("Erro ao enviar os cultivos. Tente novamente.");
         }
-    }
+    }    
 
     // Function to send a message in the chat
     async function sendMessage(text) {

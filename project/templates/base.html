@@ -255,7 +255,7 @@
             <span class="material-icons-outlined text-[#8ABF17] mr-2">bug_report</span> Organismos
         </button>
     </div>
-    <div id="utilities-section" class="hidden border rounded-lg p-4 shadow-md">
+    <div id="utilities-section" class="hidden mt-10">
         <p class="text-lg font-semibold mb-2">Você está buscando informações sobre qual(is) Cultivo(s)?</p>
         <p class="mb-4">Selecione abaixo os cultivos que você deseja:</p>
         <!-- Seção de Cultivos -->
@@ -263,9 +263,11 @@
         <select id="cultivos" name="cultivos[]" multiple required>
             {% for cultivo in type_products %}
             <option value="{{ cultivo.name }}">{{ cultivo.name }}</option>
+            {% empty %}
+            <option value="">Nenhum cultivo disponível</option>
             {% endfor %}
         </select>
-        <button id="submit-cultivos" class="btn-primary">Enviar Cultivos</button>
+        <button id="submit-cultivos" class="bg-[#8ABF17] text-white font-bold px-6 py-3 hover:bg-[#7aab0f] rounded-md w-full">Buscar</button>
     </div>    
 
     <div class="mt-6 relative">
@@ -417,8 +419,11 @@
 <script src="{% static 'chat/chat.js' %}"></script>
  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> {% comment %} markdown do chatbot {% endcomment %}
  <script src="https://cdn.jsdelivr.net/npm/dompurify@2.4.3/dist/purify.min.js"></script> {% comment %} para segurança na inserção do html da IA {% endcomment %}
-<script>
 
+ <link rel="stylesheet" href="{% static 'virtual-selector/virtual-select.min.css' %}">
+<script src="{% static 'virtual-selector/virtual-select.min.js' %}"></script>
+
+<script>
 const mobileMenuButton = document.getElementById('mobile-menu-button');
 const mobileMenu = document.getElementById('mobile-menu');
 const mobileMenuCloseButton = document.getElementById('mobile-menu-close-button');
