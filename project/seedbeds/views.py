@@ -125,6 +125,15 @@ def seedbed_detail_view(request, community_id, area_id, seedbed_id):
     estimativa_colheita_formatada = (
         DateFormat(estimativa_colheita).format('d \d\e F \d\e Y') if estimativa_colheita else None
     )
+    actions_interval = None
+    next_actions_dates = {}
+    if selected_product and selected_product.type_product and selected_product.type_product.actions_interval:
+        actions_interval = selected_product.type_product.actions_interval
+        for action, days in actions_interval.items():
+            next_action_date = timezone.now() + timedelta(days=days)
+            while next_action_date <= timezone.now():
+                next_action_date += timedelta(days=days)
+            next_actions_dates[action] = next_action_date
 
     # Previsão de colheita
     previsao_colheita = None
@@ -170,6 +179,7 @@ def seedbed_detail_view(request, community_id, area_id, seedbed_id):
         'estimativa_colheita': estimativa_colheita_formatada,
         'previsao_colheita': previsao_colheita,
         'active_products': active_products,
+        'next_actions_dates': next_actions_dates,
     }
     return render(request, 'seedbed_detail.html', context)
 

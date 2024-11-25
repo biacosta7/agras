@@ -110,7 +110,6 @@ def create_typeproduct_view(request, community_id, area_id, seedbed_id):
             lifecycle=lifecycle,
             actions_interval=actions_interval,
         )
-
         messages.success(request, f'Novo cultivo {typeproduct.name} criado com sucesso na comunidade {community.name}.')
         return redirect('seedbed_detail', community_id=community.id, area_id=area_id, seedbed_id=seedbed_id)
 
