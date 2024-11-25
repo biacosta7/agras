@@ -11,6 +11,8 @@ def chat_messages(request):
         user_id = request.user.id  # ID do usuário autenticado
         user_name = getattr(request.user, 'name', request.user.username)  # Usa o campo 'name', ou 'username' como fallback
 
+        type_products = TypeProduct.objects.filter(community=community_id)
+
         # Produtos da comunidade
         products = []
         if community_id:
@@ -22,7 +24,8 @@ def chat_messages(request):
             'user_id': user_id,
             'user_name': user_name,
             'location': 'Pernamuco',
-            'type_products': list(products),
+            'products': list(products),
             'interests': 'agricultura',
+            'type_products': type_products,
         }
     return {}

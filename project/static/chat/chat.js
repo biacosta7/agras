@@ -6,7 +6,6 @@ function renderMarkdown(markdownText) {
     return DOMPurify.sanitize(rawHtml);
 }
 
-
 // Chat functionality
 document.addEventListener('DOMContentLoaded', function() {
     const chatInput = document.querySelector('#helpModal input[type="text"]');
@@ -19,15 +18,67 @@ document.addEventListener('DOMContentLoaded', function() {
     // Insert messages container before the input div
     modalContent.insertBefore(messagesContainer, document.querySelector('#helpModal .mt-6'));
 
-    // Quick action buttons
-    const actionButtons = document.querySelectorAll('#helpModal .grid button');
-    actionButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const buttonText = this.textContent.trim();
-            sendMessage(buttonText);
-        });
-    });
+    // Event listener for showing/hiding the utilities section
+    document.getElementById("toggle-utilities").addEventListener("click", toggleUtilities);
 
+    // Event listener for submitting selected cultivos
+    document.getElementById("submit-cultivos").addEventListener("click", submitCultivos);
+
+    // Function to toggle utilities section visibility
+    function toggleUtilities() {
+        const section = document.getElementById("utilities-section");
+        if (section.classList.contains("hidden")) {
+            section.classList.remove("hidden"); // Exibe a seção
+        } else {
+            section.classList.add("hidden"); // Esconde a seção
+        }
+    }
+
+    // Function to handle submission of selected cultivos and send the request to the chatbot
+    async function submitCultivos() {
+        // Captura as opções selecionadas
+        const selectElement = document.getElementById('cultivos');
+        const selectedCultivos = Array.from(selectElement.selectedOptions).map(option => option.value);
+
+        if (selectedCultivos.length === 0) {
+            alert("Por favor, selecione pelo menos um cultivo!");
+            return;
+        }
+        const text = "Cultivos selecionados: " + selectedCultivos.join(", ");
+        console.log(text);
+
+        try {
+            const response = await fetch(askQuestionUrl, {
+                method: "POST",
+                headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken'),
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({
+                        text: text,
+                        user_context: userContext, // Adiciona o contexto ao corpo da requisição
+                        user_context: {
+                            products: selectedCultivos, // Envia os cultivos selecionados
+                        },
+                    }),
+            });
+
+            const data = await response.json();
+        
+            if (data.data && data.data.text) {
+                appendMessage(data.data.text, 'bot');
+            } else if (data.error) {
+                console.error('Error from backend:', data.error);
+                appendMessage('Desculpe, ocorreu um erro ao processar sua solicitação.', 'bot');
+            }
+        } catch (error) {
+            console.error("Erro:", error);
+            alert("Erro ao enviar os cultivos. Tente novamente.");
+        }
+    }
+
+    // Function to send a message in the chat
     async function sendMessage(text) {
         if (!text) return;
     
@@ -65,8 +116,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     
         chatInput.value = '';
-    }    
-      
+    }
+
     // Append message to chat
     function appendMessage(text, sender) {
         const messageDiv = document.createElement('div');
@@ -76,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 : 'bg-gray-100 text-black'
         }`;
         messageDiv.style.maxWidth = '80%';
-        
+    
         if (sender === 'bot') {
             // Renderiza o texto do bot como Markdown e sanitiza
             messageDiv.innerHTML = renderMarkdown(text);
@@ -84,12 +135,12 @@ document.addEventListener('DOMContentLoaded', function() {
             // Para mensagens do usuário, mostra o texto diretamente
             messageDiv.textContent = text;
         }
-        
+    
         messagesContainer.appendChild(messageDiv);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }      
+    }    
 
-    // Event listeners
+    // Event listeners for sending messages
     sendButton.addEventListener('click', () => {
         sendMessage(chatInput.value);
     });
@@ -146,10 +197,26 @@ style.textContent = `
 
     .message.bot ul {
         padding-left: 20px;
+        list-style-type: disc; 
+        padding-left: 20px;     
+        margin-top: 5px;        
+        margin-bottom: 5px;    
     }
 
     .message.bot li {
         margin-bottom: 5px;
+    }
+
+    #cultivos {
+        width: 100%;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        background-color: #fff;
+    }
+
+    #cultivos:focus {
+        outline-color: #4CAF50;
     }
 `;
 document.head.appendChild(style);

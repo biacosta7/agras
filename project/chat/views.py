@@ -1,5 +1,6 @@
-from django.shortcuts import render, reverse
+from django.shortcuts import get_object_or_404, render, reverse
 from django.contrib.auth.decorators import login_required
+from products.models import TypeProduct
 from .models import ChatBot
 from django.http import HttpResponseRedirect, JsonResponse
 import google.generativeai as genai
@@ -20,14 +21,24 @@ def ask_question(request, community_id, user_id):
             text = data.get('text', '')
             user_context = data.get('user_context', {})
 
-            # Construir o prompt personalizado
+            # Obtém os cultivos selecionados
+            products = user_context.get('products', [])
+            type_products = TypeProduct.objects.filter(community=community_id).values_list('name', flat=True)
+
+            # Construir o prompt
             prompt = (
-                f"Usuário: {user_context.get('user_name').title()}.\n"
+                f"Se meu nome não for 'None', me chame pelo meu nome (com letras iniciais maiúsculas): {user_context.get('user_name')}.\n"
                 f"Condições climáticas: {user_context.get('climate')}.\n"
-                f"Localização: {user_context.get('location')}.\n"
-                f"Produtos cadastrados: {', '.join(user_context.get('type_products', []))}.\n"
+                #f"Localização: {user_context.get('location')}.\n"
+                f"Cultivos da comunidade: {', '.join(list(type_products))}.\n"
                 f"Interesses: {user_context.get('interests')}.\n\n"
-                f"Pergunta: {text}"
+                f"Pergunta: {text}",
+                f"Cultivos selecionados: {', '.join(products)}. Por favor, se houver cultivos selecionados, forneça utilidades, saberes populares ou dicas sobre os cultivos selecionados. Caso contrário, fale sobre as outras coisas, como como você pode me ajudar no meu contexto de agricultura.",
+                f"Tente não fazer grandes parágrafos, reparta, se possível, os textos, para uma leitura mais fluída quando tiver muitas informações de fato necessárias."
+                f"Não mencione a inexistência de cultivos selecionados, nem as informações que você não possui, tente me ajudar com as informacoes que eu te passei.",
+                f"Para eu selecionar cultivos, devo clicar em 'Utilizades' localizado acima."
+                f"Na primeira interação não faça grandes textos. Se eu só te der uma saldação, seja breve e educado, perguntando o que desejo e como você pode me ajudar."
+                
             )
 
             # IA responde ao prompt
@@ -45,7 +56,7 @@ def ask_question(request, community_id, user_id):
             return JsonResponse({"data": {"text": response.text}})
         except Exception as e:
             print(f"Error processing request: {e}")
-            return JsonResponse({"error": "An error occurred while processing your request."}, status=500)
+            return JsonResponse({"error": f"An error occurred: {str(e)}"}, status=500)
     else:
         return HttpResponseRedirect(reverse("chat", args=[community_id, user_id]))
 
@@ -55,11 +66,11 @@ def chat(request, community_id, user_id):
     
     # Filtra as interações do usuário atual
     chats = ChatBot.objects.filter(user=user)
-    
+
     # Renderiza o template com o histórico de chat e os IDs
     return render(request, "chat_bot.html", {
         "chats": chats,
         "community_id": community_id,
-        "user_id": user_id
+        "user_id": user_id,
     })
 
