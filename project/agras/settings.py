@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+from storages.backends.azure_storage import AzureStorage
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -30,6 +31,8 @@ if NOT_PROD:
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
     STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 else:
     API_KEY=os.getenv('API_KEY')
     SECRET_KEY = os.getenv('SECRET_KEY')
@@ -57,6 +60,19 @@ else:
     STATIC_URL = os.environ.get('DJANGO_STATIC_URL', "/static/")
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
     STATICFILES_STORAGE = ('whitenoise.storage.CompressedManifestStaticFilesStorage')
+
+    # Configurações do Azure Blob Storage
+    AZURE_ACCOUNT_NAME = '<NOME_DA_SUA_CONTA>'
+    AZURE_ACCOUNT_KEY = '<CHAVE_DA_CONTA>'
+    AZURE_CONTAINER = 'media'
+
+    # Configurar backend de armazenamento para arquivos de mídia
+    DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
+    AZURE_LOCATION = AZURE_CONTAINER
+
+    # Configurar URL para acesso aos arquivos
+    MEDIA_URL = f'https://{AZURE_ACCOUNT_NAME}.blob.core.windows.net/{AZURE_CONTAINER}/'
+    
 
 
 # Application definition
@@ -113,6 +129,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'agras.wsgi.application'
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators

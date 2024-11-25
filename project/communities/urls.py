@@ -5,6 +5,8 @@ from seedbeds import views as seedbed_views
 from products import views as product_views  
 from chat import views as chat_views
 from tasks import views as tasks_views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('', community_views.community_list, name='community_hub'),
@@ -49,4 +51,7 @@ urlpatterns = [
     path('comunidade/<int:community_id>/tarefas/excluir/<int:task_id>', tasks_views.delete_task, name='delete_task'),
     path('comunidade/<int:community_id>/tarefas/editar/status/<int:task_id>', tasks_views.edit_only_status, name='edit_task_status')
 
-]
+    #image upload
+    path('upload/', community_views.image_upload_view, name='image_upload'),
+
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
