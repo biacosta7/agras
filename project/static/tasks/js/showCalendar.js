@@ -1,5 +1,5 @@
 // Importa as novas funções que criei para manipular datas
-import { getDayOfWeek, getDaysInMonth, getMonthName } from './newDateFunctions.js';
+import { getDayOfWeek, getDayOfWeekName, getDaysInMonth, getMonthName } from './newDateFunctions.js';
 // Importa a função de exibição do pop-up de adicionar evento no calendário
 //import { listAllEvents } from './listEvents.js';
 // Importa a função de pegar os eventos do dia e de adicionar marcadores nos dias com eventos
@@ -31,7 +31,7 @@ export const calendarState = {
         },
         // Adicione outros eventos aqui
         {
-            title: "Exemplo de Tarefa",
+            title: "Preparar o solo pro plantio de alface",
             description: "Descrição da tarefa",
             start_date: new Date(2024, 10, 15),
             end_date: new Date(2024, 11, 14),
@@ -120,18 +120,87 @@ function toggleDaySelection(dayElement) {
     }
 }
 
-// Função para listar os eventos dos dias selecionados
 function listSelectedDaysEvents() {
+    const asideSection = document.querySelector('.list-tasks-aside-section');
+    const warningDiv = asideSection.querySelector('.warning-to-select-a-day');
+
+    // Remove os divs de dias que não estão mais selecionados
+    const existingDayDivs = asideSection.querySelectorAll('.day-events');
+    existingDayDivs.forEach(dayDiv => {
+        const day = parseInt(dayDiv.getAttribute('data-day'));
+        if (!calendarState.selectedDays.includes(day)) {
+            asideSection.removeChild(dayDiv);
+        }
+    });
+
     if (calendarState.selectedDays.length === 0) {
-        console.log("Nenhum dia com evento selecionado.");
+        // Mostra a mensagem de aviso se não houver dias selecionados
+        warningDiv.style.display = 'block';
     } else {
-        console.log("Dias com eventos selecionados:", calendarState.selectedDays);
-        calendarState.selectedDays.forEach((day) => {
-            console.log(`Listando eventos para ${day}/${calendarState.month}/${calendarState.year}`);
+        // Esconde a mensagem de aviso
+        warningDiv.style.display = 'none';
+
+        // Para cada dia selecionado, verifica se já existe um div correspondente
+        calendarState.selectedDays.forEach(day => {
+            let dayDiv = asideSection.querySelector(`.day-events[data-day='${day}']`);
+            if (!dayDiv) {
+                // Cria um novo div para o dia
+                dayDiv = document.createElement('div');
+                dayDiv.classList.add('day-events');
+                dayDiv.setAttribute('data-day', day);
+
+                // Cria o header com o número do dia e o nome do dia da semana
+                const date = new Date(calendarState.year, calendarState.month - 1, day);
+                const dayOfWeekName = getDayOfWeekName(date.getDay());
+                const header = document.createElement('h3');
+                header.textContent = `Dia ${day}, ${dayOfWeekName}`;
+                dayDiv.appendChild(header);
+
+                // Obtém os eventos do dia
+                const events = getEventsForDay(day, calendarState.month, calendarState.year);
+
+                // Cria divs para cada evento
+                events.forEach(event => {
+                    const eventDiv = document.createElement('div');
+                    eventDiv.classList.add('event');
+
+                    const title = document.createElement('h4');
+                    title.textContent = event.title;
+                    eventDiv.appendChild(title);
+
+                    const description = document.createElement('p');
+                    description.textContent = event.description;
+                    eventDiv.appendChild(description);
+
+                    dayDiv.appendChild(eventDiv);
+                });
+
+                // Adiciona o div do dia à seção
+                asideSection.appendChild(dayDiv);
+            }
         });
     }
 }
 
+function clearSelections() {
+    // Limpa os dias selecionados no estado
+    calendarState.selectedDays = [];
+
+    // Remove a classe 'selected-day' e redefine os estilos de todos os dias
+    const daysCells = document.querySelectorAll('.days');
+    daysCells.forEach(cell => {
+        cell.classList.remove('selected-day');
+        cell.style.backgroundColor = ''; // Reseta a cor de fundo
+    });
+
+    // Reseta a seção de listagem de eventos
+    const asideSection = document.querySelector('.list-tasks-aside-section');
+    asideSection.innerHTML = '';
+    const warningDiv = document.createElement('div');
+    warningDiv.classList.add('warning-to-select-a-day');
+    warningDiv.textContent = 'Selecione um ou mais dias para visualizar as tarefas previstas para cada.';
+    asideSection.appendChild(warningDiv);
+}
 
 
 
@@ -198,10 +267,12 @@ export function showCalendar(month, year) {
         daysCells[i].style.backgroundColor = 'var(--days-bg-color)';
         daysCells[i].style.cursor = 'pointer';
 
+        /*
         // Verifica se é o dia de hoje e aplica estilo
         if (dayCounter === DAY && month === MONTH && year === YEAR) {
             daysCells[i].style.backgroundColor = 'var(--days-clicked-bg-color)';
         }
+        */
 
         // Obtém eventos para o dia
         const eventsForDay = getEventsForDay(dayCounter, month, year);
@@ -242,6 +313,8 @@ export function showCalendar(month, year) {
 }
 
 function updateCalendar(newMonth, newYear) {
+    // Limpa as seleções ao atualizar o calendário
+    clearSelections();
     showCalendar(newMonth, newYear);    // Atualiza o calendário com os novos valores de mês e ano
 }
 

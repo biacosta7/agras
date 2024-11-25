@@ -46,3 +46,29 @@
     color: white;
     font-weight: bold;
 }
+
+
+.day-events {
+    margin-bottom: 20px;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.day-events h3 {
+    margin-bottom: 10px;
+    color: var(--dark-green-color);
+}
+
+.event {
+    margin-bottom: 10px;
+}
+
+.event h4 {
+    margin-bottom: 5px;
+    color: var(--dark-brown-color);
+}
+
+.event p {
+    margin-left: 10px;
+    color: #555;
+}
