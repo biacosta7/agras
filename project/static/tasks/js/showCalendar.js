@@ -17,7 +17,7 @@ export const calendarState = {
     year: YEAR,
     month: MONTH,
     day: DAY,
-    selectedDayElement: null,
+    selectedDays: [],
     dayEvents: [
         // Exemplo de evento
         {
@@ -66,98 +66,65 @@ const nextButton = document.querySelector('.next-month');
 
 // Função para lidar com o toque em um dia do mês (para smartphones e tablets)
 function handleDayTouch(event) {
-    // Atualiza o dia com o dia que foi tocado
-    calendarState.selectedDayElement = event.target;
-    calendarState.day = event.target.textContent;
+    const dayElement = event.target;
 
-    // Previne o comportamento padrão para evitar que "tap-and-hold" interfira
+    // Previne o comportamento padrão para evitar interferências
     event.preventDefault();
 
-    // Define a cor de fundo ao iniciar o toque
-    event.target.style.backgroundColor = 'var(--days-clicked-bg-color)';
+    // Alterna a seleção do dia
+    toggleDaySelection(dayElement);
 
-    function handleTouchEnd() {
-        // Volta à cor original
-        event.target.style.backgroundColor = 'var(--days-bg-color)';
-        // Listas o eventos do dia tocado
-        //listAllEvents();
-        // Remove os event listeners após o toque
-        removeTouchListeners();
-    }
-
-    function handleTouchCancel() {
-        // Volta à cor original se o toque for cancelado
-        event.target.style.backgroundColor = 'var(--days-bg-color)';
-        // Remove os event listeners
-        removeTouchListeners();
-    }
-
-    function handleTouchMove(moveEvent) {
-        const touch = moveEvent.touches[0];
-        const targetRect = event.target.getBoundingClientRect();
-
-        // Verifica se o toque ainda está dentro dos limites do elemento
-        if (
-            touch.clientX < targetRect.left ||
-            touch.clientX > targetRect.right ||
-            touch.clientY < targetRect.top ||
-            touch.clientY > targetRect.bottom
-        ) {
-            handleTouchCancel();
-        }
-    }
-
-    function removeTouchListeners() {
-        event.target.removeEventListener('touchend', handleTouchEnd);
-        event.target.removeEventListener('touchcancel', handleTouchCancel);
-        event.target.removeEventListener('touchmove', handleTouchMove);
-    }
-
-    // Adiciona event listeners para touchend, touchcancel e touchmove
-    event.target.addEventListener('touchend', handleTouchEnd, { passive: true });
-    event.target.addEventListener('touchcancel', handleTouchCancel, { passive: true });
-    event.target.addEventListener('touchmove', handleTouchMove, { passive: true });
+    // Lógica adicional (exemplo: listagem de eventos)
+    listSelectedDaysEvents();
 }
 
 // Função para lidar com o clique em um dia do mês (para computadores)
 function handleDayClick(event) {
     // Se o botão pressionado do mouse não foi o esquerdo
-    if (event.button !== 0) {
-        return; // Não faz nada
-    }
+    if (event.button !== 0) return;
 
-    // Atualiza o dia com o dia que foi clicado
-    calendarState.selectedDayElement = event.target;
-    calendarState.day = event.target.textContent;
-    
-    // Adiciona a cor de fundo ao pressionar o botão do mouse ou dedo
-    event.target.style.backgroundColor = 'var(--days-clicked-bg-color)';
+    const dayElement = event.target;
 
-    // Remover a cor de fundo ao soltar o botão do mouse
-    function handleMouseUp() {
-        event.target.style.backgroundColor = 'var(--days-bg-color)'; // Volta à cor original
-        
-        // Atualiza o estado com o dia selecionado
-        calendarState.selectedDayElement = event.target;
-        calendarState.day = parseInt(event.target.querySelector('.day-number').textContent);
-        // Lista os eventos do dia clicado
-        //listAllEvents(calendarState.day, calendarState.month, calendarState.year);
-        
-        // Remove os event listeners após o clique
-        event.target.removeEventListener('mouseup', handleMouseUp);
-        event.target.removeEventListener('mouseleave', handleMouseLeave);
-    }
+    // Alterna a seleção do dia
+    toggleDaySelection(dayElement);
 
-    // Remove a cor de fundo se o mouse for movido para fora antes de soltar
-    function handleMouseLeave() {
-        event.target.style.backgroundColor = 'var(--days-bg-color)'; // Volta à cor original
-        event.target.removeEventListener('mouseup', handleMouseUp);
-        event.target.removeEventListener('mouseleave', handleMouseLeave);
-    }
-
-    event.target.addEventListener('mouseup', handleMouseUp);
-    event.target.addEventListener('mouseleave', handleMouseLeave);
+    // Lógica adicional (exemplo: listagem de eventos)
+    listSelectedDaysEvents();
 }
+
+// Função para alternar a seleção de um dia
+function toggleDaySelection(dayElement) {
+    // Verifica se o dia já está selecionado
+    const isSelected = dayElement.classList.contains('selected-day');
+
+    // Altera a cor de fundo e o estado com base na seleção
+    if (isSelected) {
+        dayElement.style.backgroundColor = 'var(--days-bg-color)';
+        dayElement.classList.remove('selected-day');
+        // Remove o dia do estado
+        calendarState.selectedDays = calendarState.selectedDays.filter(
+            (selectedDay) => selectedDay !== parseInt(dayElement.textContent)
+        );
+    } else {
+        dayElement.style.backgroundColor = 'var(--green-agras-color)';
+        dayElement.classList.add('selected-day');
+        // Adiciona o dia ao estado
+        calendarState.selectedDays.push(parseInt(dayElement.textContent));
+    }
+}
+
+// Função para listar os eventos dos dias selecionados
+function listSelectedDaysEvents() {
+    if (calendarState.selectedDays.length === 0) {
+        console.log("Nenhum dia selecionado.");
+    } else {
+        console.log("Dias selecionados:", calendarState.selectedDays);
+        calendarState.selectedDays.forEach((day) => {
+            console.log(`Listando eventos para ${day}/${calendarState.month}/${calendarState.year}`);
+        });
+    }
+}
+
 
 export function showCalendar(month, year) {
     const calendarTitle = document.querySelector('.calendar-title');
@@ -179,7 +146,7 @@ export function showCalendar(month, year) {
         cell.textContent = '';
         // Remove os estilos anteriores
         cell.style.backgroundColor = '';
-        cell.style.color = '';
+        //cell.style.color = '';
         cell.style.border = '';
         cell.style.boxShadow = '';
         cell.style.cursor = '';
@@ -212,53 +179,47 @@ export function showCalendar(month, year) {
         dayNumber.classList.add("day-number");
         daysCells[i].appendChild(dayNumber);
         dayNumber.textContent = dayCounter;
-        
+
         // Cria a div dos marcadores
         const markersContainer = document.createElement("div");
         markersContainer.classList.add("markers-container");
         daysCells[i].appendChild(markersContainer);
 
-        //daysCells[i].textContent = dayCounter;
-        dayNumber.style.color = 'black';
-        daysCells[i].style.backgroundColor = 'var(--days-bg-color)';    // Cor de fundo
-        daysCells[i].style.cursor = 'pointer';                          // Cursor apontador
+        // Define a aparência inicial do dia
+        daysCells[i].style.backgroundColor = 'var(--days-bg-color)';
+        daysCells[i].style.cursor = 'pointer';
 
-        //const currentDayOfWeek = (i % 7);
-        // Pinta o texto dos dias de domingo com vermelho
-        //if (currentDayOfWeek === 0) {
-        //    dayNumber.style.color = 'var(--sun-color)';
-        //}
-        // Pinta o texto dos dias de sábado com azul
-        //else if (currentDayOfWeek === 6) {
-        //    dayNumber.style.color = 'var(--sat-color)';
-        //}
-
-        // Verifica se é o dia de hoje, se for, adiciona um fundo diferente
+        // Verifica se é o dia de hoje e aplica estilo
         if (dayCounter === DAY && month === MONTH && year === YEAR) {
             daysCells[i].style.backgroundColor = 'var(--days-clicked-bg-color)';
         }
 
-        // Verifica se tem evento, se tiver, adiciona os marcadores
-        //if (daysCells[i].classList.contains("marked-day")) {
-        //    addMarker(markersContainer);
-        //}
-        
-        // Verifica eventos para o dia
+        // Obtém eventos para o dia
         const eventsForDay = getEventsForDay(dayCounter, month, year);
         if (eventsForDay.length > 0) {
             daysCells[i].classList.add('marked-day');
-            // Adiciona até 2 marcadores
+
+            // Adiciona marcadores até o máximo de 2
             for (let j = 0; j < Math.min(eventsForDay.length, 2); j++) {
                 addMarker(markersContainer, eventsForDay[j].color);
             }
+
+            // Adiciona texto "e mais x tarefas" se houver mais de 2 eventos
+            if (eventsForDay.length > 2) {
+                const extraTasksDiv = document.createElement("div");
+                extraTasksDiv.classList.add("extra-tasks");
+                extraTasksDiv.textContent = `e mais ${eventsForDay.length - 2} tarefas.`;
+                daysCells[i].appendChild(extraTasksDiv);
+            }
         }
 
-        // Adiciona um escutador de evento de segurar clique/ toque para os dias do mês
-        daysCells[i].addEventListener('mousedown', handleDayClick);     // Mouse segurando (para computadores)
-        daysCells[i].addEventListener('touchstart', handleDayTouch);    // Toque segurando (para celulares/ tablets)
+        // Adiciona escutadores de eventos de clique e toque
+        daysCells[i].addEventListener('mousedown', handleDayClick);
+        daysCells[i].addEventListener('touchstart', handleDayTouch);
 
         dayCounter++;
     }
+
 
 
     // Preenche as células restantes com os primeiros dias próximo mês
