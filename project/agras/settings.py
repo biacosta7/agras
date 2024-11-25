@@ -31,7 +31,7 @@ if NOT_PROD:
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
     STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
-    MEDIA_URL = '/media/'
+    MEDIA_URL = '../media/'
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 else:
     API_KEY=os.getenv('API_KEY')
