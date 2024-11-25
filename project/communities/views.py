@@ -6,6 +6,8 @@ from areas.models import Area
 from communities.models import Community, MembershipRequest
 from seedbeds.models import Seedbed
 from django.utils import timezone
+from .models import ImageUpload
+from django.http import HttpResponse
 
 @login_required
 def home_view(request):
@@ -195,3 +197,19 @@ def list_members(request, community_id):
 
     return render(request, 'list_members.html', context)
 
+def image_upload_view(request):
+    image_url = None  # Variável para armazenar a URL da imagem
+    
+    if request.method == 'POST' and request.FILES.get('image'):
+        title = request.POST.get('title', 'Untitled')
+        image = request.FILES['image']
+
+        # Salvar o objeto no banco de dados
+        new_image = ImageUpload.objects.create(title=title, image=image)
+        new_image.save()
+
+        # Obter a URL da imagem para exibir
+        image_url = new_image.image.url
+        print(image_url)
+
+    return render(request, 'upload.html', {'image_url': image_url})

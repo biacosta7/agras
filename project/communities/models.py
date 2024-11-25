@@ -30,3 +30,10 @@ class MembershipRequest(models.Model):
 
     def __str__(self):
         return f"O usuário {self.user} pediu para entrar na comunidade {self.community}"
+
+class ImageUpload(models.Model):
+    title = models.CharField(max_length=100)
+    image = models.ImageField(upload_to='uploads/')  # Diretório onde a imagem será salva
+
+    def __str__(self):
+        return self.title
