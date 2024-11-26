@@ -44,12 +44,23 @@ document.addEventListener('DOMContentLoaded', function() {
     const chatInput = document.querySelector('#helpModal input[type="text"]');
     const sendButton = document.querySelector('#helpModal button[class*="absolute"]');
     const modalContent = document.querySelector('#helpModal');
-    
-    // Create a messages container
+
+    // Criar o container de mensagens
     const messagesContainer = document.createElement('div');
     messagesContainer.className = 'messages-container mt-4 max-h-[300px] overflow-y-auto';
-    // Insert messages container before the input div
-    modalContent.insertBefore(messagesContainer, document.querySelector('#helpModal .mt-6'));
+    // Certifique-se de que a variável chats contém dados válidos
+    if (typeof chats !== 'falha' && Array.isArray(chats)) {
+        // Adicionar histórico de mensagens ao container
+        chats.forEach(chat => {
+            appendMessage(chat.text_input, 'user'); // Mensagem do usuário
+            appendMessage(chat.gemini_output, 'bot'); // Resposta da IA
+        });
+    } else {
+        console.error('Chats data is undefined or not an array:', chats);
+    }
+    if (modalContent) {
+        modalContent.insertBefore(messagesContainer, modalContent.querySelector('.mt-6'));
+    }
 
     // Event listener for showing/hiding the utilities section
     document.getElementById("toggle-utilities").addEventListener("click", toggleUtilities);

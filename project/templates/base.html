@@ -413,7 +413,6 @@
 
     {% endblock styles %}
 </style>
-
 {% if community_id and user_id %}
 <script type="text/javascript">
     const userContext = {
@@ -424,9 +423,11 @@
         //user_climate: "{{ user_climate }}",
         //type_products: {{ type_products|safe }},
     };
+    const chats = {{ chats|safe }};
     const csrfToken = "{{ csrf_token }}";
     const askQuestionUrl = "{% url 'ask_question' community_id user_id %}";
     console.log(userContext);
+    console.log("Chats:", chats); 
 </script>
 {% endif %}
 <script src="{% static 'chat/chat.js' %}"></script>
