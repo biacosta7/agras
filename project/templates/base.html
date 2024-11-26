@@ -276,7 +276,7 @@
         {% csrf_token %}
         <select id="organisms" name="organisms[]" multiple required>
             {% for organism in organisms %}
-            <option value="{{ organism.name }}">{{ organism.name }}</option>
+            <option value="{{ organism }}">{{ organism }}</option>
             {% empty %}
             <option value="">Nenhum organismo disponível</option>
             {% endfor %}

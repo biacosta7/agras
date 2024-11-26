@@ -13,6 +13,19 @@ def chat_messages(request):
 
         type_products = TypeProduct.objects.filter(community=community_id)
 
+        organisms = [
+            "Cupins",
+            "Brocas-do-caule",
+            "Moscas-das-frutas",
+            "Pulgões",
+            "Lagarta-do-cartucho",
+            "Percevejo-marrom",
+            "Lagarta Helicoverpa",
+            "Corós",
+            "Mosca-branca",
+            "Ácaro-rajado"
+        ]
+
         # Produtos da comunidade
         products = []
         if community_id:
@@ -27,5 +40,6 @@ def chat_messages(request):
             'products': list(products),
             'interests': 'agricultura',
             'type_products': type_products,
+            'organisms': organisms,
         }
     return {}

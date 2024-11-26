@@ -187,7 +187,7 @@ function toggleUtilities() {
     }
 
     // Função de submit dos organismos selecionados
-    document.getElementById("submit-organismos").addEventListener("click", function () {
+    document.getElementById("submit-organisms").addEventListener("click", function () {
         // Use getSelectedOptions() para obter os valores selecionados
         const selectedOptions = document.querySelector('#organisms').getSelectedOptions();
         console.log("Opções selecionadas:", selectedOptions); // Veja o retorno
