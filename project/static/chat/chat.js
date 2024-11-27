@@ -38,7 +38,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }, 100);
 });
 
-
 // Chat functionality
 document.addEventListener('DOMContentLoaded', function() {
     const chatInput = document.querySelector('#helpModal input[type="text"]');
@@ -52,8 +51,8 @@ document.addEventListener('DOMContentLoaded', function() {
     if (typeof chats !== 'falha' && Array.isArray(chats)) {
         // Adicionar histórico de mensagens ao container
         chats.forEach(chat => {
-            appendMessage(chat.text_input, 'user'); // Mensagem do usuário
-            appendMessage(chat.gemini_output, 'bot'); // Resposta da IA
+            appendMessage(chat.text_input, 'user');
+            appendMessage(chat.gemini_output, 'bot');
         });
     } else {
         console.error('Chats data is undefined or not an array:', chats);
@@ -114,6 +113,12 @@ function toggleUtilities() {
     // Function to handle submission of selected cultivos and send the request to the chatbot
     async function submitCultivos(selectedCultivos) {
         try {
+            // Verifica se há cultivos selecionados
+            if (selectedCultivos.length === 0 || selectedCultivos instanceof MouseEvent) {
+                console.log('Nenhum cultivo selecionado ou evento detectado. Impedindo o fetch.');
+                return;  // Não faz o fetch se o valor for '[object MouseEvent]' ou se não houver cultivos
+            }
+        
             const response = await fetch(askQuestionUrl, {
                 method: "POST",
                 headers: {
@@ -128,43 +133,58 @@ function toggleUtilities() {
                     },
                 }),
             });
-    
+        
             const data = await response.json();
-    
+        
             if (data.data && data.data.text) {
                 appendMessage(data.data.text, 'bot');
             } else if (data.error) {
                 console.error('Error from backend:', data.error);
                 appendMessage('Desculpe, ocorreu um erro ao processar sua solicitação.', 'bot');
             }
+        
+            // Limpar a seleção de cultivos após o envio
+            const cultivoSelect = document.querySelector('#cultivos');
+            if (cultivoSelect) {
+                cultivoSelect.reset();  // Limpa as opções selecionadas
+                console.log("Cultivos selecionados foram limpos.");
+            }
         } catch (error) {
             console.error("Erro:", error);
             alert("Erro ao enviar os cultivos. Tente novamente.");
         }
-    }
+    
+        toggleUtilities();
+    }    
+    
 
     // Função de submit dos cultivos selecionados
-    document.getElementById("submit-cultivos").addEventListener("click", function () {
-        // Use getSelectedOptions() para obter os valores selecionados
-        const selectedOptions = document.querySelector('#cultivos').getSelectedOptions();
-        console.log("Opções selecionadas:", selectedOptions); // Veja o retorno
-
-        if (!selectedOptions || selectedOptions.length === 0) {
-            alert("Por favor, selecione pelo menos um cultivo!");
+    document.getElementById("submit-cultivos").addEventListener("click", (event) => {
+        event.preventDefault(); // Previne o comportamento padrão do botão
+    
+        const cultivosSelect = document.querySelector('#cultivos');
+        if (!cultivosSelect) {
+            console.error("Elemento #cultivos não encontrado!");
             return;
         }
-
+    
+        // Use o método apropriado do VirtualSelect para obter os valores selecionados
+        const selectedOptions = cultivosSelect.virtualSelect.getSelectedOptions();
+        
+        if (!selectedOptions || selectedOptions.length === 0) {
+            alert("Por favor, selecione pelo menos um cultivo!");
+            return; // Não chama submitCultivos se não houver opções
+        }
+    
         // Extrai os valores das opções selecionadas
         const selectedCultivos = selectedOptions.map(option => option.value);
-        
-        const text = "Cultivos selecionados: " + selectedCultivos;
-        console.log(text);
-
-        // Envie os organismos selecionados para o backend
+        console.log("Cultivos selecionados:", selectedCultivos);
+    
+        // Envia os cultivos selecionados
         submitCultivos(selectedCultivos);
     });
-
-
+    
+    
     // Function to handle submission of selected cultivos and send the request to the chatbot
     async function submitOrganisms(selectedOrganismos) {
         try {
@@ -218,15 +238,15 @@ function toggleUtilities() {
         submitCultivos(selectedOrganismos);
     });
     
-    // Function to send a message in the chat
+    // Função para enviar uma mensagem
     async function sendMessage(text) {
         if (!text) return;
-    
+
         console.log('Sending message:', text);
-    
+
         // Cria e adiciona a mensagem do usuário no chat
         appendMessage(text, 'user');
-    
+
         try {
             // Adiciona o contexto ao payload da mensagem
             const response = await fetch(askQuestionUrl, {
@@ -241,9 +261,9 @@ function toggleUtilities() {
                     user_context: userContext // Adiciona o contexto ao corpo da requisição
                 })
             });
-    
+
             const data = await response.json();
-    
+
             if (data.data && data.data.text) {
                 appendMessage(data.data.text, 'bot');
             } else if (data.error) {
@@ -254,11 +274,27 @@ function toggleUtilities() {
             console.error('Error:', error);
             appendMessage('Desculpe, ocorreu um erro ao processar sua solicitação.', 'bot');
         }
-    
-        chatInput.value = '';
+        
+        chatInput.value = ''; // Limpa o campo de entrada após o envio
     }
 
-    // Append message to chat
+    // Array para armazenar as mensagens com a data
+    let messageHistory = [];
+
+    // Função para renderizar as mensagens em ordem decrescente de data
+    function renderMessages() {
+        messagesContainer.innerHTML = ''; // Limpa o container de mensagens
+
+        // Ordena as mensagens pela data (do mais recente para o mais antigo)
+        messageHistory.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+        // Adiciona as mensagens ordenadas ao container
+        messageHistory.forEach(message => {
+            appendMessage(message.text, message.sender);
+        });
+    }
+
+    // Função para adicionar a mensagem ao histórico
     function appendMessage(text, sender) {
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${sender} mb-4 p-3 rounded-lg ${
@@ -267,29 +303,30 @@ function toggleUtilities() {
                 : 'bg-gray-100 text-black'
         }`;
         messageDiv.style.maxWidth = '80%';
-    
+
         if (sender === 'bot') {
-            // Renderiza o texto do bot como Markdown e sanitiza
-            messageDiv.innerHTML = renderMarkdown(text);
+            messageDiv.innerHTML = renderMarkdown(text); // Para mensagens do bot, renderiza o texto como Markdown
         } else {
-            // Para mensagens do usuário, mostra o texto diretamente
-            messageDiv.textContent = text;
+            messageDiv.textContent = text; // Para mensagens do usuário, apenas o texto
         }
-    
+
         messagesContainer.appendChild(messageDiv);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }    
+    }
 
-    // Event listeners for sending messages
-    sendButton.addEventListener('click', () => {
-        sendMessage(chatInput.value);
-    });
-
+    // Event listener para enviar a mensagem ao pressionar Enter
     chatInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
             e.preventDefault();
             sendMessage(chatInput.value);
+            chatInput.value = ''; // Limpa o campo de entrada após o envio
         }
+    });
+
+    // Event listener para enviar a mensagem ao clicar no botão de envio
+    sendButton.addEventListener('click', () => {
+        sendMessage(chatInput.value);
+        chatInput.value = ''; // Limpa o campo de entrada após o envio
     });
 
     // Helper function to get CSRF token
