@@ -270,3 +270,43 @@ def image_upload_view(request):
         print(image_url)
 
     return render(request, 'upload.html', {'image_url': image_url})
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from .models import Community
+
+@login_required
+def settings(request, community_id):
+    community = get_object_or_404(Community, id=community_id)
+
+    # Verificar permissões
+    if request.user != community.creator and not community.admins.filter(id=request.user.id).exists():
+        messages.error(request, 'Você não tem permissão para acessar as configurações dessa comunidade.')
+        return redirect('community_hub')
+
+    if request.method == "POST":
+        action = request.POST.get('action')
+        
+        if action == "update":
+            # Lógica para atualização da comunidade
+            name = request.POST.get('name')
+            description = request.POST.get('description')
+
+            if Community.objects.filter(name=name).exclude(pk=community_id).exists():
+                messages.error(request, 'Já existe uma comunidade com esse nome.')
+                return render(request, 'settings.html', {'community': community})
+
+            community.name = name
+            community.description = description
+            community.save()
+            messages.success(request, 'Comunidade editada com sucesso.')
+
+        elif action == "delete":
+            # Lógica para exclusão da comunidade
+            community.delete()
+            messages.success(request, 'Comunidade deletada com sucesso.')
+            return redirect('community_hub')
+
+    return render(request, 'settings.html', {'community': community})
