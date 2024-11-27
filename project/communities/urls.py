@@ -15,6 +15,7 @@ urlpatterns = [
     path('deletar/<int:pk>/', community_views.delete_community, name='delete_community'),
     path('comunidade/<int:community_id>/gerenciamento/', community_views.manage_community, name='manage_community'),
     path('dashboard/<int:community_id>/', community_views.dashboard_view, name='dashboard'),
+    path('settings/<int:community_id>/', community_views.settings, name='settings'),
     
     # URLs para aceitar e rejeitar solicitações
     path('solicitacao/aceitar/<int:request_id>/', community_views.aceitar_solicitacao, name='aceitar_solicitacao'),
