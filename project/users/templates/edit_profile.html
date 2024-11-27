@@ -4,36 +4,37 @@
 
 {% block content %}
 
-<div class="items-center justify-center bg-white">
+<div class="items-center justify-center">
     <!-- Navbar -->
-    <nav class="bg-white border-b-[1px] h-[90px] border-[#8ABF17] flex justify-between items-center px-8 py-4 fixed top-0 left-0 w-full z-10 lg:flex xl:flex 2xl:flex sm:hidden md:hidden hidden-sm">
-        <div class="border-r-[1px] border-[#8ABF17] w-[218px] h-[90px] fixed "></div>
+    <nav class="bg-white border-b-[1px] h-[90px] border-[#CECECE] flex justify-between items-center px-8 py-4 fixed top-0 left-0 w-full z-10 lg:flex xl:flex 2xl:flex sm:hidden md:hidden hidden-sm">
         <div class="flex items-center">
             <a href="/" class="flex items-center mr-20 z-20 cursor-pointer">
                 <img src="{% static 'assets/colorido-horizontal.png' %}" alt="AGRAS" class="w-[160px] mr-4">
             </a>
             <div class="relative"> 
-              <input type="text" placeholder="Pesquisar..." class="rounded-[8px] bg-[#F5F5F7] shadow-sm py-2 px-4 pl-10 focus:outline-none">
-              <span class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 material-icons text-[#8ABF17]">search</span>
+            <div class="flex flex-col">
+                <h1 class="font-regular text-[20px] uppercase">Edite seu</h1>
+                <h2 class="font-bold text-[24px] -mt-2">Perfil</h2>
+            </div>
             </div>
         </div>
         <div class="flex items-center">
-            <div class="relative mr-6 flex items-center cursor-pointer">  
-                <span class="material-icons text-[25px]">notifications_none</span>
-                <span class="absolute top-[30%] -right-1 transform -translate-y-1/2 bg-red-500 text-white text-xs rounded-full px-1">3</span> 
-            </div>
             <div class="flex items-center cursor-pointer z-20"> 
-                <img src="{% static 'assets/icons/profile.png' %}" alt="Foto de Perfil" class="w-8 h-8 rounded-full mr-2">
-                <div class="flex flex-col">
-                    <span class="text-sm font-medium">{{ user.username }}</span> 
-                    <span class="text-xs text-gray-500">{{ user.email }}</span> 
-                </div>
+                <a href="{% url 'edit' %}" class="flex flex-row items-center">
+                    <div class="w-8 h-8 bg-[#8ABF17] text-[#FFFFFF] flex items-center justify-center rounded-md mr-2 font-bold">
+                        {{ user.username|slice:":1"|upper }}
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-sm font-medium">{{ user.username }}</span> 
+                        <span class="text-xs text-gray-500">{{ user.email }}</span> 
+                    </div>
+                </a>
             </div>
         </div>
     </nav> 
 
         <!-- Mobile Navbar -->
-        <nav class="bg-white border-b-[1px] border-[#8ABF17] h-[60px] flex justify-between items-center px-4 py-2 fixed top-0 left-0 w-full z-20 lg:hidden xl:hidden 2xl:hidden sm:flex md:flex">
+        <nav class="bg-white border-b-[1px] border-[#CECECE] h-[60px] flex justify-between items-center px-4 py-2 fixed top-0 left-0 w-full z-20 lg:hidden xl:hidden 2xl:hidden sm:flex md:flex">
             <button id="mobile-menu-button" class="text-[#8ABF17] focus:outline-none">
                 <span class="material-icons">menu</span>
             </button>
@@ -41,72 +42,55 @@
                 <img src="{% static 'assets/colorido-horizontal.png' %}" alt="AGRAS" class="w-[100px]">
             </a>
             <div class="flex items-center">
-                <div class="relative mr-2 flex items-center cursor-pointer">  
-                    <span class="material-icons text-[20px]">notifications_none</span>
-                    <span class="absolute top-[25%] -right-1 transform -translate-y-1/2 bg-red-500 text-white text-xs rounded-full px-1">3</span> 
+            <a href="{% url 'edit' %}">
+                <div class="w-8 h-8 bg-[#8ABF17] text-[#FFFFFF] flex items-center justify-center rounded-md mr-2 font-bold">
+                    {{ user.username|slice:":1"|upper }}
                 </div>
-                <img src="{% static 'assets/icons/profile.png' %}" alt="Foto de Perfil" class="w-6 h-6 rounded-full">
-            </div>
+            </a>
         </nav>
 
     <!-- Sidebar -->
-    <div class="bg-white top-[90px] border-r-[1px] border-[#8ABF17] w-[250px] min-h-screen lg:flex xl:flex 2xl:flex sm:hidden md:hidden hidden-sm flex-col items-center w-[250px] fixed">
-        <div class="flex flex-col gap-y-8 mt-12 w-full px-8 flex-grow">
-            <a href="" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
-                <img src="{% static 'assets/icons/dashboard.png' %}" class="w-[23px] mr-2" alt="dashboar2"></img> Dashboard
+    <div class="bg-[#8ABF17] min-h-screen lg:flex xl:flex 2xl:flex sm:hidden md:hidden hidden-sm flex-col items-center w-[250px] fixed top-0 z-20 border-r-[1px] border-[#CECECE]">
+        <div class="border-b-[1px] border-[#CECECE] w-[250px] h-[90px] fixed"></div>
+        <a href="/" class="px-8 py-8 mr-4 z-20 cursor-pointer">
+            <img src="{% static 'assets/logo-branco-h.png' %}" alt="AGRAS" class="w-[160px]">
+        </a>
+        <div class="group relative  flex flex-col gap-y-8 mt-12 w-full text-white"> 
+            <a href="{% url 'community_hub' %}" class="px-8 text-[14px] font-normal flex items-center cursor-pointer py-3 hover:bg-white hover:text-[#5F8C1B] transition-colors duration-300"> 
+                <div class="w-1 bg-[#5F8C1B] absolute left-0 top-0 bottom-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">group</span> Comunidades
             </a>
-            <a href="" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
-                <img src="{% static 'assets/icons/gerenciamento.png' %}" class="w-[23px] mr-2" alt="gerenciamento"></img> Gerenciamento
-            </a>
-            <a href="#" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
-                <img src="{% static 'assets/icons/comunidades.png' %}" class="w-[23px] mr-2" alt="comunidar-2"></img> Comunidades
-            </a>
-            <a href="" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
-                <img src="{% static 'assets/icons/tarefas.png' %}" class="w-[23px] mr-2" alt="tarefas"></img> Tarefas
-            </a>
-            <a href="#" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
-                <img src="{% static 'assets/icons/configuracoes.png' %}" class="w-[23px] mr-2" alt="tarefas"></img> Configurações
-            </a>
-            <form action="{% url 'logout' %}" method="POST" class="w-full mb-12">
-                {% csrf_token %}
-                <button class="mt-64 text-[14px] font-normal text-black flex items-center cursor-pointer w-full">
-                    <img src="{% static 'assets/icons/sair.png' %}" class="w-[23px] mr-2"></img>Sair
-                </button>
-            </form>
         </div>
+        <form action="{% url 'logout' %}" method="POST" class="group w-full mb-12 absolute bottom-0 left-0">
+            {% csrf_token %}
+            <div class="w-1 bg-[#5F8C1B] absolute left-0 top-0 bottom-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <button class="px-8 text-[14px] font-normal text-white flex items-center cursor-pointer w-full py-3 hover:bg-white hover:text-[#5F8C1B] transition-colors duration-300">
+                <span class="w-[23px] mr-2 material-icons-outlined">logout</span>Sair
+            </button>
+        </form>
     </div>
 
     <!-- Mobile Sidebar (Hidden by default) -->
-    <div id="mobile-menu" class="bg-white fixed top-0 left-0 h-full w-64 shadow-lg z-30 transform -translate-x-full transition-transform duration-300 ease-in-out lg:hidden">
-        <div class="p-[14.3px] border-b border-[#8ABF17] flex justify-between items-center">
-            <p class="flex ml-4 w-full">Menu Lateral</p>
-            <button id="mobile-menu-close-button" class="text-[#8ABF17] focus:outline-none ml-auto">
+    <div id="mobile-menu" class="bg-[#8ABF17] fixed top-0 left-0 h-full w-64 shadow-lg z-20 transform -translate-x-full transition-transform duration-300 ease-in-out lg:hidden border-r-[1px] border-[#CECECE]">
+        <div class="p-[14.3px] border-b border-[#CECECE] flex justify-between items-center">
+            <p class="flex ml-4 w-full text-white font-semibold">Menu Lateral</p>
+            <button id="mobile-menu-close-button" class="text-white focus:outline-none ml-auto">
                 <span class="material-icons">close</span>
             </button>
         </div>
-        <div class="flex flex-col gap-y-8 mt-12 w-full px-8 flex-grow">
-            <a href="" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
-                <img src="{% static 'assets/icons/dashboard.png' %}" class="w-[23px] mr-2" alt="dashboar2"></img> Dashboard
+        <div class="group relative  flex flex-col gap-y-8 mt-12 w-full text-white"> 
+            <a href="{% url 'community_hub' %}" class="px-8 text-[14px] font-normal flex items-center cursor-pointer py-3 hover:bg-white hover:text-[#5F8C1B] transition-colors duration-300"> 
+                <div class="w-1 bg-[#5F8C1B] absolute left-0 top-0 bottom-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">group</span> Comunidades
             </a>
-            <a href="" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
-                <img src="{% static 'assets/icons/gerenciamento.png' %}" class="w-[23px] mr-2" alt="gerenciamento"></img> Gerenciamento
-            </a>
-            <a href="#" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
-                <img src="{% static 'assets/icons/comunidades.png' %}" class="w-[23px] mr-2" alt="comunidar-2"></img> Comunidades
-            </a>
-            <a href="" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
-                <img src="{% static 'assets/icons/tarefas.png' %}" class="w-[23px] mr-2" alt="tarefas"></img> Tarefas
-            </a>
-            <a href="#" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
-                <img src="{% static 'assets/icons/configuracoes.png' %}" class="w-[23px] mr-2" alt="tarefas"></img> Configurações
-            </a>
-            <form action="{% url 'logout' %}" method="POST" class="w-full mb-12">
-                {% csrf_token %}
-                <button class="mt-64 text-[14px] font-normal text-black flex items-center cursor-pointer w-full">
-                    <img src="{% static 'assets/icons/sair.png' %}" class="w-[23px] mr-2"></img>Sair
-                </button>
-            </form>
         </div>
+        <form action="{% url 'logout' %}" method="POST" class="group w-full mb-12 absolute bottom-0 left-0">
+            {% csrf_token %}
+            <div class="w-1 bg-[#5F8C1B] absolute left-0 top-0 bottom-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <button class="px-8 text-[14px] font-normal text-white flex items-center cursor-pointer w-full py-3 hover:bg-white hover:text-[#5F8C1B] transition-colors duration-300">
+                <span class="w-[23px] mr-2 material-icons-outlined">logout</span>Sair
+            </button>
+        </form>
     </div>
 
     <!-- Main content -->
@@ -133,12 +117,14 @@
                         <option value="">Selecione a cidade</option>
                         <option value="Carpina" {% if user.city == "Carpina" %}selected{% endif %}>Carpina</option>
                         <option value="Recife" {% if user.city == "Recife" %}selected{% endif %}>Recife</option>
-                        <!-- Adicione mais opções de cidade conforme necessário -->
                     </select>
                 </div>
                 <div class="mb-4">
-                    <label for="state" class="block text-gray-700 font-medium">Estado</label>
-                    <input type="text" name="state" id="state" value="{{ user.state }}" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-[#8ABF17] focus:border-[#8ABF17]">
+                    <label for="state" class="block text-gray-700 font-medium">Estade</label>
+                    <select name="state" id="state" class="w-full px-2 py-2 border-b-2 border-[#8ABF17] focus:outline-none focus:ring-0 text-black" required>
+                        <option value="">Selecione o Estado</option>
+                        <option value="Pernambuco" {% if user.state == "Pernambuco" %}selected{% endif %}>Pernambuco</option>
+                    </select>
                 </div>
                 <div class="flex justify-between items-center mt-4">
                     <a href="/" class="bg-[#3b82f6] text-white font-bold px-6 py-2 rounded-md hover:bg-[#2563eb]">Voltar</a>

@@ -8,50 +8,325 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    
     {% block css %}
         <link rel="stylesheet" href="{% static 'globals.css' %}">
     {% endblock css %}
 
-    <title>AGRAS | {% block title %}{% endblock %}</title>
+    {% block extra_css %}
+    <!-- Para incluir o CSS das apps -->
+    {% endblock extra_css %}
 
+    <title>AGRAS | {% block title %}{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 </head>
 <body>
     {% include 'common/messages.html' %}
 
-    <div class="{% block page_classes %} bg-white h-screen{% endblock %}">
-        {% block content %}{% endblock content %}
+    <div class="{% block page_classes %} bg-[#FAFAFA] h-screen{% endblock %}">
+    {% block content %}{% endblock content %}
+    {% if request.user.is_authenticated %}
+    {% if request.path != '/comunidades/' and request.resolver_match.url_name != 'edit' %}
+
+    <!-- Navbar -->
+    <nav class="bg-white border-b-[1px] h-[90px] border-[#CECECE] flex justify-between items-center px-8 py-4 fixed top-0 left-0 w-full z-10 lg:flex xl:flex 2xl:flex sm:hidden md:hidden hidden-sm">
+        <div class="flex items-center">
+            <a href="/" class="flex items-center mr-20 z-20 cursor-pointer">
+                <img src="{% static 'assets/colorido-horizontal.png' %}" alt="AGRAS" class="w-[160px] mr-4">
+            </a>
+            <div class="relative"> 
+            <div class="flex flex-col">
+                <h1 class="font-regular text-[20px] uppercase">Comunidade</h1>
+                <h2 class="font-bold text-[24px] -mt-2">{{community.name}}</h2>
+            </div>
+            </div>
+        </div>
+        <div class="flex items-center">
+            <div class="relative mr-6 flex items-center cursor-pointer" onclick="toggleDesktopNotificationMenu()">
+                <span class="material-icons text-[25px] mr-[2px]">notifications_none</span>
+                <span class="absolute top-0 right-0 -mt-1 -mr-1">
+                {% if membership_requests|length > 0 %}
+                <span class="animate-ping top-1 absolute inline-flex h-4 w-4 rounded-full bg-red-400 opacity-75"></span>
+                {% endif %}
+                <span class="relative inline-flex rounded-full h-4 w-4 bg-red-500 justify-center items-center text-[12px] text-white">{{membership_requests|length}}</span>
+                </span>
+            </div>
+                <!-- Dropdown Menu de Notificação -->
+                <div id="desktopNotificationMenu" class="hidden absolute right-10 top-[75px] border-[#CECECE] border w-80 z-50 bg-white shadow-lg rounded-lg">
+                    <div class="p-4">
+                        <h3 class="font-semibold text-gray-700 mb-3">Notificações</h3>
+                        <div class="border-t border-[#8ABF17] mt-2">
+                            {% for request in membership_requests %}
+                                <!-- Notificação Individual com Link -->
+                                <a href="{% url 'manage_community' request.community.id %}" class="block">
+                                    <div class="flex items-center py-2 hover:bg-gray-100">
+                                        <div class="w-8 h-8 bg-[#8ABF17] text-[#FFFFFF] flex items-center justify-center rounded-md mr-2 font-bold">
+                                            {{ request.user.first_name|slice:":1"|upper }}
+                                        </div>
+                                        <div>
+                                            <p class="font-medium text-gray-800">{{ request.user }}</p>
+                                            <p class="text-sm text-gray-600">{{ request.user.email }}</p>
+                                            <p class="text-xs text-gray-500">Solicitado em: {{ request.request_date|date:"d/m/Y H:i" }}</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            {% empty %}
+                                <p class="py-4 text-center text-gray-600">Não há novas solicitações.</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>   
+
+                <div class="flex items-center cursor-pointer z-20"> 
+                    <a href="{% url 'edit' %}" class="flex flex-row items-center">
+                        <div class="w-8 h-8 bg-[#8ABF17] text-[#FFFFFF] flex items-center justify-center rounded-md mr-2 font-bold">
+                            {{ request.user.first_name|slice:":1"|upper }}
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-sm font-medium">{{ user.username }}</span> 
+                            <span class="text-xs text-gray-500">{{ user.email }}</span> 
+                        </div>
+                    </a>
+                </div>
+    </nav> 
+
+        <!-- Mobile Navbar -->
+        <nav class="bg-white border-b-[1px] border-[#CECECE] h-[60px] flex justify-between items-center px-4 py-2 fixed top-0 left-0 w-full z-20 lg:hidden xl:hidden 2xl:hidden sm:flex md:flex">
+            <button id="mobile-menu-button" class="text-[#8ABF17] focus:outline-none">
+                <span class="material-icons">menu</span>
+            </button>
+            <a href="/" class="flex items-center">
+                <img src="{% static 'assets/colorido-horizontal.png' %}" alt="AGRAS" class="w-[100px]">
+            </a>
+            <div class="flex items-center">
+                <div class="relative mr-6 flex items-center cursor-pointer" onclick="toggleMobileNotificationMenu()">
+                    <span class="material-icons text-[25px] mr-[2px]">notifications_none</span>
+                    <span class="absolute top-0 right-0 -mt-1 -mr-1">
+                        {% if membership_requests|length > 0 %}
+                        <span class="animate-ping top-1 absolute inline-flex h-4 w-4 rounded-full bg-red-400 opacity-75"></span>
+                        {% endif %}
+                    <span class="relative inline-flex rounded-full h-4 w-4 bg-red-500 justify-center items-center text-[12px] text-white">{{membership_requests|length}}</span>
+                    </span>
+                </div>
+                <a href="{% url 'edit' %}">
+                    <div class="w-8 h-8 bg-[#8ABF17] text-[#FFFFFF] flex items-center justify-center rounded-md mr-2 font-bold">
+                        {{ user.username|slice:":1"|upper }}
+                    </div>
+                </a>
+            </div>
+            <!-- Dropdown Menu de Notificação -->
+            <div id="mobileNotificationMenu" class="hidden absolute right-10 top-[75px] border-[#CECECE] border w-80 z-50 bg-white shadow-lg rounded-lg">
+                <div class="p-4">
+                    <h3 class="font-semibold text-gray-700 mb-3">Notificações</h3>
+                    <div class="border-t border-[#8ABF17] mt-2">
+                        {% for request in membership_requests %}
+                            <!-- Notificação Individual com Link -->
+                            <a href="{% url 'manage_community' request.community.id %}" class="block">
+                                <div class="flex items-center py-2 hover:bg-gray-100">
+                                    <div class="w-8 h-8 bg-[#8ABF17] text-[#FFFFFF] flex items-center justify-center rounded-md mr-2 font-bold">
+                                        {{ user.username|slice:":1"|upper }}
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-gray-800">{{ request.user }}</p>
+                                        <p class="text-sm text-gray-600">{{ request.user.email }}</p>
+                                        <p class="text-xs text-gray-500">Solicitado em: {{ request.request_date|date:"d/m/Y H:i" }}</p>
+                                    </div>
+                                </div>
+                            </a>
+                        {% empty %}
+                            <p class="py-4 text-center text-gray-600">Não há novas solicitações.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>  
+        </nav>
+
+        <!-- Sidebar -->
+        <div class="bg-[#8ABF17] min-h-screen lg:flex xl:flex 2xl:flex sm:hidden md:hidden hidden-sm flex-col items-center w-[250px] fixed top-0 z-20 border-r-[1px] border-[#CECECE]">
+            <div class="border-b-[1px] border-[#CECECE] w-[250px] h-[90px] fixed"></div>
+            <a href="/" class="px-8 py-8 mr-4 z-20 cursor-pointer">
+                <img src="{% static 'assets/logo-branco-h.png' %}" alt="AGRAS" class="w-[160px]">
+            </a>
+            <!-- Dashboard -->
+            <div class="flex flex-col gap-y-8 mt-12 w-full text-white">
+                <a href="{% url 'dashboard' community.id %}" class="relative px-8 text-[14px] font-normal flex items-center cursor-pointer w-full {% if request.resolver_match.url_name == 'dashboard' %}bg-white text-[#5F8C1B] py-3 font-medium{% endif %}"> 
+                    <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">dashboard</span> 
+                    <span class="flex-grow">Dasboard</span>
+                    {% if request.resolver_match.url_name == 'dashboard' %}
+                        <div class="w-[5px] bg-[#5F8C1B] absolute left-0 top-0 bottom-0"></div>
+                    {% endif %}
+                </a>
+                <!-- Areas de Plantio -->
+                <a href="{% url 'area_manage' community.id %}" class="px-8 relative text-[14px] font-normal flex items-center cursor-pointer {% if request.resolver_match.url_name == 'area_manage' or request.resolver_match.url_name == 'area_detail' or request.resolver_match.url_name == 'seedbed_detail' %}bg-white text-[#5F8C1B] py-3 font-medium{% endif %}">
+                    <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">forest</span> 
+                    <span class="flex-grow">Áreas de Plantio</span>
+                    {% if request.resolver_match.url_name == 'area_manage' or request.resolver_match.url_name == 'area_detail' or request.resolver_match.url_name == 'seedbed_detail' %}
+                        <div class="w-[5px] bg-[#5F8C1B] absolute left-0 top-0 bottom-0"></div>
+                    {% endif %}
+                </a>
+                <!-- Tarefas -->
+                <a href="{% url 'task_page' community.id %}" class="px-8 relative text-[14px] font-normal flex items-center cursor-pointer {% if request.resolver_match.url_name == 'task_page' %}bg-white text-[#5F8C1B] py-3 font-medium{% endif %}"> 
+                    <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">event_available</span> 
+                    <span class="flex-grow">Tarefas</span>
+                    {% if request.resolver_match.url_name == 'task_page' %}
+                        <div class="w-[5px] bg-[#5F8C1B] absolute left-0 top-0 bottom-0"></div>
+                    {% endif %}            
+                </a>
+                <!-- Participantes -->
+                <a href="{% url 'manage_community' community.id %}" class="px-8 relative text-[14px] font-normal flex items-center cursor-pointer {% if request.resolver_match.url_name == 'manage_community' %}bg-white text-[#5F8C1B] py-3 font-medium{% endif %}"> 
+                    <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">people</span> 
+                    <span class="flex-grow">Participantes</span>
+                    {% if request.resolver_match.url_name == 'manage_community' %}
+                        <div class="w-[5px] bg-[#5F8C1B] absolute left-0 top-0 bottom-0"></div>
+                    {% endif %}            
+                </a>
+                <!-- Minha Conta -->
+                <a href="{% url 'profile' %}" class="px-8 relative text-[14px] font-normal flex items-center cursor-pointer {% if request.resolver_match.url_name == 'profile' %}bg-white text-[#5F8C1B] py-3 font-medium{% endif %}"> 
+                    <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">account_circle</span> 
+                    <span class="flex-grow">Meu Perfil</span>
+                    {% if request.resolver_match.url_name == 'profile' %}
+                        <div class="w-[5px] bg-[#5F8C1B] absolute left-0 top-0 bottom-0"></div>
+                    {% endif %}            
+                </a>
+                <!-- Configurações -->
+                <a href="#" class="px-8 relative text-[14px] font-normal flex items-center cursor-pointer {% if request.resolver_match.url_name == 'settings' %} bg-white text-[#5F8C1B] py-3 font-medium{% endif %}"> 
+                    <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">settings</span> 
+                    <span class="flex-grow">Configurações</span>
+                    {% if request.resolver_match.url_name == 'settings' %}
+                        <div class="w-[5px] bg-[#5F8C1B] absolute left-0 top-0 bottom-0"></div>
+                    {% endif %}            
+                </a>
+
+            </div>
+            <form action="{% url 'logout' %}" method="POST" class="w-full mb-12 absolute bottom-0 left-0">
+        {% csrf_token %}
+        <!-- Comunidades -->
+        <a href="{% url 'community_hub' %}" class="flex items-center cursor-pointer w-full py-3 px-8 text-[14px] font-normal text-white relative group hover:bg-white hover:text-[#5F8C1B] transition-colors duration-300 {% if request.resolver_match.url_name == 'community_hub' %}bg-white text-[#8ABF17] font-medium{% endif %}">
+            <div class="w-1 bg-[#5F8C1B] absolute left-0 top-0 bottom-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <span class="w-[23px] mr-2" alt="comunidade">
+                <svg class="w-[21px] h-[21px] fill-white group-hover:fill-[#5F8C1B] transition-colors duration-300" width="22" height="23" viewBox="0 0 26 26" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M6.95554 3.60696C7.43149 4.08292 7.43149 4.85458 6.95554 5.33054L4.16107 8.125H17.4688C18.6627 8.125 20.5384 8.34237 22.1583 9.31431C23.8655 10.3386 25.1875 12.1495 25.1875 15.0312C25.1875 17.913 23.8655 19.7239 22.1583 20.7482C20.5384 21.7201 18.6627 21.9375 17.4688 21.9375H13.4062C12.7332 21.9375 12.1875 21.3918 12.1875 20.7188C12.1875 20.0457 12.7332 19.5 13.4062 19.5H17.4688C18.4415 19.5 19.8158 19.3111 20.9042 18.6581C21.9054 18.0574 22.75 17.0245 22.75 15.0312C22.75 13.038 21.9054 12.0051 20.9042 11.4044C19.8158 10.7514 18.4415 10.5625 17.4688 10.5625H4.16107L6.95554 13.357C7.43149 13.8329 7.43149 14.6046 6.95554 15.0805C6.47958 15.5565 5.70792 15.5565 5.23196 15.0805L0.356964 10.2055C-0.118988 9.72958 -0.118988 8.95792 0.356964 8.48196L5.23196 3.60696C5.70792 3.13101 6.47958 3.13101 6.95554 3.60696Z"/>
+                </svg>
+            </span>
+            Comunidades
+        </a>    
+        <!-- Sair -->
+        <button class="flex items-center cursor-pointer w-full py-3 px-8 text-[14px] font-normal text-white relative group hover:bg-white hover:text-[#5F8C1B] transition-colors duration-300">
+            <div class="w-1 bg-[#5F8C1B] absolute left-0 top-0 bottom-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <span class="w-[23px] mr-2 material-icons-outlined">logout</span> Sair
+        </button>
+        </form>
+    </div>
+
+    <!-- Mobile Sidebar (Hidden by default) -->
+    <div id="mobile-menu" class="bg-[#8ABF17] fixed top-0 left-0 h-full w-64 shadow-lg z-20 transform -translate-x-full transition-transform duration-300 ease-in-out lg:hidden border-r-[1px] border-[#CECECE]">
+        <div class="p-[14.3px] border-b border-[#CECECE] flex justify-between items-center">
+            <p class="flex ml-4 w-full text-white font-semibold">Menu Lateral</p>
+            <button id="mobile-menu-close-button" class="text-white focus:outline-none ml-auto">
+                <span class="material-icons">close</span>
+            </button>
+        </div>
+        <div class="flex flex-col gap-y-8 mt-12 w-full text-white">  <!-- Text color changed to white -->
+            <a href="{% url 'community_hub' %}" class="px-8 text-[14px] font-normal flex items-center cursor-pointer {% if request.resolver_match.url_name == 'community_hub' %}bg-white text-[#8ABF17] py-3 font-medium{% endif %}"> 
+                <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">group</span> Comunidades
+            </a>
+            <a href="{% url 'dashboard' community.id %}" class="relative px-8 text-[14px] font-normal flex items-center cursor-pointer w-full {% if request.resolver_match.url_name == 'dashboard' %}bg-white text-[#5F8C1B] py-3 font-medium{% endif %}"> 
+                <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">dashboard</span> 
+                <span class="flex-grow">Dasboard</span>
+                {% if request.resolver_match.url_name == 'dashboard' %}
+                    <div class="w-[5px] bg-[#5F8C1B] absolute left-0 top-0 bottom-0"></div>
+                {% endif %}
+            </a>
+            <a href="{% url 'area_manage' community.id %}" class="px-8 relative text-[14px] font-normal flex items-center cursor-pointer {% if request.resolver_match.url_name == 'area_manage' or request.resolver_match.url_name == 'area_detail' or request.resolver_match.url_name == 'seedbed_detail' %}bg-white text-[#5F8C1B] py-3 font-medium{% endif %}">
+                <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">forest</span> 
+                <span class="flex-grow">Áreas de Plantio</span>
+                {% if request.resolver_match.url_name == 'area_manage' or request.resolver_match.url_name == 'area_detail' or request.resolver_match.url_name == 'seedbed_detail' %}
+                    <div class="w-[5px] bg-[#5F8C1B] absolute left-0 top-0 bottom-0"></div>
+                {% endif %}
+            </a>
+            <a href="{% url 'manage_community' community.id %}" class="px-8 relative text-[14px] font-normal flex items-center cursor-pointer {% if request.resolver_match.url_name == 'manage_community' %}bg-white text-[#5F8C1B] py-3 font-medium{% endif %}"> 
+                <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">equalizer</span> 
+                <span class="flex-grow">Gerenciamento</span>
+                {% if request.resolver_match.url_name == 'manage_community' %}
+                    <div class="w-[5px] bg-[#5F8C1B] absolute left-0 top-0 bottom-0"></div>
+                {% endif %}            </a>
+        </div>
+        <form action="{% url 'logout' %}" method="POST" class="group w-full mb-12 absolute bottom-0 left-0">
+            {% csrf_token %}
+            <div class="w-1 bg-[#5F8C1B] absolute left-0 top-0 bottom-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <button class="px-8 text-[14px] font-normal text-white flex items-center cursor-pointer w-full py-3 hover:bg-white hover:text-[#5F8C1B] transition-colors duration-300">
+                <span class="w-[23px] mr-2 material-icons-outlined">logout</span>Sair
+            </button>
+        </form>
+    </div>
+
     <!-- Fundo escurecido para o modal -->
     <div id="modalBackground" class="fixed inset-0 bg-black bg-opacity-50 hidden z-20" onclick="closeHelpModal()"></div>
     
     <!-- Modal -->
-    <div id="helpModal" class="fixed bottom-4 right-4 bg-white px-14 py-12 rounded-[34px] w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] max-w-[596px] max-h-[663px] overflow-y-auto z-30 hidden">
-            <button onclick="closeHelpModal()" class="flex material-icons-outlined text-[#F76711]">close</button>
-            <h1 class="text-[22px] font-bold text-[#8ABF17]">IA Chat</h1>
-            <p class="text-[16px] font-normal text-black">Como posso te ajudar hoje?</p>
-
-            <input type="text" placeholder="Me pergunte qualquer coisa..." name="name" id="name" required class="mt-6 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] h-[55px] py-2 px-3">
+<div id="helpModal" class="fixed bottom-4 right-4 bg-white px-6 py-6 rounded-[16px] w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] max-w-[520px]  z-30 hidden">
+    <div class="flex justify-end">
+        <button onclick="closeHelpModal()" class="material-icons-outlined text-[#F76711]">close</button>
+      <button onclick="maximizeHelpModal()" class="material-icons-outlined text-[#8ABF17] mr-2">fullscreen</button>
 
     </div>
+
+    <h1 class="text-[22px] font-bold text-[#8ABF17]">IA Chat</h1>
+    <p class="text-[16px] font-normal text-black">Como posso te ajudar hoje?</p>
+
+    <div class="grid grid-cols-2 gap-4 mt-4">
+        <button id="toggle-utilities" class="border rounded-[9px] px-4 py-2 rounded-lg flex items-center">
+            <span class="material-icons-outlined text-[#915F10] mr-2">forum</span> Utilidades
+        </button>
+        <button class="border rounded-[9px] px-4 py-2 rounded-lg flex items-center">
+            <span class="material-icons-outlined text-[#8ABF17] mr-2">bug_report</span> Organismos
+        </button>
+    </div>
+    <div id="utilities-section" class="hidden mt-10">
+        <p class="text-lg font-semibold mb-2">Você está buscando informações sobre qual(is) Cultivo(s)?</p>
+        <p class="mb-4">Selecione abaixo os cultivos que você deseja:</p>
+        <!-- Seção de Cultivos -->
+        {% csrf_token %}
+        <select id="cultivos" name="cultivos[]" multiple required>
+            {% for cultivo in type_products %}
+            <option value="{{ cultivo.name }}">{{ cultivo.name }}</option>
+            {% empty %}
+            <option value="">Nenhum cultivo disponível</option>
+            {% endfor %}
+        </select>
+        <button id="submit-cultivos" class="bg-[#8ABF17] text-white font-bold px-6 py-3 hover:bg-[#7aab0f] rounded-md w-full">Buscar</button>
+    </div>    
+
+    <div class="mt-6 relative">
+        <input type="text" placeholder="Me pergunte qualquer coisa..." class="block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] h-[55px] py-2 px-3" />
+        <button class="absolute right-2 top-1/2 transform -translate-y-1/2 material-icons-outlined text-[#8ABF17]">send</button>
+    </div>
+</div>
     
     <!-- Help Button -->
     <button onclick="openHelpModal()" id="help-button" class="fixed bottom-4 right-4 bg-[#8ABF17] text-white p-2 rounded-full shadow-md z-10 focus:outline-none">
         <span class="material-icons">help</span> 
     </button>
+    {% endif %}
+    {% endif %}
 </div>
 
     </div>
 </body>
 <style>
     {% block styles %}
-
     #help-button { /* Style the help button */
             width: 40px; /* Adjust size as needed */
             height: 40px;
             display: flex; /* Center the icon */
             align-items: center;
             justify-content: center;
+        }
+
+        input, textarea {
+        caret-color: #8ABF17; /* Troca a cor do cursor para vermelho */
         }
         
         body {
@@ -86,13 +361,13 @@
 
         /* Scrollbar for Webkit browsers (Chrome, Safari) */
         ::-webkit-scrollbar {
-            width: 4px; /* Largura da scrollbar */
-            height: 4px; /* Altura da scrollbar (para scroll horizontal) */
+            width: 3px; /* Largura da scrollbar */
+            height: 3px; /* Altura da scrollbar (para scroll horizontal) */
         }
 
         ::-webkit-scrollbar-thumb {
             background-color: #8ABF17; /* Cor da parte que arrasta */
-            border-radius: 4px; /* Bordas arredondadas */
+            border-radius: 3px; /* Bordas arredondadas */
         }
 
         ::-webkit-scrollbar-track {
@@ -104,6 +379,11 @@
             scrollbar-width: thin; /* Define a largura como fina */
             scrollbar-color: #8ABF17 transparent; /* Cor do thumb e do track */
         }
+        
+        ::selection {
+            background-color: #8ABF17;
+            color: white;
+        }
 
         @media (max-width: 640px) { /* sm breakpoint */
             .hidden-sm {
@@ -111,34 +391,121 @@
             }
         }
 
+        @media (min-width: 1280px) and (max-width: 1546px) {
+        .lgxl {
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+        }
+    }
+
+    .fade-down {
+        animation: fadeDown 1s ease-in-out;
+    }
+
+    @keyframes fadeDown {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    }
+
+    .fade-right {
+        animation: fadeRight 1s ease-in-out;
+    }
+
+    @keyframes fadeRight {
+    0% {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    }
+
     {% endblock styles %}
 </style>
 
+{% if community_id and user_id %}
+<script type="text/javascript">
+    const userContext = {
+        community_id: {{ community_id }},
+        user_id: {{ user_id }},
+        user_name: "{{ user_name }}",
+        location: "Pernambuco",
+        //user_climate: "{{ user_climate }}",
+        //type_products: {{ type_products|safe }},
+    };
+    const csrfToken = "{{ csrf_token }}";
+    const askQuestionUrl = "{% url 'ask_question' community_id user_id %}";
+    console.log(userContext);
+</script>
+{% endif %}
+<script src="{% static 'chat/chat.js' %}"></script>
+ <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> {% comment %} markdown do chatbot {% endcomment %}
+ <script src="https://cdn.jsdelivr.net/npm/dompurify@2.4.3/dist/purify.min.js"></script> {% comment %} para segurança na inserção do html da IA {% endcomment %}
+
+ <link rel="stylesheet" href="{% static 'virtual-selector/virtual-select.min.css' %}">
+<script src="{% static 'virtual-selector/virtual-select.min.js' %}"></script>
+
 <script>
-    const togglePassword = document.getElementById('togglePassword');
-    const passwordInput = document.getElementById('password');
-
-    togglePassword.addEventListener('click', () => {
-        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-        passwordInput.setAttribute('type', type);
+const mobileMenuButton = document.getElementById('mobile-menu-button');
+const mobileMenu = document.getElementById('mobile-menu');
+const mobileMenuCloseButton = document.getElementById('mobile-menu-close-button');
     
-        togglePassword.src = type === 'text' 
-            ? "{% static 'assets/eye-fill.svg' %}" 
-            : "{% static 'assets/eye-slash-fill.svg' %}";
+mobileMenuButton.addEventListener('click', () => {
+mobileMenu.classList.remove('-translate-x-full');
+    
+});
+    
+mobileMenuCloseButton.addEventListener('click', () => {
+mobileMenu.classList.add('-translate-x-full');
+    
 });
 
-// Para o campo de confirmar senha
-const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
-const confirmPasswordInput = document.getElementById('confirm_password');
+function toggleDesktopNotificationMenu() {
+    const menu = document.getElementById('desktopNotificationMenu');
+    const outsideClickListener = function(event) {
+        if (!menu.contains(event.target)) {
+            menu.classList.add('hidden');
+            document.removeEventListener('click', outsideClickListener); 
+        }
+    };
 
-toggleConfirmPassword.addEventListener('click', () => {
-    const type = confirmPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-    confirmPasswordInput.setAttribute('type', type);
-    
-    toggleConfirmPassword.src = type === 'text' 
-        ? "{% static 'assets/eye-fill.svg' %}" 
-        : "{% static 'assets/eye-slash-fill.svg' %}";
-});
+    if (menu.classList.contains('hidden')) {
+        menu.classList.remove('hidden');
+        setTimeout(() => {  
+            document.addEventListener('click', outsideClickListener);
+        }, 0); 
+    } else {
+        menu.classList.add('hidden');
+        document.removeEventListener('click', outsideClickListener); 
+    }
+}
+
+function toggleMobileNotificationMenu() {
+    const menu = document.getElementById('mobileNotificationMenu');
+    const outsideClickListener = function(event) {
+        if (!menu.contains(event.target)) {
+            menu.classList.add('hidden');
+            document.removeEventListener('click', outsideClickListener);
+        }
+    };
+
+    if (menu.classList.contains('hidden')) {
+        menu.classList.remove('hidden');
+        setTimeout(() => {
+            document.addEventListener('click', outsideClickListener);
+        }, 0);
+    } else {
+        menu.classList.add('hidden');
+        document.removeEventListener('click', outsideClickListener);
+    }
+}
 
 function openHelpModal() {
     document.getElementById('modalBackground').classList.remove('hidden');
@@ -149,5 +516,22 @@ function closeHelpModal() {
     document.getElementById('modalBackground').classList.add('hidden');
     document.getElementById('helpModal').classList.add('hidden');
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+      const passwordFields = document.querySelectorAll('.password-toggle');
+
+      passwordFields.forEach(field => {
+        const input = field.querySelector('input[type="password"]');
+        const eyeIcon = field.querySelector('img');
+
+        eyeIcon.addEventListener('click', function() {
+          const type = input.type === 'password' ? 'text' : 'password';
+          input.type = type;
+          eyeIcon.src = type === 'text' 
+            ? "{% static 'assets/eye-fill.svg' %}" 
+            : "{% static 'assets/eye-slash-fill.svg' %}";
+        });
+      });
+    });
 </script>
 </html>

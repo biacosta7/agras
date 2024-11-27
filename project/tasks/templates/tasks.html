@@ -1,0 +1,299 @@
+{% extends "base.html" %} {% load static %} {% block title %}
+Tarefas {{ community.name }}{% endblock %} 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'tasks/css/variables.css' %}" />
+<link rel="stylesheet" href="{% static 'tasks/css/calendar.css' %}" />
+<link rel="stylesheet" href="{% static 'tasks/css/listTasks.css' %}" />
+<link rel="stylesheet" href="{% static 'tasks/css/talkAnimation.css' %}" />
+{% endblock extra_css %}
+{% block content %}
+<div class="flex-1 p-6 fade-down lg:p-10 ml:0 lg:ml-[250px] mt-12 lg:mt-[60px]">
+  <div class="flex md:flex-row flex-col justify-between mt-4">
+    {% include 'modal_create_task.html' %} {% include 'modal_edit_task.html' %}
+    {% if tasks %}
+    <header class="mb-6">
+      <!--
+      <h1 class="text-[44px] lg:text-[48px] font-semibold mt-2">
+        Gerenciar <span class="font-medium">tarefas</span>
+      </h1>
+      -->
+      <h1 class="text-[44px] lg:text-[48px] font-semibold mt-2 tasks-h1">
+        Tarefas <button class="material-icons talk-button">volume_up</button>
+      </h1>
+    </header>
+    
+    <div class="flex flex-row items-center space-x-6">
+      <div class="relative max-w-[411px]">
+        <input
+          type="text"
+          placeholder="Pesquise por tarefas..."
+          class="w-full rounded-[8px] bg-[#F5F5F7] shadow-sm py-2 px-4 pl-10 focus:outline-none"
+        />
+        <span
+          class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 material-icons text-[#8ABF17] cursor-pointer"
+          >search</span
+        >
+      </div>
+      <button
+        id="addArea"
+        class="bg-[#8ABF17] text-white font-semibold flex items-center justify-center rounded-[9px] hover:bg-[#7cad10] hover:text-[#edf0e9] h-[50px] px-4"
+        onclick="toggleModal('create')"
+      >
+        <span class="text-3xl items-center mr-2">+</span> Adicionar Tarefa
+      </button>
+    </div>
+  </div>
+
+  <div class="w-full overflow-x-auto">
+    <div class="rounded-lg">
+      <div
+        class="bg-[#FAFAFA] text-black font-normal py-2 flex items-center justify-between"
+      >
+        <div class="flex items-center">
+          <button
+            id="btnList"
+            class="flex items-center"
+            onclick="showView('list')"
+          >
+            <span class="material-icons mr-2 text-[17px]">list</span>
+            <p class="text-[16px]">Lista</p>
+          </button>
+          <button
+            id="btnCalendar"
+            class="flex items-center"
+            onclick="showView('calendar')"
+          >
+            <span class="material-icons mx-4 text-[17px] mr-2"
+              >calendar_today</span
+            >
+            <p class="text-[16px]">Calendário</p>
+          </button>
+        </div>
+      </div>
+      <div id="listView" class="">
+        <table class="w-full text-sm text-left table-auto">
+          <thead
+            class="text-xs text-[#5F8C1B] uppercase bg-gray-50 border-t-4 border-[#5F8C1B] border-b-4 border-b-[#D3D3D3]"
+          >
+            <tr>
+              <th scope="col" class="px-6 py-3 font-bold">Descrição</th>
+              <th scope="col" class="px-[50px] py-3 font-bold">Status</th>
+              <th scope="col" class="px-6 py-3 font-bold">Local</th>
+              <th scope="col" class="px-6 py-3 font-bold">Prazo</th>
+              <th scope="col" class="px-[38px] py-3 font-bold">Materiais</th>
+              <th scope="col" class="px-6 py-3 font-bold">Responsável</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for task in tasks %}
+            <tr
+              class="bg-[#FAFAFA] border-b border-t border-[#D3D3D3]"
+            >
+              <td class="px-6 py-4 text-black capitalize">
+                {{task.description}}
+              </td>
+              <div class="relative">
+                <td class="px-6 py-4 relative">
+                  {% if task.status == 'Pendente' %}
+                  <span class="bg-red-700 px-2 py-1 rounded-full text-white cursor-pointer text-nowrap inline-flex items-center justify-center" id="status-dropdown-{{ task.id }}" onclick="openStatusDropdown({{task.id}})">
+                    <span class="material-icons mr-2 text-[18px]">radio_button_unchecked</span> {{ task.status }}
+                  </span>
+                  {% elif task.status == 'Progresso' %} 
+                    <span class="bg-[#562A00] px-2 py-1 -ml-3 rounded-full text-white cursor-pointer text-nowrap inline-flex items-center justify-center"  id="status-dropdown-{{ task.id }}" onclick="openStatusDropdown({{task.id}})">
+                      <span class="material-icons mr-2 text-[18px]">pending_actions</span> Em {{ task.status }}
+                    </span>
+                  {% else %}
+                    <span class="bg-[#5F8C1B] px-2 py-1 rounded-full cursor-pointer text-white text-nowrap inline-flex items-center justify-center"  id="status-dropdown-{{ task.id }}" onclick="openStatusDropdown({{task.id}})">
+                      <span class="material-icons-outlined mr-2 text-[18px]">check_circle</span> {{ task.status }}
+                    </span>
+                  {% endif %}
+                  <div id="statusModal-{{ task.id }}" class="hidden absolute top-full left-0 -mt-4 z-50 w-42 rounded-lg shadow-lg border border-gray-200 bg-white">
+                    <form method="POST" id="status-form-{{ task.id }}" action="{% url 'edit_task_status' community.id task.id %}" class="p-4">
+                        {% csrf_token %}
+                        <span class="block text-sm font-medium text-gray-700 mb-2">Alterar Status</span> 
+                        <div class="flex flex-col space-y-2">
+                            {% for value, status in status_choices %}
+                            <button type="button" 
+                                    class="relative w-full text-left p-2 rounded-md transition-colors hover:bg-gray-100 focus:outline-none {% if task.status == status %}bg-gray-200{% endif %}"
+                                    onclick="changeStatus({{ task.id }}, '{{ status }}')">
+                                <span class="flex items-center gap-2"> 
+                                  <span class="material-icons-outlined text-gray-600 {% if task.status == status %}text-current{% endif %}">
+                                    {% if status == 'Pendente' %}radio_button_unchecked{% elif status == 'Progresso' %}pending_actions{% elif status == 'Concluída' %}check_circle{% endif %}
+                                  </span>
+                                  <span class="{% if status == 'Pendente' %}text-red-700{% elif status == 'Progresso' %}text-amber-800{% elif status == 'Concluída' %}text-green-700{% endif %} font-medium">
+                                    {{ status }}
+                                  </span>
+                                </span>
+                             
+                            </button>
+                                {% if not forloop.last %}
+                                    <hr class="border-t border-gray-200 my-1">
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </form>
+                </div>
+              <td class="px-6 py-4 text-black capitalize">
+                {% if task.local == 'seedbed' %}<span class="font-bold"
+                  >{{ task.area }}</span
+                >
+                <br />
+                {{ task.seedbed }} {% else %} <p class='font-bold'> {{ task.area }} </p> {% endif %}
+              </td>
+              <td class="px-6 py-4 text-black">
+                <div class="flex flex-col space-y-1">
+                  {% if task.days_left > 1 %}
+                    <p class="ml-0">{{ task.days_left }} dias restantes</p>
+                    <p class="text-xs text-gray-500">Tarefa {{ task.recurrence }}</p>
+                  {% elif task.days_left == 1 %}
+                    <p class="ml-0">{{ task.days_left }} dia restante</p>
+                    <p class="text-xs text-gray-500">Tarefa {{ task.recurrence }}</p>
+                  {% elif task.days_left == 0 %}
+                    <p class="font-semibold text-[#F76711]">Hoje</p>
+                    <p class="ml-0 text-xs text-gray-500">Tarefa {{ task.recurrence }}</p>
+                  {% elif task.days_left < 0 %}
+                    <p class="font-semibold text-red-700 uppercase">Expirado</p>
+                  {% endif %}
+                </div>
+              </td>
+              <td class="px-6 py-4 text-black">
+                <button
+                  class="bg-[#8ABF17] text-white font-semibold flex items-center justify-center rounded-[9px] hover:bg-[#7cad10] hover:text-[#edf0e9] h-[40px] px-4 mt-2  hover:scale-[1.01] hover:shadow-md transition-all duration-300"
+                  onclick="toggleEditTaskModal({{ task.id }})"
+                >
+                  Consultar
+                </button>
+              </td>
+              <td class="px-6 py-4 text-black">
+                <div class="flex items-center gap-1">
+                  {% for user in task.responsible_users.all|slice:":3" %}
+                  <div
+                    class="w-8 h-8 bg-[#8ABF17] text-[#FFFFFF] flex items-center justify-center rounded-md mr-2 font-bold relative"
+                    data-name="{{ user.username }}"
+                    title="{{ user.first_name }}"
+                    style="z-index: 1; margin-left: -4px"
+                  >
+                    {{ user.username|slice:":1"|upper }}
+                  </div>
+                  {% endfor %} {% if task.responsible_users.count > 3 %}
+                  <span class="text-sm font-medium text-blue-500"
+                    >+ {{ task.responsible_users.count|add:"-3" }} outros</span
+                  >
+                  {% endif %}
+                </div>
+              </td>
+            </tr>
+            {%endfor%}
+          </tbody>
+        </table>
+      </div>
+      <div id="calendarView" class="border-t-4 border-[#5F8C1B]">
+        {% include 'calendar.html' with tasks=tasks community=community %}
+      </div>
+    </div>
+    {%else%}
+    <div class="text-center w-full mt-[15vh]">
+      <div class="flex flex-col items-center justify-center w-full">
+        <img
+          src="{% static 'assets/esqueci-novo.png' %}"
+          alt="Plantas"
+          class="w-64 mb-4"
+        />
+        <h1 class="font-bold text-[24px]">
+          Nenhuma tarefa criada na comunidade "{{community.name}}"
+        </h1>
+        <p class="font-normal text-[16px]">
+          Clique no botão abaixo para criar tarefas e visualizá-las
+        </p>
+        <button
+          id="addArea"
+          class="bg-[#8ABF17] text-white font-semibold flex items-center justify-center rounded-[9px] mt-2 hover:bg-[#7cad10] hover:text-[#edf0e9] h-[50px] px-4"
+          onclick="toggleModal('create')"
+        >
+          <span class="text-3xl items-center mr-2">+</span> Adicionar Tarefa
+        </button>
+      </div>
+    </div>
+    {%endif%}
+  </div>
+</div>
+<!-- Inclua os dados das tarefas em uma variável JavaScript -->
+<script type="text/javascript">
+  var tasksData = JSON.parse('{{ tasks_json|escapejs }}');
+</script>
+
+<script type="module" src="{% static 'tasks/js/showCalendar.js' %}"></script>
+
+<script src="{% static 'tasks/js/talkTasks.js' %}"></script>
+
+<script>
+  function openStatusDropdown(taskId) {
+    const modal = document.getElementById(`statusModal-${taskId}`);
+    const allDropdowns = document.querySelectorAll('[id^="statusModal-"]');
+  
+    // Fecha todos os dropdowns
+    allDropdowns.forEach(dropdown => {
+      if (dropdown !== modal) {
+        dropdown.classList.add('hidden');
+      }
+    });
+  
+    // Alterna o estado do dropdown clicado
+    modal.classList.toggle('hidden');
+  }
+  
+  // Fecha o dropdown quando clicar fora
+  document.addEventListener('click', function(event) {
+    const dropdowns = document.querySelectorAll('[id^="statusModal-"]');
+    dropdowns.forEach(dropdown => {
+      if (!dropdown.contains(event.target) && !event.target.closest('[id^="status-dropdown-"]')) {
+        dropdown.classList.add('hidden');
+      }
+    });
+  });
+  
+  // Submete o formulário de status com o valor da opção selecionada
+  function changeStatus(taskId, status) {
+    const form = document.getElementById(`status-form-${taskId}`);
+    
+    // Cria ou encontra o campo hidden para o status
+    let statusInput = form.querySelector('input[name="status"]');
+    if (!statusInput) {
+      statusInput = document.createElement('input');
+      statusInput.type = 'hidden';
+      statusInput.name = 'status';
+      form.appendChild(statusInput);
+    }
+  
+    // Define o valor do status no input hidden
+    statusInput.value = status;
+  
+    // Submete o formulário
+    form.submit();
+  }
+
+  function showView(view) {
+    const listView = document.getElementById("listView");
+    const calendarView = document.getElementById("calendarView");
+    const btnList = document.getElementById("btnList");
+    const btnCalendar = document.getElementById("btnCalendar");
+
+    if (view === "list") {
+      listView.style.display = "flex"; // Corrigido para 'style.display'
+      calendarView.style.display = "none";
+
+      btnList.classList.add("font-bold");
+      btnCalendar.classList.remove("font-bold");
+    } else if (view === "calendar") {
+      listView.style.display = "none";
+      calendarView.style.display = "block";
+
+      btnList.classList.remove("font-bold");
+      btnCalendar.classList.add("font-bold");
+    }
+  }
+
+  showView("list");
+</script>
+
+{% endblock %}

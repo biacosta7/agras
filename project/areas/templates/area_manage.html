@@ -1,133 +1,36 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load static %}
-{% block title %}Áreas{% endblock %}
+{% block title %}Áreas{% endblock %}""
 
 {% block content %}
-<!-- Navbar -->
-<nav class="bg-white border-b-[1px] h-[90px] border-[#8ABF17] flex justify-between items-center px-8 py-4 fixed top-0 left-0 w-full z-10 lg:flex xl:flex 2xl:flex sm:hidden md:hidden hidden-sm">
-    <div class="border-r-[1px] border-[#8ABF17] w-[218px] h-[90px] fixed"></div>
-    <div class="flex items-center">
-        <a href="/" class="flex items-center mr-20 z-20 cursor-pointer">
-            <img src="{% static 'assets/colorido-horizontal.png' %}" alt="AGRAS" class="w-[160px] mr-4">
-        </a>
-        <div class="relative"> 
-          <input type="text" placeholder="Pesquisar..." class="rounded-[8px] bg-[#F5F5F7] shadow-sm py-2 px-4 pl-10 focus:outline-none">
-          <span class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 material-icons text-[#8ABF17]">search</span>
-        </div>
-    </div>
-    <div class="flex items-center">
-        <div class="relative mr-6 flex items-center cursor-pointer">  
-            <span class="material-icons text-[25px]">notifications_none</span>
-            <span class="absolute top-[30%] -right-1 transform -translate-y-1/2 bg-red-500 text-white text-xs rounded-full px-1">3</span> 
-        </div>
-        <div class="flex items-center cursor-pointer z-20"> 
-            <img src="{% static 'assets/icons/profile.png' %}" alt="Foto de Perfil" class="w-8 h-8 rounded-full mr-2">
-            <div class="flex flex-col">
-                <span class="text-sm font-medium">{{ user.username }}</span> 
-                <span class="text-xs text-gray-500">{{ user.email }}</span> 
-            </div>
-        </div>
-    </div>
-</nav> 
-
-    <!-- Mobile Navbar -->
-    <nav class="bg-white border-b-[1px] border-[#8ABF17] h-[60px] flex justify-between items-center px-4 py-2 fixed top-0 left-0 w-full z-20 lg:hidden xl:hidden 2xl:hidden sm:flex md:flex">
-        <button id="mobile-menu-button" class="text-[#8ABF17] focus:outline-none">
-            <span class="material-icons">menu</span>
-        </button>
-        <a href="/" class="flex items-center">
-            <img src="{% static 'assets/colorido-horizontal.png' %}" alt="AGRAS" class="w-[100px]">
-        </a>
-        <div class="flex items-center">
-            <div class="relative mr-2 flex items-center cursor-pointer">  
-                <span class="material-icons text-[20px]">notifications_none</span>
-                <span class="absolute top-[25%] -right-1 transform -translate-y-1/2 bg-red-500 text-white text-xs rounded-full px-1">3</span> 
-            </div>
-            <img src="{% static 'assets/icons/profile.png' %}" alt="Foto de Perfil" class="w-6 h-6 rounded-full">
-        </div>
-    </nav>
-
-<!-- Sidebar -->
-<div class="bg-white top-[90px] border-r-[1px] border-[#8ABF17] w-[250px] min-h-screen lg:flex xl:flex 2xl:flex sm:hidden md:hidden hidden-sm flex-col items-center w-[250px] fixed">
-    <div class="flex flex-col gap-y-8 mt-12 w-full px-8 flex-grow">
-        <a href="{% url 'dashboard' community.id %}" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
-            <span class="w-[23px] material-icons mr-2" alt="dashboar2">dashboard</span> Dashboard
-        </a>
-        <a href="{% url 'community_hub' %}" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
-            <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">group</span> Comunidades
-        </a>
-        <a href="" class="text-[14px] font-normal text-[#8ABF17] flex items-center cursor-pointer">
-            <span class="material-icons-outlined mr-2">forest</span> Areas de Plantio </a>
-        <a href="{% url 'manage_community' community.id %}" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
-            <span class="w-[23px] mr-2 material-icons" alt="gerenciamento">equalizer</span> Gerenciamento
-        </a>
-        <a href="" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
-            <span class="w-[23px] mr-2 material-icons-outlined" alt="tarefas">task_alt</span> Tarefas
-        </a>
-        <form action="{% url 'logout' %}" method="POST" class="w-full mb-12">
-            {% csrf_token %}
-            <button class="mt-64 text-[14px] font-normal text-black flex items-center cursor-pointer w-full">
-                <span class="w-[23px] mr-2 material-icons-outlined">logout</span>Sair
-            </button>
-        </form>
-    </div>
-</div>
-
-<!-- Mobile Sidebar (Hidden by default) -->
-<div id="mobile-menu" class="bg-white fixed top-0 left-0 h-full w-64 shadow-lg z-30 transform -translate-x-full transition-transform duration-300 ease-in-out lg:hidden">
-    <div class="p-[14.3px] border-b border-[#8ABF17] flex justify-between items-center">
-        <p class="flex ml-4 w-full">Menu Lateral</p>
-        <button id="mobile-menu-close-button" class="text-[#8ABF17] focus:outline-none ml-auto">
-            <span class="material-icons">close</span>
-        </button>
-    </div>
-    <div class="flex flex-col gap-y-8 mt-12 w-full px-8 flex-grow">
-        <a href="" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
-            <span class="w-[23px] material-icons mr-2" alt="dashboar2">dashboard</span> Dashboard
-        </a>
-        <a href="{% url 'community_hub' %}" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
-            <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">group</span> Comunidades
-        </a>
-        <a href="{% url 'area_manage' community.id %}" class="text-[14px] font-normal text-[#8ABF17] flex items-center cursor-pointer">
-            <span class="material-icons-outlined mr-2">forest</span> Areas de Plantio </a>
-        <a href="{% url 'manage_community' community.id %}" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
-            <span class="w-[23px] mr-2 material-icons" alt="gerenciamento">equalizer</span> Gerenciamento
-        </a>
-        <a href="" class="text-[14px] font-normal text-black flex items-center cursor-pointer">
-            <span class="w-[23px] mr-2 material-icons-outlined" alt="tarefas">task_alt</span> Tarefas
-        </a>
-        <form action="{% url 'logout' %}" method="POST" class="w-full mb-12">
-            {% csrf_token %}
-            <button class="mt-48 text-[14px] font-normal text-black flex items-center cursor-pointer w-full">
-                <span class="w-[23px] mr-2 material-icons-outlined">logout</span>Sair
-            </button>
-        </form>
-    </div>
-</div>
-
+<style>
+    input::placeholder {
+           font-size: 13.5px; /* Adjust this value as needed */
+       }
+</style>
         <!-- Main content -->
-        <div class="flex-1 p-6 lg:p-10 ml:0 lg:ml-[250px] mt-12 lg:mt-[60px]">
-
-            <div class="flex justify-between items-center">
-                <h1 class="mb-4 text-xl font-semibold">
-                    <a href="{% url 'dashboard' community.id %}" class="text-[#8ABF17] hover:underline">Dashboard &gt;</a>
-                </h1>
-            </div>
-
+        <div class="flex-1 p-6 fade-down lg:p-10 ml:0 lg:ml-[250px] mt-12 lg:mt-[60px]">
             {% if areas %}
-            <header class="mb-6">
-                <h1 class="text-3xl lg:text-[48px] font-bold mt-2">Áreas de Plantio</h1>
-                <p class="text-lg text-black font-medium">Encontre, crie e gerencie suas áreas!</p>
-            </header>
-
-            <button id="addCommunityBtn" class="bg-[#8ABF17] text-white px-6 py-3 rounded-[9px] mb-6 hover:bg-[#7cad10] hover:text-[#edf0e9]" onclick="toggleModal('create')">
-                Criar Área de Plantio
-            </button>
+            <div class="flex md:flex-row flex-col justify-between mt-4">
+                <header class="mb-6">
+                    <h1 class="text-[44px] lg:text-[48px] font-semibold mt-2 ">Áreas <span class="font-medium">de Plantio</span></h1>
+                </header>
+            
+                <div class="flex flex-row items-center space-x-6">
+                    <div class="relative max-w-[411px]"> 
+                        <input type="text" placeholder="Pesquise por áreas..." class="w-full rounded-[8px] bg-[#F5F5F7] shadow-sm py-2 px-4 pl-10 focus:outline-none">
+                        <span class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 material-icons text-[#8ABF17] cursor-pointer">search</span>
+                    </div>
+                    <button id="addArea" class="bg-[#8ABF17] text-white font-semibold flex items-center justify-center rounded-[9px] hover:bg-[#7cad10] hover:text-[#edf0e9] h-[50px] px-4" onclick="toggleModal('create')">
+                        <span class="text-3xl items-center mr-2">+</span> Criar
+                    </button>
+                </div>
+            </div>
             {% endif %}
 
 
         <!-- Modal para criar area -->
-        <div id="areaModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-10">
+        <div id="areaModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50">
             <div class="bg-white px-14 py-12 rounded-[34px] w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] max-w-[596px] max-h-[663px] overflow-y-auto rounded-[32px]">
                 <h2 id="modalTitle" class="text-[24px] font-bold mb-4 text-[#8ABF17]">Nova área de plantio</h2>
                 <p class="font-medium text-[16px]">Preencha as informações abaixo para criar uma nova área</p>
@@ -135,11 +38,11 @@
                     {% csrf_token %}
                     <div class="mb-4 mt-6">
                         <label for="name" class="block text-sm font-medium text-gray-700">Nome*</label>
-                        <input type="text" name="name" id="name" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] h-[55px] py-2 px-3">
+                        <input type="text" name="name" id="name" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] h-[55px] py-2 px-3">
                     </div>
                     <div class="mb-4">
                         <label for="description" class="block text-sm font-medium text-gray-700">Descrição</label>
-                        <textarea name="description" id="description" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] h-[120px] py-2 px-3"></textarea>
+                        <textarea name="description" id="description" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] h-[120px] py-2 px-3"></textarea>
                     </div>
                     <div class="flex justify-end">
                         <button type="button" class="mr-2 bg-white border-2 border-[#8ABF17] hover:border-[#7aab0f] text-[#8ABF17] hover:text-[#7aab0f] font-bold px-6 py-3 rounded-[9px] w-full" onclick="toggleModal('close')">Cancelar</button>
@@ -148,18 +51,74 @@
                 </form>
             </div>
         </div>
+
         <div class="mt-5">
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
                 {% for area in areas %}
                 <div class="bg-white border border-gray-300 shadow-sm rounded-[12px]">
                     <img src="{% static 'assets/seedbed-pic.jpg' %}" alt="Área de plantio" class="w-full h-auto rounded-t-[12px]">
                     <div class="p-4">
-                        
-                        <h3 class="text-lg lg:text-xl mt-3 font-semibold">
-                            <a href="{% url 'area_detail' community.id area.id %}" class="text-[#8ABF17] hover:underline">{{ area.name }}</a>
-                        </h3>
-                        <p class="text-sm lg:text-base">{{ area.description }}</p>
-        
+                        <div class="flex justify-between">
+                            <div class="flex-col">
+                                <h3 class="text-lg lg:text-xl mt-3 font-semibold">
+                                    <a href="{% url 'area_detail' community.id area.id %}" class="text-[#8ABF17] hover:underline">{{ area.name }}</a>
+                                </h3>
+                                <p class="text-sm lg:text-base">{{ area.description }}</p>
+                            </div> 
+                            <div class="relative-wrapper relative"> {% if is_admin_of_community %}
+                                <span class="material-icons mt-3 cursor-pointer" onclick="toggleManageModal('manage', {{area.id}})">more_vert</span>
+                                <!-- Modal de gerenciamento -->
+                                <div id="manageModal-{{ area.id }}" class="hidden absolute top-8 right-0 bg-white border border-gray-300 mt-2 shadow-lg px-4 py-2 rounded-lg z-10 w-auto">
+                                    <button onclick="toggleManageModal('close-manage', {{ area.id }}), {}" class="absolute top-2 right-2 text-[#F76711] material-icons-outlined">close</button>
+                                    <div class="flex flex-row items-center gap-x-2"> 
+                                        <button onclick="openEditModal({{area.id}})" class="bg-yellow-500 text-white p-1 rounded-full hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 flex">
+                                            <span class="material-icons-outlined">edit</span>
+                                        </button>
+                                        <button onclick="openDeleteModal({{area.id}})" class="bg-red-500 mr-5 text-white p-1 rounded-full hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 flex">
+                                            <span class="material-icons-outlined">delete</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- Modal de edição -->
+                                <div id="editModal-{{ area.id }}" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
+                                    <div class="bg-white px-14 py-12 rounded-[34px] w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] max-w-[596px] max-h-[663px] overflow-y-auto rounded-[32px]">
+                                        <h2 id="modalTitle" class="text-[24px] font-bold mb-4 text-[#8ABF17]">Editar área de plantio</h2>
+                                        <p class="font-medium text-[16px]">Altere as informações abaixo para editar sua área de plantio</p>
+                                        <form method="POST" action="{% url 'update_area' community.id area.id %}">
+                                            {% csrf_token %}
+                                            <div class="mb-4 mt-6">
+                                                <label for="name" class="block text-sm font-medium text-gray-700">Nome*</label>
+                                                <input type="text" name="name" id="name" value="{{ area.name }}" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] h-[55px] py-2 px-3">
+                                            </div>
+                                            <div class="mb-4">
+                                                <label for="description" class="block text-sm font-medium text-gray-700">Descrição</label>
+                                                <textarea name="description" id="description" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] h-[120px] py-2 px-3">{{ area.description }}</textarea>
+                                            </div>
+                                            <div class="flex justify-end">
+                                                <button type="button" onclick="closeEditModal({{area.id}})" class="mr-2 bg-white border-2 border-[#8ABF17] hover:border-[#7aab0f] text-[#8ABF17] hover:text-[#7aab0f] font-bold px-6 py-3 rounded-[9px] w-full">Cancelar</button>
+                                                <button type="submit" class="mr-2 bg-[#8ABF17] text-white font-bold px-6 py-3 rounded-[9px] hover:bg-[#7aab0f] text-[#f3f7f0] w-full">Salvar Alterações</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <!-- Modal de deleção -->
+                                <div id="deleteModal-{{ area.id }}" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
+                                    <div class="bg-white px-14 py-12 rounded-[34px] w-full max-w-lg">
+                                        <h3 class="text-xl font-bold mb-4 text-red-600">Excluir Área de plantio</h3>
+                                        <p class="text-gray-700 mb-6">Tem certeza de que deseja excluir a área de plantio "{{ area.name }}"? Esta ação não pode ser desfeita.</p>
+                                        <form method="POST" action="{% url 'delete_area' community.id area.id %}">
+                                            {% csrf_token %}
+                                            <div class="flex flex-row justify-between">
+                                                <button type="submit" class="mr-2 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 w-full font-bold">Excluir</button>
+                                                <button type="button" onclick="closeDeleteModal({{area.id}})" class="bg-white border-2 border-[#8ABF17] hover:border-[#7aab0f] text-[#8ABF17] hover:text-[#7aab0f] font-bold px-6 py-3 rounded-[9px] w-full">Cancelar</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            </div>
+                        </div>
                         <!-- Dropdown para os canteiros -->
                         <div class="mt-2">
                             <button class="w-full text-left bg-[#f7f7f7] p-3 rounded-[9px] text-sm lg:text-base font-medium border-2 border-[#8ABF17] focus:outline-none flex justify-between items-center transition-all transform hover:shadow-lg" onclick="toggleDropdown('seedbed-list-{{ area.id }}')">
@@ -191,9 +150,9 @@
                 <div class="text-center col-span-full mt-[15vh]">
                     <div class="flex flex-col items-center justify-center">
                         <img src="{% static 'assets/Ativo 304x.png' %}" alt="Plantas" class="w-64 mb-4">
-                        <h1 class="font-bold text-[24px]">Nenhuma área de plantio criada em {{area.name}}</h1>
-                        <p class="font-normal text-[16px]">Clique no botão abaixo para criar áreas de plantio e visualizá-los</p>
-                        <button id="addCommunityBtn" class="mt-4 bg-[#8ABF17] text-white px-6 py-3 rounded-[9px] mb-6 hover:bg-[#7cad10] hover:text-[#edf0e9]" onclick="toggleModal('create')">
+                        <h1 class="font-bold text-[24px]">Nenhuma área de plantio criada na comunidade "{{community.name}}"</h1>
+                        <p class="font-normal text-[16px]">Clique no botão abaixo para criar áreas de plantio e visualizá-las</p>
+                        <button id="addCommunityBtn" class="mt-4 bg-[#8ABF17] text-white font-semibold px-6 py-3 rounded-[9px] mb-6 hover:bg-[#7cad10] hover:text-[#edf0e9]" onclick="toggleModal('create')">
                             Criar Área de Plantio
                         </button>
                     </div>
@@ -202,33 +161,55 @@
             </div>
         </div>     
     </div>
-</div>
 
 <script>
 
-const mobileMenuButton = document.getElementById('mobile-menu-button');
-const mobileMenu = document.getElementById('mobile-menu');
-const mobileMenuCloseButton = document.getElementById('mobile-menu-close-button');
+function toggleEditTaskModal(taskId) {
+    const modal = document.getElementById(`editTaskModal-${taskId}`);
+    modal.classList.toggle('hidden');
+}
 
-    mobileMenuButton.addEventListener('click', () => {
-        mobileMenu.classList.remove('-translate-x-full');
-
-    });
-
-    mobileMenuCloseButton.addEventListener('click', () => {
-        mobileMenu.classList.add('-translate-x-full');
-
-    });
+function closeEditTaskModal(taskId) {
+    const modal = document.getElementById(`editTaskModal-${taskId}`);
+    modal.classList.add('hidden');
+}
 
 function toggleModal(action) {
-    const areaModal = document.getElementById('areaModal'); // Corrigido o ID do modal
+    const areaModal = document.getElementById('areaModal'); 
 
     if (action === 'create') {
         areaModal.classList.remove('hidden'); // Mostra o modal de criar área
         document.getElementById('areaForm').reset(); // Limpa o formulário (opcional)
-    } else if (action === 'close') {
-        areaModal.classList.add('hidden'); // Esconde o modal de criar área
     } 
+    else if (action === 'close') {
+        areaModal.classList.add('hidden'); // Esconde o modal de criar área
+        manageModal.classList.add('hidden'); 
+    } 
+}
+
+function toggleManageModal(action, seedbedId) {
+    const manageModal = document.getElementById(`manageModal-${seedbedId}`);
+    if (action === 'manage') {
+            manageModal.classList.remove('hidden');
+        } else if (action === 'close-manage') {
+        manageModal.classList.add('hidden'); 
+    }
+}
+
+function openEditModal(seedbedId) {
+    document.getElementById(`editModal-${seedbedId}`).classList.remove('hidden');
+}
+
+function closeEditModal(seedbedId) {
+    document.getElementById(`editModal-${seedbedId}`).classList.add('hidden');
+}
+
+function openDeleteModal(seedbedId) {
+    document.getElementById(`deleteModal-${seedbedId}`).classList.remove('hidden');
+}
+
+function closeDeleteModal(seedbedId) {
+    document.getElementById(`deleteModal-${seedbedId}`).classList.add('hidden');
 }
 
 function toggleDropdown(id) {
@@ -245,3 +226,13 @@ function toggleDropdown(id) {
     }
 </script>
 {% endblock %}
+
+</div>
+
+<style>
+
+.relative-wrapper {
+    position: relative; /* Torna este elemento o contexto de posicionamento */
+    display: inline-block; /* Impede que o wrapper ocupe toda a largura */
+}
+</style>

@@ -35,7 +35,7 @@ def create_user(request):
             messages.error(request, 'Esse usuário já existe.')
             return render(request, 'signup.html', form_data)
 
-        valid_name = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+        valid_name = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ")
         if not set(first_name).issubset(valid_name):
             messages.error(request, 'O nome não deve conter números ou caracteres especiais')
             return render(request, 'signup.html', form_data)
@@ -78,12 +78,6 @@ def delete_user(request, user_id):
     user.delete()
     messages.success(request, 'Usuário deletado com sucesso.')
     return redirect('get_all_users')
-
-
-@login_required
-def get_all_users(request):
-    users = User.objects.all()
-    return render(request, 'listar_usuarios.html', {'users': users})
 
 def login(request):
     if request.user.is_authenticated:
@@ -221,3 +215,15 @@ def update_user(request):
             return redirect('edit')
 
         return render(request, 'login.html', {'community': community})
+
+
+@login_required
+def profile(request):
+    user = request.user
+    community = None
+
+    if user.communities_members.exists():
+        community = user.communities_members.first()
+
+    if request.method == "GET":
+        return render(request, 'myprofile.html', {'user': user, 'community': community})

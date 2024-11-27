@@ -1,0 +1,201 @@
+{% load static %}
+{% for task in tasks %}
+<!-- Modal para editar tarefas -->
+<div id="editTaskModal-{{ task.id }}"
+    class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
+    <div
+        class="bg-white px-14 py-12 rounded-[34px] w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] max-w-[596px] max-h-[663px] overflow-y-auto rounded-[32px]">
+        <h2 id="modalTitle" class="text-[24px] font-bold mb-4 text-[#8ABF17]">Editar Tarefa {{task.id}}</h2>
+        <p class="font-medium text-[16px] mb-4">Altere as informações abaixo para editar sua tarefa</p>
+        <form method="POST" action="{% url 'edit_task' community.id task.id %}">
+            {% csrf_token %}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Descricao -->
+                <div>
+                    <label for="description-{{ task.id }}" class="text-sm font-medium text-gray-700 mb-1 flex"><span
+                            class="material-icons text-[#8ABF17] items-center text-[18px] mr-1">description</span>Descrição*</label>
+                    <textarea id="description-{{ task.id }}" name="description"
+                        class="max-w-[468px] w-full border h-[41px] border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] py-2 px-3 resize-y"
+                        required>{{ task.description }}</textarea>
+                </div>
+                <!-- Data de Inicio -->
+                <div>
+                    <label for="start_date-{{ task.id }}" class="text-sm font-medium text-gray-700 mb-1 flex"><span
+                            class="material-icons text-[#8ABF17] items-center text-[18px] mr-1">schedule</span>Data
+                        Inicial</label>
+                    <input type="date" id="start_date-{{ task.id }}" value="{{ task.start_date|date:'Y-m-d' }}"
+                        name="start_date"
+                        class="w-full border border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] py-2 px-3"
+                        placeholder="" required>
+                </div>
+                <!-- Data fim -->
+                <div>
+                    <label for="final_date-{{ task.id }}" class="text-sm font-medium text-gray-700 mb-1 flex"><span
+                            class="material-icons text-[#8ABF17] items-center text-[18px] mr-1">schedule</span>Data
+                        Final <span class="text-xs flex items-center justify-center ml-1">- apenas leitura </span> </label>
+                    <input type="date" id="final_date-{{ task.id }}" value="{{ task.final_date|date:'Y-m-d' }}"
+                        name="final_date"
+                        class="w-full border border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] py-2 px-3"
+                        placeholder="" readonly>
+                </div>
+                <!-- Frequencia -->
+                <div>
+                    <label for="recurrence-{{ task.id }}" class="text-sm font-medium text-gray-700 mb-1 flex">
+                        <span class="material-icons text-[#8ABF17] items-center text-[18px] mr-1">update</span>
+                        Frequência
+                    </label>
+                    <select id="recurrence-{{ task.id }}" name="recurrence" required>
+                        <option value="" selected disabled hidden>Selecione a Frequência</option>
+                        {% for value, recurrence in recurrences %}
+                        <option value="{{ recurrence }}" {% if task.recurrence == recurrence %}selected{% endif %}>{{ recurrence }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <!-- Local -->
+                <div>
+                    <label for="local-{{ task.id }}" class="text-sm font-medium text-gray-700 mb-1 flex">
+                        <span class="material-icons text-[#8ABF17] items-center text-[18px] mr-1">location_on</span>
+                        Local
+                    </label>
+                    <select id="local-{{ task.id }}" name="local" required>
+                        <option value="" selected disabled hidden>Selecione o Local</option>
+                        {% for place in all_seedbeds %}
+                            <option value="seedbed_{{ place.id }}" {% if task.local == "seedbed" and task.seedbed_id == place.id %}selected{% endif %}>
+                                Canteiro - {{ place }}
+                            </option>
+                        {% endfor %}
+                        {% for place in all_areas %}
+                            <option value="area_{{ place.id }}" {% if task.local == "area" and task.area_id == place.id %}selected{% endif %}>
+                                Área - {{ place }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <!-- Responsavel -->
+                <div>
+                    <label for="responsible_users" class="text-sm font-medium text-gray-700 mb-1 flex"> <span
+                            class="material-icons text-[#8ABF17] items-center text-[18px] mr-1">person</span>
+                        Responsável</label>
+                    <div>
+                        <select id="responsible_users-{{ task.id }}" name="responsible_users[]" multiple required>
+                            {% for member in community.members.all %}
+                            <option value="{{ member.id }}" {% if member in task.responsible_users.all %}selected{% endif %}>{{ member.username }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <!-- Status -->
+                <div>
+                    <label for="status-{{ task.id }}" class="text-sm font-medium text-gray-700 mb-1 flex"><span
+                            class="material-icons text-[#8ABF17] items-center text-[18px] mr-1">radio_button_checked</span>Status</label>
+                    <select id="status-{{ task.id }}" name="status" required>
+                        <option value="" disabled hidden>Selecione o Status</option>
+                        {% for value, status in status_choices%}
+                        <option value="{{ status }}" {% if task.status == status %}selected{% endif %}>{{ status }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <!-- Materiais  -->
+                <div>
+                   <label for="material" class="text-sm font-medium text-gray-700 mb-1 flex"><span
+                           class="material-icons text-[#8ABF17] items-center text-[18px] mr-1">handyman</span>Materiais*</label>
+                   <textarea id="materials" name="materials"
+                       class="w-full border h-[80px] border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] py-2 px-3 resize-y">{{task.materials}}</textarea>
+               </div>
+            </div>
+            <div class="flex mt-6">
+                <button type="button"
+                    class="bg-white border-2 border-[#8ABF17] hover:border-[#7aab0f] text-[#8ABF17] hover:text-[#7aab0f] font-bold px-6 py-3 rounded-md mr-2 w-full"
+                    onclick="closeEditTaskModal({{ task.id }})">Cancelar</button>
+                <button type="submit"
+                    class="bg-[#8ABF17] text-white font-bold px-6 py-3 hover:bg-[#7aab0f] rounded-md w-full">Editar</button>
+            </div>
+        </form>
+        <button onclick="openDeleteModal({{task.id}})"
+                class="bg-red-500  text-white font-bold px-6 py-3 mt-2 hover:bg-red-600 rounded-md w-full">Excluir</button>
+    </div>
+</div>
+
+<!-- Modal de deleção -->
+<div id="deleteModal-{{ task.id }}" class="hidden fixed inset-0 bg-black bg-opacity-20 flex items-center justify-center z-50">
+    <div class="bg-white px-14 py-12 rounded-[34px] w-full max-w-lg">
+        <h3 class="text-xl font-bold mb-4 text-red-600">Excluir Tarefa</h3>
+        <p class="text-gray-700 mb-6">Tem certeza de que deseja excluir a tarefa "{{ task.title }}"? Esta ação não pode ser desfeita.</p>
+        <form method="POST" action="{% url 'delete_task' community.id task.id %}">
+            {% csrf_token %}
+            <div class="flex flex-row justify-between">
+                <button type="submit" class="mr-2 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 w-full font-bold">Excluir</button>
+                <button type="button" onclick="closeDeleteModal({{ task.id }})" class="bg-white border-2 border-[#8ABF17] hover:border-[#7aab0f] text-[#8ABF17] hover:text-[#7aab0f] font-bold px-6 py-3 rounded-[9px] w-full">Cancelar</button>
+            </div>
+        </form>
+    </div> 
+</div>
+{% endfor %}
+
+<link rel="stylesheet" href="{% static 'virtual-selector/virtual-select.min.css' %}">
+<script src="{% static 'virtual-selector/virtual-select.min.js' %}"></script>
+
+<script>
+    function toggleEditTaskModal(taskId) {
+        let modal = document.getElementById(`editTaskModal-${taskId}`); 
+        if (modal) {
+            modal.classList.remove('hidden');
+        } else {
+            console.log(`editTaskModal-${taskId}`)
+        }
+    }
+
+    function openDeleteModal(taskId) {
+        document.getElementById(`deleteModal-${taskId}`).classList.remove('hidden');
+    }
+
+    function closeDeleteModal(taskId) {
+        document.getElementById(`deleteModal-${taskId}`).classList.add('hidden');
+    }
+
+    function closeEditTaskModal(taskId) {
+        const modal = document.getElementById(`editTaskModal-${taskId}`);
+        if (modal) {
+            modal.classList.add('hidden');
+        }
+    }
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        {% for task in tasks %}
+        // Inicializa VirtualSelect para os campos de cada tarefa
+        VirtualSelect.init({
+            ele: `#responsible_users-{{ task.id }}`, // Note o task.id aqui
+            placeholder: 'Selecione os responsáveis',
+            search: true,
+            multiple: true,
+            noOptionsText: 'Nenhum usuário encontrado',
+            selectAllText: 'Selecionar todos',
+            selectedTextFormat: 'count > 2'
+        });
+        VirtualSelect.init({
+            ele: `#status-{{ task.id }}`,
+            placeholder: 'Selecione o Status',
+            search: true,
+            noOptionsText: 'Nenhum status encontrado',
+            selectAllText: 'Selecionar todos',
+            selectedTextFormat: 'count > 2',
+
+        });
+        VirtualSelect.init({
+            ele: `#local-{{ task.id }}`,
+            placeholder: 'Selecione o Local',
+            multiple: false,
+            search: true,
+            noOptionsText: 'Nenhum local encontrado'
+        });
+        VirtualSelect.init({
+            ele: `#recurrence-{{ task.id }}`,
+            placeholder: 'Selecione a Frequência',
+            multiple: false,
+            search: true,
+            noOptionsText: 'Nenhuma frequência encontrada'
+        });
+        {% endfor %}
+    });
+</script>

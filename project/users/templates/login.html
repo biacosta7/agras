@@ -16,7 +16,7 @@
                 <div class="mb-5">
                     <input type="text" name="login_input" id="login_input" placeholder="Usuário ou Email" class="w-full px-1 py-2 border-b-2 border-[#8ABF17] focus:outline-none focus:ring-0 text-black placeholder-black" required>
                 </div>
-                <div class="mb-6 flex items-center justify-center text-center relative">
+                <div class="mb-6 flex items-center justify-center text-center relative ">
                     <input type="password" name="password" id="password" placeholder="Senha" 
                            class="w-full px-1 py-2 border-b-2 border-[#8ABF17] focus:outline-none focus:ring-0 text-black placeholder-black pr-10" 
                            required>
@@ -46,4 +46,17 @@
         <img src="{% static 'assets/colhendo toranja.png' %}" alt="Tipografia" class="w-[700px] lg:w-[555px] mb-4">
     </div>
 </div>
+<script>
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+
+    togglePassword.addEventListener('click', () => {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+    
+        togglePassword.src = type === 'text' 
+            ? "{% static 'assets/eye-fill.svg' %}" 
+            : "{% static 'assets/eye-slash-fill.svg' %}";
+});
+</script>
 {% endblock %}
