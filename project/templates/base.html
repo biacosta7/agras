@@ -269,8 +269,6 @@
 <div id="helpModal" class="fixed bottom-4 right-4 bg-white px-6 py-6 rounded-[16px] w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] max-w-[520px]  z-30 hidden">
     <div class="flex justify-end">
         <button onclick="closeHelpModal()" class="material-icons-outlined text-[#F76711]">close</button>
-      <button onclick="maximizeHelpModal()" class="material-icons-outlined text-[#8ABF17] mr-2">fullscreen</button>
-
     </div>
 
     <h1 class="text-[22px] font-bold text-[#8ABF17]">IA Chat</h1>
@@ -280,7 +278,7 @@
         <button id="toggle-utilities" class="border rounded-[9px] px-4 py-2 rounded-lg flex items-center">
             <span class="material-icons-outlined text-[#915F10] mr-2">forum</span> Utilidades
         </button>
-        <button class="border rounded-[9px] px-4 py-2 rounded-lg flex items-center">
+        <button id="toggle-organisms" class="border rounded-[9px] px-4 py-2 rounded-lg flex items-center">
             <span class="material-icons-outlined text-[#8ABF17] mr-2">bug_report</span> Organismos
         </button>
     </div>
@@ -297,6 +295,34 @@
             {% endfor %}
         </select>
         <button id="submit-cultivos" class="bg-[#8ABF17] text-white font-bold px-6 py-3 hover:bg-[#7aab0f] rounded-md w-full">Buscar</button>
+    </div>    
+    <div id="organisms-section" class="hidden mt-10">
+        <p class="text-lg font-semibold mb-2">Você está lidando com qual Organismo Indesejado?</p>
+        <p class="mb-4">Selecione abaixo o organismo que você deseja:</p>
+        <!-- Seção de Organismos -->
+        {% csrf_token %}
+        <select id="organisms" name="organisms[]" required>
+            {% for organism in organisms %}
+            <option value="{{ organism }}">{{ organism }}</option>
+            {% empty %}
+            <option value="">Nenhum organismo disponível</option>
+            {% endfor %}
+        </select>
+        <button id="submit-organisms" class="bg-[#8ABF17] text-white font-bold px-6 py-3 hover:bg-[#7aab0f] rounded-md w-full">Enviar</button>
+    </div>  
+    <div id="organisms-section2" class="hidden mt-10">
+        <p class="text-lg font-semibold mb-2">Esse Organismo Indesejado se encontra em quais <b>Cultivos</b>?</p>
+        <p class="mb-4">Selecione abaixo os cultivos que você deseja:</p>
+        <!-- Seção de Cultivos que tem Organismos -->
+        {% csrf_token %}
+        <select id="cultivos2" name="cultivos[]" multiple required>
+            {% for cultivo in type_products %}
+            <option value="{{ cultivo.name }}">{{ cultivo.name }}</option>
+            {% empty %}
+            <option value="">Nenhum cultivo disponível</option>
+            {% endfor %}
+        </select>
+        <button id="submit-organisms2" class="bg-[#8ABF17] text-white font-bold px-6 py-3 hover:bg-[#7aab0f] rounded-md w-full">Buscar</button>
     </div>    
 
     <div class="mt-6 relative">
@@ -429,7 +455,6 @@
 
     {% endblock styles %}
 </style>
-
 {% if community_id and user_id %}
 <script type="text/javascript">
     const userContext = {
@@ -438,11 +463,12 @@
         user_name: "{{ user_name }}",
         location: "Pernambuco",
         //user_climate: "{{ user_climate }}",
-        //type_products: {{ type_products|safe }},
     };
+    const chats = {{ chats|safe }};
     const csrfToken = "{{ csrf_token }}";
     const askQuestionUrl = "{% url 'ask_question' community_id user_id %}";
     console.log(userContext);
+    console.log("Chats:", chats); 
 </script>
 {% endif %}
 <script src="{% static 'chat/chat.js' %}"></script>
