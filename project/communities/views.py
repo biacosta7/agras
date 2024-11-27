@@ -59,14 +59,12 @@ def dashboard_view(request, community_id):
 def send_community_invite(request, community_id, user_id):
     target_user = get_object_or_404(User, id=user_id)
     
-    # Buscar a comunidade pelo ID e verificar se o usuário é admin dessa comunidade
     community = get_object_or_404(Community, id=community_id)
     print(community.id)
     if not community.admins.filter(id=request.user.id).exists():
         messages.error(request, 'Você não tem permissão para enviar convites nesta comunidade.')
         return redirect('manage_community', community.id)
 
-    # Verificar se já existe um convite pendente para esse usuário
     existing_invite = SendCommunityInvite.objects.filter(user=target_user, community=community, status='pending').first()
 
     if existing_invite and existing_invite.status == 'pending':
@@ -75,6 +73,12 @@ def send_community_invite(request, community_id, user_id):
 
     if existing_invite and existing_invite.status == 'rejected':
         existing_invite.delete()
+
+    request_invite = MembershipRequest.objects.filter(user=target_user, community=community, status='pending').first()
+
+    if request_invite and request_invite.status == 'pending':
+        messages.info(request, f'Já existe uma solicitação de entrada do usuário {target_user.username}')
+        return redirect('manage_community', community.id)
 
     if not existing_invite:
         SendCommunityInvite.objects.create(
@@ -128,6 +132,47 @@ def manage_community(request, community_id):
     return render(request, 'manage_community.html', context)
 
 @login_required
+def kick_member(request, community_id, user_id):
+    community = get_object_or_404(Community, id=community_id)
+    user_to_be_kicked = get_object_or_404(User, id=user_id)
+
+    if not community.admins.filter(id=request.user.id).exists():
+        messages.error(request, 'Você não tem permissão para expulsar membros da comunidade.')
+        return redirect('manage_community', community.id)
+    
+    if user_to_be_kicked == request.user:
+        messages.error(request, 'Você não pode se expulsar da comunidade. Para sair vá em configurações.')
+        return redirect('manage_community', community.id)
+    
+    if user_to_be_kicked == community.creator:
+        messages.error(request, 'Você não pode expulsar o dono da comunidade.')
+        return redirect('manage_community', community.id)
+    
+    community.members.remove(user_to_be_kicked)
+    if community.admins.filter(id=request.user.id).exists():
+        community.admins.remove(user_to_be_kicked)
+
+    messages.success(request, f'Usuário {user_to_be_kicked.username} foi removido da comunidade com sucesso.')
+    return redirect('manage_community', community.id)
+
+@login_required
+def promote_member(request, community_id, user_id):
+    community = get_object_or_404(Community, id=community_id)
+    user_to_be_admin = get_object_or_404(User, id=user_id)
+
+    if not community.admins.filter(id=request.user.id).exists():
+        messages.error(request, 'Você não tem permissão para expulsar membros da comunidade.')
+        return redirect('manage_community', community.id)
+    
+    if community.admins.filter(id=user_to_be_admin.id).exists():
+        messages.error(request, f'O usuário {user_to_be_admin.username} já é administrador da comunidade.')
+        return redirect('manage_community', community.id)
+    
+    community.admins.add(user_to_be_admin)
+    messages.success(request, f'Usuário {user_to_be_admin.username} agora é administrador da comunidade.')
+    return redirect('manage_community', community.id)
+
+@login_required
 def aceitar_solicitacao(request, request_id):
     membership_request = get_object_or_404(MembershipRequest, id=request_id)
 
@@ -140,6 +185,8 @@ def aceitar_solicitacao(request, request_id):
     membership_request.save()
 
     membership_request.community.members.add(membership_request.user)
+
+    membership_request.delete()
 
     messages.success(request, 'Solicitação aceita com sucesso!')
     return redirect('manage_community', community_id=membership_request.community.id)
@@ -155,6 +202,8 @@ def rejeitar_solicitacao(request, request_id):
     membership_request.status = 'rejected'
     membership_request.decision_date = timezone.now()
     membership_request.save()
+
+    membership_request.delete()
 
     messages.success(request, 'Solicitação rejeitada com sucesso!')
     return redirect('manage_community', community_id=membership_request.community.id)
