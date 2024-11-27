@@ -59,6 +59,6 @@ urlpatterns = [
     path('comunidade/<int:community_id>/tarefas/editar/status/<int:task_id>', tasks_views.edit_only_status, name='edit_task_status'),
 
     #image upload
-    #path('upload/', community_views.image_upload_view, name='image_upload'),
+    path('upload/<int:user_id>/', community_views.image_upload_view, name='image_upload'),
 
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]

@@ -253,15 +253,15 @@ def list_members(request, community_id):
 
     return render(request, 'list_members.html', context)
 
-def image_upload_view(request):
+def image_upload_view(request, user_id):
     image_url = None  # Variável para armazenar a URL da imagem
+    user = get_object_or_404(User, id=user_id)
     
     if request.method == 'POST' and request.FILES.get('image'):
-        title = request.POST.get('title', 'Untitled')
         image = request.FILES['image']
 
         # Salvar o objeto no banco de dados
-        new_image = FileUpload.objects.create(title=title, image=image)
+        new_image = FileUpload.objects.create(user=user,image=image)
         new_image.save()
 
         # Obter a URL da imagem para exibir
