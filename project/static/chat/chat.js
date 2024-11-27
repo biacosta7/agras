@@ -334,16 +334,27 @@ document.addEventListener('DOMContentLoaded', function() {
         // Envia os dados combinados após o segundo popup
         submitCombinedData();
     });
+
+    
     
     // Função para enviar uma mensagem
     async function sendMessage(text) {
         if (!text) return;
-
+    
         console.log('Sending message:', text);
-
+    
         // Cria e adiciona a mensagem do usuário no chat
-        appendMessage(text, 'user');
+        appendMessage(text, 'user');        
 
+        let processingMessage = document.createElement('div');
+        processingMessage.id = 'processing-message';
+
+        if (processingMessage) {
+            processingMessage = appendMessage('Processando...', 'bot');
+        } else {
+            console.error('processingMessage is undefined!');
+        }
+    
         try {
             // Adiciona o contexto ao payload da mensagem
             const response = await fetch(askQuestionUrl, {
@@ -358,9 +369,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     user_context: userContext // Adiciona o contexto ao corpo da requisição
                 })
             });
-
+    
             const data = await response.json();
+    
+            let messageDivs = document.querySelectorAll('.message.bot');
 
+            messageDivs.forEach(div => {
+                let paragraph = div.querySelector('p');
+                if (paragraph && paragraph.textContent.includes("Processando...")) {
+                    div.remove();
+                    console.log("Mensagem 'Processando...' removida.");
+                }
+            });
+    
             if (data.data && data.data.text) {
                 appendMessage(data.data.text, 'bot');
             } else if (data.error) {
@@ -371,9 +392,10 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Error:', error);
             appendMessage('Desculpe, ocorreu um erro ao processar sua solicitação.', 'bot');
         }
-        
+    
         chatInput.value = ''; // Limpa o campo de entrada após o envio
     }
+    
 
     // Função para adicionar mensagem
     function appendMessage(text, sender) {
@@ -389,6 +411,7 @@ document.addEventListener('DOMContentLoaded', function() {
             messageDiv.innerHTML = renderMarkdown(text); // Para mensagens do bot, renderiza o texto como Markdown
         } else {
             messageDiv.textContent = text; // Para mensagens do usuário, apenas o texto
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
     
         messagesContainer.appendChild(messageDiv); // Adiciona ao final do container
