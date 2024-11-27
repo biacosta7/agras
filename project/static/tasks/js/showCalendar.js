@@ -26,7 +26,7 @@ function parseDateString(dateString) {
 function getTaskColor(status) {
     status = status.toLowerCase();
     if (status === 'pendente') {
-        return 'var(--dark-orange-color)';
+        return 'var(--dar-red-color)';
     } 
     else if (status === 'progresso') {
         return 'var(--dark-brown-color)';
@@ -183,7 +183,7 @@ function listSelectedDaysEvents() {
                     const colorDiv = document.createElement('div');
                     colorDiv.classList.add('task-color');
                     colorDiv.style.backgroundColor = event.color;
-                    colorDiv.textContent = 'progresso';
+                    colorDiv.textContent = `${event.status}`;
                     infoDiv.appendChild(colorDiv);
 
                     // Área e Canteiro
