@@ -3,139 +3,144 @@
 {% block title %}Participantes{% endblock %}
 
 {% block content %}
-    <!-- Main content -->
-    <div class="flex-grow fade-down px-4 lg:px-8 py-10 ml:0 lg:ml-[250px] mt-12 lg:mt-[90px]">
-        <div class="flex md:flex-row flex-col justify-between mt-4"> 
-            <h1 class="text-[44px] lg:text-[48px] font-semibold mt-2 mb-2">Participantes</h1>
+            <!-- Main content -->
+            <div class="flex-grow fade-down px-4 lg:px-8 py-10 ml:0 lg:ml-[250px] mt-12 lg:mt-[90px]">
+                <div class="flex md:flex-row flex-col justify-between -mt-7"> 
+                    <h1 class="text-[44px] lg:text-[48px] font-semibold mt-2 mb-2">Participantes</h1>
 
-        <div class="flex flex-row items-center space-x-6">
-            <button id="inviteMember" class="bg-[#8ABF17] text-white font-semibold flex items-center justify-center rounded-[9px] hover:bg-[#7cad10] hover:text-[#edf0e9] h-[50px] px-4" onclick="toggleModal('create')">
-                <span class="text-3xl items-center mr-2">+</span> Convidar
-            </button>
-        </div>
-    </div>
-
-<!-- Modal convite -->
-<div id="modalInvite" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
-    <div class="bg-white rounded-xl w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] max-w-[596px] max-h-[663px] overflow-y-auto p-12 relative">
-        <button id="closeModalInvite" onclick="toggleModal('close')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition duration-200">
-            <span class="material-icons text-2xl">close</span>
-        </button>
-        <h2 class="text-2xl font-bold mb-4 text-[#8ABF17]">Convide membros</h2>
-        <p class="font-medium text-sm mb-6">Busque na lista de membros e faça um convite para ele fazer parte da sua comunidade!</p>
-        <span class="text-black uppercase font-bold text-[12px] ml-2 mr-2"> nome - <span class="text-[#5F8C1B]"> usuario </span></span>
-        <div class="border rounded-lg p-4 mb-6 overflow-y-auto h-[250px]">  
-            {% for user in all_users %}
-            <div class="flex items-center justify-between py-2 border-b"> 
-                <span class="font-medium text-[13px] sm:text-[14px]">{{ user.first_name }} - <span class="text-[#5F8C1B]">{{ user.username }}</span></span> 
-                <div> 
-                <form method="POST" action="{% url 'send_invite' community.id user.id %}">
-                    {% csrf_token %}
-                    <button type="submit" class="bg-[#8ABF17] text-white font-medium text-sm py-2.5 px-5 rounded-lg w-full sm:w-auto sm:px-6 sm:py-2 lg:text-base hover:bg-[#79a80f] transition-all duration-200">
-                        Convidar
+                <div class="flex flex-row items-center space-x-6">
+                    <button id="inviteMember" class="bg-[#8ABF17] text-white font-semibold flex items-center justify-center rounded-[9px] hover:bg-[#7cad10] hover:text-[#edf0e9] h-[50px] px-4" onclick="toggleModal('create')">
+                        <span class="text-3xl items-center mr-2">+</span> Convidar
                     </button>
-                </form>
                 </div>
             </div>
-            {%empty%}
-            <p class="flex justify-center items-center text-sm"> Não existe outros usuários cadastrados que não façam parte da sua comunidade.</p>
-            {% endfor %}
-        </div>
-    </div>
-</div>
-    
-<!-- Barra de Comunidade -->
-<div class="bg-gray-100 p-4 rounded-lg mb-6 max-w-[500px] shadow-md border-2 border-[#8ABF17]">
-    <h2 class="text-xl font-semibold">Comunidade</h2>
-    <div class="flex items-center justify-between">
-        <span class="bg-white border border-[#8ABF17] text-[#000] px-4 py-2 rounded-lg font-semibold">{{ community.name }}</span>
-        <div class="flex flex-row">
-            <button onclick="openEditModal()" class="ml-2 bg-yellow-500 text-white p-1 rounded-full hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 flex">
-                <span class="material-icons-outlined">edit</span>
-            </button>
-            <button onclick="openDeleteModal()" class="ml-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 flex">
-                <span class="material-icons-outlined">delete</span>
-            </button>
-        </div>
-    </div>
-</div>
 
-<!-- Seção de Solicitações -->
-<div class="bg-gray-200 p-4 rounded-lg mb-6 shadow-md border-2 border-[#8ABF17]">
-    <h2 class="text-xl font-semibold mb-4">Solicitações</h2>
-    <p class="text-gray-600 mb-4">Lista de usuários que solicitaram entrada na comunidade</p>
-    <table class="min-w-full bg-white rounded-lg">
-        <thead>
-            <tr>
-                <th class="py-2 px-4 text-left font-semibold text-gray-700">Usuário</th>
-                <th class="py-2 px-4 text-left font-semibold text-gray-700">Email</th>
-                <th class="py-2 px-4 text-left font-semibold text-gray-700">Data de solicitação</th>
-                <th class="py-2 px-4 text-center font-semibold text-gray-700">Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for request in membership_requests %}
-            <tr class="border-b border-gray-200 hover:bg-gray-100">
-                <td class="py-2 px-4 text-gray-800">{{ request.user }}</td>
-                <td class="py-2 px-4 text-gray-600">{{ request.user.email }}</td>
-                <td class="py-2 px-10 text-gray-600">{{ request.request_date|date:"d/m/Y H:i" }}</td>
-                <td class="py-2 px-4 flex justify-center space-x-2">
-                    <form action="{% url 'aceitar_solicitacao' request.id %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit" class="bg-green-500 text-white rounded-full p-1 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 flex">
-                            <span class="material-icons-outlined">check</span>
-                        </button>
-                    </form>
-                    <form action="{% url 'rejeitar_solicitacao' request.id %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit" class="bg-red-500 text-white rounded-full p-1 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 flex">
-                            <span class="material-icons-outlined">close</span>
-                        </button>
-                    </form>
-                </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="4" class="py-4 text-center text-gray-600">Não há solicitações de acesso no momento.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+            <!-- Seção de Solicitações -->
+            <div class="bg-gray-200 p-4 rounded-lg mt-6 mb-6 shadow-md border-2 border-[#8ABF17]">
+                <h2 class="text-xl font-semibold mb-4">Solicitações</h2>
+                <p class="text-gray-600 mb-4">Lista de usuários que solicitaram entrada na comunidade</p>
+                <div class="overflow-x-auto"> 
+                    <table class="w-full bg-white rounded-lg shadow-md">
+                        <thead>
+                            <tr class="bg-[#F0F8E1]">
+                                <th class="py-3 px-6 text-left font-semibold text-[#5F8C1B]">Usuário</th>
+                                <th class="py-3 px-6 text-left font-semibold text-[#5F8C1B]">Email</th>
+                                <th class="py-3 px-6 text-left font-semibold text-[#5F8C1B]">Data de solicitação</th>
+                                <th class="py-3 px-6 text-center font-semibold text-[#5F8C1B]">Ações</th> 
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for request in membership_requests %}
+                            <tr class="border-b border-gray-200 hover:bg-[#F1F8E1]">
+                                <td class="py-2 px-4 text-gray-800">{{ request.user }}</td>
+                                <td class="py-2 px-4 text-gray-600">{{ request.user.email }}</td>
+                                <td class="py-2 px-10 text-gray-600">{{ request.request_date|date:"d/m/Y H:i" }}</td>
+                                <td class="py-2 px-4 flex justify-center space-x-2">
+                                    <form action="{% url 'aceitar_solicitacao' request.id %}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" class="bg-[#8ABF17] text-white rounded-full p-1 hover:bg-[#7cad10] focus:outline-none focus:ring-2 focus:ring-[#8ABF17]  flex">
+                                            <span class="material-icons-outlined">check</span>
+                                        </button>
+                                    </form>
+                                    <form action="{% url 'rejeitar_solicitacao' request.id %}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" class="bg-red-500 text-white rounded-full p-1 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 flex">
+                                            <span class="material-icons-outlined">close</span>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="py-4 text-center text-gray-600">Não há solicitações de acesso no momento.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-<!-- Seção de Membros -->
-<div class="bg-gray-200 p-4 rounded-lg mb-6 shadow-md border-2 border-[#8ABF17] w-full sm:w-[600px] ml-0">
-    <div class="flex items-center mb-4">
-        <h2 class="text-xl font-semibold mr-4">Membros</h2>
-        <div class="flex items-center px-4 py-3 rounded-md border-2 border-[#8ABF17] overflow-hidden w-full">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192.904 192.904" width="16px" class="fill-gray-600 mr-3 rotate-90">
-                <path d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z"></path>
-            </svg>
-            <input type="text" id="searchInput" placeholder="Pesquisar nome..." class="w-full outline-none bg-transparent text-[#000] text-sm" onkeyup="searchMembers()" />
+            <!-- Seção de Membros -->
+            <div class="w-full p-4 rounded-lg mb-6 shadow-md border-2 border-[#8ABF17] bg-gray-200">
+                <div class="flex items-center mb-4">
+                    <h2 class="text-xl font-semibold mr-4">Membros</h2>
+                    <div class="flex items-center px-4 py-3 rounded-md border-2 border-[#8ABF17] overflow-hidden max-w-[250px]">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192.904 192.904" width="16px" class="fill-gray-600 mr-3 rotate-90">
+                            <path d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z"></path>
+                        </svg>
+                        <input type="text" id="searchInput" placeholder="Pesquisar nome..." class="w-full outline-none bg-transparent text-[#000] text-sm" onkeyup="searchMembers()" />
+                    </div>
+                </div>
+                <p class="text-gray-600 mb-4">Lista de usuários dentro da comunidade</p>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full bg-white rounded-lg shadow-md" id="membersTable">
+                        <thead>
+                            <tr class="bg-[#F0F8E1]">
+                                <th class="py-3 px-6 text-left font-semibold text-[#5F8C1B]">Nome</th>
+                                <th class="py-3 px-6 text-left font-semibold text-[#5F8C1B]">Usuário</th>
+                                <th class="py-3 px-6 text-left font-semibold text-[#5F8C1B]">Email</th>
+                                <th class="py-3 px-6 text-center font-semibold text-[#5F8C1B]">Ações</th> 
+                            </tr>
+                        </thead>
+                        <tbody id="membersList">
+                            {% for member in community.members.all %}
+                            <tr class="border-b border-[#E1E1E1] hover:bg-[#F1F8E1]" data-username="{{ member.username }}" data-email="{{ member.email }}">
+                                <td class="py-2 px-4 text-gray-600">{{ member.first_name }}</td>
+                                <td class="py-2 px-4 text-gray-600">{{ member.username }}</td>
+                                <td class="py-2 px-4 text-gray-600">{{ member.email }}</td>
+                                <td class="py-2 px-4 flex justify-center space-x-2">
+                                        <form action="{% url 'promote_member' community.id member.id %}" method="post">
+                                            {% csrf_token %}
+                                            <button type="submit" class="bg-[#8ABF17] text-white rounded-full w-8 h-8 hover:bg-[#7cad10] focus:outline-none focus:ring-2 focus:ring-[#8ABF17] flex justify-center items-center transition ease-in-out duration-200" title="Tornar Administrador">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-crown"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/></svg>
+                                            </button>
+                                        </form>
+                                        <form action="{% url 'kick_member' community.id member.id %}" method="post">
+                                            {% csrf_token %}
+                                            <button type="submit" class="bg-[#D9534F] text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-[#c13f39] focus:outline-none focus:ring-2 focus:ring-[#D9534F] transition ease-in-out duration-200" title="Expulsar Membro">
+                                                <span class="material-icons-outlined text-2xl">block</span>
+                                            </button>
+                                        </form>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="py-4 text-center text-gray-600">Não há membros na comunidade no momento.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        <!-- Modal convite -->
+        <div id="modalInvite" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
+            <div class="bg-white rounded-xl w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] max-w-[596px] max-h-[663px] overflow-y-auto p-12 relative">
+                <button id="closeModalInvite" onclick="toggleModal('close')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition duration-200">
+                    <span class="material-icons text-2xl">close</span>
+                </button>
+                <h2 class="text-2xl font-bold mb-4 text-[#8ABF17]">Convide membros</h2>
+                <p class="font-medium text-sm mb-6">Busque na lista de membros e faça um convite para ele fazer parte da sua comunidade!</p>
+                <span class="text-black uppercase font-bold text-[12px] ml-2 mr-2"> nome - <span class="text-[#5F8C1B]"> usuario </span></span>
+                <div class="border rounded-lg p-4 mb-6 overflow-y-auto h-[250px]">  
+                    {% for user in all_users %}
+                    <div class="flex items-center justify-between py-2 border-b"> 
+                        <span class="font-medium text-[13px] sm:text-[14px]">{{ user.first_name }} - <span class="text-[#5F8C1B]">{{ user.username }}</span></span> 
+                        <div> 
+                        <form method="POST" action="{% url 'send_invite' community.id user.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="bg-[#8ABF17] text-white font-medium text-sm py-2.5 px-5 rounded-lg w-full sm:w-auto sm:px-6 sm:py-2 lg:text-base hover:bg-[#79a80f] transition-all duration-200">
+                                Convidar
+                            </button>
+                        </form>
+                        </div>
+                    </div>
+                    {%empty%}
+                    <p class="flex justify-center items-center text-sm"> Não existe outros usuários cadastrados que não façam parte da sua comunidade.</p>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
-    </div>
-    <p class="text-gray-600 mb-4">Lista de usuários dentro da comunidade</p>
-    <table class="min-w-full bg-white rounded-lg" id="membersTable">
-        <thead>
-            <tr>
-                <th class="py-2 px-4 text-left font-semibold text-gray-700">Usuário</th>
-                <th class="py-2 px-4 text-left font-semibold text-gray-700">Email</th>
-            </tr>
-        </thead>
-        <tbody id="membersList">
-            {% for member in community.members.all %}
-            <tr class="border-b border-gray-200 hover:bg-gray-100" data-username="{{ member.username }}" data-email="{{ member.email }}">
-                <td class="py-2 px-4 text-gray-800">{{ member.username }}</td>
-                <td class="py-2 px-4 text-gray-600">{{ member.email }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="2" class="py-4 text-center text-gray-600">Não há membros na comunidade no momento.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
 
 
         <!-- Modal de edição -->
