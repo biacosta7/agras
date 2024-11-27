@@ -78,7 +78,7 @@
                 </div>   
 
                 <div class="flex items-center cursor-pointer z-20"> 
-                    <a href="{% url 'profile' %}" class="flex flex-row items-center">
+                    <a href="#" class="flex flex-row items-center">
                         <div class="w-8 h-8 bg-[#8ABF17] text-[#FFFFFF] flex items-center justify-center rounded-md mr-2 font-bold">
                             {{ request.user.first_name|slice:":1"|upper }}
                         </div>  
@@ -154,7 +154,7 @@
                 </div>
             </div>
         </div> 
-                <a href="{% url 'profile' %}">
+                <a href="#">
                     <div class="w-8 h-8 bg-[#8ABF17] text-[#FFFFFF] flex items-center justify-center rounded-md mr-2 font-bold">
                         {{ user.username|slice:":1"|upper }}
                     </div>
