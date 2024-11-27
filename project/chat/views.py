@@ -74,16 +74,14 @@ def ask_question(request, community_id, user_id):
             
             # Cultivos selecionados na pergunta atual
             current_crops = extract_selected_crops(history_text)
-
-            print(text)
             
             # Construir o prompt com o histórico
             prompt = (
                 f"Pergunta: {text}\n"
                 f"\nGuia:\n"
                 f"1. Se meu nome não for 'None', me chame pelo meu nome (com letras iniciais maiúsculas). Meu nome: {user_context.get('user_name')}.\n"
-                f"2. Seu nome é Chat IA e você é o assistente virtual impulsionado por inteligência artificial do AGRAS.\n"
-                f"3. O AGRAS é um aplicativo de gestão rural focado em promover a sustentabilidade na agricultura, especialmente para pequenos agricultores que enfrentam desafios de organização e planejamento.\n"
+                f"2. O AGRAS é um aplicativo de gestão rural focado em promover a sustentabilidade na agricultura, especialmente para pequenos agricultores que enfrentam desafios de organização e planejamento.\n"
+                f"3. Seu nome é IA Chat e você é o assistente virtual impulsionado por inteligência artificial da plataforma AGRAS.\n"
                 f"4. Se houver cultivos selecionados na 'Pergunta', forneça utilidades, saberes populares ou dicas sobre esses cultivos. Caso contrário, fale sobre como você pode me ajudar no meu contexto agrícola.\n"
                 f"5. Divida as respostas longas em parágrafos menores para facilitar a leitura.\n"
                 f"6. Não mencione a inexistência de cultivos selecionados nem informações que você não tem. Baseie suas respostas nas informações fornecidas.\n"
@@ -103,8 +101,6 @@ def ask_question(request, community_id, user_id):
                 f"Sugestões de cultivos: {', '.join(list(type_products))}\n"
                 f"Interesses: Agricultura\n\n"
             )
-
-            print(prompt)
 
             # IA responde ao prompt
             model = genai.GenerativeModel("gemini-pro")

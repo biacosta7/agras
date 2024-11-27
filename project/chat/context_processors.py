@@ -25,16 +25,14 @@ def chat_messages(request):
         type_products = TypeProduct.objects.filter(community=community_id)
 
         organisms = [
+            "Colchonilas",
+            "Joaninhas"
             "Cupins",
-            "Brocas-do-caule",
-            "Moscas-das-frutas",
             "Pulgões",
-            "Lagarta-do-cartucho",
-            "Percevejo-marrom",
-            "Lagarta Helicoverpa",
-            "Corós",
-            "Mosca-branca",
-            "Ácaro-rajado"
+            "Moscas",
+            "Percevejo",
+            "Lagarta",
+            "Ácaro"
         ]
 
         # Produtos da comunidade

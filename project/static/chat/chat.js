@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
             search: true,
             multiple: false,
             noOptionsText: 'Nenhum organismo encontrado',
-            selectedTextFormat: 'count > 2'
+            selectedTextFormat: 'count > 2',
         });
 
     }, 100);
@@ -411,10 +411,10 @@ document.addEventListener('DOMContentLoaded', function() {
             messageDiv.innerHTML = renderMarkdown(text); // Para mensagens do bot, renderiza o texto como Markdown
         } else {
             messageDiv.textContent = text; // Para mensagens do usuário, apenas o texto
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
     
         messagesContainer.appendChild(messageDiv); // Adiciona ao final do container
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
 
     // Event listener para enviar a mensagem ao pressionar Enter
@@ -487,6 +487,16 @@ style.textContent = `
 
     .message.bot li {
         margin-bottom: 5px;
+    }
+    
+    .vscomp-toggle-button {
+        margin-bottom: 10px;
+    }
+    
+    #utilities-section, #organisms-section, #organisms-section2{
+        margin-right: 10px;
+        margin-left: 10px;
+        margin-bottom: 2.5rem;
     }
 
 `;
