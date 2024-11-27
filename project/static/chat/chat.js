@@ -237,8 +237,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Texto consolidado para envio
             const combinedText = `
-                Organismos indesejados selecionados: ${selectedOrganismos.join(', ')}.
-                Cultivos que possuem esses organismos: ${selectedCultivosOrganismos.join(', ')}.
+                Organismos indesejados selecionados: ${selectedOrganismos}.
+                Cultivos que possuem esses organismos: ${selectedCultivosOrganismos}.
             `;
 
             const response = await fetch(askQuestionUrl, {
