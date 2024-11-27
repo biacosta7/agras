@@ -1,10 +1,51 @@
 <section class="calendar">
+  <!--
     {{community.id}}
     <br/>
     {% for task in tasks %}
     {{task.title}} | {{task.id}} |
         <br/>
     {%endfor%}
+  -->
+
+  <!-- Exibir o ID da Comunidade
+  <div>
+    <h2>Comunidade ID: {{ community.id }}</h2>
+  </div>
+
+  Listar todas as tarefas da comunidade
+  <div>
+    <h3>Lista de Tarefas da Comunidade</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Descrição</th>
+          <th>ID da Comunidade</th>
+          <th>Status</th>
+          <th>Data Inicial</th>
+          <th>Data Final</th>
+          <th>ID da Área</th>
+          <th>ID do Canteiro</th>
+          <th>Recorrência</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for task in tasks %}
+          <tr>
+            <td>{{ task.description }}</td>
+            <td>{{ task.community_id }}</td>
+            <td>{{ task.get_status_display }}</td>
+            <td>{{ task.start_date|date:"d/m/Y" }}</td>
+            <td>{{ task.final_date|date:"d/m/Y" }}</td>
+            <td>{{ task.area_id|default:"-" }}</td>
+            <td>{{ task.seedbed_id|default:"-" }}</td>
+            <td>{{ task.get_recurrence_display }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  -->
   <!-- Tabela com os dias do mês -->
   <table class="month">
     

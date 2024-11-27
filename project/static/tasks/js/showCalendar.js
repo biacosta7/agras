@@ -11,53 +11,38 @@ const YEAR = currentDate.getFullYear();
 const MONTH = currentDate.getMonth() + 1; // getMonth() retorna o mês de 0 a 11, então é adicionado 1
 const DAY = currentDate.getDate();
 
-// Objeto constante global para armazenar o estado do calendário (dia, mês e ano exibidos)
-// Inicializa com o dia de hoje e é atualizado conforme algum dia for clicado/ tocado
+// Captura os dados das tarefas do script no HTML
+//const tasksDataElement = document.getElementById('tasks-data');
+//const tasksData = JSON.parse(tasksDataElement.textContent);
+
+function parseDateString(dateString) {
+    if (!dateString) return null;
+    const [year, month, day] = dateString.split('-').map(Number);
+    return new Date(year, month, day);
+}
+
+
+// Processa os dados das tarefas
+const processedTasks = tasksData.map(task => ({
+    title: task.title,
+    description: task.description,
+    start_date: parseDateString(task.start_date),
+    end_date: task.end_date ? parseDateString(task.end_date) : parseDateString(task.start_date),
+    recurrence: task.recurrence.toLowerCase(),
+    priority: task.priority,
+    color: task.color,
+    area_id: task.area_id,
+    seedbed_id: task.seedbed_id,
+    responsible_users: task.responsible_users,  // Lista de usuários responsáveis
+}));
+
+// Objeto constante global para armazenar o estado do calendário
 export const calendarState = {
     year: YEAR,
     month: MONTH,
     day: DAY,
     selectedDays: [],
-    dayEvents: [
-        // Exemplo de evento
-        {
-            title: "Exemplo de Tarefa",
-            description: "Descrição da tarefa",
-            start_date: new Date(2024, 10, 15),
-            end_date: new Date(2024, 11, 14),
-            recurrence: "daily",
-            priority: "medium",
-            color: "var(--dark-green-color)"
-        },
-        // Adicione outros eventos aqui
-        {
-            title: "Preparar o solo pro plantio de alface",
-            description: "Descrição da tarefa",
-            start_date: new Date(2024, 10, 15),
-            end_date: new Date(2024, 11, 14),
-            recurrence: "weekly",
-            priority: "medium",
-            color: "var(--dark-orange-color)"
-        },
-        {
-            title: "Exemplo de Tarefa",
-            description: "Descrição da tarefa",
-            start_date: new Date(2024, 11, 1),
-            end_date: new Date(2024, 11, 7),
-            recurrence: "daily",
-            priority: "medium",
-            color: "var(--dark-brown-color)"
-        },
-        {
-            title: "Exemplo de Tarefa",
-            description: "Descrição da tarefa",
-            start_date: new Date(2024, 11, 21),
-            end_date: new Date(2025, 12, 21),
-            recurrence: "monthly",
-            priority: "medium",
-            color: "var(--dark-orange-color)"
-        },
-    ]
+    dayEvents: processedTasks
 };
 
 // Captura os botões de controle do calendário
@@ -150,7 +135,7 @@ function listSelectedDaysEvents() {
                 dayDiv.setAttribute('data-day', day);
 
                 // Cria o header com o número do dia e o nome do dia da semana
-                const date = new Date(calendarState.year, calendarState.month - 1, day);
+                const date = new Date(calendarState.year, calendarState.month, day);
                 const dayOfWeekName = getDayOfWeekName(date.getDay());
                 const header = document.createElement('h3');
                 header.textContent = `Dia ${day}, ${dayOfWeekName}`;
@@ -159,20 +144,61 @@ function listSelectedDaysEvents() {
                 // Obtém os eventos do dia
                 const events = getEventsForDay(day, calendarState.month, calendarState.year);
 
-                // Cria divs para cada evento
+                // Cria divs para cada evento (tarefa)
                 events.forEach(event => {
-                    const eventDiv = document.createElement('div');
-                    eventDiv.classList.add('event');
+                    // Cria o cartão da tarefa
+                    const taskCard = document.createElement('div');
+                    taskCard.classList.add('task-card');
+                    taskCard.style.display = 'flex';
+                    taskCard.style.flexDirection = 'column';
 
-                    const title = document.createElement('h4');
-                    title.textContent = event.title;
-                    eventDiv.appendChild(title);
+                    // Metade do cartão: descrição
+                    const descriptionDiv = document.createElement('div');
+                    descriptionDiv.classList.add('task-description');
+                    descriptionDiv.style.flex = '1';
+                    descriptionDiv.textContent = event.description;
+                    taskCard.appendChild(descriptionDiv);
 
-                    const description = document.createElement('p');
-                    description.textContent = event.description;
-                    eventDiv.appendChild(description);
+                    // Outra metade: informações adicionais
+                    const infoDiv = document.createElement('div');
+                    infoDiv.classList.add('task-info');
+                    infoDiv.style.flex = '1';
+                    infoDiv.style.display = 'flex';
+                    infoDiv.style.flexDirection = 'column';
 
-                    dayDiv.appendChild(eventDiv);
+                    // Cor
+                    const colorDiv = document.createElement('div');
+                    colorDiv.classList.add('task-color');
+                    colorDiv.style.backgroundColor = event.color;
+                    colorDiv.style.width = '20px';
+                    colorDiv.style.height = '20px';
+                    colorDiv.style.borderRadius = '50%';
+                    infoDiv.appendChild(colorDiv);
+
+                    // Área e Canteiro
+                    const areaSeedbedDiv = document.createElement('div');
+                    areaSeedbedDiv.classList.add('task-area-seedbed');
+                    areaSeedbedDiv.textContent = `Área: ${event.area_id || '-'}, Canteiro: ${event.seedbed_id || '-'}`;
+                    infoDiv.appendChild(areaSeedbedDiv);
+
+                    // Botão "Consultar"
+                    const consultButton = document.createElement('button');
+                    consultButton.classList.add('task-consult-button');
+                    consultButton.textContent = 'Consultar';
+                    // Adicione um event listener se necessário
+                    infoDiv.appendChild(consultButton);
+
+                    // Usuários Responsáveis
+                    const usersDiv = document.createElement('div');
+                    usersDiv.classList.add('task-users');
+                    usersDiv.textContent = `Responsáveis: ${event.responsible_users.join(', ')}`;
+                    infoDiv.appendChild(usersDiv);
+
+                    // Adiciona o infoDiv ao taskCard
+                    taskCard.appendChild(infoDiv);
+
+                    // Adiciona o taskCard ao dayDiv
+                    dayDiv.appendChild(taskCard);
                 });
 
                 // Adiciona o div do dia à seção
@@ -183,16 +209,6 @@ function listSelectedDaysEvents() {
 }
 
 function clearSelections() {
-    // Limpa os dias selecionados no estado
-    calendarState.selectedDays = [];
-
-    // Remove a classe 'selected-day' e redefine os estilos de todos os dias
-    const daysCells = document.querySelectorAll('.days');
-    daysCells.forEach(cell => {
-        cell.classList.remove('selected-day');
-        cell.style.backgroundColor = ''; // Reseta a cor de fundo
-    });
-
     // Reseta a seção de listagem de eventos
     const asideSection = document.querySelector('.list-tasks-aside-section');
     asideSection.innerHTML = '';
@@ -231,6 +247,9 @@ export function showCalendar(month, year) {
         // Remove os escutadores de eventos antigos
         cell.removeEventListener('mousedown', handleDayClick);
         cell.removeEventListener('touchstart', handleDayTouch);
+
+        // Remove as classes CSS anteriores
+        cell.classList.remove('marked-day', 'selected-day');
 
         // Remove as divs de números e marcadores, se existirem
         const dayNumber = cell.querySelector('.day-number');
@@ -328,6 +347,8 @@ function parseDateWithoutTimezone(dateString) {
 */
 
 function main() {
+    console.log(calendarState.dayEvents);
+
     // Evento de clique pro botão anterior
     previousButton.addEventListener('click', () => {
         if (calendarState.month === 1) {
