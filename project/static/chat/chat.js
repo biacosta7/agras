@@ -107,6 +107,14 @@ document.addEventListener('DOMContentLoaded', function() {
     function toggleUtilities() {
         const utilitiesSection = document.getElementById("utilities-section");
         const organismsSection = document.getElementById("organisms-section");
+        const toggleOrganisms = document.getElementById("toggle-organisms");
+
+        // Fecha o botao de organismos, se estiver aberta
+        if (!toggleOrganisms.classList.contains("hidden")) {
+            toggleOrganisms.classList.add("hidden");
+        } else if (toggleOrganisms.classList.contains("hidden")) {
+            toggleOrganisms.classList.remove("hidden");
+        }
 
         // Fecha a seção de organismos, se estiver aberta
         if (!organismsSection.classList.contains("hidden")) {
@@ -127,6 +135,14 @@ document.addEventListener('DOMContentLoaded', function() {
     function toggleOrganisms() {
         const organismsSection = document.getElementById("organisms-section");
         const utilitiesSection = document.getElementById("utilities-section");
+        const toggleUtilities = document.getElementById("toggle-utilities");
+
+        // Fecha o botao de utilidades, se estiver aberta
+        if (!toggleUtilities.classList.contains("hidden")) {
+            toggleUtilities.classList.add("hidden");
+        } else if (toggleUtilities.classList.contains("hidden")) {
+            toggleUtilities.classList.remove("hidden");
+        }
 
         // Fecha a seção de utilidades, se estiver aberta
         if (!utilitiesSection.classList.contains("hidden")) {
