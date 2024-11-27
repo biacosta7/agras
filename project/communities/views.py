@@ -3,7 +3,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from products.models import Product
 from areas.models import Area
-from communities.models import Community, MembershipRequest
+from communities.models import Community, MembershipRequest, SendCommunityInvite
+from users.models import User
 from seedbeds.models import Seedbed
 from django.utils import timezone
 from .models import ImageUpload
@@ -55,19 +56,72 @@ def dashboard_view(request, community_id):
     return render(request, 'dashboard.html', context)
 
 @login_required
+def send_community_invite(request, user_id):
+    target_user = get_object_or_404(User, id=user_id)
+    
+    community = get_object_or_404(Community, admins=request.user)
+
+    if not community.admins.filter(id=request.user.id).exists():
+        messages.error(request, 'Você não tem permissão para enviar convites nesta comunidade.')
+        return redirect('manage_community', community.id)
+
+    existing_invite = SendCommunityInvite.objects.filter(user=target_user, community=community, status='pending').first()
+
+    if existing_invite and existing_invite.status == 'pending':
+        messages.error(request, f'Já existe um convite para o usuário {target_user.username}')
+
+
+    if existing_invite and existing_invite.status == 'rejected':
+        existing_invite.delete()
+
+    if not existing_invite:
+        SendCommunityInvite.objects.create(
+            user=target_user,
+            community=community,
+            requested_by=request.user,
+            status='pending',
+            invite_date=timezone.now()
+        )
+        messages.info(request, 'Convite enviado com sucesso!')
+
+    return redirect('manage_community', community.id)
+
+@login_required
+def accept_community_invite(request, invite_id):
+    invite_request = get_object_or_404(SendCommunityInvite, id=invite_id)
+
+    invite_request.status = 'approved'
+    invite_request.decision_date = timezone.now()
+    invite_request.save()
+
+    invite_request.community.members.add(invite_request.user)
+
+    messages.success(request, 'Solicitação aceita com sucesso!')
+    return redirect('community_hub')
+
+
+@login_required
+def decline_community_invite(request, invite_id):
+    invite_request = get_object_or_404(SendCommunityInvite, id=invite_id)
+
+    invite_request.status = 'rejected'
+    invite_request.decision_date = timezone.now()
+    invite_request.save()
+
+    messages.success(request, 'Solicitação recusada com sucesso!')
+    return redirect('community_hub')
+
+@login_required
 def manage_community(request, community_id):
     community = get_object_or_404(Community, id=community_id)
-    
-    # Verifica se o usuário tem permissão para acessar o gerenciamento
-    if request.user != community.creator and not community.admins.filter(id=request.user.id).exists():
-        messages.error(request, 'Você não tem permissão para gerenciar esta comunidade.')
-        return redirect('community_hub')
+    all_users_not_in_your_community = User.objects.exclude(communities_members__id=community_id)
     
     membership_requests = MembershipRequest.objects.filter(community=community, status='pending')
 
     context = {
         'community': community,
         'membership_requests': membership_requests,
+        'all_users': all_users_not_in_your_community
     }
     
     return render(request, 'manage_community.html', context)
@@ -112,12 +166,14 @@ def community_list(request):
     has_communities = user_communities.exists() or is_admin_of_community
     communities = Community.objects.all()
     user_communities_count = request.user.communities_members.count() + request.user.admin_communities.count()
+    invite_request = SendCommunityInvite.objects.filter(user=user, status='pending')
 
     context = {
         'communities': communities,
         'has_communities': has_communities,
         'user': user,
-        'user_communities_count': user_communities_count
+        'user_communities_count': user_communities_count,
+        'invite_request': invite_request
     }
 
     return render(request, 'hub.html', context)
