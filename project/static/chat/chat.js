@@ -29,13 +29,11 @@ document.addEventListener('DOMContentLoaded', function () {
             ele: '#organisms',
             placeholder: 'Selecione o organismo',
             search: true,
-            multiple: false,
-            noOptionsText: 'Nenhum organismo encontrado',
-            selectedTextFormat: 'count > 2',
+            allowNewOption: true,
         });
-
     }, 100);
 });
+
 
 document.addEventListener('DOMContentLoaded', function () {
     setTimeout(function () {
@@ -289,7 +287,8 @@ document.addEventListener('DOMContentLoaded', function() {
         } catch (error) {
             console.error("Erro:", error);
             alert("Erro ao enviar os dados. Tente novamente.");
-        }
+        }        
+
     }
 
     // Função para lidar com o primeiro popup (organismos)

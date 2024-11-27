@@ -9,6 +9,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_protect
 import json
 from django.core.cache import cache
+import hashlib
 
 # Configura a API do Gemini com a chave de API
 genai.configure(api_key=os.environ["API_KEY"])
@@ -45,6 +46,9 @@ def extract_selected_crops(text):
             return ", ".join(sorted(unique_crops))  # Retorna os cultivos únicos, separados por vírgula e ordenados
     return None
 
+def hashed_cache_key(key):
+    return hashlib.md5(key.encode('utf-8')).hexdigest()
+
 @csrf_protect
 @login_required
 def ask_question(request, community_id, user_id):
@@ -58,8 +62,11 @@ def ask_question(request, community_id, user_id):
             # Obtém os cultivos selecionados
             type_products = TypeProduct.objects.filter(community=community_id).values_list('name', flat=True)
 
+            # Gera uma chave de cache única e hash
+            cache_key = hashed_cache_key(f"response_{text}_{user_id}")
+
             # Verificar se a resposta já está em cache
-            cached_response = cache.get(f"response_{text}_{user_id}")
+            cached_response = cache.get(cache_key)
             if cached_response:
                 return JsonResponse({"data": {"text": cached_response}})
 
