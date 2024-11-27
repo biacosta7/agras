@@ -270,7 +270,7 @@
     </div>    
     <div id="organisms-section" class="hidden mt-10">
         <p class="text-lg font-semibold mb-2">Você está lidando com qual Organismo Indesejado?</p>
-        <p class="mb-4">Selecione abaixo o organismos que você deseja:</p>
+        <p class="mb-4">Selecione abaixo o organismo que você deseja:</p>
         <!-- Seção de Organismos -->
         {% csrf_token %}
         <select id="organisms" name="organisms[]" required>
@@ -280,7 +280,7 @@
             <option value="">Nenhum organismo disponível</option>
             {% endfor %}
         </select>
-        <button id="submit-organisms" class="bg-[#8ABF17] text-white font-bold px-6 py-3 hover:bg-[#7aab0f] rounded-md w-full">Buscar</button>
+        <button id="submit-organisms" class="bg-[#8ABF17] text-white font-bold px-6 py-3 hover:bg-[#7aab0f] rounded-md w-full">Enviar</button>
     </div>  
     <div id="organisms-section2" class="hidden mt-10">
         <p class="text-lg font-semibold mb-2">Esse Organismo Indesejado se encontra em quais <b>Cultivos</b>?</p>

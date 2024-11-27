@@ -88,6 +88,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Event listener for submitting selected organisms
     //document.getElementById("submit-organisms").addEventListener("click", submitOrganisms);
 
+    function toggleChatVisibility(show) {
+        const messagesContainer = document.querySelector('.messages-container');
+        if (messagesContainer) {
+            messagesContainer.style.display = show ? 'block' : 'none';
+        }
+    }    
+
     // Function to toggle utilities section visibility
     function toggleUtilities() {
         const utilitiesSection = document.getElementById("utilities-section");
@@ -101,8 +108,10 @@ document.addEventListener('DOMContentLoaded', function() {
         // Alterna a visibilidade da seção de utilidades
         if (utilitiesSection.classList.contains("hidden")) {
             utilitiesSection.classList.remove("hidden"); // Exibe a seção
+            toggleChatVisibility(false); // Fecha o chat
         } else {
             utilitiesSection.classList.add("hidden"); // Esconde a seção
+            toggleChatVisibility(true); // Reabre o chat
         }
     }
 
@@ -119,8 +128,10 @@ document.addEventListener('DOMContentLoaded', function() {
         // Alterna a visibilidade da seção de organismos
         if (organismsSection.classList.contains("hidden")) {
             organismsSection.classList.remove("hidden"); // Exibe a seção
+            toggleChatVisibility(false); // Fecha o chat
         } else {
             organismsSection.classList.add("hidden"); // Esconde a seção
+            toggleChatVisibility(true); // Reabre o chat
         }
     }
 
@@ -142,10 +153,13 @@ document.addEventListener('DOMContentLoaded', function() {
         // Alterna a visibilidade da seção de organismos 2 (cultivos dos organismos)
         if (organismsSection2.classList.contains("hidden")) {
             organismsSection2.classList.remove("hidden"); // Exibe a seção
+            toggleChatVisibility(false); // Fecha o chat
         } else {
             organismsSection2.classList.add("hidden"); // Esconde a seção
+            toggleChatVisibility(true); // Reabre o chat
         }
     }
+
 
 
     // Function to handle submission of selected cultivos and send the request to the chatbot
@@ -458,16 +472,5 @@ style.textContent = `
         margin-bottom: 5px;
     }
 
-    #cultivos {
-        width: 100%;
-        padding: 10px;
-        border-radius: 5px;
-        border: 1px solid #ddd;
-        background-color: #fff;
-    }
-
-    #cultivos:focus {
-        outline-color: #4CAF50;
-    }
 `;
 document.head.appendChild(style);
