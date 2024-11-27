@@ -63,13 +63,24 @@ document.addEventListener('DOMContentLoaded', function() {
     const messagesContainer = document.createElement('div');
     messagesContainer.className = 'messages-container mt-4 max-h-[300px] overflow-y-auto';
     
-    // Inicialize mensagens, se houver histórico
+    // Modifique sua função de rolagem
+    function scrollToBottom() {
+        setTimeout(() => {
+            if (messagesContainer) {
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+        }, 200);
+    }
+
+    // Chame a função de rolagem após adicionar as mensagens
     if (Array.isArray(chats)) {
         chats.reverse().forEach(chat => {
             appendMessage(chat.text_input, 'user');
             appendMessage(chat.gemini_output, 'bot');
         });
-    }    
+        scrollToBottom();  // Chama a função de rolagem aqui
+        console.log("Rolei");
+    }
 
     if (modalContent) {
         modalContent.insertBefore(messagesContainer, modalContent.querySelector('.mt-6'));
@@ -364,11 +375,6 @@ document.addEventListener('DOMContentLoaded', function() {
         chatInput.value = ''; // Limpa o campo de entrada após o envio
     }
 
-    // Função para rolar até a última mensagem
-    function scrollToLatestMessage() {
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }
-
     // Função para adicionar mensagem
     function appendMessage(text, sender) {
         const messageDiv = document.createElement('div');
@@ -386,7 +392,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     
         messagesContainer.appendChild(messageDiv); // Adiciona ao final do container
-        messagesContainer.scrollTop = messagesContainer.scrollHeight; // Rola automaticamente para o final
     }
 
     // Event listener para enviar a mensagem ao pressionar Enter
@@ -419,12 +424,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         return cookieValue;
     }
-
-    // Rola para a última mensagem ao abrir o modal
-    const modal = document.getElementById('helpModal');
-    modal.addEventListener('shown.bs.modal', () => {
-        scrollToLatestMessage();
-    });
     
 });
 
@@ -444,6 +443,7 @@ style.textContent = `
         flex-direction: column;
         gap: 1rem;
         padding: 1rem;
+        overflow-y: auto;
     }
     
     #helpModal.max-h-screen {
