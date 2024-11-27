@@ -44,10 +44,3 @@ class SendCommunityInvite(models.Model):
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
     invite_date = models.DateTimeField(default=timezone.now)
     decision_date = models.DateTimeField(null=True, blank=True)
-
-class ImageUpload(models.Model):
-    title = models.CharField(max_length=100)
-    image = models.ImageField(upload_to='uploads/')  # Diretório onde a imagem será salva
-
-    def __str__(self):
-        return self.title

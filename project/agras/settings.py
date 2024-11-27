@@ -14,6 +14,11 @@ load_dotenv(BASE_DIR / '.env')
 TARGET_ENV = os.getenv('TARGET_ENV')
 NOT_PROD = not TARGET_ENV.lower().startswith('prod')
 
+# Configurações do Azure Blob Storage
+AZURE_ACCOUNT_NAME = os.getenv('AZURE_ACCOUNT_NAME')
+AZURE_ACCOUNT_KEY = os.getenv('AZURE_ACCOUNT_KEY')
+AZURE_CONTAINER = 'media'
+
 if NOT_PROD:
     # SECURITY WARNING: don't run with debug turned on in production!
     DEBUG = True
@@ -59,21 +64,27 @@ else:
 
     STATIC_URL = os.environ.get('DJANGO_STATIC_URL', "/static/")
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-    STATICFILES_STORAGE = ('whitenoise.storage.CompressedManifestStaticFilesStorage')
-
-    # Configurações do Azure Blob Storage
-    AZURE_ACCOUNT_NAME = '<NOME_DA_SUA_CONTA>'
-    AZURE_ACCOUNT_KEY = '<CHAVE_DA_CONTA>'
-    AZURE_CONTAINER = 'media'
+    #STATICFILES_STORAGE = ('whitenoise.storage.CompressedManifestStaticFilesStorage')
 
     # Configurar backend de armazenamento para arquivos de mídia
-    DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
+    #DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
     AZURE_LOCATION = AZURE_CONTAINER
 
     # Configurar URL para acesso aos arquivos
     MEDIA_URL = f'https://{AZURE_ACCOUNT_NAME}.blob.core.windows.net/{AZURE_CONTAINER}/'
-    
 
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.azure_storage.AzureStorage",
+        "OPTIONS": {
+            "timeout": 20,
+            "expiration_secs": 500,
+        },
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 # Application definition
 AUTH_USER_MODEL = 'users.User'

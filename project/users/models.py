@@ -11,3 +11,8 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+
+class FileUpload(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    image = models.FileField(upload_to='uploads/')  # Diretório onde a imagem será salva
+    uploaded_at = models.DateTimeField(auto_now_add=True)  # Data de upload

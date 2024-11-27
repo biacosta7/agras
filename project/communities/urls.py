@@ -21,6 +21,10 @@ urlpatterns = [
     path('solicitacao/aceitar/<int:request_id>/', community_views.aceitar_solicitacao, name='aceitar_solicitacao'),
     path('solicitacao/rejeitar/<int:request_id>/', community_views.rejeitar_solicitacao, name='rejeitar_solicitacao'),
 
+    # URLs para gerenciar membros dentro da comunidade
+    path('comunidade/<int:community_id>/kick/<int:user_id>', community_views.kick_member, name='kick_member'),
+    path('comunidade/<int:community_id>/promote/<int:user_id>', community_views.promote_member, name='promote_member'),
+
     # URL para enviar convite para comunidade
     path('comunidade/<int:community_id>/enviar/solicitacao/<int:user_id>/', community_views.send_community_invite, name='send_invite'),
     
@@ -60,6 +64,6 @@ urlpatterns = [
     path('comunidade/<int:community_id>/tarefas/editar/status/<int:task_id>', tasks_views.edit_only_status, name='edit_task_status'),
 
     #image upload
-    path('upload/', community_views.image_upload_view, name='image_upload'),
+    path('upload/<int:user_id>/', community_views.image_upload_view, name='image_upload'),
 
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
