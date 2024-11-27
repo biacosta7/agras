@@ -59,19 +59,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const sendButton = document.querySelector('#helpModal button[class*="absolute"]');
     const modalContent = document.querySelector('#helpModal');
 
-    // Criar o container de mensagens
+    // Container de mensagens
     const messagesContainer = document.createElement('div');
     messagesContainer.className = 'messages-container mt-4 max-h-[300px] overflow-y-auto';
-    // Certifique-se de que a variável chats contém dados válidos
-    if (typeof chats !== 'falha' && Array.isArray(chats)) {
-        // Adicionar histórico de mensagens ao container
+    
+    // Inicialize mensagens, se houver histórico
+    if (Array.isArray(chats)) {
         chats.forEach(chat => {
             appendMessage(chat.text_input, 'user');
             appendMessage(chat.gemini_output, 'bot');
         });
-    } else {
-        console.error('Chats data is undefined or not an array:', chats);
     }
+
     if (modalContent) {
         modalContent.insertBefore(messagesContainer, modalContent.querySelector('.mt-6'));
     }
@@ -365,23 +364,12 @@ document.addEventListener('DOMContentLoaded', function() {
         chatInput.value = ''; // Limpa o campo de entrada após o envio
     }
 
-    // Array para armazenar as mensagens com a data
-    let messageHistory = [];
-
-    // Função para renderizar as mensagens em ordem decrescente de data
-    function renderMessages() {
-        messagesContainer.innerHTML = ''; // Limpa o container de mensagens
-
-        // Ordena as mensagens pela data (do mais recente para o mais antigo)
-        messageHistory.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-
-        // Adiciona as mensagens ordenadas ao container
-        messageHistory.forEach(message => {
-            appendMessage(message.text, message.sender);
-        });
+    // Função para rolar até a última mensagem
+    function scrollToLatestMessage() {
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
 
-    // Função para adicionar a mensagem ao histórico
+    // Função para adicionar mensagem
     function appendMessage(text, sender) {
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${sender} mb-4 p-3 rounded-lg ${
@@ -390,15 +378,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 : 'bg-gray-100 text-black'
         }`;
         messageDiv.style.maxWidth = '80%';
-
+    
         if (sender === 'bot') {
             messageDiv.innerHTML = renderMarkdown(text); // Para mensagens do bot, renderiza o texto como Markdown
         } else {
             messageDiv.textContent = text; // Para mensagens do usuário, apenas o texto
         }
-
-        messagesContainer.appendChild(messageDiv);
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    
+        messagesContainer.appendChild(messageDiv); // Adiciona ao final do container
+        messagesContainer.scrollTop = messagesContainer.scrollHeight; // Rola automaticamente para o final
     }
 
     // Event listener para enviar a mensagem ao pressionar Enter
@@ -431,6 +419,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         return cookieValue;
     }
+
+    // Rola para a última mensagem ao abrir o modal
+    const modal = document.getElementById('helpModal');
+    modal.addEventListener('shown.bs.modal', () => {
+        scrollToLatestMessage();
+    });
     
 });
 
