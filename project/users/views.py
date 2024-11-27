@@ -159,7 +159,7 @@ def forgot_password(request):
 @login_required
 def profile(request):
     user = request.user
-    community = None
+    community = user.communities_members.first() if user.communities_members.exists() else None
 
     # Verifica se o usuário está em alguma comunidade, pegando a primeira comunidade associada a ele
     if user.communities_members.exists():
@@ -201,7 +201,7 @@ def profile(request):
         user.first_name = first_name
         user.username = username
         user.email = email
-        user.phone = phone  # Atualiza o telefone
+        user.phone = phone
         user.city = city
         user.state = state
 
@@ -212,5 +212,4 @@ def profile(request):
             messages.error(request, 'Erro ao atualizar as credenciais. Tente novamente.')
             return redirect('profile')
 
-    # Se o método for GET, renderiza a página com as informações do usuário
     return render(request, 'myprofile.html', {'user': user, 'community': community})
