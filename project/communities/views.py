@@ -362,6 +362,9 @@ def settings(request, community_id):
 
 @login_required
 def profile(request, community_id):
+
+    image_url = None  # Variável para armazenar a URL da imagem
+
     # Obtém a comunidade pelo ID, ou retorna 404 se não existir
     community = get_object_or_404(Community, id=community_id)
 
@@ -373,7 +376,8 @@ def profile(request, community_id):
     # Usuário autenticado
     user = request.user
 
-    if request.method == "POST":
+    if request.method == "POST" and request.FILES.get('image'):
+        image = request.FILES['image']
         # Processa a atualização de informações do perfil
         first_name = request.POST.get('first_name')
         username = request.POST.get('username')
@@ -412,6 +416,14 @@ def profile(request, community_id):
         user.phone = phone
         user.city = city
         user.state = state
+
+        # Salvar o objeto no banco de dados
+        new_image = FileUpload.objects.create(user=user,image=image)
+        new_image.save()
+
+        # Obter a URL da imagem para exibir
+        image_url = new_image.image.url
+        print(image_url)
 
         try:
             user.save()
