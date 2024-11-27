@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Configurações da Comunidade{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-[#FAFAFA] flex flex-col lg:flex-row">
+    <!-- Conteúdo principal -->
+    <div class="flex-1 p-6 lg:p-10 mt-12 lg:mt-[60px]">
+        <div class="flex md:flex-row flex-col justify-between mt-4">
+            <header class="mb-2">
+                <h1 class="text-[44px] lg:text-[48px] lg:ml-[250px] font-semibold mt-2">Configurações</h1>
+            </header>
+        </div>
+
+        <div class="flex items-center lg:ml-[250px] justify-center mt-4">
+            <!-- Formulário -->
+            <form id="community-settings-form" method="POST" action="{% url 'settings' community.id %}" class="bg-white shadow-lg rounded-lg p-8 w-full max-w-4xl">
+                {% csrf_token %}
+                <h2 class="text-2xl font-bold text-[#5F8C1B] mb-6">Configurações da Comunidade</h2>
+
+                <!-- Capa -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold mb-4">Foto ou Cor para a Capa</h3>
+                    <div class="flex flex-row items-start space-x-4">
+                        <!-- Upload de Foto -->
+                        <label class="block border border-dashed border-gray-400 rounded-lg w-48 h-32 flex items-center justify-center cursor-pointer">
+                            <span class="material-icons text-[#8ABF17]">upload</span>
+                            <input type="file" name="cover_photo" class="hidden" />
+                        </label>
+                        <!-- Cores -->
+                        <div class="flex flex-col space-y-1">
+                            <div class="w-12 h-10 rounded-lg bg-[#8B4513] cursor-pointer"></div>
+                            <div class="w-12 h-10 rounded-lg bg-[#FF6F00] cursor-pointer"></div>
+                            <div class="w-12 h-10 rounded-lg bg-[#5F8C1B] cursor-pointer"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nome e Descrição -->
+                <div class="mb-6">
+                    <label class="block text-lg font-semibold mb-2" for="name">Nome da Comunidade</label>
+                    <input type="text" id="name" name="name" class="block w-full border border-black rounded-lg p-2" value="{{ community.name }}" />
+                </div>
+                <div class="mb-6">
+                    <label class="block text-lg font-semibold mb-2" for="description">Descrição da Comunidade</label>
+                    <textarea id="description" name="description" class="block w-full border border-black rounded-lg p-2" rows="3">{{ community.description }}</textarea>
+                </div>
+
+                <!-- Botões -->
+                <div class="flex justify-between mt-6">
+                    <!-- Botão Excluir -->
+                    <button type="submit" name="action" value="delete" class="bg-[#FF4D4D] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#cc3c3c]">
+                        Excluir
+                    </button>
+                    
+                    <div class="flex space-x-4">
+                        <!-- Botão Cancelar -->
+                        <button type="button" onclick="document.getElementById('community-settings-form').reset()" class="bg-white text-[#8ABF17] border border-[#8ABF17] px-6 py-2 rounded-lg font-semibold hover:bg-gray-100">
+                            Cancelar
+                        </button>
+                        
+                        <!-- Botão Salvar -->
+                        <button type="submit" name="action" value="update" class="bg-[#5F8C1B] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#4a7c13]">
+                            Salvar
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
