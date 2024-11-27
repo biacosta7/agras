@@ -80,7 +80,7 @@
                 </div>   
 
                 <div class="flex items-center cursor-pointer z-20"> 
-                    <a href="{% url 'profile' %}" class="flex flex-row items-center">
+                    <a href="{% url 'profile' community.id %}" class="flex flex-row items-center">
                         <div class="w-8 h-8 bg-[#8ABF17] text-[#FFFFFF] flex items-center justify-center rounded-md mr-2 font-bold">
                             {{ request.user.first_name|slice:":1"|upper }}
                         </div>
@@ -110,7 +110,7 @@
                     <span class="relative inline-flex rounded-full h-4 w-4 bg-red-500 justify-center items-center text-[12px] text-white">{{membership_requests|length}}</span>
                     </span>
                 </div>
-                <a href="{% url 'profile' %}">
+                <a href="{% url 'profile' community.id %}">
                     <div class="w-8 h-8 bg-[#8ABF17] text-[#FFFFFF] flex items-center justify-center rounded-md mr-2 font-bold">
                         {{ user.username|slice:":1"|upper }}
                     </div>
@@ -183,7 +183,7 @@
                     {% endif %}            
                 </a>
                 <!-- Minha Conta -->
-                <a href="{% url 'profile' %}" class="px-8 relative text-[14px] font-normal flex items-center cursor-pointer {% if request.resolver_match.url_name == 'profile' %}bg-white text-[#5F8C1B] py-3 font-medium{% endif %}"> 
+                <a href="{% url 'profile' community.id %}" class="px-8 relative text-[14px] font-normal flex items-center cursor-pointer {% if request.resolver_match.url_name == 'profile' %}bg-white text-[#5F8C1B] py-3 font-medium{% endif %}"> 
                     <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">account_circle</span> 
                     <span class="flex-grow">Meu Perfil</span>
                     {% if request.resolver_match.url_name == 'profile' %}
@@ -191,7 +191,7 @@
                     {% endif %}            
                 </a>
                 <!-- Configurações -->
-                <a href="{% url 'settings' community.id%}" class="px-8 relative text-[14px] font-normal flex items-center cursor-pointer {% if request.resolver_match.url_name == 'settings' %} bg-white text-[#5F8C1B] py-3 font-medium{% endif %}"> 
+                <a href="{% url 'settings' community.id %}" class="px-8 relative text-[14px] font-normal flex items-center cursor-pointer {% if request.resolver_match.url_name == 'settings' %} bg-white text-[#5F8C1B] py-3 font-medium{% endif %}"> 
                     <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">settings</span> 
                     <span class="flex-grow">Configurações</span>
                     {% if request.resolver_match.url_name == 'settings' %}

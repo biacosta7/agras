@@ -5,6 +5,7 @@ from seedbeds import views as seedbed_views
 from products import views as product_views  
 from chat import views as chat_views
 from tasks import views as tasks_views
+from users import views as users_views
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -16,7 +17,7 @@ urlpatterns = [
     path('comunidade/<int:community_id>/gerenciamento/', community_views.manage_community, name='manage_community'),
     path('dashboard/<int:community_id>/', community_views.dashboard_view, name='dashboard'),
     path('settings/<int:community_id>/', community_views.settings, name='settings'),
-    
+
     # URLs para aceitar e rejeitar solicitações
     path('solicitacao/aceitar/<int:request_id>/', community_views.aceitar_solicitacao, name='aceitar_solicitacao'),
     path('solicitacao/rejeitar/<int:request_id>/', community_views.rejeitar_solicitacao, name='rejeitar_solicitacao'),
@@ -24,6 +25,9 @@ urlpatterns = [
     # URLs para gerenciar membros dentro da comunidade
     path('comunidade/<int:community_id>/kick/<int:user_id>', community_views.kick_member, name='kick_member'),
     path('comunidade/<int:community_id>/promote/<int:user_id>', community_views.promote_member, name='promote_member'),
+
+    path('comunidade/<int:community_id>/perfil/', community_views.profile, name='profile'),
+
 
     # URL para enviar convite para comunidade
     path('comunidade/<int:community_id>/enviar/solicitacao/<int:user_id>/', community_views.send_community_invite, name='send_invite'),

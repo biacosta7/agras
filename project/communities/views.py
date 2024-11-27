@@ -8,6 +8,7 @@ from users.models import User, FileUpload
 from seedbeds.models import Seedbed
 from django.utils import timezone
 from django.http import HttpResponse
+from django.db import IntegrityError
 
 @login_required
 def home_view(request):
@@ -358,3 +359,66 @@ def settings(request, community_id):
             return redirect('community_hub')
 
     return render(request, 'settings.html', {'community': community})
+
+@login_required
+def profile(request, community_id):
+    # Obtém a comunidade pelo ID, ou retorna 404 se não existir
+    community = get_object_or_404(Community, id=community_id)
+
+    # Verifica se o usuário é membro da comunidade
+    if not community.members.filter(id=request.user.id).exists():
+        messages.error(request, 'Você não tem acesso a esta comunidade.')
+        return redirect('community_hub')
+
+    # Usuário autenticado
+    user = request.user
+
+    if request.method == "POST":
+        # Processa a atualização de informações do perfil
+        first_name = request.POST.get('first_name')
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        city = request.POST.get('city')
+        state = request.POST.get('state')
+
+        # Validação de dados
+        valid_chars = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_")
+        if not set(username).issubset(valid_chars):
+            messages.error(request, 'O nome de usuário deve conter apenas letras, números ou underlines.')
+            return redirect('profile', community_id=community.id)
+
+        valid_name = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ")
+        if not set(first_name).issubset(valid_name):
+            messages.error(request, 'O nome não deve conter números ou caracteres especiais.')
+            return redirect('profile', community_id=community.id)
+
+        if '@' not in email or email.count('@') != 1:
+            messages.error(request, 'Por favor, insira um email válido.')
+            return redirect('profile', community_id=community.id)
+
+        if User.objects.filter(username=username).exclude(id=user.id).exists():
+            messages.error(request, 'Este nome de usuário já está em uso.')
+            return redirect('profile', community_id=community.id)
+
+        if User.objects.filter(email=email).exclude(id=user.id).exists():
+            messages.error(request, 'Já existe um usuário com este email.')
+            return redirect('profile', community_id=community.id)
+
+        # Atualiza as informações do usuário
+        user.first_name = first_name
+        user.username = username
+        user.email = email
+        user.phone = phone
+        user.city = city
+        user.state = state
+
+        try:
+            user.save()
+            messages.success(request, 'Credenciais atualizadas com sucesso.')
+        except IntegrityError:
+            messages.error(request, 'Erro ao atualizar as credenciais. Tente novamente.')
+            return redirect('profile', community_id=community.id)
+
+    # Renderiza o template com as informações do usuário e da comunidade
+    return render(request, 'myprofile.html', {'user': user, 'community': community})
