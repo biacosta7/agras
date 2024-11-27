@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from .models import User
 from communities.models import Community
 from django.contrib import messages
+from communities.views import Community
 
 def create_user(request):
     if request.method == "GET":
@@ -154,56 +155,53 @@ def forgot_password(request):
         else:
             messages.error(request, 'As senhas não coincidem.')
             return redirect('forgot_password')
-        
-        
+
 @login_required
-def update_user(request):
+def profile(request):
     user = request.user
     community = None
 
     # Verifica se o usuário está em alguma comunidade, pegando a primeira comunidade associada a ele
     if user.communities_members.exists():
-        # Se o usuário está em uma comunidade, pegamos a primeira comunidade
         community = user.communities_members.first()
 
-    if request.method == "GET":
-        # Passa o contexto de 'community' para o template se houver
-        return render(request, 'edit_profile.html', {'user': user, 'community': community})
-    
-    else:
+    if request.method == "POST":
+        # Se o método for POST, ou seja, o formulário foi submetido, processamos a atualização
         first_name = request.POST.get('first_name')
         username = request.POST.get('username')
         email = request.POST.get('email')
+        phone = request.POST.get('phone')  # Pega o telefone do formulário
         city = request.POST.get('city')
         state = request.POST.get('state')
-
+        
         # Validação dos dados recebidos
         valid_chars = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_")
         if not set(username).issubset(valid_chars):
             messages.error(request, 'O nome de usuário deve conter apenas letras, números ou underlines, sem espaços ou caracteres especiais.')
-            return redirect('edit')
+            return redirect('profile')
 
-        valid_name = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+        valid_name = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ")
         if not set(first_name).issubset(valid_name):
             messages.error(request, 'O nome não deve conter números ou caracteres especiais.')
-            return redirect('edit')
+            return redirect('profile')
 
         if '@' not in email or email.count('@') != 1:
             messages.error(request, 'Por favor, insira um email válido.')
-            return redirect('edit')
+            return redirect('profile')
 
         if User.objects.filter(username=username).exclude(id=user.id).exists():
             messages.error(request, 'Este nome de usuário já está em uso.')
-            return redirect('edit')
+            return redirect('profile')
 
         if User.objects.filter(email=email).exclude(id=user.id).exists():
             messages.error(request, 'Já existe um usuário com este email.')
-            return redirect('edit')
+            return redirect('profile')
 
-        # Atualiza as credenciais do usuário
+        # Atualiza as credenciais do usuário, incluindo o telefone
         user.first_name = first_name
         user.username = username
         user.email = email
+        user.phone = phone  # Atualiza o telefone
         user.city = city
         user.state = state
 
@@ -212,18 +210,7 @@ def update_user(request):
             messages.success(request, 'Credenciais atualizadas com sucesso.')
         except IntegrityError:
             messages.error(request, 'Erro ao atualizar as credenciais. Tente novamente.')
-            return redirect('edit')
+            return redirect('profile')
 
-        return render(request, 'login.html', {'community': community})
-
-
-@login_required
-def profile(request):
-    user = request.user
-    community = None
-
-    if user.communities_members.exists():
-        community = user.communities_members.first()
-
-    if request.method == "GET":
-        return render(request, 'myprofile.html', {'user': user, 'community': community})
+    # Se o método for GET, renderiza a página com as informações do usuário
+    return render(request, 'myprofile.html', {'user': user, 'community': community})
