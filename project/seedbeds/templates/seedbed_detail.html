@@ -4,6 +4,30 @@
 {% block title %}{{ seedbed.nome }}{% endblock %}
 
 {% block styles %}
+    .shift-down {
+        transform: translateY(90px); /* Altere conforme a distância desejada */
+    }
+
+    .bg-green-box{
+        background-color: #5F8C1B; /* Cor verde para o fundo */
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra leve */
+        margin-left: 260px;
+    }
+    .brown-box {
+        background-color: #8B4513; /* Cor marrom */
+        color: #fff; /* Texto branco para contraste */
+        padding: 10px; /* Espaçamento interno */
+        border-radius: 8px; /* Bordas arredondadas */
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para realce */
+        text-align: center; /* Centraliza o conteúdo */
+        width: 150px; /* Define uma largura fixa para as caixas */
+    }
+    .white-box{
+        background-color: white;
+        width: 200px;
+        border-radius: 5px;
+        padding-left: 8px;
+    }
     .button {
         padding: 10px 20px;
         border: none;
@@ -24,18 +48,27 @@
     }
     .product-info {
         display: flex;
-        justify-content: center;
-        align-items: flex-start;
+        justify-content: space-between;
+        gap: 20px;
         margin-top: 20px;
         padding-top: 30px;
     }
-    .left-info {
-        max-width: 45%;
-        padding-right: 40px;
+    .coluna {
+        flex: 1; /* Cada coluna vai ocupar uma quantidade igual de espaço */
+        padding: 10px; /* Um pouco de padding para o conteúdo não colar nas bordas */
+        border: 1px solid #ccc; /* Bordas para demarcar as colunas */
     }
-    .right-info {
-        max-width: 45%;
-        padding-left: 40px;
+
+    .sub-container {
+        display: flex; /* Ativa o Flexbox dentro da subcoluna */
+        gap: 20px; /* Espaçamento entre as subcolunas */
+        margin-top: 20px; /* Distância para separar a flexbox interna do conteúdo acima */
+    }
+
+    .sub-coluna {
+        flex: 1; /* As subcolunas vão ocupar uma quantidade igual de espaço */
+        border: 1px solid #ccc; /* Bordas para demarcar as subcolunas */
+        padding: 10px; /* Padding para as subcolunas */
     }
 
     #product-select {
@@ -72,6 +105,14 @@
         border: 1px solid #ccc;
         border-radius: 5px;
     }
+    @media (max-width: 768px) {
+    .container {
+        flex-direction: column; /* Em telas menores, as colunas se empilham */
+    }
+    .sub-container {
+        flex-direction: column; /* As subcolunas também se empilham em telas pequenas */
+    }
+}
 
 {% endblock %}
 
@@ -96,16 +137,18 @@
         <div class="text-center flex-1">
             <ul class="flex flex-wrap list-none justify-center">
                 {% for product in active_products %}
-                    <li class="flex flex-col items-center mr-12 mb-4">
+                    <!-- Cada cultivo agora terá sua própria caixa marrom -->
+                    <li class="flex flex-col items-center mr-12 mb-4 brown-box" onclick="moveBox(this)">
                         <a href="?product_id={{ product.id }}">
                             <img src="{% static 'assets/small-plant.png' %}" alt="Área de plantio" class="w-16 h-16 mb-1">
                             <p class="text-lg">{{ product.type_product.name }}</p>
                         </a>
-                    </li>
+                    </li>                    
                 {% empty %}
                     <li>Nenhum cultivo cadastrado</li>
                 {% endfor %}
-                <li class="flex flex-col items-center mb-4 mr-12">  
+                <!-- Adicionar Cultivo também terá a mesma estrutura, se desejar -->
+                <li class="flex flex-col items-center mb-4 mr-12 brown-box">  
                     <a href="{% url 'create_product' community.id area.pk seedbed.id %}">
                         <img src="{% static 'assets/add.png' %}" alt="Adicionar novo cultivo" class="w-16 h-16">
                     </a>
@@ -115,52 +158,55 @@
         </div>
     </div>
 </div>
+
 <br>
 {% if seedbed.products_in_seedbed.all %}
 <div class="flex items-center justify-center"> 
-    <div class="bg-[#fafafa] p-6 rounded-lg shadow-lg" style="max-width: 1200px; width: 90%; height: 450px; overflow: auto;">
-        <!-- Dropdown para selecionar produto -->
-        <form method="GET" action="">
-            <div class="flex items-center">
-                <div class="flex-container">
-                    <select id="product-select" name="product_id" class="mb-4 p-2 border border-gray-300 rounded">
-                        <option value="">Selecione um cultivo</option>
-                        {% for product in products %}
-                            <option value="{{ product.id }}" {% if selected_product and selected_product.id == product.id %}selected{% endif %}>
-                                {{ product.type_product.name }}
-                            </option>
-                        {% empty %}
-                            <option value="">Nenhum cultivo disponível</option>
-                        {% endfor %}
-                    </select>      
-                    <button type="submit" class="bg-[#8ABF17] text-white py-2 px-4 rounded hover:bg-[#5F8C1B] transition duration-200 ml-4">
-                        Ver Detalhes
-                    </button>
-                </div>
-            </div>
-        </form>
-        
+    <div class="bg-[#fafafa] p-6 rounded-lg shadow-lg bg-green-box" style="max-width: 1200px; width: 90%; height: 450px; overflow: auto">
         <!-- Detalhes do produto selecionado -->
         {% if selected_product %}
-        <div class="product-info mt-6">
-            <div class="left-info mb-4">
-                <p>
-                    <span class="text-lg font-semibold mr-12">Data de plantio:</span>
-                    <span class="text-lg" id="planting-date">{{ selected_product.data_plantio }}</span>
-                </p>
-                <br>
-                <p>
-                    <span class="text-lg font-semibold mr-12">Previsão de colheita</span>
-                    <span class="text-lg" id="harvest-estimate">
-                        {% if estimativa_colheita %}
-                            {{ estimativa_colheita }}
-                        {% else %}
-                            Data de colheita indisponível
-                        {% endif %}
-                    </span>
-
-                </p>
-                <br>
+        <div class="product-info mt-6 green-box">
+            <div class="coluna mb-4">
+                <div class="sub-container">
+                    <div class="sub-coluna">
+                        <span class="text-lg font-semibold mr-12">Plantados:</span><br>
+                        <div class="white-box">
+                            <span class="text-lg" id="quantidade">{{ selected_product.quantidade }}</span>
+                        </div>
+                    </div>
+                    <div class="sub-coluna">
+                        <span class="text-lg font-semibold mr-12">Data de plantio:</span><br>
+                        <div class="white-box">
+                            <span class="text-lg" id="planting-date">{{ selected_product.data_plantio }}</span>
+                        </div>
+                    </div>
+                </div>
+                <span class="text-lg font-semibold mr-12">Histórico de colheitas:</span><br>
+                <ul>
+                    <div class="white-box">
+                        {% for product in selected_product.type_product.products.all %}
+                            <li>{{ product.data_colheita }}: {{ product.quantidade_colhida }} unidades colhidas</li>
+                        {% empty %}
+                            <li>Sem registros de colheita.</li>
+                        {% endfor %}
+                    </div>
+                </ul>
+                <div class="sub-container">
+                    <div class="sub-coluna">
+                        <span class="text-lg font-semibold mr-12">Colheitas total:</span><br>
+                        <div class="white-box">
+                            <span class="text-lg" id="total-quantity">{{ total_quantidade_colhida }}</span>
+                        </div>
+                    </div>
+                    <div class="sub-coluna">
+                        <span class="text-lg font-semibold mr-12">Ciclo de Vida:</span><br>
+                        <div class="white-box">
+                            <span class="text-lg" id="life-cycle">{{ ciclo_de_vida }} meses</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="coluna">
                 <span class="text-lg font-semibold mr-12">Tarefas:</span>
                 <div id="to-do-list">
                     <ul class="list-disc ml-5">
@@ -172,23 +218,11 @@
                             <li>Sem atividades programadas.</li>
                         {% endif %}
                     </ul>
-                </div>         
+                </div>
+            </div>    
+            <div class="coluna">
                 <p>
-                    <a href="#" id="read-more" onclick="toggleToDo()" 
-                    class="mt-3 ml-1 text-[#5F8C1B] font-semibold hover:text-[#8ABF17] transition duration-200 inline-block">
-                        Ler mais
-                    </a>
-                </p>
-            </div>
-    
-            <div class="right-info">
-                <p>
-                    <span class="text-lg font-semibold mr-2">Quantidade: </span>
-                    <span class="text-lg" id="quantidade">{{ selected_product.quantidade }}</span>
-                </p>
-                <br>
-                <p>
-                    <span class="text-lg font-semibold mr-2">Produção esperada: </span>
+                    <span class="text-lg font-semibold mr-2">Previsão de colheita: </span>
                     <p>
                         {% if previsao_colheita %}
                             {{ previsao_colheita }} unidades.
@@ -198,11 +232,9 @@
                     </p>
                 </p>
                 <br>
-                <p> 
-                    <span class="text-lg font-semibold mr-2">Comentários: </span>
-                    <br>
-                    <span class="ml-1 text-base" id="comments">Em breve...</span>
-                </p>
+                <span class="text-lg font-semibold mr-2">Comentários: </span>
+                <br>
+                <span class="ml-1 text-base" id="comments">Em breve...</span>
                 <br>
                 <form id="delete-product-form" method="POST" action="{% url 'product_delete' community.id area.id seedbed.id selected_product.id %}" style="display:none;">
                     {% csrf_token %}
@@ -218,14 +250,6 @@
                 </button>                
             </div>
         </div>
-        <h3>Histórico de Colheitas</h3>
-        <ul>
-            {% for product in selected_product.type_product.products.all %}
-                <li>{{ product.data_colheita }}: {{ product.quantidade_colhida }} unidades colhidas</li>
-            {% empty %}
-                <li>Sem registros de colheita.</li>
-            {% endfor %}
-        </ul>
 
         {% endif %}
     
@@ -302,6 +326,19 @@
 {% endif %}
 
 <script>
+    {% comment %} function moveBox(selectedElement) {
+        // Obtém todas as caixas com a classe "brown-box"
+        const boxes = document.querySelectorAll('.brown-box');
+        
+        // Remove a classe "bg-green-box" de todas as caixas
+        boxes.forEach(box => {
+            box.classList.remove('bg-green-box');
+        });
+        
+        // Adiciona a classe "bg-green-box" à caixa clicada
+        selectedElement.classList.add('bg-green-box');
+    } {% endcomment %}
+    
     function openModal() {
         document.getElementById('deleteModal').style.display = 'block';
     }
