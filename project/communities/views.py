@@ -4,10 +4,9 @@ from django.contrib import messages
 from products.models import Product
 from areas.models import Area
 from communities.models import Community, MembershipRequest, SendCommunityInvite
-from users.models import User
+from users.models import User, FileUpload
 from seedbeds.models import Seedbed
 from django.utils import timezone
-from .models import ImageUpload
 from django.http import HttpResponse
 
 @login_required
@@ -262,7 +261,7 @@ def image_upload_view(request):
         image = request.FILES['image']
 
         # Salvar o objeto no banco de dados
-        new_image = ImageUpload.objects.create(title=title, image=image)
+        new_image = FileUpload.objects.create(title=title, image=image)
         new_image.save()
 
         # Obter a URL da imagem para exibir
