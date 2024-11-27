@@ -102,13 +102,6 @@ def seedbed_detail_view(request, community_id, area_id, seedbed_id):
     )
     
     # Acumulador para somar a quantidade colhida de todos os produtos
-    total_quantidade_colhida = sum(
-        product.quantidade_colhida if product.quantidade_colhida else 0
-        for product in active_products
-    )
-
-    print("Total de quantidade colhida de todos os produtos:", total_quantidade_colhida)
-
     # Se um produto foi selecionado a partir do dropdown
     selected_product_id = request.GET.get('product_id')
     if selected_product_id:
@@ -169,6 +162,14 @@ def seedbed_detail_view(request, community_id, area_id, seedbed_id):
 
             # Atualizar a taxa de colheita do tipo de produto
             messages.success(request, f'{quantidade_colhida} unidades colhidas registradas para o tipo {tipo_produto.name}.')
+    
+    total_quantidade_colhida_produto = None
+    if selected_product and selected_product.type_product:
+        total_quantidade_colhida_produto = Product.objects.filter(
+            type_product=selected_product.type_product, 
+            quantidade_colhida__isnull=False
+        ).aggregate(total_harvest=Sum('quantidade_colhida'))['total_harvest'] or 0
+    print("Total quantidade colhida do produto: ", total_quantidade_colhida_produto)
 
     context = {
         'community': community,
@@ -180,8 +181,7 @@ def seedbed_detail_view(request, community_id, area_id, seedbed_id):
         'previsao_colheita': previsao_colheita,
         'active_products': active_products,
         'next_actions_dates': next_actions_dates,
-        'total_quantidade_colhida': total_quantidade_colhida,  # Passando o total de colheita
-        'ciclo_de_vida': ciclo_de_vida,
+        'total_quantidade_colhida_produto': total_quantidade_colhida_produto,  # Passando o total de colheita
     }
     return render(request, 'seedbed_detail.html', context)
 

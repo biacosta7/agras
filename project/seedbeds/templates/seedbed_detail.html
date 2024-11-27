@@ -195,7 +195,7 @@
                     <div class="sub-coluna">
                         <span class="text-lg font-semibold mr-12">Colheitas total:</span><br>
                         <div class="white-box">
-                            <span class="text-lg" id="total-quantity">{{ total_quantidade_colhida }}</span>
+                            <span class="text-lg" id="total-quantity">{{ total_quantidade_colhida_produto }}</span>
                         </div>
                     </div>
                     <div class="sub-coluna">
@@ -221,20 +221,19 @@
                 </div>
             </div>    
             <div class="coluna">
-                <p>
-                    <span class="text-lg font-semibold mr-2">Previsão de colheita: </span>
-                    <p>
-                        {% if previsao_colheita %}
-                            {{ previsao_colheita }} unidades.
-                        {% else %}
-                            Nenhuma previsão disponível.
-                        {% endif %}
-                    </p>
-                </p>
+                <span class="text-lg" id="harvest-estimate">Previsão de colheita: </span>
+                    {% if estimativa_colheita %}
+                        {{ estimativa_colheita }}
+                    {% else %}
+                        Data de colheita indisponível
+                    {% endif %}
+                </span>
                 <br>
                 <span class="text-lg font-semibold mr-2">Comentários: </span>
                 <br>
-                <span class="ml-1 text-base" id="comments">Em breve...</span>
+                    <div class="white-box">
+                        <span class="ml-1 text-base" id="comments">Adicione aqui observações sobre o cultivo...</span>
+                    </div>
                 <br>
                 <form id="delete-product-form" method="POST" action="{% url 'product_delete' community.id area.id seedbed.id selected_product.id %}" style="display:none;">
                     {% csrf_token %}
