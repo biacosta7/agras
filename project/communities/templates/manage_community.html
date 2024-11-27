@@ -29,7 +29,7 @@
             <div class="flex items-center justify-between py-2 border-b"> 
                 <span class="font-medium text-[13px] sm:text-[14px]">{{ user.first_name }} - <span class="text-[#5F8C1B]">{{ user.username }}</span></span> 
                 <div> 
-                <form method="POST" action="{% url 'send_invite' user.id %}">
+                <form method="POST" action="{% url 'send_invite' community.id user.id %}">
                     {% csrf_token %}
                     <button type="submit" class="bg-[#8ABF17] text-white font-medium text-sm py-2.5 px-5 rounded-lg w-full sm:w-auto sm:px-6 sm:py-2 lg:text-base hover:bg-[#79a80f] transition-all duration-200">
                         Convidar

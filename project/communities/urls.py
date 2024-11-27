@@ -21,7 +21,7 @@ urlpatterns = [
     path('solicitacao/rejeitar/<int:request_id>/', community_views.rejeitar_solicitacao, name='rejeitar_solicitacao'),
 
     # URL para enviar convite para comunidade
-    path('comunidade/enviar/solicitacao/<int:user_id>/', community_views.send_community_invite, name='send_invite'),
+    path('comunidade/<int:community_id>/enviar/solicitacao/<int:user_id>/', community_views.send_community_invite, name='send_invite'),
     
     # URLs para aceitar/rejeitar convites de comunidade
     path('accept/<int:invite_id>/', community_views.accept_community_invite, name='accept_invite'),

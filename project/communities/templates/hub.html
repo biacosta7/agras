@@ -321,7 +321,7 @@
                                 </div>
                                 {% endif %}
                             {% endfor %}
-                            {% if communities|length == user_communities_count %}
+                            {% if communities|length == 0 %}
                                 <p class="col-span-full text-gray-500 mb-12">Não há outras comunidades disponíveis.</p>
                             {% endif %}
                         </div>
@@ -369,7 +369,7 @@
                     document.removeEventListener('click', outsideClickListener);
                 }
             };
-
+        }
         function toggleModal(action) {
             const modal = document.getElementById('communityModal');
             const editModal = document.getElementById('editCommunityModal');

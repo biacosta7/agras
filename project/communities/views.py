@@ -56,20 +56,22 @@ def dashboard_view(request, community_id):
     return render(request, 'dashboard.html', context)
 
 @login_required
-def send_community_invite(request, user_id):
+def send_community_invite(request, community_id, user_id):
     target_user = get_object_or_404(User, id=user_id)
     
-    community = get_object_or_404(Community, admins=request.user)
-
+    # Buscar a comunidade pelo ID e verificar se o usuário é admin dessa comunidade
+    community = get_object_or_404(Community, id=community_id)
+    print(community.id)
     if not community.admins.filter(id=request.user.id).exists():
         messages.error(request, 'Você não tem permissão para enviar convites nesta comunidade.')
         return redirect('manage_community', community.id)
 
+    # Verificar se já existe um convite pendente para esse usuário
     existing_invite = SendCommunityInvite.objects.filter(user=target_user, community=community, status='pending').first()
 
     if existing_invite and existing_invite.status == 'pending':
         messages.error(request, f'Já existe um convite para o usuário {target_user.username}')
-
+        return redirect('manage_community', community.id)
 
     if existing_invite and existing_invite.status == 'rejected':
         existing_invite.delete()
@@ -85,7 +87,6 @@ def send_community_invite(request, user_id):
         messages.info(request, 'Convite enviado com sucesso!')
 
     return redirect('manage_community', community.id)
-
 @login_required
 def accept_community_invite(request, invite_id):
     invite_request = get_object_or_404(SendCommunityInvite, id=invite_id)
