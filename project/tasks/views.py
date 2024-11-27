@@ -2,6 +2,7 @@ from datetime import timedelta
 from django.utils import timezone
 from django.utils.timezone import now
 from django.shortcuts import redirect, render, get_object_or_404
+from django.core.exceptions import ObjectDoesNotExist
 from .models import Task
 from products.models import Product, TypeProduct
 from areas.models import Area
@@ -108,8 +109,22 @@ def task_page(request, community_id):
             task.days_left = days_left  
     
     # Serialização das tarefas
+    # Serialização das tarefas
     tasks_list = []
     for task in tasks:
+        # Obter os nomes da área e do canteiro, se existirem
+        area_name = ''
+        seedbed_name = ''
+        try:
+            if task.area_id:
+                area = Area.objects.get(id=task.area_id)
+                area_name = area.name
+            if task.seedbed_id:
+                seedbed = Seedbed.objects.get(id=task.seedbed_id)
+                seedbed_name = seedbed.nome
+        except ObjectDoesNotExist:
+            pass
+
         task_data = {
             'title': task.description,
             'description': task.description,
@@ -117,9 +132,9 @@ def task_page(request, community_id):
             'end_date': task.final_date.isoformat() if task.final_date else '',
             'recurrence': task.recurrence.lower() if task.recurrence else '',
             'status': task.status,
-            'area_id': task.area_id,  # Adiciona o area_id
-            'seedbed_id': task.seedbed_id,  # Adiciona o seedbed_id
-            'responsible_users': [user.username for user in task.responsible_users.all()],  # Lista de usuários responsáveis
+            'area_name': area_name,
+            'seedbed_name': seedbed_name,
+            'responsible_users': [user.username for user in task.responsible_users.all()],
         }
         tasks_list.append(task_data)
 
@@ -127,13 +142,13 @@ def task_page(request, community_id):
 
     context = {
         'tasks': tasks,
-        'tasks_json': tasks_json,#teste
+        'tasks_json': tasks_json,
         'community': community,
         'all_areas': all_areas_in_specific_community,
         'all_seedbeds': all_seedbeds_in_specific_area,
         'status_choices': Task.STATUS_CHOICES,
         'recurrences': Task.RECURRENCE_CHOICES,
-        'membership_requests' : membership_requests,
+        'membership_requests': membership_requests,
     }
     return render(request, 'tasks.html', context)
 
