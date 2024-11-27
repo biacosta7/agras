@@ -27,10 +27,25 @@ document.addEventListener('DOMContentLoaded', function () {
         // Inicialize o VirtualSelect
         VirtualSelect.init({
             ele: '#organisms',
-            placeholder: 'Selecione os organismos',
+            placeholder: 'Selecione o organismo',
+            search: true,
+            multiple: false,
+            noOptionsText: 'Nenhum organismo encontrado',
+            selectedTextFormat: 'count > 2'
+        });
+
+    }, 100);
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    setTimeout(function () {
+        // Inicialize o VirtualSelect
+        VirtualSelect.init({
+            ele: '#cultivos2',
+            placeholder: 'Selecione os cultivos',
             search: true,
             multiple: true,
-            noOptionsText: 'Nenhum organismo encontrado',
+            noOptionsText: 'Nenhum cultivo encontrado',
             selectAllText: 'Selecionar todos',
             selectedTextFormat: 'count > 2'
         });
@@ -71,24 +86,24 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById("toggle-organisms").addEventListener("click", toggleOrganisms);
 
     // Event listener for submitting selected organisms
-    document.getElementById("submit-organisms").addEventListener("click", submitOrganisms);
+    //document.getElementById("submit-organisms").addEventListener("click", submitOrganisms);
 
     // Function to toggle utilities section visibility
-function toggleUtilities() {
-    const utilitiesSection = document.getElementById("utilities-section");
-    const organismsSection = document.getElementById("organisms-section");
+    function toggleUtilities() {
+        const utilitiesSection = document.getElementById("utilities-section");
+        const organismsSection = document.getElementById("organisms-section");
 
-    // Fecha a seção de organismos, se estiver aberta
-    if (!organismsSection.classList.contains("hidden")) {
-        organismsSection.classList.add("hidden");
-    }
+        // Fecha a seção de organismos, se estiver aberta
+        if (!organismsSection.classList.contains("hidden")) {
+            organismsSection.classList.add("hidden");
+        }
 
-    // Alterna a visibilidade da seção de utilidades
-    if (utilitiesSection.classList.contains("hidden")) {
-        utilitiesSection.classList.remove("hidden"); // Exibe a seção
-    } else {
-        utilitiesSection.classList.add("hidden"); // Esconde a seção
-    }
+        // Alterna a visibilidade da seção de utilidades
+        if (utilitiesSection.classList.contains("hidden")) {
+            utilitiesSection.classList.remove("hidden"); // Exibe a seção
+        } else {
+            utilitiesSection.classList.add("hidden"); // Esconde a seção
+        }
     }
 
     // Function to toggle organisms section visibility
@@ -106,6 +121,29 @@ function toggleUtilities() {
             organismsSection.classList.remove("hidden"); // Exibe a seção
         } else {
             organismsSection.classList.add("hidden"); // Esconde a seção
+        }
+    }
+
+    function toggleOrganisms2() {
+        const organismsSection2 = document.getElementById("organisms-section2");
+        const organismsSection = document.getElementById("organisms-section");
+        const utilitiesSection = document.getElementById("utilities-section");
+
+        // Fecha a seção de utilidades, se estiver aberta
+        if (!utilitiesSection.classList.contains("hidden")) {
+            utilitiesSection.classList.add("hidden");
+        }
+        
+        // Fecha a seção de organismos, se estiver aberta
+        if (!organismsSection.classList.contains("hidden")) {
+            organismsSection.classList.add("hidden");
+        }
+
+        // Alterna a visibilidade da seção de organismos 2 (cultivos dos organismos)
+        if (organismsSection2.classList.contains("hidden")) {
+            organismsSection2.classList.remove("hidden"); // Exibe a seção
+        } else {
+            organismsSection2.classList.add("hidden"); // Esconde a seção
         }
     }
 
@@ -154,7 +192,6 @@ function toggleUtilities() {
             alert("Erro ao enviar os cultivos. Tente novamente.");
         }
     
-        toggleUtilities();
     }    
     
 
@@ -182,12 +219,28 @@ function toggleUtilities() {
     
         // Envia os cultivos selecionados
         submitCultivos(selectedCultivos);
+        toggleUtilities();
     });
-    
-    
-    // Function to handle submission of selected cultivos and send the request to the chatbot
-    async function submitOrganisms(selectedOrganismos) {
+        
+        
+    // Variáveis globais para armazenar as seleções
+    let selectedOrganismos = [];
+    let selectedCultivosOrganismos = [];
+
+    // Função para enviar os dados ao chatbot
+    async function submitCombinedData() {
         try {
+            if (selectedOrganismos.length === 0 && selectedCultivosOrganismos.length === 0) {
+                alert("Nenhum dado selecionado para envio.");
+                return;
+            }
+
+            // Texto consolidado para envio
+            const combinedText = `
+                Organismos indesejados selecionados: ${selectedOrganismos.join(', ')}.
+                Cultivos que possuem esses organismos: ${selectedCultivosOrganismos.join(', ')}.
+            `;
+
             const response = await fetch(askQuestionUrl, {
                 method: "POST",
                 headers: {
@@ -196,15 +249,16 @@ function toggleUtilities() {
                     'X-Requested-With': 'XMLHttpRequest'
                 },
                 body: JSON.stringify({
-                    text: "Organismos indesejádos selecionados: " + selectedOrganismos,
+                    text: combinedText,
                     user_context: {
-                        organisms: selectedOrganismos, // Envia os organismos selecionados
+                        organisms: selectedOrganismos,
+                        cultivos: selectedCultivosOrganismos,
                     },
                 }),
             });
-    
+
             const data = await response.json();
-    
+
             if (data.data && data.data.text) {
                 appendMessage(data.data.text, 'bot');
             } else if (data.error) {
@@ -213,29 +267,51 @@ function toggleUtilities() {
             }
         } catch (error) {
             console.error("Erro:", error);
-            alert("Erro ao enviar os organismos. Tente novamente.");
+            alert("Erro ao enviar os dados. Tente novamente.");
         }
     }
 
-    // Função de submit dos organismos selecionados
+    // Função para lidar com o primeiro popup (organismos)
     document.getElementById("submit-organisms").addEventListener("click", function () {
-        // Use getSelectedOptions() para obter os valores selecionados
-        const selectedOptions = document.querySelector('#organisms').getSelectedOptions();
-        console.log("Opções selecionadas:", selectedOptions); // Veja o retorno
-
-        if (!selectedOptions || selectedOptions.length === 0) {
+        const organismsElement = document.querySelector('#organisms');
+        const organismsOptions = organismsElement.value;
+    
+        if (!organismsOptions || organismsOptions.length === 0) {
             alert("Por favor, selecione pelo menos um organismo!");
+            return;
+        }
+    
+        // Atualize a variável com os valores selecionados
+        selectedOrganismos = organismsOptions;
+    
+        console.log("Organismos selecionados:", selectedOrganismos);
+    
+        // Fecha o modal do primeiro popup
+        toggleOrganisms();
+    
+        // Abre o segundo modal
+        toggleOrganisms2();
+    });    
+
+    // Função para lidar com o segundo popup (cultivos dos organismos)
+    document.getElementById("submit-organisms2").addEventListener("click", function () {
+        const cultivosOptions = document.querySelector('#cultivos2').getSelectedOptions();
+
+        if (!cultivosOptions || cultivosOptions.length === 0) {
+            alert("Por favor, selecione pelo menos um cultivo!");
             return;
         }
 
         // Extrai os valores das opções selecionadas
-        const selectedOrganismos = selectedOptions.map(option => option.value);
-        
-        const text = "Organismos selecionados: " + selectedOrganismos;
-        console.log(text);
+        selectedCultivosOrganismos = cultivosOptions.map(option => option.value);
 
-        // Envie os organismos selecionados para o backend
-        submitCultivos(selectedOrganismos);
+        console.log("Cultivos selecionados:", selectedCultivosOrganismos);
+
+        // Fecha o modal do segundo popup
+        toggleOrganisms2();
+
+        // Envia os dados combinados após o segundo popup
+        submitCombinedData();
     });
     
     // Função para enviar uma mensagem

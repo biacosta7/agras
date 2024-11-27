@@ -269,11 +269,11 @@
         <button id="submit-cultivos" class="bg-[#8ABF17] text-white font-bold px-6 py-3 hover:bg-[#7aab0f] rounded-md w-full">Buscar</button>
     </div>    
     <div id="organisms-section" class="hidden mt-10">
-        <p class="text-lg font-semibold mb-2">Você está buscando informações sobre qual(is) Organismo(s)?</p>
-        <p class="mb-4">Selecione abaixo os organismos que você deseja:</p>
-        <!-- Seção de Cultivos -->
+        <p class="text-lg font-semibold mb-2">Você está lidando com qual Organismo Indesejado?</p>
+        <p class="mb-4">Selecione abaixo o organismos que você deseja:</p>
+        <!-- Seção de Organismos -->
         {% csrf_token %}
-        <select id="organisms" name="organisms[]" multiple required>
+        <select id="organisms" name="organisms[]" required>
             {% for organism in organisms %}
             <option value="{{ organism }}">{{ organism }}</option>
             {% empty %}
@@ -281,6 +281,20 @@
             {% endfor %}
         </select>
         <button id="submit-organisms" class="bg-[#8ABF17] text-white font-bold px-6 py-3 hover:bg-[#7aab0f] rounded-md w-full">Buscar</button>
+    </div>  
+    <div id="organisms-section2" class="hidden mt-10">
+        <p class="text-lg font-semibold mb-2">Esse Organismo Indesejado se encontra em quais <b>Cultivos</b>?</p>
+        <p class="mb-4">Selecione abaixo os cultivos que você deseja:</p>
+        <!-- Seção de Cultivos que tem Organismos -->
+        {% csrf_token %}
+        <select id="cultivos2" name="cultivos[]" multiple required>
+            {% for cultivo in type_products %}
+            <option value="{{ cultivo.name }}">{{ cultivo.name }}</option>
+            {% empty %}
+            <option value="">Nenhum cultivo disponível</option>
+            {% endfor %}
+        </select>
+        <button id="submit-organisms2" class="bg-[#8ABF17] text-white font-bold px-6 py-3 hover:bg-[#7aab0f] rounded-md w-full">Buscar</button>
     </div>    
 
     <div class="mt-6 relative">
