@@ -65,11 +65,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Inicialize mensagens, se houver histórico
     if (Array.isArray(chats)) {
-        chats.forEach(chat => {
+        chats.reverse().forEach(chat => {
             appendMessage(chat.text_input, 'user');
             appendMessage(chat.gemini_output, 'bot');
         });
-    }
+    }    
 
     if (modalContent) {
         modalContent.insertBefore(messagesContainer, modalContent.querySelector('.mt-6'));
