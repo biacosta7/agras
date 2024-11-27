@@ -78,7 +78,7 @@
                 </div>   
 
                 <div class="flex items-center cursor-pointer z-20"> 
-                    <a href="{% url 'profile' %}" class="flex flex-row items-center">
+                    <a href="#" class="flex flex-row items-center">
                         <div class="w-8 h-8 bg-[#8ABF17] text-[#FFFFFF] flex items-center justify-center rounded-md mr-2 font-bold">
                             {{ request.user.first_name|slice:":1"|upper }}
                         </div>  
@@ -154,6 +154,9 @@
                 </div>
             </div>
         </div> 
+<<<<<<< HEAD
+                <a href="#">
+=======
                 <!-- Dropdown Menu de Notificação -->
                 <div id="mobileNotificationMenu" class="hidden absolute right-10 top-[75px] border-[#CECECE] border w-80 z-50 bg-white shadow-lg rounded-lg">
                     <div class="p-4">
@@ -200,6 +203,7 @@
             </div>
         </div> 
                 <a href="{% url 'profile' %}">
+>>>>>>> 1ffe91dda0a37f635e61aca40d5cbd05901420ca
                     <div class="w-8 h-8 bg-[#8ABF17] text-[#FFFFFF] flex items-center justify-center rounded-md mr-2 font-bold">
                         {{ user.username|slice:":1"|upper }}
                     </div>

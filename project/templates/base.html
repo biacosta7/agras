@@ -191,7 +191,7 @@
                     {% endif %}            
                 </a>
                 <!-- Configurações -->
-                <a href="#" class="px-8 relative text-[14px] font-normal flex items-center cursor-pointer {% if request.resolver_match.url_name == 'settings' %} bg-white text-[#5F8C1B] py-3 font-medium{% endif %}"> 
+                <a href="{% url 'settings' community.id%}" class="px-8 relative text-[14px] font-normal flex items-center cursor-pointer {% if request.resolver_match.url_name == 'settings' %} bg-white text-[#5F8C1B] py-3 font-medium{% endif %}"> 
                     <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">settings</span> 
                     <span class="flex-grow">Configurações</span>
                     {% if request.resolver_match.url_name == 'settings' %}
