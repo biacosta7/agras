@@ -1,0 +1,34 @@
+.tasks-h1 {
+    display: flex;
+    align-items: center;
+    gap: 5%;
+}
+
+.talk-button {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    color: #8ABF17;
+    border: none;
+    font-size: 48px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.talk-button:active {
+    background-color: #8ABF17;
+}
+
+/* Animação de pulsação */
+.talking {
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: 0 0 0 0 #8abf17a2;
+    }
+    50% {
+        box-shadow: 0 0 20px 10px #8abf175e;
+    }
+}
