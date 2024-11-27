@@ -29,6 +29,20 @@ def extract_selected_crops(text):
             crops_list = crops.split(",")  # Supondo que os cultivos sejam separados por vírgulas
             unique_crops = set(crops_list)  # Remove duplicados
             return ", ".join(sorted(unique_crops))  # Retorna os cultivos únicos, separados por vírgula e ordenados
+    elif text.startswith("User: Organismos indesejados selecionado: "):
+        crops = text.replace("User: Organismos indesejados selecionado: ", "User: organismo selecionado anteriormente:").strip()
+        if crops:
+            # Remove cultivos duplicados
+            crops_list = crops.split(",")  # Supondo que os cultivos sejam separados por vírgulas
+            unique_crops = set(crops_list)  # Remove duplicados
+            return ", ".join(sorted(unique_crops))  # Retorna os cultivos únicos, separados por vírgula e ordenados
+    elif text.startswith("User: Cultivos que possuem esses organismos: "):
+        crops = text.replace("User: Cultivos que possuem esses organismos: ", "User: cultivos que possuem organismo selecionado anteriormente:").strip()
+        if crops:
+            # Remove cultivos duplicados
+            crops_list = crops.split(",")  # Supondo que os cultivos sejam separados por vírgulas
+            unique_crops = set(crops_list)  # Remove duplicados
+            return ", ".join(sorted(unique_crops))  # Retorna os cultivos únicos, separados por vírgula e ordenados
     return None
 
 @csrf_protect
@@ -66,12 +80,11 @@ def ask_question(request, community_id, user_id):
             # Construir o prompt com o histórico
             prompt = (
                 f"Pergunta: {text}\n"
-                f"\nHistórico de conversa:\n[{current_crops}]\n"
                 f"\nGuia:\n"
                 f"1. Se meu nome não for 'None', me chame pelo meu nome (com letras iniciais maiúsculas). Meu nome: {user_context.get('user_name')}.\n"
                 f"2. Seu nome é Chat IA e você é o assistente virtual impulsionado por inteligência artificial do AGRAS.\n"
                 f"3. O AGRAS é um aplicativo de gestão rural focado em promover a sustentabilidade na agricultura, especialmente para pequenos agricultores que enfrentam desafios de organização e planejamento.\n"
-                f"4. Se houver cultivos selecionados na 'Pergunta', forneça utilidades, saberes populares ou dicas sobre esses cultivos: '{text}'. Caso contrário, fale sobre como você pode me ajudar no meu contexto agrícola.\n"
+                f"4. Se houver cultivos selecionados na 'Pergunta', forneça utilidades, saberes populares ou dicas sobre esses cultivos. Caso contrário, fale sobre como você pode me ajudar no meu contexto agrícola.\n"
                 f"5. Divida as respostas longas em parágrafos menores para facilitar a leitura.\n"
                 f"6. Não mencione a inexistência de cultivos selecionados nem informações que você não tem. Baseie suas respostas nas informações fornecidas.\n"
                 f"7. Para selecionar cultivos, clique em 'Utilidades' na parte superior.\n"
@@ -81,6 +94,10 @@ def ask_question(request, community_id, user_id):
                 f"11. Verifique apenas se há cultivos selecionados na pergunta atual (mais recente), ignore os cultivos selecionados anteriormente no 'Histórico de conversa'.\n"
                 f"12. Sugestões de cultivos é diferente de cultivos selecionados.\n"
                 f"13. Caso não haja informações suficientes nas instruções para responder a pergunta, use suas próprias fontes\n"
+                f"14. Caso a pergunta seguir o seguinte formato de exemplo: 'Organismos indesejados selecionados: Brocas-do-caule.\nCultivos que possuem esses organismos: Tomate.', forneça algumas informações sobre como lidar para remover esse Organismo Indesejado dos Cultivos que foram indicados na pergunta: {text}.\n"
+                f"15. Organismo Indesejados é uma forma melhor de chamar pragas (no contexto da agricultura), então evite chamar de praga.\n"
+                f"16. Apenas considere o histórico de conversas se for perguntado algo relacionado à uma mensagem anterior.\n"
+                f"\nHistórico de conversa:\n[{current_crops}]\n"
                 f"\nContextos:\n"
                 f"Clima: {user_context.get('climate')}\n"
                 f"Sugestões de cultivos: {', '.join(list(type_products))}\n"

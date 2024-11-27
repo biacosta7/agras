@@ -236,10 +236,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             // Texto consolidado para envio
-            const combinedText = `
-                Organismos indesejados selecionados: ${selectedOrganismos}.
-                Cultivos que possuem esses organismos: ${selectedCultivosOrganismos}.
-            `;
+            const combinedText = `Organismos indesejados selecionados: ${selectedOrganismos}.\nCultivos que possuem esses organismos: ${selectedCultivosOrganismos}.`;
 
             const response = await fetch(askQuestionUrl, {
                 method: "POST",
