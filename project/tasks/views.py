@@ -116,8 +116,7 @@ def task_page(request, community_id):
             'start_date': task.start_date.isoformat() if task.start_date else '',
             'end_date': task.final_date.isoformat() if task.final_date else '',
             'recurrence': task.recurrence.lower() if task.recurrence else '',
-            'priority': 'medium',
-            'color': get_task_color(task.status),
+            'status': task.status,
             'area_id': task.area_id,  # Adiciona o area_id
             'seedbed_id': task.seedbed_id,  # Adiciona o seedbed_id
             'responsible_users': [user.username for user in task.responsible_users.all()],  # Lista de usuários responsáveis
@@ -138,17 +137,6 @@ def task_page(request, community_id):
     }
     return render(request, 'tasks.html', context)
 
-#teste
-def get_task_color(status):
-    status = status.lower()
-    if status == 'to_do':
-        return 'var(--dark-red-color)'
-    elif status == 'in_progress':
-        return 'var(--dark-orange-color)'
-    elif status == 'completed':
-        return 'var(--dark-green-color)'
-    else:
-        return 'var(--dark-gray-color)'
 
 def delete_task(request, community_id, task_id):
     task = get_object_or_404(Task, id=task_id)

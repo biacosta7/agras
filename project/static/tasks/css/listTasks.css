@@ -1,5 +1,18 @@
 @import url('variables.css');
 
+.selected-day {
+    border: 1px solid var(--green-agras-color);
+    box-shadow: 4px 4px 8px 0px rgba(0, 0, 0, 0.3);
+    background-color: var(--green-agras-color);
+    z-index: 1;
+    transition: border 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.selected-day * {
+    color: white;
+    font-weight: bold;
+}
+
 .list-tasks-aside {
     display: flex;
     flex-direction: column;
@@ -17,13 +30,27 @@
 
 .list-tasks-aside-section {
     display: flex;
+    flex-direction: column;
     align-items: start;
-    justify-content: center;
+    gap: 5%;
     width: 100%;
     height: 100%;
     padding: 5%;
-    background-color: #FAFAFA;
+    background-color: white;
     overflow-y: auto;
+}
+
+.day-events {
+    display: flex;
+    flex-direction: column;
+    gap: 5%;
+    width: 100%;
+}
+
+.day-events h3 {
+    font-size: 1.5vw;
+    font-weight: bold;
+    color: var(--green-agras-color);
 }
 
 .warning-to-select-a-day {
@@ -35,85 +62,57 @@
     color: #7D7D7D;
 }
 
-.selected-day {
-    border: 1px solid var(--green-agras-color);
-    box-shadow: 4px 4px 8px 0px rgba(0, 0, 0, 0.3);
-    background-color: var(--green-agras-color);
-    z-index: 1;
-    transition: border 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
-}
-
-.selected-day * {
-    color: white;
-    font-weight: bold;
-}
-
-
-.day-events {
-    margin-bottom: 20px;
-    padding: 10px;
-    border-bottom: 1px solid #ccc;
-}
-
-.day-events h3 {
-    margin-bottom: 10px;
-    color: var(--dark-green-color);
-}
-
-.event {
-    margin-bottom: 10px;
-}
-
-.event h4 {
-    margin-bottom: 5px;
-    color: var(--dark-brown-color);
-}
-
-.event p {
-    margin-left: 10px;
-    color: #555;
-}
-
-
-
-
 .task-card {
     display: flex;
     flex-direction: column;
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin-bottom: 10px;
+    padding: 5%;
+    border-radius: 25px;
+    box-shadow: 4px 4px 8px 0px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
 }
 
 .task-description {
-    flex: 1;
-    margin-bottom: 10px;
+    font-weight: bold;
+    margin-bottom: 5%;
 }
 
 .task-info {
-    flex: 1;
     display: flex;
-    flex-direction: column;
-}
-
-.task-info > div {
-    margin-bottom: 5px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4%;
+    padding: 0 4% 0 4%;
+    font-size: 0.6vw;
 }
 
 .task-color {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
+    padding: 2.5% 5% 2.5% 5%;
+    border-radius: 10px;
+    font-weight: bold;
+    color: white;
 }
 
 .task-consult-button {
-    padding: 5px 10px;
-    background-color: #5F8C1B;
+    padding: 2.5% 5% 2.5% 5%;
+    border-radius: 5px;
+    font-weight: bold;
     color: white;
-    border: none;
+    background-color: var(--green-agras-color);
     cursor: pointer;
 }
 
 .task-consult-button:hover {
-    background-color: #4e7015;
+    background-color: rgb(124 173 16);
+}
+
+.task-users {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--green-agras-color);
+    width: 2vw;
+    height: 2vw;
+    border-radius: 50%;
+    font-weight: bold;
+    color: white;
 }
