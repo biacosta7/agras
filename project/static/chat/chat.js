@@ -163,6 +163,14 @@ document.addEventListener('DOMContentLoaded', function() {
         const organismsSection2 = document.getElementById("organisms-section2");
         const organismsSection = document.getElementById("organisms-section");
         const utilitiesSection = document.getElementById("utilities-section");
+        const toggleUtilities = document.getElementById("toggle-utilities");
+
+        // Fecha o botao de utilidades, se estiver aberta
+        if (!toggleUtilities.classList.contains("hidden")) {
+            toggleUtilities.classList.add("hidden");
+        } else if (toggleUtilities.classList.contains("hidden")) {
+            toggleUtilities.classList.remove("hidden");
+        }
 
         // Fecha a seção de utilidades, se estiver aberta
         if (!utilitiesSection.classList.contains("hidden")) {

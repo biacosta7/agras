@@ -26,7 +26,7 @@ def chat_messages(request):
 
         organisms = [
             "Colchonilas",
-            "Joaninhas"
+            "Joaninhas",
             "Cupins",
             "Pulgões",
             "Moscas",
