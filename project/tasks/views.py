@@ -10,6 +10,9 @@ from communities.models import Community, MembershipRequest
 from django.contrib import messages
 from users.models import User
 
+import json
+from django.core.serializers.json import DjangoJSONEncoder
+
 def calculate_final_date(start_date, recurrence):   
     today = now().date()  # Obtém a data atual
     if recurrence == 'Única':
@@ -104,8 +107,28 @@ def task_page(request, community_id):
             days_left = (task.final_date - today).days
             task.days_left = days_left  
     
+    # Serialização das tarefas
+    tasks_list = []
+    for task in tasks:
+        task_data = {
+            'title': task.description,
+            'description': task.description,
+            'start_date': task.start_date.isoformat() if task.start_date else '',
+            'end_date': task.final_date.isoformat() if task.final_date else '',
+            'recurrence': task.recurrence.lower() if task.recurrence else '',
+            'priority': 'medium',
+            'color': get_task_color(task.status),
+            'area_id': task.area_id,  # Adiciona o area_id
+            'seedbed_id': task.seedbed_id,  # Adiciona o seedbed_id
+            'responsible_users': [user.username for user in task.responsible_users.all()],  # Lista de usuários responsáveis
+        }
+        tasks_list.append(task_data)
+
+    tasks_json = json.dumps(tasks_list, cls=DjangoJSONEncoder)
+
     context = {
         'tasks': tasks,
+        'tasks_json': tasks_json,#teste
         'community': community,
         'all_areas': all_areas_in_specific_community,
         'all_seedbeds': all_seedbeds_in_specific_area,
@@ -114,6 +137,18 @@ def task_page(request, community_id):
         'membership_requests' : membership_requests,
     }
     return render(request, 'tasks.html', context)
+
+#teste
+def get_task_color(status):
+    status = status.lower()
+    if status == 'to_do':
+        return 'var(--dark-red-color)'
+    elif status == 'in_progress':
+        return 'var(--dark-orange-color)'
+    elif status == 'completed':
+        return 'var(--dark-green-color)'
+    else:
+        return 'var(--dark-gray-color)'
 
 def delete_task(request, community_id, task_id):
     task = get_object_or_404(Task, id=task_id)

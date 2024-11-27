@@ -1,30 +1,67 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Gerenciamento da Comunidade{% endblock %}
+{% block title %}Participantes{% endblock %}
 
 {% block content %}
     <!-- Main content -->
     <div class="flex-grow fade-down px-4 lg:px-8 py-10 ml:0 lg:ml-[250px] mt-12 lg:mt-[90px]">
-        <h1 class="text-3xl lg:text-[48px] font-bold mb-2">Gerenciamento da</h1>
-        <h1 class="text-3xl lg:text-[48px] font-bold mb-6">Comunidade </h1>
+        <div class="flex md:flex-row flex-col justify-between mt-4"> 
+            <h1 class="text-[44px] lg:text-[48px] font-semibold mt-2 mb-2">Participantes</h1>
 
-        <!-- Barra de Comunidade -->
-        <div class="bg-gray-100 p-4 rounded-lg mb-6 max-w-[500px] flex items-center justify-between">
-            <h2 class="text-xl font-semibold">Comunidade</h2>
-            <div class="flex items-center">
-                <span class="bg-[#ffff] border border-[#8ABF17] text-[#000] px-4 py-2 rounded-lg font-semibold">{{ community.name }}</span>
-                <button onclick="openEditModal()" class="ml-2 bg-yellow-500 text-white p-1 rounded-full hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 flex">
-                    <span class="material-icons-outlined">edit</span>
-                </button>
-                <button onclick="openDeleteModal()" class="ml-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 flex">
-                    <span class="material-icons-outlined">delete</span>
-                </button>
-            </div>
+        <div class="flex flex-row items-center space-x-6">
+            <button id="inviteMember" class="bg-[#8ABF17] text-white font-semibold flex items-center justify-center rounded-[9px] hover:bg-[#7cad10] hover:text-[#edf0e9] h-[50px] px-4" onclick="toggleModal('create')">
+                <span class="text-3xl items-center mr-2">+</span> Convidar
+            </button>
         </div>
+    </div>
 
+<!-- Modal convite -->
+<div id="modalInvite" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
+    <div class="bg-white rounded-xl w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] max-w-[596px] max-h-[663px] overflow-y-auto p-12 relative">
+        <button id="closeModalInvite" onclick="toggleModal('close')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition duration-200">
+            <span class="material-icons text-2xl">close</span>
+        </button>
+        <h2 class="text-2xl font-bold mb-4 text-[#8ABF17]">Convide membros</h2>
+        <p class="font-medium text-sm mb-6">Busque na lista de membros e faça um convite para ele fazer parte da sua comunidade!</p>
+        <span class="text-black uppercase font-bold text-[12px] ml-2 mr-2"> nome - <span class="text-[#5F8C1B]"> usuario </span></span>
+        <div class="border rounded-lg p-4 mb-6 overflow-y-auto h-[250px]">  
+            {% for user in all_users %}
+            <div class="flex items-center justify-between py-2 border-b"> 
+                <span class="font-medium text-[13px] sm:text-[14px]">{{ user.first_name }} - <span class="text-[#5F8C1B]">{{ user.username }}</span></span> 
+                <div> 
+                <form method="POST" action="{% url 'send_invite' community.id user.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="bg-[#8ABF17] text-white font-medium text-sm py-2.5 px-5 rounded-lg w-full sm:w-auto sm:px-6 sm:py-2 lg:text-base hover:bg-[#79a80f] transition-all duration-200">
+                        Convidar
+                    </button>
+                </form>
+                </div>
+            </div>
+            {%empty%}
+            <p class="flex justify-center items-center text-sm"> Não existe outros usuários cadastrados que não façam parte da sua comunidade.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+    
+<!-- Barra de Comunidade -->
+<div class="bg-gray-100 p-4 rounded-lg mb-6 max-w-[500px] shadow-md border-2 border-[#8ABF17]">
+    <h2 class="text-xl font-semibold">Comunidade</h2>
+    <div class="flex items-center justify-between">
+        <span class="bg-white border border-[#8ABF17] text-[#000] px-4 py-2 rounded-lg font-semibold">{{ community.name }}</span>
+        <div class="flex flex-row">
+            <button onclick="openEditModal()" class="ml-2 bg-yellow-500 text-white p-1 rounded-full hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 flex">
+                <span class="material-icons-outlined">edit</span>
+            </button>
+            <button onclick="openDeleteModal()" class="ml-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 flex">
+                <span class="material-icons-outlined">delete</span>
+            </button>
+        </div>
+    </div>
+</div>
 
-        <!-- Seção de solicitações de acesso -->
-<div class="bg-gray-100 p-4 rounded-lg mb-6 max-w-full">
+<!-- Seção de Solicitações -->
+<div class="bg-gray-200 p-4 rounded-lg mb-6 shadow-md border-2 border-[#8ABF17]">
     <h2 class="text-xl font-semibold mb-4">Solicitações</h2>
     <p class="text-gray-600 mb-4">Lista de usuários que solicitaram entrada na comunidade</p>
     <table class="min-w-full bg-white rounded-lg">
@@ -66,10 +103,11 @@
     </table>
 </div>
 
-<div class="bg-gray-100 p-4 rounded-lg mb-6 max-w-full">
+<!-- Seção de Membros -->
+<div class="bg-gray-200 p-4 rounded-lg mb-6 shadow-md border-2 border-[#8ABF17] w-full sm:w-[600px] ml-0">
     <div class="flex items-center mb-4">
         <h2 class="text-xl font-semibold mr-4">Membros</h2>
-        <div class="flex items-center px-4 py-3 rounded-md border-2 border-[#8ABF17] overflow-hidden max-w-md">
+        <div class="flex items-center px-4 py-3 rounded-md border-2 border-[#8ABF17] overflow-hidden w-full">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192.904 192.904" width="16px" class="fill-gray-600 mr-3 rotate-90">
                 <path d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z"></path>
             </svg>
@@ -99,23 +137,6 @@
     </table>
 </div>
 
-<script>
-function searchMembers() {
-    const searchInput = document.getElementById("searchInput").value.toLowerCase();
-    const rows = document.querySelectorAll("#membersList tr");
-
-    rows.forEach(row => {
-        const username = row.getAttribute("data-username").toLowerCase();
-        const email = row.getAttribute("data-email").toLowerCase();
-
-        if (username.includes(searchInput) || email.includes(searchInput)) {
-            row.style.display = "";
-        } else {
-            row.style.display = "none";
-        }
-    });
-}
-</script>
 
         <!-- Modal de edição -->
         <div id="editModal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
@@ -171,6 +192,32 @@ function openDeleteModal() {
 
 function closeDeleteModal() {
     document.getElementById('deleteModal').classList.add('hidden');
+}
+
+function toggleModal (action) {
+    const inviteButton = document.getElementById("inviteMember");
+    const modalInvite = document.getElementById("modalInvite");
+    if (action == 'create') {
+        modalInvite.classList.remove('hidden');
+    } else if (action == 'close') {
+        modalInvite.classList.add('hidden');
+    }
+}
+
+function searchMembers() {
+    const searchInput = document.getElementById("searchInput").value.toLowerCase();
+    const rows = document.querySelectorAll("#membersList tr");
+
+    rows.forEach(row => {
+        const username = row.getAttribute("data-username").toLowerCase();
+        const email = row.getAttribute("data-email").toLowerCase();
+
+        if (username.includes(searchInput) || email.includes(searchInput)) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+    });
 }
 </script>
 {% endblock %}

@@ -36,13 +36,84 @@
 }
 
 .selected-day {
+    border: 1px solid var(--green-agras-color);
     box-shadow: 4px 4px 8px 0px rgba(0, 0, 0, 0.3);
     background-color: var(--green-agras-color);
     z-index: 1;
-    transition: box-shadow 0.3s ease, background-color 0.3s ease;
+    transition: border 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
 }
 
 .selected-day * {
     color: white;
     font-weight: bold;
+}
+
+
+.day-events {
+    margin-bottom: 20px;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.day-events h3 {
+    margin-bottom: 10px;
+    color: var(--dark-green-color);
+}
+
+.event {
+    margin-bottom: 10px;
+}
+
+.event h4 {
+    margin-bottom: 5px;
+    color: var(--dark-brown-color);
+}
+
+.event p {
+    margin-left: 10px;
+    color: #555;
+}
+
+
+
+
+.task-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.task-description {
+    flex: 1;
+    margin-bottom: 10px;
+}
+
+.task-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.task-info > div {
+    margin-bottom: 5px;
+}
+
+.task-color {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
+
+.task-consult-button {
+    padding: 5px 10px;
+    background-color: #5F8C1B;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.task-consult-button:hover {
+    background-color: #4e7015;
 }

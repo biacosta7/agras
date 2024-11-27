@@ -143,51 +143,80 @@
             </div>  
         </nav>
 
-    <!-- Sidebar -->
-    <div class="bg-[#8ABF17] min-h-screen lg:flex xl:flex 2xl:flex sm:hidden md:hidden hidden-sm flex-col items-center w-[250px] fixed top-0 z-20 border-r-[1px] border-[#CECECE]">
-        <div class="border-b-[1px] border-[#CECECE] w-[250px] h-[90px] fixed"></div>
-        <a href="/" class="px-8 py-8 mr-4 z-20 cursor-pointer">
-            <img src="{% static 'assets/logo-branco-h.png' %}" alt="AGRAS" class="w-[160px]">
-        </a>
-        <div class="flex flex-col gap-y-8 mt-12 w-full text-white">
-            <a href="{% url 'community_hub' %}" class="px-8 text-[14px] font-normal flex items-center cursor-pointer {% if request.resolver_match.url_name == 'community_hub' %}bg-white text-[#8ABF17] py-3 font-medium{% endif %}"> 
-                <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">group</span> Comunidades
+        <!-- Sidebar -->
+        <div class="bg-[#8ABF17] min-h-screen lg:flex xl:flex 2xl:flex sm:hidden md:hidden hidden-sm flex-col items-center w-[250px] fixed top-0 z-20 border-r-[1px] border-[#CECECE]">
+            <div class="border-b-[1px] border-[#CECECE] w-[250px] h-[90px] fixed"></div>
+            <a href="/" class="px-8 py-8 mr-4 z-20 cursor-pointer">
+                <img src="{% static 'assets/logo-branco-h.png' %}" alt="AGRAS" class="w-[160px]">
             </a>
-            <a href="{% url 'dashboard' community.id %}" class="relative px-8 text-[14px] font-normal flex items-center cursor-pointer w-full {% if request.resolver_match.url_name == 'dashboard' %}bg-white text-[#5F8C1B] py-3 font-medium{% endif %}"> 
-                <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">dashboard</span> 
-                <span class="flex-grow">Dasboard</span>
-                {% if request.resolver_match.url_name == 'dashboard' %}
-                    <div class="w-[5px] bg-[#5F8C1B] absolute left-0 top-0 bottom-0"></div>
-                {% endif %}
-            </a>
-            <a href="{% url 'area_manage' community.id %}" class="px-8 relative text-[14px] font-normal flex items-center cursor-pointer {% if request.resolver_match.url_name == 'area_manage' or request.resolver_match.url_name == 'area_detail' or request.resolver_match.url_name == 'seedbed_detail' %}bg-white text-[#5F8C1B] py-3 font-medium{% endif %}">
-                <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">forest</span> 
-                <span class="flex-grow">Áreas de Plantio</span>
-                {% if request.resolver_match.url_name == 'area_manage' or request.resolver_match.url_name == 'area_detail' or request.resolver_match.url_name == 'seedbed_detail' %}
-                    <div class="w-[5px] bg-[#5F8C1B] absolute left-0 top-0 bottom-0"></div>
-                {% endif %}
-            </a>
-            <a href="{% url 'manage_community' community.id %}" class="px-8 relative text-[14px] font-normal flex items-center cursor-pointer {% if request.resolver_match.url_name == 'manage_community' %}bg-white text-[#5F8C1B] py-3 font-medium{% endif %}"> 
-                <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">equalizer</span> 
-                <span class="flex-grow">Gerenciamento</span>
-                {% if request.resolver_match.url_name == 'manage_community' %}
-                    <div class="w-[5px] bg-[#5F8C1B] absolute left-0 top-0 bottom-0"></div>
-                {% endif %}            
-            </a>
-            <a href="{% url 'task_page' community.id %}" class="px-8 relative text-[14px] font-normal flex items-center cursor-pointer {% if request.resolver_match.url_name == 'task_page' %}bg-white text-[#5F8C1B] py-3 font-medium{% endif %}"> 
-                <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">task</span> 
-                <span class="flex-grow">Tarefas</span>
-                {% if request.resolver_match.url_name == 'task_page' %}
-                    <div class="w-[5px] bg-[#5F8C1B] absolute left-0 top-0 bottom-0"></div>
-                {% endif %}            
-            </a>
-        </div>
-        <form action="{% url 'logout' %}" method="POST" class="group w-full mb-12 absolute bottom-0 left-0">
-            {% csrf_token %}
+            <!-- Dashboard -->
+            <div class="flex flex-col gap-y-8 mt-12 w-full text-white">
+                <a href="{% url 'dashboard' community.id %}" class="relative px-8 text-[14px] font-normal flex items-center cursor-pointer w-full {% if request.resolver_match.url_name == 'dashboard' %}bg-white text-[#5F8C1B] py-3 font-medium{% endif %}"> 
+                    <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">dashboard</span> 
+                    <span class="flex-grow">Dasboard</span>
+                    {% if request.resolver_match.url_name == 'dashboard' %}
+                        <div class="w-[5px] bg-[#5F8C1B] absolute left-0 top-0 bottom-0"></div>
+                    {% endif %}
+                </a>
+                <!-- Areas de Plantio -->
+                <a href="{% url 'area_manage' community.id %}" class="px-8 relative text-[14px] font-normal flex items-center cursor-pointer {% if request.resolver_match.url_name == 'area_manage' or request.resolver_match.url_name == 'area_detail' or request.resolver_match.url_name == 'seedbed_detail' %}bg-white text-[#5F8C1B] py-3 font-medium{% endif %}">
+                    <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">forest</span> 
+                    <span class="flex-grow">Áreas de Plantio</span>
+                    {% if request.resolver_match.url_name == 'area_manage' or request.resolver_match.url_name == 'area_detail' or request.resolver_match.url_name == 'seedbed_detail' %}
+                        <div class="w-[5px] bg-[#5F8C1B] absolute left-0 top-0 bottom-0"></div>
+                    {% endif %}
+                </a>
+                <!-- Tarefas -->
+                <a href="{% url 'task_page' community.id %}" class="px-8 relative text-[14px] font-normal flex items-center cursor-pointer {% if request.resolver_match.url_name == 'task_page' %}bg-white text-[#5F8C1B] py-3 font-medium{% endif %}"> 
+                    <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">event_available</span> 
+                    <span class="flex-grow">Tarefas</span>
+                    {% if request.resolver_match.url_name == 'task_page' %}
+                        <div class="w-[5px] bg-[#5F8C1B] absolute left-0 top-0 bottom-0"></div>
+                    {% endif %}            
+                </a>
+                <!-- Participantes -->
+                <a href="{% url 'manage_community' community.id %}" class="px-8 relative text-[14px] font-normal flex items-center cursor-pointer {% if request.resolver_match.url_name == 'manage_community' %}bg-white text-[#5F8C1B] py-3 font-medium{% endif %}"> 
+                    <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">people</span> 
+                    <span class="flex-grow">Participantes</span>
+                    {% if request.resolver_match.url_name == 'manage_community' %}
+                        <div class="w-[5px] bg-[#5F8C1B] absolute left-0 top-0 bottom-0"></div>
+                    {% endif %}            
+                </a>
+                <!-- Minha Conta -->
+                <a href="{% url 'profile' %}" class="px-8 relative text-[14px] font-normal flex items-center cursor-pointer {% if request.resolver_match.url_name == 'profile' %}bg-white text-[#5F8C1B] py-3 font-medium{% endif %}"> 
+                    <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">account_circle</span> 
+                    <span class="flex-grow">Meu Perfil</span>
+                    {% if request.resolver_match.url_name == 'profile' %}
+                        <div class="w-[5px] bg-[#5F8C1B] absolute left-0 top-0 bottom-0"></div>
+                    {% endif %}            
+                </a>
+                <!-- Configurações -->
+                <a href="#" class="px-8 relative text-[14px] font-normal flex items-center cursor-pointer {% if request.resolver_match.url_name == 'settings' %} bg-white text-[#5F8C1B] py-3 font-medium{% endif %}"> 
+                    <span class="w-[23px] material-icons-outlined mr-2" alt="comunidar-2">settings</span> 
+                    <span class="flex-grow">Configurações</span>
+                    {% if request.resolver_match.url_name == 'settings' %}
+                        <div class="w-[5px] bg-[#5F8C1B] absolute left-0 top-0 bottom-0"></div>
+                    {% endif %}            
+                </a>
+
+            </div>
+            <form action="{% url 'logout' %}" method="POST" class="w-full mb-12 absolute bottom-0 left-0">
+        {% csrf_token %}
+        <!-- Comunidades -->
+        <a href="{% url 'community_hub' %}" class="flex items-center cursor-pointer w-full py-3 px-8 text-[14px] font-normal text-white relative group hover:bg-white hover:text-[#5F8C1B] transition-colors duration-300 {% if request.resolver_match.url_name == 'community_hub' %}bg-white text-[#8ABF17] font-medium{% endif %}">
             <div class="w-1 bg-[#5F8C1B] absolute left-0 top-0 bottom-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            <button class="px-8 text-[14px] font-normal text-white flex items-center cursor-pointer w-full py-3 hover:bg-white hover:text-[#5F8C1B] transition-colors duration-300">
-                <span class="w-[23px] mr-2 material-icons-outlined">logout</span>Sair
-            </button>
+            <span class="w-[23px] mr-2" alt="comunidade">
+                <svg class="w-[21px] h-[21px] fill-white group-hover:fill-[#5F8C1B] transition-colors duration-300" width="22" height="23" viewBox="0 0 26 26" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M6.95554 3.60696C7.43149 4.08292 7.43149 4.85458 6.95554 5.33054L4.16107 8.125H17.4688C18.6627 8.125 20.5384 8.34237 22.1583 9.31431C23.8655 10.3386 25.1875 12.1495 25.1875 15.0312C25.1875 17.913 23.8655 19.7239 22.1583 20.7482C20.5384 21.7201 18.6627 21.9375 17.4688 21.9375H13.4062C12.7332 21.9375 12.1875 21.3918 12.1875 20.7188C12.1875 20.0457 12.7332 19.5 13.4062 19.5H17.4688C18.4415 19.5 19.8158 19.3111 20.9042 18.6581C21.9054 18.0574 22.75 17.0245 22.75 15.0312C22.75 13.038 21.9054 12.0051 20.9042 11.4044C19.8158 10.7514 18.4415 10.5625 17.4688 10.5625H4.16107L6.95554 13.357C7.43149 13.8329 7.43149 14.6046 6.95554 15.0805C6.47958 15.5565 5.70792 15.5565 5.23196 15.0805L0.356964 10.2055C-0.118988 9.72958 -0.118988 8.95792 0.356964 8.48196L5.23196 3.60696C5.70792 3.13101 6.47958 3.13101 6.95554 3.60696Z"/>
+                </svg>
+            </span>
+            Comunidades
+        </a>    
+        <!-- Sair -->
+        <button class="flex items-center cursor-pointer w-full py-3 px-8 text-[14px] font-normal text-white relative group hover:bg-white hover:text-[#5F8C1B] transition-colors duration-300">
+            <div class="w-1 bg-[#5F8C1B] absolute left-0 top-0 bottom-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <span class="w-[23px] mr-2 material-icons-outlined">logout</span> Sair
+        </button>
         </form>
     </div>
 
@@ -240,8 +269,6 @@
 <div id="helpModal" class="fixed bottom-4 right-4 bg-white px-6 py-6 rounded-[16px] w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] max-w-[520px]  z-30 hidden">
     <div class="flex justify-end">
         <button onclick="closeHelpModal()" class="material-icons-outlined text-[#F76711]">close</button>
-      <button onclick="maximizeHelpModal()" class="material-icons-outlined text-[#8ABF17] mr-2">fullscreen</button>
-
     </div>
 
     <h1 class="text-[22px] font-bold text-[#8ABF17]">IA Chat</h1>
@@ -251,7 +278,7 @@
         <button id="toggle-utilities" class="border rounded-[9px] px-4 py-2 rounded-lg flex items-center">
             <span class="material-icons-outlined text-[#915F10] mr-2">forum</span> Utilidades
         </button>
-        <button class="border rounded-[9px] px-4 py-2 rounded-lg flex items-center">
+        <button id="toggle-organisms" class="border rounded-[9px] px-4 py-2 rounded-lg flex items-center">
             <span class="material-icons-outlined text-[#8ABF17] mr-2">bug_report</span> Organismos
         </button>
     </div>
@@ -268,6 +295,34 @@
             {% endfor %}
         </select>
         <button id="submit-cultivos" class="bg-[#8ABF17] text-white font-bold px-6 py-3 hover:bg-[#7aab0f] rounded-md w-full">Buscar</button>
+    </div>    
+    <div id="organisms-section" class="hidden mt-10">
+        <p class="text-lg font-semibold mb-2">Você está lidando com qual Organismo Indesejado?</p>
+        <p class="mb-4">Selecione abaixo o organismo que você deseja:</p>
+        <!-- Seção de Organismos -->
+        {% csrf_token %}
+        <select id="organisms" name="organisms[]" required>
+            {% for organism in organisms %}
+            <option value="{{ organism }}">{{ organism }}</option>
+            {% empty %}
+            <option value="">Nenhum organismo disponível</option>
+            {% endfor %}
+        </select>
+        <button id="submit-organisms" class="bg-[#8ABF17] text-white font-bold px-6 py-3 hover:bg-[#7aab0f] rounded-md w-full">Enviar</button>
+    </div>  
+    <div id="organisms-section2" class="hidden mt-10">
+        <p class="text-lg font-semibold mb-2">Esse Organismo Indesejado se encontra em quais <b>Cultivos</b>?</p>
+        <p class="mb-4">Selecione abaixo os cultivos que você deseja:</p>
+        <!-- Seção de Cultivos que tem Organismos -->
+        {% csrf_token %}
+        <select id="cultivos2" name="cultivos[]" multiple required>
+            {% for cultivo in type_products %}
+            <option value="{{ cultivo.name }}">{{ cultivo.name }}</option>
+            {% empty %}
+            <option value="">Nenhum cultivo disponível</option>
+            {% endfor %}
+        </select>
+        <button id="submit-organisms2" class="bg-[#8ABF17] text-white font-bold px-6 py-3 hover:bg-[#7aab0f] rounded-md w-full">Buscar</button>
     </div>    
 
     <div class="mt-6 relative">
@@ -400,7 +455,6 @@
 
     {% endblock styles %}
 </style>
-
 {% if community_id and user_id %}
 <script type="text/javascript">
     const userContext = {
@@ -409,11 +463,12 @@
         user_name: "{{ user_name }}",
         location: "Pernambuco",
         //user_climate: "{{ user_climate }}",
-        //type_products: {{ type_products|safe }},
     };
+    const chats = {{ chats|safe }};
     const csrfToken = "{{ csrf_token }}";
     const askQuestionUrl = "{% url 'ask_question' community_id user_id %}";
     console.log(userContext);
+    console.log("Chats:", chats); 
 </script>
 {% endif %}
 <script src="{% static 'chat/chat.js' %}"></script>

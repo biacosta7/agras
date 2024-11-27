@@ -20,6 +20,13 @@ urlpatterns = [
     path('solicitacao/aceitar/<int:request_id>/', community_views.aceitar_solicitacao, name='aceitar_solicitacao'),
     path('solicitacao/rejeitar/<int:request_id>/', community_views.rejeitar_solicitacao, name='rejeitar_solicitacao'),
 
+    # URL para enviar convite para comunidade
+    path('comunidade/<int:community_id>/enviar/solicitacao/<int:user_id>/', community_views.send_community_invite, name='send_invite'),
+    
+    # URLs para aceitar/rejeitar convites de comunidade
+    path('accept/<int:invite_id>/', community_views.accept_community_invite, name='accept_invite'),
+    path('decline/<int:invite_id>/', community_views.decline_community_invite, name='decline_community_invite'),
+
     # URLs para áreas dentro de uma comunidade
     path('comunidade/<int:community_id>/areas/', area_views.area_manage, name='area_manage'),
     path('comunidade/<int:community_id>/areas/criar/', area_views.area_create, name='create_area'),

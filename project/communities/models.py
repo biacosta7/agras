@@ -22,7 +22,7 @@ class MembershipRequest(models.Model):
         ('rejected', 'Rejected'),
     ]
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='membership_requests')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='membership_requests', null=False)
     community = models.ForeignKey(Community, on_delete=models.CASCADE, related_name='membership_requests')
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
     request_date = models.DateTimeField(default=timezone.now)
@@ -30,6 +30,20 @@ class MembershipRequest(models.Model):
 
     def __str__(self):
         return f"O usuário {self.user} pediu para entrar na comunidade {self.community}"
+
+class SendCommunityInvite(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+    ]
+
+    requested_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_community_invites')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_community_invites')
+    community = models.ForeignKey(Community, on_delete=models.CASCADE, related_name='community_invites')
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+    invite_date = models.DateTimeField(default=timezone.now)
+    decision_date = models.DateTimeField(null=True, blank=True)
 
 class ImageUpload(models.Model):
     title = models.CharField(max_length=100)
