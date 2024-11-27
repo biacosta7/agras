@@ -215,3 +215,15 @@ def update_user(request):
             return redirect('edit')
 
         return render(request, 'login.html', {'community': community})
+
+
+@login_required
+def profile(request):
+    user = request.user
+    community = None
+
+    if user.communities_members.exists():
+        community = user.communities_members.first()
+
+    if request.method == "GET":
+        return render(request, 'myprofile.html', {'user': user, 'community': community})
