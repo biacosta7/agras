@@ -80,7 +80,7 @@
                 </div>   
 
                 <div class="flex items-center cursor-pointer z-20"> 
-                    <a href="{% url 'edit' %}" class="flex flex-row items-center">
+                    <a href="{% url 'profile' %}" class="flex flex-row items-center">
                         <div class="w-8 h-8 bg-[#8ABF17] text-[#FFFFFF] flex items-center justify-center rounded-md mr-2 font-bold">
                             {{ request.user.first_name|slice:":1"|upper }}
                         </div>
@@ -110,7 +110,7 @@
                     <span class="relative inline-flex rounded-full h-4 w-4 bg-red-500 justify-center items-center text-[12px] text-white">{{membership_requests|length}}</span>
                     </span>
                 </div>
-                <a href="{% url 'edit' %}">
+                <a href="{% url 'profile' %}">
                     <div class="w-8 h-8 bg-[#8ABF17] text-[#FFFFFF] flex items-center justify-center rounded-md mr-2 font-bold">
                         {{ user.username|slice:":1"|upper }}
                     </div>

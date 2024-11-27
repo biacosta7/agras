@@ -7,10 +7,8 @@
 </head>
 <body>
     <h1>Upload de Imagem</h1>
-    <form action="{% url 'image_upload' %}" method="post" enctype="multipart/form-data">
+    <form action="{% url 'image_upload' user_id %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <label for="title">Título:</label>
-        <input type="text" id="title" name="title"><br><br>
 
         <label for="image">Imagem:</label>
         <input type="file" id="image" name="image"><br><br>

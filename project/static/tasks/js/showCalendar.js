@@ -22,6 +22,23 @@ function parseDateString(dateString) {
 }
 
 
+// Função para mapear status para cor
+function getTaskColor(status) {
+    status = status.toLowerCase();
+    if (status === 'pendente') {
+        return 'var(--dar-red-color)';
+    } 
+    else if (status === 'progresso') {
+        return 'var(--dark-brown-color)';
+    } 
+    else if (status === 'concluída') {
+        return 'var(--dark-green-color)';
+    } 
+    else {
+        return 'var(--dark-gray-color)';
+    }
+}
+
 // Processa os dados das tarefas
 const processedTasks = tasksData.map(task => ({
     title: task.title,
@@ -30,10 +47,11 @@ const processedTasks = tasksData.map(task => ({
     end_date: task.end_date ? parseDateString(task.end_date) : parseDateString(task.start_date),
     recurrence: task.recurrence.toLowerCase(),
     priority: task.priority,
-    color: task.color,
+    status: task.status,  // Inclui o status
+    color: getTaskColor(task.status),  // Obtém a cor com base no status
     area_id: task.area_id,
     seedbed_id: task.seedbed_id,
-    responsible_users: task.responsible_users,  // Lista de usuários responsáveis
+    responsible_users: task.responsible_users,
 }));
 
 // Objeto constante global para armazenar o estado do calendário
@@ -121,7 +139,8 @@ function listSelectedDaysEvents() {
     if (calendarState.selectedDays.length === 0) {
         // Mostra a mensagem de aviso se não houver dias selecionados
         warningDiv.style.display = 'block';
-    } else {
+    } 
+    else {
         // Esconde a mensagem de aviso
         warningDiv.style.display = 'none';
 
@@ -149,30 +168,22 @@ function listSelectedDaysEvents() {
                     // Cria o cartão da tarefa
                     const taskCard = document.createElement('div');
                     taskCard.classList.add('task-card');
-                    taskCard.style.display = 'flex';
-                    taskCard.style.flexDirection = 'column';
 
                     // Metade do cartão: descrição
                     const descriptionDiv = document.createElement('div');
                     descriptionDiv.classList.add('task-description');
-                    descriptionDiv.style.flex = '1';
                     descriptionDiv.textContent = event.description;
                     taskCard.appendChild(descriptionDiv);
 
                     // Outra metade: informações adicionais
                     const infoDiv = document.createElement('div');
                     infoDiv.classList.add('task-info');
-                    infoDiv.style.flex = '1';
-                    infoDiv.style.display = 'flex';
-                    infoDiv.style.flexDirection = 'column';
 
                     // Cor
                     const colorDiv = document.createElement('div');
                     colorDiv.classList.add('task-color');
                     colorDiv.style.backgroundColor = event.color;
-                    colorDiv.style.width = '20px';
-                    colorDiv.style.height = '20px';
-                    colorDiv.style.borderRadius = '50%';
+                    colorDiv.textContent = `${event.status}`;
                     infoDiv.appendChild(colorDiv);
 
                     // Área e Canteiro
@@ -191,7 +202,8 @@ function listSelectedDaysEvents() {
                     // Usuários Responsáveis
                     const usersDiv = document.createElement('div');
                     usersDiv.classList.add('task-users');
-                    usersDiv.textContent = `Responsáveis: ${event.responsible_users.join(', ')}`;
+                    //usersDiv.textContent = `${event.responsible_users.join(', ')}`;
+                    usersDiv.textContent = `${event.responsible_users[0][0]}`; // Só a 1ª letra do 1º responsável
                     infoDiv.appendChild(usersDiv);
 
                     // Adiciona o infoDiv ao taskCard

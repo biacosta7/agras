@@ -26,10 +26,10 @@ export function getEventsForDay(day, month, year) {
         const timeDifference = currentDate.getTime() - eventStartDate.getTime();
         const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
 
-        if (event.recurrence === "Diária") {
+        if (event.recurrence === "diária") {
             return true;
 
-        } else if (event.recurrence === "Semanal") {
+        } else if (event.recurrence === "semanal") {
             if (getDayOfWeek(year, month, day) !== getDayOfWeek(event.start_date.getFullYear(), event.start_date.getMonth(), event.start_date.getDate())) {
                 return false;
             }
@@ -43,10 +43,10 @@ export function getEventsForDay(day, month, year) {
             const weeksDifference = Math.floor(daysDifference / 7);
             return weeksDifference >= 0 && weeksDifference % 2 === 0;
 
-        } else if (event.recurrence === "Mensal") {
+        } else if (event.recurrence === "mensal") {
             return currentDate.getDate() === eventStartDate.getDate();
 
-        } else if (event.recurrence === "Anual") {
+        } else if (event.recurrence === "anual") {
             return currentDate.getDate() === eventStartDate.getDate() &&
                    currentDate.getMonth() === eventStartDate.getMonth();
 

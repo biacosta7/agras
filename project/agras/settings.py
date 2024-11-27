@@ -14,12 +14,17 @@ load_dotenv(BASE_DIR / '.env')
 TARGET_ENV = os.getenv('TARGET_ENV')
 NOT_PROD = not TARGET_ENV.lower().startswith('prod')
 
+# Configurações do Azure Blob Storage
+AZURE_ACCOUNT_NAME = os.getenv('AZURE_ACCOUNT_NAME')
+AZURE_ACCOUNT_KEY = os.getenv('AZURE_ACCOUNT_KEY')
+AZURE_CONTAINER = 'media'
+
 if NOT_PROD:
     # SECURITY WARNING: don't run with debug turned on in production!
     DEBUG = True
     # SECURITY WARNING: keep the secret key used in production secret!
-    SECRET_KEY = os.getenv('SECRET_KEY')
-    API_KEY=os.getenv('API_KEY')
+    SECRET_KEY = 'django-insecure-pati6-&4n7tnx**0u$jl@g2)*d9-$s5a+n5=ps^29adk2^-#(@'
+    API_KEY='AIzaSyC2pCVgR3wzXaEaT2uDw73syf6B3LONiEg'
     ALLOWED_HOSTS = ['localhost', '127.0.0.1']
     DATABASES = {
         'default': {
@@ -31,7 +36,7 @@ if NOT_PROD:
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
     STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
-    MEDIA_URL = '../media/'
+    MEDIA_URL = '/media/'
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 else:
     API_KEY=os.getenv('API_KEY')
@@ -59,21 +64,27 @@ else:
 
     STATIC_URL = os.environ.get('DJANGO_STATIC_URL', "/static/")
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-    STATICFILES_STORAGE = ('whitenoise.storage.CompressedManifestStaticFilesStorage')
-
-    # Configurações do Azure Blob Storage
-    AZURE_CONTAINER = os.getenv('AZURE_CONTAINER', 'media')
-    AZURE_ACCOUNT_NAME = os.getenv('AZURE_ACCOUNT_NAME')
-    AZURE_ACCOUNT_KEY = os.getenv('AZURE_ACCOUNT_KEY')
+    #STATICFILES_STORAGE = ('whitenoise.storage.CompressedManifestStaticFilesStorage')
 
     # Configurar backend de armazenamento para arquivos de mídia
-    DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
+    #DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
     AZURE_LOCATION = AZURE_CONTAINER
 
     # Configurar URL para acesso aos arquivos
     MEDIA_URL = f'https://{AZURE_ACCOUNT_NAME}.blob.core.windows.net/{AZURE_CONTAINER}/'
-    
 
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.azure_storage.AzureStorage",
+        "OPTIONS": {
+            "timeout": 20,
+            "expiration_secs": 500,
+        },
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 # Application definition
 AUTH_USER_MODEL = 'users.User'
