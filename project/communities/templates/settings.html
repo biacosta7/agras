@@ -50,10 +50,9 @@
                 <!-- Botões -->
                 <div class="flex justify-between mt-6">
                     <!-- Botão Excluir -->
-                    <button type="submit" name="action" value="delete" class="bg-[#FF4D4D] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#cc3c3c]">
+                    <button type="button" onclick="openDeleteModal()" class="bg-[#FF4D4D] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#cc3c3c]">
                         Excluir
                     </button>
-                    
                     <div class="flex space-x-4">
                         <!-- Botão Cancelar -->
                         <button type="button" onclick="document.getElementById('community-settings-form').reset()" class="bg-white text-[#8ABF17] border border-[#8ABF17] px-6 py-2 rounded-lg font-semibold hover:bg-gray-100">
@@ -69,5 +68,34 @@
             </form>
         </div>
     </div>
+    
+<!-- Modal de deleção -->
+<div id="deleteModal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
+    <div class="bg-white px-14 py-12 rounded-[34px] w-full max-w-lg">
+        <h3 class="text-xl font-bold mb-4 text-red-600">Excluir Comunidade</h3>
+        <p class="text-gray-700 mb-6">Tem certeza de que deseja excluir a comunidade "{{ community.name }}"? Esta ação não pode ser desfeita.</p>
+        <form id="deleteForm" method="POST" action="{% url 'delete_community' community.id %}">
+            {% csrf_token %}
+            <div class="flex flex-row justify-between">
+                <button type="button" onclick="submitDeleteForm()" class="mr-2 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 w-full font-bold">Excluir</button>
+                <button type="button" onclick="closeDeleteModal()" class="bg-white border-2 border-[#8ABF17] hover:border-[#7aab0f] text-[#8ABF17] hover:text-[#7aab0f] font-bold px-6 py-3 rounded-[9px] w-full">Cancelar</button>
+            </div>
+        </form>
+    </div>
 </div>
+</div>
+
+<script>
+    function openDeleteModal() {
+        document.getElementById('deleteModal').classList.remove('hidden');
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('deleteModal').classList.add('hidden');
+    }
+
+    function submitDeleteForm() {
+        document.getElementById('deleteForm').submit();
+    }
+</script>
 {% endblock %}
