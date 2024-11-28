@@ -4,6 +4,7 @@ sqlparse==0.5.1
 tzdata==2024.2
 python-dotenv
 psycopg2-binary
+python-dateutil
 gunicorn
 whitenoise
 selenium
