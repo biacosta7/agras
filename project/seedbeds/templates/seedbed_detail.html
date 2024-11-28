@@ -3,172 +3,508 @@
 
 {% block title %}{{ seedbed.nome }}{% endblock %}
 
+{% block styles %}
+    .header{
+        padding-top: 90px;
+        padding-left: 225px;
+    }
+    input[type="checkbox"] {
+        display: none;
+    }
+
+    /* Estilizando o container do checkbox personalizado */
+    input[type="checkbox"] + label {
+        position: relative;
+        padding-left: 30px;
+        cursor: pointer;
+        display: inline-block;
+        line-height: 20px;
+        font-size: 16px;
+    }
+
+    /* Criando o "quadrado" que será o checkbox */
+    input[type="checkbox"] + label::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 20px;
+        height: 20px;
+        border: 2px solid #5F8C1B;
+        background-color: white;
+        border-radius: 4px;
+        transition: background-color 0.3s, border-color 0.3s;
+    }
+
+    /* Estilo quando o checkbox está marcado */
+    input[type="checkbox"]:checked + label::before {
+        background-color: #5F8C1B;
+        border-color: #5F8C1B;
+    }
+
+    /* Estilo para o "check" dentro do quadrado */
+    input[type="checkbox"]:checked + label::after {
+        content: '';
+        position: absolute;
+        left: 6px;
+        top: 2px;
+        width: 7px;
+        height: 12px;
+        border: solid white;
+        border-width: 0 4px 4px 0;
+        transform: rotate(45deg);
+    }
+    .shift-down {
+        transform: translateY(90px); /* Altere conforme a distância desejada */
+    }
+
+    .green-box{
+        background-color: #5F8C1B; /* Cor verde para o fundo */
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra leve */
+        margin-left: 260px;
+        border-radius: 10px;
+        padding: 20px;
+    }
+    .brown-box {
+        background-color: #8B4513; /* Cor marrom */
+        color: #fff; /* Texto branco para contraste */
+        border-radius: 8px; /* Bordas arredondadas */
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para realce */
+        text-align: center; /* Centraliza o conteúdo */
+        width: 150px; /* Define uma largura fixa para as caixas */
+        padding: 1rem;
+    }
+    .white-box {
+        background-color: white;
+        border-radius: 5px;
+        padding: 8px; /* Ajustado para espaço uniforme */
+        display: inline-block; /* Faz com que a caixa se ajuste ao conteúdo */
+        max-width: 100%; /* Evita que a caixa exceda o espaço disponível */
+        box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1); /* Adiciona um leve sombreamento */
+        word-wrap: break-word; /* Garante que o texto quebre em várias linhas se necessário */
+        margin-top: 10px;
+    }
+    .button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        background-color: #007BFF;
+        color: white;
+        transition: background-color 0.3s;
+    }
+    .button:hover {
+        background-color: #0056b3;
+    }
+    .dropdown {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-right: 10px;
+    }
+    .product-info {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+    }
+    .coluna {
+        flex: 1; /* Cada coluna vai ocupar uma quantidade igual de espaço */
+        padding: 0; /* Remove o padding da coluna maior */
+        /*border: 1px solid #ccc;*/ /* Bordas para demarcar as colunas */
+    }
+    
+    .sub-container {
+        display: flex; /* Ativa o Flexbox dentro da subcoluna */
+        gap: 5px; /* Espaçamento entre as subcolunas */
+        margin: 0; /* Remove o espaço extra acima do sub-container */
+        white-space: nowrap;
+    }
+    
+    .sub-coluna {
+        flex: 1; /* As subcolunas vão ocupar uma quantidade igual de espaço */
+        /*border: 1px solid #ccc;*/ /* Bordas para demarcar as subcolunas */
+        padding: 0; /* Remove o padding das subcolunas */
+        white-space: nowrap;
+    }
+    
+
+    
+    #product-select {
+        width: 250px; /* Largura fixa ou percentual */
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-bottom: 10px; /* Espaçamento entre a dropdown e o botão */
+    }
+    .modal {
+        display: none; /* Mantenha como 'none' inicialmente */
+        position: fixed; /* Fixa o modal em relação à viewport */
+        z-index: 1000; /* Garante que o modal fique sobre outros conteúdos */
+        left: 0;
+        top: 0;
+        width: 100%; /* Largura total da tela */
+        height: 100%; /* Altura total da tela */
+        overflow: auto; /* Permite rolagem se o conteúdo for maior que a tela */
+        background-color: rgba(0, 0, 0, 0.5); /* Fundo escuro com opacidade */
+    }
+    
+    .modal-content {
+        background-color: white; /* Cor de fundo do conteúdo do modal */
+        margin: 15% auto; /* Centraliza verticalmente */
+        padding: 20px; /* Espaçamento interno */
+        border: 1px solid #888; /* Borda do modal */
+        width: 80%; /* Largura do modal */
+        max-width: 600px; /* Largura máxima do modal */
+        border-radius: 8px; /* Bordas arredondadas */
+    }
+    #product-select {
+        width: 250px; /* Largura fixa ou percentual */
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    .brown-box.selected {
+        background-color: #5F8C1B; /* Verde */
+        color: white; /* Cor do texto */
+    }
+    
+    @media (max-width: 768px) {
+    .container {
+        flex-direction: column; /* Em telas menores, as colunas se empilham */
+    }
+    .sub-container {
+        flex-direction: column; /* As subcolunas também se empilham em telas pequenas */
+    }
+}
+
+{% endblock %}
+
+{% block page_classes %}
+    bg-gray-300 h-screen p-4
+{% endblock %}
+
 {% block content %}
-<!-- Main content -->
- <div class="flex-1 p-6 fade-down lg:p-10 ml:0 lg:ml-[250px] mt-12 lg:mt-[60px]">
+<div class= "header">
+    <h1 class="mt-1 ml-5 text-xl font-semibold">
+        <a href="{% url 'area_manage' community.id %}" class="text-black-600 hover:underline">Áreas &gt;</a>
+        <a href="" class="text-black-600 hover:underline">{{ area.name }} &gt;</a>
+        <a href="" class="text-green-600 hover:underline">{{ seedbed.nome }} &gt;</a>
+    </h1>
+    <div class="flex justify-between items-center">
+        <h2 class="ml-5 mt-2 text-4xl font-bold">{{ seedbed.nome }}</h2>
+    </div>
+</div>
+<br>
+
+<div class="flex container mx-auto mt-5">
+    <div class="text-center flex-1 ml-48">
+        <!-- Adicionando overflow horizontal -->
+        <div class="overflow-x-auto">
+            <!-- Forçando largura maior -->
+            <ul class="flex list-none ml-8 mr-4" style="min-width: 300%; display: flex;">
+                {% for product in active_products %}
+                    <li class="flex flex-col items-center mr-12 mb-4 brown-box" 
+                        data-product-id="{{ product.id }}" 
+                        onclick="moveAndScroll(this, '{{ product.id }}', event)">
+                        <a href="?product_id={{ product.id }}">
+                            <img src="{% static 'assets/small-plant.png' %}" alt="Área de plantio" class="w-16 h-16 mb-1">
+                            <p class="text-lg">{{ product.type_product.name }}</p>
+                        </a>
+                    </li>
+                    {% endfor %}
+                <li class="flex flex-col items-center mb-4 mr-12 brown-box">  
+                    <a href="{% url 'create_product' community.id area.pk seedbed.id %}">
+                        <img src="{% static 'assets/add.png' %}" alt="Adicionar novo cultivo" class="w-16 h-16">
+                    </a>
+                    <p class="text-lg">Adicionar Cultivo</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
 
 
-     <div class="flex justify-between items-center">
-         <h2 class="ml-5 mt-2 text-4xl font-bold">{{ seedbed.nome }}</h2>
-     </div>
-     
-     <br>
-     
-     <div class="container mx-auto mt-5">
-         <div class="flex items-center justify-center">
-             <div class="text-center flex-1">
-                 <ul class="flex flex-wrap list-none justify-center">
-                     {% for product in seedbed.products_in_seedbed.all %}
-                         <li class="flex flex-col items-center mr-12 mb-4">
-                             <a href="?product_id={{ product.id }}">
-                                 <img src="{% static 'assets/small-plant.png' %}" alt="Área de plantio" class="w-16 h-16 mb-1">
-                                 <p class="text-lg">{{ product.type_product.name }}</p>
-                             </a>
-                         </li>
-                     {% empty %}
-                         <li>Nenhum cultivo cadastrado</li>
-                     {% endfor %}
-                     <li class="flex flex-col items-center mb-4 mr-12">  
-                         <a href="{% url 'create_product' community.id area.pk seedbed.id %}">
-                             <img src="{% static 'assets/add.png' %}" alt="Adicionar novo cultivo" class="w-16 h-16">
-                         </a>
-                         <p class="text-lg">Adicionar Cultivo</p>
-                     </li>
-                 </ul>
-             </div>
-         </div>
-     </div>
-     <br>
-     {% if seedbed.products_in_seedbed.all %}
-     <div class="flex items-center justify-center"> 
-         <div class="bg-[#fafafa] p-6 rounded-lg shadow-lg" style="max-width: 1200px; width: 90%; height: 450px; overflow: auto;">
-             <!-- Dropdown para selecionar produto -->
-             <form method="GET" action="">
-                 <div class="flex items-center">
-                     <div class="flex-container">
-                         <select id="product-select" name="product_id" class="mb-4 p-2 border border-gray-300 rounded">
-                             <option value="">Selecione um cultivo</option>
-                             {% for product in products %}
-                                 <option value="{{ product.id }}" {% if selected_product and selected_product.id == product.id %}selected{% endif %}>
-                                     {{ product.type_product.name }}
-                                 </option>
-                             {% endfor %}
-                         </select>
-                         <button type="submit" class="bg-[#8ABF17] text-white py-2 px-4 rounded hover:bg-[#5F8C1B] transition duration-200 ml-4">
-                             Ver Detalhes
-                         </button>
-                     </div>
-                 </div>
-             </form>
-             
-             <!-- Detalhes do produto selecionado -->
-             {% if selected_product %}
-             <div class="product-info mt-6">
-                 <div class="left-info mb-4">
-                     <p>
-                         <span class="text-lg font-semibold mr-12">Data de plantio:</span>
-                         <span class="text-lg" id="planting-date">{{ selected_product.data_plantio }}</span>
-                     </p>
-                     <br>
-                     <p>
-                         <span class="text-lg font-semibold mr-4">Estimativa de colheita:</span> 
-                         <span class="text-lg" id="harvest-estimate">2 de Janeiro de 2025</span>
-                     </p>
-                     <br>
-                     <span class="text-lg font-semibold mr-12">Tarefas:</span>
-                     <div id="to-do-list">
-                         <ul class="list-disc ml-5">
-                             <li>Regar</li>
-                             <li>Fertilizar</li>
-                         </ul>
-                     </div>
-                     <p>
-                         <a href="#" id="read-more" onclick="toggleToDo()" 
-                         class="mt-3 ml-1 text-[#5F8C1B] font-semibold hover:text-[#8ABF17] transition duration-200 inline-block">
-                             Ler mais
-                         </a>
-                     </p>
-                 </div>
-         
-                 <div class="right-info">
-                     <p>
-                         <span class="text-lg font-semibold mr-2">Quantidade: </span>
-                         <span class="text-lg" id="quantidade">{{ selected_product.quantidade }}</span>
-                     </p>
-                     <br>
-                     <p>
-                         <span class="text-lg font-semibold mr-2">Produção esperada: </span>
-                         <span class="text-lg" id="expected-production">100</span>
-                     </p>
-                     <br>
-                     <p> 
-                         <span class="text-lg font-semibold mr-2">Comentários: </span>
-                         <br>
-                         <span class="ml-1 text-base" id="comments">Em breve...</span>
-                     </p>
-                     <br>
-                     <form id="delete-product-form" method="POST" action="{% url 'product_delete' community.id area.id seedbed.id selected_product.id %}" style="display:none;">
-                         {% csrf_token %}
-                     </form>
-                     <button type="button" class="mt-5 m-2 bg-[#F77711] p-7 text-white py-2 rounded hover:bg-[#F76711] transition duration-200" onclick="openModal()">Excluir</button>
-                     <button type="button" class="mt-5 m-2 bg-[#562A00] p-7 text-white py-2 rounded hover:bg-[#401F00] transition duration-200" onclick="openEditModal()">
-                         Editar
-                     </button>
-                 </div>
-             </div>
-             {% endif %}
-         
-             <!-- Modal de Confirmação de Exclusão -->
-             <div id="deleteModal" class="modal">
-                 <div class="modal-content">
-                     <span class="close cursor-pointer" onclick="closeModal()">&times;</span>
-                     <h1 class="mt-2 font-bold">Tem certeza que deseja excluir o cultivo "{{ selected_product.type_product.name }}"?</h1>
-                     <p class="mt-2">Essa ação não pode ser desfeita.</p>
-                     <br>
-                     <button class="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition duration-200" onclick="document.getElementById('delete-product-form').submit();">Excluir</button>
-                     <button class="bg-gray-300 text-black py-2 px-4 rounded hover:bg-gray-400 transition duration-200" onclick="closeModal()">Cancelar</button>
-                 </div>
-             </div>
-             <!-- Modal de Edição -->
-             <div id="editModal" class="modal">
-                 <div class="modal-content">
-                     <span class="close cursor-pointer" onclick="closeEditModal()">&times;</span>
-                     <h1 class="mt-2 font-bold">Editar Cultivo "{{ selected_product.type_product.name }}"</h1>
-     
-                    <!-- Formulário de Edição -->
-                     <form id="edit-product-form" method="POST" action="{% url 'product_update' community.id area.id seedbed.id selected_product.id %}">
-                         {% csrf_token %}
-                         
-                         <!-- Campo para editar quantidade -->
-                         <div class="mt-4">
-                             <label for="edit-quantidade" class="block font-semibold">Quantidade:</label>
-                             <input type="number" id="edit-quantidade" name="quantidade" class="w-full border border-gray-300 p-2 rounded" 
-                                 value="{{ selected_product.quantidade }}" required>
-                         </div>
-     
-                         <!-- Campo para editar data de plantio -->
-                         <div class="mt-4">
-                             <label for="edit-data-plantio" class="block font-semibold">Data de Plantio:</label>
-                             <input type="date" id="edit-data-plantio" name="data_plantio" class="w-full border border-gray-300 p-2 rounded" 
-                                 value="{{ selected_product.data_plantio|date:'Y-m-d' }}" required>
-                         </div>
-     
-                         <!-- Botões de ação -->
-                         <div class="mt-6 flex justify-end">
-                             <button type="button" class="bg-gray-300 text-black py-2 px-4 rounded hover:bg-gray-400 transition duration-200 mr-2" onclick="closeEditModal()">Cancelar</button>
-                             <button type="submit" class="bg-[#8ABF17] text-white py-2 px-4 rounded hover:bg-[#5F8C1B] transition duration-200">Salvar Alterações</button>
-                         </div>
-                     </form>
-     
-                 </div>
-             </div>
-     
-         </div>
-     </div>
-     {% endif %}
- </div>
+{% if seedbed.products_in_seedbed.all %}
+<div class="flex items-center justify-center"> 
+    <!-- Detalhes do produto selecionado -->
+    {% if selected_product %}
+        <div class="product-info mt-6 green-box">
+            <div class="coluna mb-4">
+                <div class="sub-container">
+                    <div class="sub-coluna">
+                        <span class="font-semibold mr-12" style="font-size: 18px; color: white">Qtd. plantada:</span><br>
+                        <div class="white-box">
+                            <span class="text-lg" style="font-size: 15px" id="quantidade">{{ selected_product.quantidade }} unidades</span>
+                        </div>
+                    </div>
+                    <div class="sub-coluna">
+                        <span class="font-semibold mr-12" style="font-size: 18px; color: white">Data de Plantio:</span><br>
+                        <div class="white-box">
+                            <span class="text-lg" style="font-size: 15px" id="planting-date">{{ selected_product.formatted_date }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="white-box" style="width: 85%">
+                    <div class="sub-container">
+                        <div class="sub-coluna">
+                            <span class="text-lg font-semibold mr-12" style="color: #F76711;">Colheitas:</span><br>
+                        </div>
+                        <div class="sub-coluna">
+                            <button type="button" class="bg-[#F77711] p-4 text-sm text-white py-1.5 rounded hover:bg-[#F76711] transition duration-200" onclick="openHarvestModal()">
+                                Adicionar +
+                            </button>
+                        </div>
+                    </div>
+                    <ul>
+                        <span class="text-lg mr-12 font-semibold" style="color: #F76711; font-size: 15px">Tempo médio: {{ tempo_medio_colheita }} dias</span><br>
+                        {% for product in selected_product.type_product.products.all %}
+                            {% if product.data_colheita and product.quantidade_colhida > 0 %}
+                                <li>{{ product.quantidade_colhida }} unidades | {{ product.data_colheita }}</li>
+                            {% endif %}
+                        {% empty %}
+                            <li>Sem registros de colheita.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <br>
+                <br>
+                <div class="sub-container">
+                    <div class="sub-coluna">
+                        <span class="text-lg font-semibold mr-12" style="color: white">Total de colheitas:</span><br>
+                        <div class="white-box">
+                            <span class="text-lg" id="total-quantity">{{ total_quantidade_colhida_produto }} unidades</span>
+                        </div>
+                    </div>
+                    <div class="sub-coluna">
+                        <span class="text-lg font-semibold mr-12" style="color: white">Ciclo de Vida:</span><br>
+                        <div class="white-box">
+                            <span class="text-lg" id="life-cycle">{{ ciclo_de_vida }} meses</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="coluna">
+                <div class="white-box">
+                    <div id="to-do-list">
+                        <ul class="list-disc ml-5">
+                            <span class="text-lg font-semibold mr-12" style="color: #5F8C1B">Tarefas previstas para {{ selected_product.type_product.name}}:</span>
+                            {% if next_actions_dates %}
+                                {% for action, date in next_actions_dates.items %}
+                                    <input type="checkbox" id="action_{{ forloop.counter }}" class="mr-2">
+                                        <label for="action_{{ forloop.counter }}">
+                                            {{ action }} | {{ date|date:"d \d\e F \d\e Y" }}
+                                        </label>
+                                {% endfor %}
+                            {% else %}
+                                <li>Sem atividades programadas.</li>
+                            {% endif %}
+                            
+                            <span class="text-lg font-semibold mr-12" style="color: #5F8C1B">Tarefas do canteiro {{ seedbed.nome }}:</span>
+                            {% if tasks %}
+                                <ul>
+                                    {% for task in tasks %}
+                                        <li>
+                                            <input type="checkbox" id="task_{{ task.id }}" class="mr-2">
+                                            <label for="task_{{ task.id }}">
+                                                {{ task.description }} |
+                                                {{ task.start_date|date:"d/m/Y" }}
+                                            </label>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p>Não há tarefas associadas a este canteiro.</p>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+              
+            <div class="coluna">
+                <span class="text-lg font-semibold mr-2" id="harvest-estimate" style="color: white">Previsão para a próxima colheita: </span><br>
+                <div class="white-box">
+                    {% if estimativa_colheita %}
+                        {{ estimativa_colheita }}
+                    {% else %}
+                        Data de colheita indisponível
+                    {% endif %}
+                </div>
+                </span>
+                <br>
+                <span class="text-lg font-semibold mr-2" style="color: white">Comentários: </span>
+                <br>
+                    <div class="white-box">
+                        <span class="ml-1 text-base" id="comment"> {{ comment }}</span>
+                    </div>
+                <br>
+                <form id="delete-product-form" method="POST" action="{% url 'product_delete' community.id area.id seedbed.id selected_product.id %}" style="display:none;">
+                    {% csrf_token %}
+                </form>
+                <button type="button" class="mt-5 m-2 bg-[#F77711] p-7 text-white py-2 rounded hover:bg-[#F76711] transition duration-200" onclick="openModal()">
+                    Excluir
+                </button>
+                <button type="button" class="mt-5 m-2 bg-[#562A00] p-7 text-white py-2 rounded hover:bg-[#401F00] transition duration-200" onclick="openEditModal()">
+                    Editar
+                </button>              
+            </div>
+        </div>
+
+        {% endif %}
+    
+        <!-- Modal de Confirmação de Exclusão -->
+        <div id="deleteModal" class="modal">
+            <div class="modal-content">
+                <span class="close cursor-pointer" onclick="closeModal()">&times;</span>
+                <h1 class="mt-2 font-bold">Tem certeza que deseja excluir o cultivo "{{ selected_product.type_product.name }}"?</h1>
+                <p class="mt-2">Essa ação não pode ser desfeita.</p>
+                <br>
+                <button class="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition duration-200" onclick="document.getElementById('delete-product-form').submit();">Excluir</button>
+                <button class="bg-gray-300 text-black py-2 px-4 rounded hover:bg-gray-400 transition duration-200" onclick="closeModal()">Cancelar</button>
+            </div>
+        </div>
+        <!-- Modal de Edição -->
+        <div id="editModal" class="modal">
+            <div class="modal-content">
+                <span class="close cursor-pointer" onclick="closeEditModal()">&times;</span>
+                <h1 class="mt-2 font-bold">Editar Cultivo "{{ selected_product.type_product.name }}"</h1>
+
+               <!-- Formulário de Edição -->
+               {% if selected_product %}
+                    <form id="edit-product-form" method="POST" action="{% url 'product_update' community.id area.id seedbed.id selected_product.id %}">
+                        {% csrf_token %}
+                {% endif %}
+                    
+                    <!-- Campo para editar quantidade -->
+                    <div class="mt-4">
+                        <label for="edit-quantidade" class="block font-semibold">Quantidade:</label>
+                        <input type="number" id="edit-quantidade" name="quantidade" class="w-full border border-gray-300 p-2 rounded" 
+                            value="{{ selected_product.quantidade }}" required>
+                    </div>
+
+                    <div class="mt-4">
+                        <label for="data_plantio" class="block font-semibold">Data de Plantio:</label>
+                        <input type="date" id="data_plantio" name="data_plantio" class="w-full border border-gray-300 p-2 rounded" 
+                            value="{{ selected_product.data_plantio }}" required>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <label for="comentario" class="block font-semibold">Comentário:</label>
+                        <input type="text" id="comentario" name="comentario" class="w-full border border-gray-300 p-2 rounded" 
+                            value="{{ selected_product.comentario }}" required>
+                    </div>
+
+                    <!-- Botões de ação -->
+                    <div class="mt-6 flex justify-end">
+                        <button type="button" class="bg-gray-300 text-black py-2 px-4 rounded hover:bg-gray-400 transition duration-200 mr-2" onclick="closeEditModal()">Cancelar</button>
+                        <button type="submit" class="bg-[#8ABF17] text-white py-2 px-4 rounded hover:bg-[#5F8C1B] transition duration-200">Salvar Alterações</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+        <div id="harvestModal" class="modal">
+            <div class="modal-content">
+                <span class="close cursor-pointer" onclick="closeHarvestModal()">&times;</span>
+                <h1 class="mt-2 font-bold">Colher "{{ selected_product.type_product.name }}"</h1>
+        
+                <!-- Formulário de Colheita -->
+                <form id="harvest-product-form" method="POST" action="{% url 'seedbed_detail' community.id area.id seedbed.id %}">
+                    {% csrf_token %}
+                    
+                    <!-- Campo para inserir a data de colheita -->
+                    <div class="mt-4">
+                        <label for="harvest-date" class="block font-semibold">Data de Colheita:</label>
+                        <input type="date" id="harvest_date" name="harvest_date" class="w-full border border-gray-300 p-2 rounded" required>
+                    </div>
+        
+                    <!-- Campo para inserir a quantidade colhida -->
+                    <div class="mt-4">
+                        <label for="harvest-quantity" class="block font-semibold">Quantidade Colhida:</label>
+                        <input type="number" id="quantidade_colhida" name="quantidade_colhida" class="w-full border border-gray-300 p-2 rounded" required>
+                    </div>
+        
+                    <!-- Botões de ação -->
+                    <div class="mt-6 flex justify-end">
+                        <button type="button" class="bg-gray-300 text-black py-2 px-4 rounded hover:bg-gray-400 transition duration-200 mr-2" onclick="closeHarvestModal()">Cancelar</button>
+                        <button type="submit" class="bg-[#8ABF17] text-white py-2 px-4 rounded hover:bg-[#5F8C1B] transition duration-200">Salvar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
 
 <script>
+    function moveAndScroll(element, productId, event) {
+        event.preventDefault(); // Prevent immediate redirection
+    
+        // Clear any previous scroll states
+        sessionStorage.removeItem('hasScrolled');
+    
+        // Add "selected" class to highlight the selected card
+        const cards = document.querySelectorAll('.brown-box');
+        cards.forEach(card => card.classList.remove('selected'));
+        element.classList.add('selected');
+    
+        // Save the product ID
+        sessionStorage.setItem("selectedProductId", productId);
+    
+        // Scroll and then redirect
+        element.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest",
+            inline: "start"
+        });
+    
+        // Wait for scroll to complete before redirecting
+        setTimeout(() => {
+            const url = element.querySelector("a").href;
+            window.location.href = url;
+        }, 500);
+    }
+    
+    // Page load event listener
+    document.addEventListener("DOMContentLoaded", () => {
+        const selectedProductId = sessionStorage.getItem("selectedProductId");
+        const hasScrolled = sessionStorage.getItem('hasScrolled');
+    
+        if (selectedProductId && !hasScrolled) {
+            const selectedCard = document.querySelector(`[data-product-id="${selectedProductId}"]`);
+            
+            if (selectedCard) {
+                // Mark that we're about to scroll
+                sessionStorage.setItem('hasScrolled', 'true');
+    
+                selectedCard.classList.add("selected");
+                selectedCard.scrollIntoView({
+                    behavior: "auto", // Changed from smooth to instant
+                    block: "nearest",
+                    inline: "start"
+                });
+            }
+        }
+    
+        // Clean up after scrolling
+        sessionStorage.removeItem("selectedProductId");
+    });
+    
+    
+    
+    
+    {% comment %} function moveBox(selectedElement) {
+        // Obtém todas as caixas com a classe "brown-box"
+        const boxes = document.querySelectorAll('.brown-box');
+        
+        // Remove a classe "bg-green-box" de todas as caixas
+        boxes.forEach(box => {
+            box.classList.remove('bg-green-box');
+        });
+        
+        // Adiciona a classe "bg-green-box" à caixa clicada
+        selectedElement.classList.add('bg-green-box');
+    } {% endcomment %}
+    
     function openModal() {
         document.getElementById('deleteModal').style.display = 'block';
     }
@@ -198,6 +534,21 @@
         const editModal = document.getElementById('editModal');
         if (event.target === editModal) {
             closeEditModal();
+        }
+    }
+    function openHarvestModal() {
+        document.getElementById('harvestModal').style.display = 'block';
+    }
+    
+    function closeHarvestModal() {
+        document.getElementById('harvestModal').style.display = 'none';
+    }
+    
+    // Fechar o modal ao clicar fora dele
+    window.onclick = function(event) {
+        const harvestModal = document.getElementById('harvestModal');
+        if (event.target === harvestModal) {
+            closeHarvestModal();
         }
     }
 </script>
