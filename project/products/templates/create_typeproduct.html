@@ -1,21 +1,44 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %}
 {% load static %}
-{% block title %}Criar Cultuvo{% endblock %}
+{% block title %}Criar Cultivo{% endblock %}
 
 {% block content %}
-    <div class="flex-1 p-6 fade-down lg:p-10 ml:0 lg:ml-[250px] mt-12 lg:mt-[60px]">
+<body class="font-sans bg-gray-100">
+    <div class="container mx-auto p-6">
         <h1 class="text-3xl font-bold mb-6">Cadastrar Cultivo</h1>
         <form method="POST" class="bg-white p-6 rounded-lg shadow-md">
             {% csrf_token %}
             <input type="hidden" name="area_id" value="{{ area_id }}">
             <input type="hidden" name="seedbed_id" value="{{ seedbed_id }}">
+            
+            <!-- Campo para o nome do cultivo -->
             <label for="nome" class="block text-gray-700">Nome do Cultivo:</label>
             <input type="text" id="nome" name="nome" required 
                    class="mt-2 block w-full p-2 border border-gray-300 rounded-md">
+            
+            <!-- Novo campo para o ciclo de vida em meses -->
+            <label for="lifecycle" class="block text-gray-700 mt-4">Ciclo de Vida (em meses):</label>
+            <input type="number" id="lifecycle" name="lifecycle" min="1" 
+                    class="mt-2 block w-full p-2 border border-gray-300 rounded-md"
+                   placeholder="Informe o ciclo de vida do produto em meses">
+            
+            <label for="irrigacao" class="block text-gray-700 mt-4">Intervalo de Irrigação (em dias):</label>
+            <input type="number" id="irrigacao" name="irrigacao" min="1" 
+                    class="mt-2 block w-full p-2 border border-gray-300 rounded-md">
+                   
+            <label for="poda" class="block text-gray-700 mt-4">Intervalo de Poda (em dias):</label>
+            <input type="number" id="poda" name="poda" min="1" 
+                    class="mt-2 block w-full p-2 border border-gray-300 rounded-md">
+                   
+            <label for="manejo" class="block text-gray-700 mt-4">Intervalo de Manejo (em dias):</label>
+            <input type="number" id="manejo" name="manejo" min="1" 
+                    class="mt-2 block w-full p-2 border border-gray-300 rounded-md">
+       
             
             <button type="submit" class="mt-4 bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600">
                 Cadastrar
             </button>
         </form>
     </div>
+</body>
 {% endblock %}
