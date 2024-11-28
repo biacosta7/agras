@@ -7,8 +7,9 @@ from communities.models import Community, MembershipRequest, SendCommunityInvite
 from users.models import User, FileUpload
 from seedbeds.models import Seedbed
 from django.utils import timezone
-from django.http import HttpResponse
+from .utils import get_weather_data
 from django.db import IntegrityError
+from django.utils import timezone
 
 @login_required
 def home_view(request):
@@ -44,13 +45,30 @@ def dashboard_view(request, community_id):
     seedbeds = Seedbed.objects.filter(area__community=community)
     membership_requests = MembershipRequest.objects.filter(community=community, status='pending')
     users = community.members.all().union(community.admins.all()) if community else None
+    now = timezone.now()
+    city = request.user.city
+    weather_data = None  # Inicializando a variável
+
+    day_of_week = now.weekday()  # 0 = segunda-feira, 6 = domingo
+
+
+    if city:
+        try:
+            weather_data = get_weather_data(city)
+        except Exception as e:
+            weather_data = {'error': f"Erro na requisição: {e}"}
+    else:
+        weather_data = {'error': 'Cidade não encontrada.'}
 
     context = {
         'community': community,
         'areas': areas,
         'seedbeds': seedbeds,
         'membership_requests': membership_requests,
-        'users': users
+        'users': users,
+        'weather_data': weather_data,
+        'now': now, 
+        'day_of_week': day_of_week
     }
 
     return render(request, 'dashboard.html', context)
