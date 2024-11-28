@@ -304,7 +304,7 @@ def list_members(request, community_id):
     return render(request, 'list_members.html', context)
 
 def image_upload_view(request, user_id):
-    image_url = None  # Variável para armazenar a URL da imagem
+    image_banner_url = None  # Variável para armazenar a URL da imagem
     user = get_object_or_404(User, id=user_id)
     
     if request.method == 'POST' and request.FILES.get('image'):
@@ -315,10 +315,10 @@ def image_upload_view(request, user_id):
         new_image.save()
 
         # Obter a URL da imagem para exibir
-        image_url = new_image.image.url
-        print(image_url)
+        image_banner_url = new_image.image.url
+        print(image_banner_url)
 
-    return render(request, 'upload.html', {'image_url': image_url})
+    return render(request, 'upload.html', {'image_banner_url': image_banner_url})
 
 
 from django.shortcuts import render, get_object_or_404, redirect
@@ -362,8 +362,8 @@ def settings(request, community_id):
 
 @login_required
 def profile(request, community_id):
-    image_url = None  # Variável para armazenar a URL da imagem
-
+    image_banner_url = None
+    image_profile_url = None
     # Obtém a comunidade pelo ID, ou retorna 404 se não existir
     community = get_object_or_404(Community, id=community_id)
 
@@ -377,14 +377,14 @@ def profile(request, community_id):
 
     if request.method == "POST":
         # Processar o upload da imagem de perfil
-        if 'profile_image' in request.FILES:
+        if request.FILES.get('profile_image'):
             profile_image = request.FILES['profile_image']
             # Salva a imagem no banco de dados ou no sistema de arquivos
             new_profile_image = FileUpload.objects.create(user=user, image=profile_image)
             new_profile_image.save()
 
         # Processar o upload do banner (caso necessário)
-        if 'banner_image' in request.FILES:
+        if request.FILES.get('banner_image'):
             banner_image = request.FILES['banner_image']
             # Salva o banner no banco de dados ou no sistema de arquivos
             new_banner_image = FileUpload.objects.create(user=user, image=banner_image)
@@ -429,6 +429,17 @@ def profile(request, community_id):
         user.city = city
         user.state = state
 
+        # Obtém a URL da imagem de perfil do usuário
+        if FileUpload.objects.filter(user=user).exists():
+            image_banner_url = FileUpload.objects.filter(user=user).last().image.url
+        else:
+            image_banner_url = None
+        
+        if FileUpload.objects.filter(user=user).exists():
+            image_profile_url = FileUpload.objects.filter(user=user).last().image.url
+        else:
+            image_profile_url = None
+
         try:
             user.save()
             messages.success(request, 'Credenciais atualizadas com sucesso.')
@@ -442,5 +453,6 @@ def profile(request, community_id):
     return render(request, 'myprofile.html', {
         'user': user,
         'community': community,
-        'image_url': image_url,
+        'image_banner_url': image_banner_url,
+        'image_profile_url': image_profile_url,
     })
