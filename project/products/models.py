@@ -38,6 +38,7 @@ class Product(models.Model):
     quantidade = models.IntegerField(default=1)
     quantidade_colhida = models.IntegerField(default=0, null=True, blank=True)
     data_colheita = models.DateField(null =True, blank = True)  # Campo para a data da colheita
+    comentario = models.TextField(null=True, blank=True, max_length=500)
 
     def is_harvested(self):
         """Verifica se o cultivo foi colhido (baseado na quantidade colhida ou na data de colheita)."""
@@ -56,7 +57,6 @@ class Product(models.Model):
 class Harvest(models.Model):
     # Atributo que define a categoria de colheita, ex: "colhidos", "pendentes"
     name = models.CharField(max_length=100)
-    
     # Relacionamento com o produto
     products_in_seedbed = models.ManyToManyField(Product, related_name='harvests')
 

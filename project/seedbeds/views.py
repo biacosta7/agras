@@ -96,6 +96,7 @@ def seedbed_detail_view(request, community_id, area_id, seedbed_id):
     area = get_object_or_404(Area, id=area_id, community=community)
     seedbed = get_object_or_404(Seedbed, id=seedbed_id, area=area)
     formatted_date = request.session.get('formatted_date', None)
+    comment = request.session.get('comment', None)
     # Obtém a lista de produtos associados ao canteiro
     active_products = seedbed.products_in_seedbed.filter(
         data_colheita__isnull=True,
@@ -184,6 +185,7 @@ def seedbed_detail_view(request, community_id, area_id, seedbed_id):
         'total_quantidade_colhida_produto': total_quantidade_colhida_produto,  # Passando o total de colheita
         'formatted_date': formatted_date,
         'ciclo_de_vida': ciclo_de_vida,
+        'comment': comment,
     }
     return render(request, 'seedbed_detail.html', context)
 

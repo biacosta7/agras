@@ -233,7 +233,7 @@
                 <span class="text-lg font-semibold mr-2">Comentários: </span>
                 <br>
                     <div class="white-box">
-                        <span class="ml-1 text-base" id="comments">Adicione aqui observações sobre o cultivo...</span>
+                        <span class="ml-1 text-base" id="comments"> {{ comment }}</span>
                     </div>
                 <br>
                 <form id="delete-product-form" method="POST" action="{% url 'product_delete' community.id area.id seedbed.id selected_product.id %}" style="display:none;">
