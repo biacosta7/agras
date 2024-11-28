@@ -10,4 +10,4 @@ urlpatterns = [
 	path('product/', include('products.urls')),
     path('comunidades/canteiros/', include('seedbeds.urls')),
 	path('comunidades/<int:communities_id>/areas/', include('areas.urls')),
-] 
+]
