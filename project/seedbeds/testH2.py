@@ -8,6 +8,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import TimeoutException
 import time
 
+# Criar produto com erro
 
 class UserRegistrationAndLoginTest(LiveServerTestCase):
     def setUp(self):
