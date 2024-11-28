@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}Áreas{% endblock %}""
-
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'tasks/css/talkAnimation.css' %}" />
+{% endblock extra_css %}
 {% block content %}
 <style>
     input::placeholder {
@@ -13,7 +15,7 @@
             {% if areas %}
             <div class="flex md:flex-row flex-col justify-between mt-4">
                 <header class="mb-6">
-                    <h1 class="text-[44px] lg:text-[48px] font-semibold mt-2 ">Áreas <span class="font-medium">de Plantio</span></h1>
+                    <h1 class="text-[44px] lg:text-[48px] font-semibold mt-2 ">Áreas<button class="material-icons talk-button">volume_up</button></h1>
                 </header>
             
                 <div class="flex flex-row items-center space-x-6">
@@ -61,7 +63,7 @@
                         <div class="flex justify-between">
                             <div class="flex-col">
                                 <h3 class="text-lg lg:text-xl mt-3 font-semibold">
-                                    <a href="{% url 'area_detail' community.id area.id %}" class="text-[#8ABF17] hover:underline">{{ area.name }}</a>
+                                    <a href="{% url 'area_detail' community.id area.id %}" class="text-[#8ABF17] hover:underline area-name">{{ area.name }}</a>
                                 </h3>
                                 <p class="text-sm lg:text-base">{{ area.description }}</p>
                             </div> 
@@ -225,6 +227,7 @@ function toggleDropdown(id) {
         }
     }
 </script>
+<script src="{% static 'areas/js/talkAreas.js' %}"></script>
 {% endblock %}
 
 </div>
