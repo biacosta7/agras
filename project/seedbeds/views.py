@@ -14,6 +14,8 @@ from django.utils.dateformat import DateFormat
 from datetime import timedelta, datetime
 from django.db.models import Sum, F
 from tasks.models import Task
+from django.db.models import Avg, F, ExpressionWrapper, DurationField
+from datetime import timedelta
 
 @login_required
 def list_seedbeds(request, community_id, area_id):
@@ -180,6 +182,25 @@ def seedbed_detail_view(request, community_id, area_id, seedbed_id):
             quantidade_colhida__isnull=False
         ).aggregate(total_harvest=Sum('quantidade_colhida'))['total_harvest'] or 0
     print("Total quantidade colhida do produto: ", total_quantidade_colhida_produto)
+    
+    tempo_medio_colheita = None
+    if selected_product and selected_product.type_product:
+        tipo_produto = selected_product.type_product
+        # Calcula o tempo médio entre data_plantio e data_colheita para o tipo de produto
+        tempo_medio_colheita = Product.objects.filter(
+            type_product=tipo_produto,
+            data_plantio__isnull=False,
+            data_colheita__isnull=False
+        ).annotate(
+            tempo_colheita=ExpressionWrapper(
+                F('data_colheita') - F('data_plantio'),
+                output_field=DurationField()
+            )
+        ).aggregate(media_tempo=Avg('tempo_colheita'))['media_tempo']
+
+        # Converte o valor em dias, se existir
+        if tempo_medio_colheita:
+            tempo_medio_colheita = tempo_medio_colheita.days
 
     context = {
         'community': community,
@@ -196,6 +217,7 @@ def seedbed_detail_view(request, community_id, area_id, seedbed_id):
         'ciclo_de_vida': ciclo_de_vida,
         'comment': comment,
         'tasks': tasks,
+        'tempo_medio_colheita': tempo_medio_colheita,
     }
     return render(request, 'seedbed_detail.html', context)
 

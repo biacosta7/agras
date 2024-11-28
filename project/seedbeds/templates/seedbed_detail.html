@@ -245,7 +245,6 @@
                     <div class="sub-container">
                         <div class="sub-coluna">
                             <span class="text-lg font-semibold mr-12" style="color: #F76711;">Colheitas:</span><br>
-                            <span class="text-lg font-semibold mr-12" style="color: #F76711;">Tempo médio:</span><br>
                         </div>
                         <div class="sub-coluna">
                             <button type="button" class="bg-[#F77711] p-4 text-sm text-white py-1.5 rounded hover:bg-[#F76711] transition duration-200" onclick="openHarvestModal()">
@@ -254,7 +253,7 @@
                         </div>
                     </div>
                     <ul>
-                        
+                        <span class="text-lg mr-12 font-semibold" style="color: #F76711; font-size: 15px">Tempo médio: {{ tempo_medio_colheita }} dias</span><br>
                         {% for product in selected_product.type_product.products.all %}
                             {% if product.data_colheita and product.quantidade_colhida > 0 %}
                                 <li>{{ product.quantidade_colhida }} unidades | {{ product.data_colheita }}</li>
