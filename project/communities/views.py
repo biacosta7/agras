@@ -367,7 +367,6 @@ def settings(request, community_id):
             messages.success(request, 'Comunidade deletada com sucesso.')
             return redirect('community_hub')
 
-    last_community_image = None
     last_community_image = FileUpload.objects.filter(user=user, image_type='community').last()
     image_community_url = last_community_image.image.url if last_community_image else None
 

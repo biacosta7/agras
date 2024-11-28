@@ -1,3 +1,4 @@
+.
 {% extends "base.html" %} 
 {% load static %}
 
@@ -6,7 +7,7 @@
 {% block styles %}
     .header{
         padding-top: 90px;
-        padding-left: 225px;
+        padding-left: 240px;
     }
     input[type="checkbox"] {
         display: none;
@@ -73,6 +74,7 @@
         text-align: center; /* Centraliza o conteúdo */
         width: 150px; /* Define uma largura fixa para as caixas */
         padding: 1rem;
+        transition: transform 0.5s ease;
     }
     .white-box {
         background-color: white;
@@ -166,8 +168,28 @@
     .brown-box.selected {
         background-color: #5F8C1B; /* Verde */
         color: white; /* Cor do texto */
+        transform: translateY(20px); 
     }
-    
+    .empty_seedbed{
+        padding-left: 300px;
+    }
+    .btn{
+        margin-top: 1rem; /* mt-4 */
+        background-color: #8ABF17; /* bg-[#8ABF17] */
+        color: white; /* text-white */
+        padding-left: 1.5rem; /* px-6 */
+        padding-right: 1.5rem; /* px-6 */
+        padding-top: 0.75rem; /* py-3 */
+        padding-bottom: 0.75rem; /* py-3 */
+        border-radius: 9px; /* rounded-[9px] */
+        margin-bottom: 1.5rem; /* mb-6 */
+        font-weight: 600; /* font-semibold */
+    }
+    .btn:hover {
+        background-color: #7cad10; /* hover:bg-[#7cad10] */
+        color: #edf0e9; /* hover:text-[#edf0e9] */
+    }
+
     @media (max-width: 768px) {
     .container {
         flex-direction: column; /* Em telas menores, as colunas se empilham */
@@ -177,10 +199,6 @@
     }
 }
 
-{% endblock %}
-
-{% block page_classes %}
-    bg-gray-300 h-screen p-4
 {% endblock %}
 
 {% block content %}
@@ -211,13 +229,30 @@
                             <p class="text-lg">{{ product.type_product.name }}</p>
                         </a>
                     </li>
-                    {% endfor %}
+                {% empty %}
+                    <div class="empty_seedbed">
+                        <div class="text-center col-span-full mt-[15vh]">
+                            <div class="flex flex-col items-center justify-center">
+                                <img src="{% static 'assets/Ativo 324.png' %}" alt="Plantas" class="w-64 mb-4">
+                                <h1 class="font-bold text-[24px]">Nenhum cultivo adicionado em "{{seedbed.nome}}"</h1>
+                                <p class="font-normal text-[16px]">Clique no botão abaixo para criar canteiros e visualizá-los</p>
+                                <div class="btn">
+                                    <a href="{% url 'create_product' community.id area.pk seedbed.id %}">
+                                        Criar Cultivo
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                {% endfor %}
+                
+                <!-- Card para Adicionar Cultivo, agora fora do loop -->
                 <li class="flex flex-col items-center mb-4 mr-12 brown-box">  
                     <a href="{% url 'create_product' community.id area.pk seedbed.id %}">
                         <img src="{% static 'assets/add.png' %}" alt="Adicionar novo cultivo" class="w-16 h-16">
                     </a>
                     <p class="text-lg">Adicionar Cultivo</p>
-                </li>
+                </li>  
             </ul>
         </div>
     </div>
@@ -256,7 +291,11 @@
                         </div>
                     </div>
                     <ul>
-                        <span class="text-lg mr-12 font-semibold" style="color: #F76711; font-size: 15px">Tempo médio: {{ tempo_medio_colheita }} dias</span><br>
+                        {% if tempo_medio_colheita %}
+                            <span class="text-lg mr-12 font-semibold" style="color: #F76711; font-size: 15px">Tempo médio: {{ tempo_medio_colheita }} dias</span><br>
+                        {% else %}
+                            <span class="text-lg mr-12 font-semibold" style="color: #F76711; font-size: 15px">Sem registros de colheita</span><br>
+                        {% endif %}
                         {% for product in selected_product.type_product.products.all %}
                             {% if product.data_colheita and product.quantidade_colhida > 0 %}
                                 <li>{{ product.quantidade_colhida }} unidades | {{ product.data_colheita }}</li>
@@ -489,22 +528,6 @@
         sessionStorage.removeItem("selectedProductId");
     });
     
-    
-    
-    
-    {% comment %} function moveBox(selectedElement) {
-        // Obtém todas as caixas com a classe "brown-box"
-        const boxes = document.querySelectorAll('.brown-box');
-        
-        // Remove a classe "bg-green-box" de todas as caixas
-        boxes.forEach(box => {
-            box.classList.remove('bg-green-box');
-        });
-        
-        // Adiciona a classe "bg-green-box" à caixa clicada
-        selectedElement.classList.add('bg-green-box');
-    } {% endcomment %}
-    
     function openModal() {
         document.getElementById('deleteModal').style.display = 'block';
     }
@@ -554,3 +577,4 @@
 </script>
 
 {% endblock content %}
+
