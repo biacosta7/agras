@@ -362,7 +362,6 @@ def settings(request, community_id):
 
 @login_required
 def profile(request, community_id):
-
     image_url = None  # Variável para armazenar a URL da imagem
 
     # Obtém a comunidade pelo ID, ou retorna 404 se não existir
@@ -376,9 +375,22 @@ def profile(request, community_id):
     # Usuário autenticado
     user = request.user
 
-    if request.method == "POST" and request.FILES.get('image'):
-        image = request.FILES['image']
-        # Processa a atualização de informações do perfil
+    if request.method == "POST":
+        # Processar o upload da imagem de perfil
+        if 'profile_image' in request.FILES:
+            profile_image = request.FILES['profile_image']
+            # Salva a imagem no banco de dados ou no sistema de arquivos
+            new_profile_image = FileUpload.objects.create(user=user, image=profile_image)
+            new_profile_image.save()
+
+        # Processar o upload do banner (caso necessário)
+        if 'banner_image' in request.FILES:
+            banner_image = request.FILES['banner_image']
+            # Salva o banner no banco de dados ou no sistema de arquivos
+            new_banner_image = FileUpload.objects.create(user=user, image=banner_image)
+            new_banner_image.save()
+
+        # Processa os outros dados do formulário
         first_name = request.POST.get('first_name')
         username = request.POST.get('username')
         email = request.POST.get('email')
@@ -386,7 +398,7 @@ def profile(request, community_id):
         city = request.POST.get('city')
         state = request.POST.get('state')
 
-        # Validação de dados
+        # Validações
         valid_chars = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_")
         if not set(username).issubset(valid_chars):
             messages.error(request, 'O nome de usuário deve conter apenas letras, números ou underlines.')
@@ -409,21 +421,13 @@ def profile(request, community_id):
             messages.error(request, 'Já existe um usuário com este email.')
             return redirect('profile', community_id=community.id)
 
-        # Atualiza as informações do usuário
+        # Atualiza os dados do usuário
         user.first_name = first_name
         user.username = username
         user.email = email
         user.phone = phone
         user.city = city
         user.state = state
-
-        # Salvar o objeto no banco de dados
-        new_image = FileUpload.objects.create(user=user,image=image)
-        new_image.save()
-
-        # Obter a URL da imagem para exibir
-        image_url = new_image.image.url
-        print(image_url)
 
         try:
             user.save()
@@ -432,5 +436,11 @@ def profile(request, community_id):
             messages.error(request, 'Erro ao atualizar as credenciais. Tente novamente.')
             return redirect('profile', community_id=community.id)
 
-    # Renderiza o template com as informações do usuário e da comunidade
-    return render(request, 'myprofile.html', {'user': user, 'community': community})
+        return redirect('profile', community_id=community.id)
+
+    # Renderiza a página com o formulário e os dados do usuário
+    return render(request, 'myprofile.html', {
+        'user': user,
+        'community': community,
+        'image_url': image_url,
+    })

@@ -14,12 +14,12 @@
         <div class="lg:ml-[250px] px-4 sm:px-8 lg:px-16 pb-8">
             <div class="bg-white shadow-lg rounded-lg p-8">
                 <!-- Banner com imagem de fundo -->
-        <div class="relative h-32 sm:h-40 md:h-52 w-full rounded-lg overflow-hidden">
+        <!-- Banner com imagem de fundo -->
+        <div id="banner-container" class="relative h-32 sm:h-40 md:h-52 w-full rounded-lg overflow-hidden bg-gray-200">
             <img 
                 src="{% static 'assets/retangulo.png' %}" 
                 alt="Banner" 
-                class="w-full h-full object-cover">
-            
+                class="w-full h-full object-cover hidden">
             <label 
                 for="file-upload-banner" 
                 class="absolute bottom-4 right-4 flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full shadow-lg cursor-pointer"
@@ -27,7 +27,7 @@
                 <span class="material-icons text-[#8ABF17] text-lg sm:text-xl">
                     photo_camera
                 </span>
-                <input id="file-upload-banner" type="file" name="banner_image" class="hidden" />
+                <input id="file-upload-banner" type="file" name="banner_image" class="hidden" accept="image/*" />
             </label>
         </div>
         <!-- Foto do perfil e texto -->
@@ -62,7 +62,7 @@
             </div>
         </div>
         <!-- Formulário para editar as informações -->
-        <form method="POST" action="{% url 'profile' community.id %}" class="mt-20 sm:mt-24">
+        <form method="POST" action="{% url 'profile' community.id %}" class="mt-20 sm:mt-24" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-6">
                 <div>
@@ -131,28 +131,50 @@
 {% endblock %}
 {% block extra_js %}
 <script>
-    const fileInput = document.getElementById('file-upload-profile');
+    // Manipulação de imagem de perfil
+    const fileInputProfile = document.getElementById('file-upload-profile');
     const profileContainer = document.getElementById('profile-container');
     const profileInitial = document.getElementById('profile-initial');
 
-    // Detecta quando uma imagem é selecionada
-    fileInput.addEventListener('change', (event) => {
+    fileInputProfile.addEventListener('change', (event) => {
         const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
 
-            // Quando a imagem for carregada, atualize o conteúdo
             reader.onload = (e) => {
-                // Remove o texto inicial
                 profileInitial.style.display = 'none';
-
-                // Adiciona a imagem como plano de fundo
                 profileContainer.style.backgroundImage = `url(${e.target.result})`;
                 profileContainer.style.backgroundSize = 'cover';
                 profileContainer.style.backgroundPosition = 'center';
             };
 
-            reader.readAsDataURL(file); // Lê o arquivo como uma URL base64
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Manipulação de imagem de banner
+    const fileInputBanner = document.getElementById('file-upload-banner');
+    const bannerContainer = document.getElementById('banner-container');
+
+    fileInputBanner.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+                // Adiciona a imagem ao fundo do banner
+                bannerContainer.style.backgroundImage = `url(${e.target.result})`;
+                bannerContainer.style.backgroundSize = 'cover';
+                bannerContainer.style.backgroundPosition = 'center';
+
+                // Oculta qualquer imagem padrão
+                const imgElement = bannerContainer.querySelector('img');
+                if (imgElement) {
+                    imgElement.style.display = 'none';
+                }
+            };
+
+            reader.readAsDataURL(file);
         }
     });
 </script>
