@@ -329,6 +329,7 @@ from .models import Community
 @login_required
 def settings(request, community_id):
     community = get_object_or_404(Community, id=community_id)
+    user = request.user
 
     # Verificar permissões
     if request.user != community.creator and not community.admins.filter(id=request.user.id).exists():
@@ -342,6 +343,14 @@ def settings(request, community_id):
             # Lógica para atualização da comunidade
             name = request.POST.get('name')
             description = request.POST.get('description')
+
+            # Upload de imagem da comunidade
+            if request.FILES.get('community_image'):
+                community_image = request.FILES['community_image']
+                image_type_community = request.POST.get('image_type_community')  # Recupera o tipo de imagem
+
+                if image_type_community:
+                    FileUpload.objects.create(user=user, image=community_image, image_type=image_type_community)
 
             if Community.objects.filter(name=name).exclude(pk=community_id).exists():
                 messages.error(request, 'Já existe uma comunidade com esse nome.')
@@ -358,7 +367,11 @@ def settings(request, community_id):
             messages.success(request, 'Comunidade deletada com sucesso.')
             return redirect('community_hub')
 
-    return render(request, 'settings.html', {'community': community})
+    last_community_image = None
+    last_community_image = FileUpload.objects.filter(user=user, image_type='community').last()
+    image_community_url = last_community_image.image.url if last_community_image else None
+
+    return render(request, 'settings.html', {'community': community, 'image_community_url': image_community_url})
 
 @login_required
 def profile(request, community_id):

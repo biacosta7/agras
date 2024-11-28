@@ -15,7 +15,7 @@
 
         <div class="flex items-center lg:ml-[250px] justify-center mt-4">
             <!-- Formulário -->
-            <form id="community-settings-form" method="POST" action="{% url 'settings' community.id %}" class="bg-white shadow-lg rounded-lg p-8 w-full max-w-4xl">
+            <form id="community-settings-form" method="POST" action="{% url 'settings' community.id %}" class="bg-white shadow-lg rounded-lg p-8 w-full max-w-4xl" enctype="multipart/form-data">
                 {% csrf_token %}
                 <h2 class="text-2xl font-bold text-[#5F8C1B] mb-6">Configurações da Comunidade</h2>
 
@@ -24,10 +24,23 @@
                     <h3 class="text-lg font-semibold mb-4">Foto ou Cor para a Capa</h3>
                     <div class="flex flex-row items-start space-x-4">
                         <!-- Upload de Foto -->
-                        <label class="block border border-dashed border-gray-400 rounded-lg w-48 h-32 flex items-center justify-center cursor-pointer">
-                            <span class="material-icons text-[#8ABF17]">upload</span>
-                            <input type="file" name="cover_photo" class="hidden" />
-                        </label>
+                        <div id="community-container" class="relative w-64 h-32 rounded-lg overflow-hidden bg-gray-200" 
+                            style="background-image: url('{{ image_community_url }}'); background-size: cover; background-position: center;">
+                            
+                            <!-- Exibição da Imagem da Comunidade -->
+                            <img src="{% if image_community_url %}{{ image_community_url }}{% else %}{% static 'assets/retangulo.png' %}{% endif %}" alt="Community Image" class="w-full h-full object-cover">
+                            
+                            <!-- Botão de upload (aparece somente se não houver imagem) -->
+                                <label 
+                                    for="file-upload-community" 
+                                    class="absolute bottom-4 right-4 flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full shadow-lg cursor-pointer"
+                                    title="Editar imagem da comunidade">
+                                    <span class="material-icons text-[#8ABF17] text-lg sm:text-xl">photo_camera</span>
+                                    <input id="file-upload-community" type="file" name="community_image" class="hidden" accept="image/*" />
+                                    <input type="hidden" name="image_type_community" value="community" />
+                                </label>
+                        </div>
+                        
                         <!-- Cores -->
                         <div class="flex flex-col space-y-1">
                             <div class="w-12 h-10 rounded-lg bg-[#8B4513] cursor-pointer"></div>
@@ -71,3 +84,5 @@
     </div>
 </div>
 {% endblock %}
+
+    
