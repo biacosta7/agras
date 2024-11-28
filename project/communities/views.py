@@ -303,24 +303,6 @@ def list_members(request, community_id):
 
     return render(request, 'list_members.html', context)
 
-def image_upload_view(request, user_id):
-    image_banner_url = None  # Variável para armazenar a URL da imagem
-    user = get_object_or_404(User, id=user_id)
-    
-    if request.method == 'POST' and request.FILES.get('image'):
-        image = request.FILES['image']
-
-        # Salvar o objeto no banco de dados
-        new_image = FileUpload.objects.create(user=user,image=image)
-        new_image.save()
-
-        # Obter a URL da imagem para exibir
-        image_banner_url = new_image.image.url
-        print(image_banner_url)
-
-    return render(request, 'upload.html', {'image_banner_url': image_banner_url})
-
-
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -442,7 +424,6 @@ def profile(request, community_id):
             if image_type_banner:
                 FileUpload.objects.create(user=user, image=banner_image, image_type=image_type_banner)
 
-
         try:
             user.save()
             messages.success(request, 'Credenciais atualizadas com sucesso.')
@@ -467,3 +448,27 @@ def profile(request, community_id):
         'image_banner_url': image_banner_url,
         'image_profile_url': image_profile_url,
     })
+
+@login_required
+def update_community_image(request):
+    if request.method == 'POST' and request.FILES.get('community_image'):
+        # Verifica se a imagem já existe no banco de dados para o tipo 'community'
+        existing_image = FileUpload.objects.filter(user=request.user, image_type='community').last()
+        
+        # Se existir, exclui a imagem antiga
+        if existing_image:
+            existing_image.image.delete()  # Deleta a imagem anterior
+
+        # Cria um novo objeto de FileUpload para a imagem da comunidade
+        new_image = FileUpload(user=request.user, image_type='community', image=request.FILES['community_image'])
+        new_image.save()
+
+        # Atualiza o contexto da imagem para refletir a nova URL
+        context = {
+            'image_community_url': new_image.image.url,
+        }
+
+        # Redireciona para a página com o novo contexto
+        return render(request, 'settings.html', context)
+    
+    return redirect('settings')

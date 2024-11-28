@@ -16,6 +16,8 @@ from django.db.models import Sum, F
 from tasks.models import Task
 from django.db.models import Avg, F, ExpressionWrapper, DurationField
 from datetime import timedelta
+from users.models import User, FileUpload
+
 
 @login_required
 def list_seedbeds(request, community_id, area_id):
@@ -39,6 +41,17 @@ def create_seedbed(request, community_id, area_id):
         # Obter o nome do canteiro
         seedbed_name = request.POST.get('seedbed_name')
         
+        # Upload de imagem da comunidade
+        if request.FILES.get('seedbed_image'):
+            community_image = request.FILES['seedbed_image']
+            image_type_community = request.POST.get('image_type_seedbed')  # Recupera o tipo de imagem
+
+            if image_type_community:
+                FileUpload.objects.create(user=user, image=community_image, image_type=image_type_community)
+
+        last_seedbed_image = FileUpload.objects.filter(user=user, image_type='seedbed').last()
+        image_seedbed_url = last_seedbed_image.image.url if last_seedbed_image else None
+
         if seedbed_name:  # Verifica se o nome foi fornecido
             try:
                 # Criação do canteiro
