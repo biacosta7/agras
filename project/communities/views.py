@@ -362,8 +362,7 @@ def settings(request, community_id):
 
 @login_required
 def profile(request, community_id):
-    image_banner_url = None
-    image_profile_url = None
+    
     # Obtém a comunidade pelo ID, ou retorna 404 se não existir
     community = get_object_or_404(Community, id=community_id)
 
@@ -376,19 +375,6 @@ def profile(request, community_id):
     user = request.user
 
     if request.method == "POST":
-        # Processar o upload da imagem de perfil
-        if request.FILES.get('profile_image'):
-            profile_image = request.FILES['profile_image']
-            # Salva a imagem no banco de dados ou no sistema de arquivos
-            new_profile_image = FileUpload.objects.create(user=user, image=profile_image)
-            new_profile_image.save()
-
-        # Processar o upload do banner (caso necessário)
-        if request.FILES.get('banner_image'):
-            banner_image = request.FILES['banner_image']
-            # Salva o banner no banco de dados ou no sistema de arquivos
-            new_banner_image = FileUpload.objects.create(user=user, image=banner_image)
-            new_banner_image.save()
 
         # Processa os outros dados do formulário
         first_name = request.POST.get('first_name')
@@ -429,16 +415,21 @@ def profile(request, community_id):
         user.city = city
         user.state = state
 
-        # Obtém a URL da imagem de perfil do usuário
-        if FileUpload.objects.filter(user=user).exists():
-            image_banner_url = FileUpload.objects.filter(user=user).last().image.url
-        else:
-            image_banner_url = None
+        if request.FILES.get('profile_image'):
+            profile_image = request.FILES['profile_image']
+            image_type = request.POST.get('image_type')  # Recupera o tipo de imagem
+
+            # Salva o arquivo com o tipo especificado
+            new_file = FileUpload.objects.create(user=user, image=profile_image, image_type=image_type)
+            new_file.save()
         
-        if FileUpload.objects.filter(user=user).exists():
-            image_profile_url = FileUpload.objects.filter(user=user).last().image.url
-        else:
-            image_profile_url = None
+        if request.FILES.get('banner_image'):
+            banner_image = request.FILES['banner_image']
+            image_type = request.POST.get('image_type')  # Recupera o tipo de imagem
+
+            # Salva o arquivo com o tipo especificado
+            new_file = FileUpload.objects.create(user=user, image=banner_image, image_type=image_type)
+            new_file.save()
 
         try:
             user.save()
@@ -448,6 +439,15 @@ def profile(request, community_id):
             return redirect('profile', community_id=community.id)
 
         return redirect('profile', community_id=community.id)
+    
+    last_profile_image = None
+    last_banner_image = None
+    last_profile_image = FileUpload.objects.filter(user=user, image_type='profile').last()
+    image_profile_url = last_profile_image.image.url if last_profile_image else None
+    print("\nimage_profile_url: ", image_profile_url)
+    last_banner_image = FileUpload.objects.filter(user=user, image_type='banner').last()
+    image_banner_url = last_banner_image.image.url if last_banner_image else None
+    print("\nimage_banner_url: ", image_banner_url)
 
     # Renderiza a página com o formulário e os dados do usuário
     return render(request, 'myprofile.html', {

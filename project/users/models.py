@@ -15,3 +15,9 @@ class FileUpload(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     image = models.FileField(upload_to='uploads/')  # Diretório onde a imagem será salva
     uploaded_at = models.DateTimeField(auto_now_add=True)  # Data de upload
+    image_type = models.CharField(max_length=10, choices=[('profile', 'Profile'), ('banner', 'Banner')], default='banner')
+
+    def __str__(self):
+        return f"{self.user.username} - {self.image_type}"
+
+
