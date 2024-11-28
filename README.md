@@ -3,15 +3,6 @@
 ## Bem vindo(a) ao **AGRAS**
 Bem-vindo ao Agras! Este projeto foi desenvolvido para auxiliar famílias que praticam agricultura familiar no acompanhamento das suas plantações e no planejamento das atividades agrícolas.
 
-## 🧑‍🌾 Sobre o Projeto  
-### A aplicação permite que os usuários/agricultores:
-
-- Realizem o cadastro das plantas cultivadas.
-- Acompanhem o ciclo de produção (desde o plantio até a colheita).
-- Organizem atividades diárias como irrigação e fertilização.
-- Gerem relatórios sobre a produção e o desempenho das culturas.
-
-
 ## 🌍 Visão Geral
 A agricultura familiar é essencial para o sustento de muitas famílias ao redor do mundo, e ter uma ferramenta para gerenciar esse processo de forma organizada pode fazer toda a diferença. Este sistema foi criado para otimizar o controle de plantações, organizar atividades diárias, e monitorar o desempenho da produção, proporcionando um apoio digital para agricultores familiares.
 
