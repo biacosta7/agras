@@ -23,7 +23,7 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
 
     def test_user_registration_and_login(self):
         # Navega até a página de cadastro
-        self.browser.get(f"{self.live_server_url}")
+        self.browser.get("http://127.0.0.1:8000/")
         time.sleep(1)
         self.browser.find_element(By.LINK_TEXT, "Cadastre-se").click()
 
@@ -119,3 +119,67 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
         # Realiza o clique no botão "Entrar"
         botao_entrar.click()
         time.sleep(1)
+
+        # Clicar em Areas de Plantio
+        self.browser.find_element(By.XPATH, '/html/body/div/div[2]/div[2]/a[2]/span[2]').click()
+        time.sleep(1)
+
+        # Clicar em Criar Area de Plantio
+        self.browser.find_element(By.XPATH, '//*[@id="addCommunityBtn"]').click()
+        time.sleep(1)
+
+        # Preencher Nome e Descrição
+        self.browser.find_element(By.ID, "name").send_keys("Area Exemplo")
+        time.sleep(1)
+
+
+        # Preenche o campo abaixo de "Descrição"
+        self.browser.find_element(By.ID, "description").send_keys("Area Exemplo 1")
+        time.sleep(1)
+        # Clicar em Criar
+        self.browser.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
+        time.sleep(1)
+
+        # Clicar em OK
+        WebDriverWait(self.browser, 10).until(
+        EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'OK')]"))).click()
+        time.sleep(1)
+
+        # Clicar em Visualizar
+        self.browser.find_element(By.XPATH, '/html/body/div/div[1]/div[3]/div/div[1]/div/div[3]/a').click()
+        time.sleep(1)
+
+        # Clicar em Criar Canteiro
+        self.browser.find_element(By.XPATH, '//*[@id="addCommunityBtn"]').click()
+        time.sleep(1)
+
+        # Preencher Nome
+        self.browser.find_element(By.ID, "seedbed_name").send_keys("Canteiro Exemplo")
+        time.sleep(1)
+
+        # Clicar em Criar
+        self.browser.find_element(By.XPATH, '//*[@id="areaForm"]/div[2]/button[2]').click()
+        time.sleep(1)
+
+        # Clicar em Ok
+        WebDriverWait(self.browser, 10).until(
+        EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'OK')]"))).click()
+        time.sleep(1)
+
+        # Visualizar Canteiro
+        self.browser.find_element(By.XPATH, '/html/body/div/div[1]/div[2]/div[2]/div/div/div/div[2]/div/a').click()
+        time.sleep(1)
+
+        # Adicionar Cultivo
+        self.browser.find_element(By.XPATH, '/html/body/div/div[2]/div/div/ul/li/a/img').click()
+        time.sleep(1)
+       # Adicionar Produto
+        self.browser.find_element(By.XPATH, '/html/body/div/div[1]/form/button').click()
+        time.sleep(1)
+       # Erro pois nao colocou o nome
+
+
+
+
+
+
