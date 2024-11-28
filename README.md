@@ -59,9 +59,20 @@ A agricultura familiar é essencial para o sustento de muitas famílias ao redor
 
 ## 🤝 Relatos de Pair Programming
 
-Nas últimas três semanas, a equipe aplicou intensivamente o Pair Programming como uma prática central no desenvolvimento do projeto. Essa abordagem envolve dois programadores trabalhando juntos em uma única tarefa, onde um atua como "driver", escrevendo o código, e o outro como "navigator", revisando e sugerindo melhorias em tempo real. Essa dinâmica permite uma maior troca de ideias e colaboração, com foco na qualidade do código e na detecção rápida de erros. Durante o projeto, a equipe promoveu um rodízio frequente de papéis, garantindo que todos pudessem tanto programar quanto revisar, ampliando o conhecimento coletivo e a familiaridade com o código.
+O principal objetivo foi otimizar o tempo de desenvolvimento e facilitar a resolução de problemas, com a meta de finalizar as tasks/histórias do projeto com alta qualidade. A ideia central foi dividir as tarefas de forma eficiente e garantir que cada parte do projeto fosse concluída de acordo com os padrões estabelecidos.
 
-Essa metodologia foi fundamental para a aceleração do desenvolvimento e a melhoria contínua do código, permitindo que os membros da equipe colaborassem de forma mais eficiente. Além de otimizar o tempo e a qualidade das entregas, o Pair Programming também serviu como uma ferramenta de aprendizado colaborativo, onde todos os envolvidos puderam trocar experiências, discutir soluções e aplicar as melhores práticas de programação, tanto no back-end quanto no front-end. Colocar essa metodologia em prática contribuiu para uma maior coesão do grupo e para a entrega de um produto com código mais sólido e bem estruturado.
+Divisão de Tarefas:
+Durante uma reunião inicial, decidimos nos dividir em duplas para cada conjunto de tarefas. Cada dupla ficou responsável por 3 a 4 histórias para implementar, o que possibilitou uma maior distribuição do trabalho e aceleração no progresso do projeto. As tarefas foram organizadas em um documento colaborativo, onde cada membro indicava seu nome nas atividades nas quais tinha mais interesse, garantindo uma distribuição equilibrada e eficiente.
+
+Além disso, parte das duplas ficou responsável pela realização dos testes, enquanto outras ficaram encarregadas do processo de deploy. Todos os membros participaram ativamente do desenvolvimento das funcionalidades.
+
+Metodologia de Trabalho:
+Utilizamos o Live Share durante as sessões de pair programming, o que facilitou muito a integração entre as duplas e possibilitou uma colaboração contínua em tempo real. Isso nos permitiu discutir e ajustar o código de maneira imediata, modelar melhor as histórias e tomar decisões coletivas sobre a implementação das funcionalidades. A troca constante de feedbacks entre os membros foi fundamental para atingir a qualidade desejada e otimizar o tempo de entrega.
+
+Adicionalmente, utilizamos branches no GitHub para organizar o trabalho de cada dupla, realizando merges para combinar os códigos desenvolvidos por cada equipe. Esse processo garantiu que as implementações de cada dupla fossem integradas de forma eficiente, sem causar conflitos no código final.
+
+Resultados:
+Então, com essa divisão eficiente e com o uso de ferramentas como o Live Share e o GitHub, conseguimos cumprir as tarefas planejadas, sempre com foco na qualidade do código e na entrega das funcionalidades conforme o esperado. A experiência foi enriquecedora e demonstrou como a colaboração eficaz pode melhorar a produtividade e a qualidade final do projeto.
 
 
 ## 🔄 Diagrama de atividades do sistema
