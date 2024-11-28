@@ -415,21 +415,21 @@ def profile(request, community_id):
         user.city = city
         user.state = state
 
+        # Upload de imagem de perfil
         if request.FILES.get('profile_image'):
             profile_image = request.FILES['profile_image']
-            image_type = request.POST.get('image_type')  # Recupera o tipo de imagem
+            image_type_profile = request.POST.get('image_type_profile')  # Recupera o tipo de imagem
 
-            # Salva o arquivo com o tipo especificado
-            new_file = FileUpload.objects.create(user=user, image=profile_image, image_type=image_type)
-            new_file.save()
-        
+            if image_type_profile:
+                FileUpload.objects.create(user=user, image=profile_image, image_type=image_type_profile)
+
         if request.FILES.get('banner_image'):
             banner_image = request.FILES['banner_image']
-            image_type = request.POST.get('image_type')  # Recupera o tipo de imagem
+            image_type_banner = request.POST.get('image_type_banner')  # Recupera o tipo de imagem
 
-            # Salva o arquivo com o tipo especificado
-            new_file = FileUpload.objects.create(user=user, image=banner_image, image_type=image_type)
-            new_file.save()
+            if image_type_banner:
+                FileUpload.objects.create(user=user, image=banner_image, image_type=image_type_banner)
+
 
         try:
             user.save()
@@ -441,13 +441,12 @@ def profile(request, community_id):
         return redirect('profile', community_id=community.id)
     
     last_profile_image = None
-    last_banner_image = None
     last_profile_image = FileUpload.objects.filter(user=user, image_type='profile').last()
     image_profile_url = last_profile_image.image.url if last_profile_image else None
-    print("\nimage_profile_url: ", image_profile_url)
+    
+    last_banner_image = None
     last_banner_image = FileUpload.objects.filter(user=user, image_type='banner').last()
     image_banner_url = last_banner_image.image.url if last_banner_image else None
-    print("\nimage_banner_url: ", image_banner_url)
 
     # Renderiza a página com o formulário e os dados do usuário
     return render(request, 'myprofile.html', {
