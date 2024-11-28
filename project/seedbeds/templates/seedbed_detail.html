@@ -1,13 +1,22 @@
+.
 {% extends "base.html" %} 
 {% load static %}
 
 {% block title %}{{ seedbed.nome }}{% endblock %}
 
 {% block styles %}
-    .header{
+    .header {
         padding-top: 90px;
-        padding-left: 225px;
+        padding-left: 260px;
+        display: flex; /* Ativa o layout flexbox */
+        align-items: center; /* Alinha itens verticalmente no centro */
+        justify-content: space-between; /* Distribui os itens horizontalmente */
     }
+    .text-content {
+        flex-grow: 1; /* Permite que o texto ocupe mais espaço, empurrando o botão */
+        margin-right: 20px; /* Espaçamento entre texto e botão */
+    }
+
     input[type="checkbox"] {
         display: none;
     }
@@ -58,13 +67,18 @@
         transform: translateY(90px); /* Altere conforme a distância desejada */
     }
 
-    .green-box{
-        background-color: #5F8C1B; /* Cor verde para o fundo */
+    .green-box {
+        background-color: #0D2601; 
         box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra leve */
         margin-left: 260px;
         border-radius: 10px;
         padding: 20px;
+        position: relative; /* Keep relative positioning */
+        z-index: 1; /* Lower z-index */
+        margin-top: -5px; /* Pull the green box up slightly */
+        margin-right: 10px;
     }
+
     .brown-box {
         background-color: #8B4513; /* Cor marrom */
         color: #fff; /* Texto branco para contraste */
@@ -73,7 +87,10 @@
         text-align: center; /* Centraliza o conteúdo */
         width: 150px; /* Define uma largura fixa para as caixas */
         padding: 1rem;
+        transition: transform 0.5s ease, z-index 0.5s ease;
+        position: relative; /* Add relative positioning */
     }
+
     .white-box {
         background-color: white;
         border-radius: 5px;
@@ -127,8 +144,6 @@
         white-space: nowrap;
     }
     
-
-    
     #product-select {
         width: 250px; /* Largura fixa ou percentual */
         padding: 10px;
@@ -166,8 +181,43 @@
     .brown-box.selected {
         background-color: #5F8C1B; /* Verde */
         color: white; /* Cor do texto */
+        transform: translateY(-10px); /* Adjust to overlap precisely */
+        position: relative; /* Ensure it stays above other elements */
     }
     
+    .empty_seedbed{
+        padding-left: 300px;
+    }
+    .btn {
+        background-color: #8ABF17;
+        color: white;
+        border-radius: 9px;
+        font-weight: 600;
+        font-size: 1.5rem; /* Fonte ligeiramente menor */
+        white-space: nowrap; /* Garante que o texto fique em uma linha */
+        width: auto; /* Ajusta a largura ao conteúdo */
+        text-align: center;
+        height: 40px; /* Mantém a altura consistente */
+        padding: 0.4rem 1rem; /* Ajusta o espaçamento interno para equilibrar */
+        margin-right: 50px; /* Margem direita para posicionamento */
+        display: flex; /* Flex container */
+        align-items: center; /* Alinha o texto verticalmente no centro */
+        justify-content: center; /* Alinha o texto horizontalmente no centro */
+        cursor: pointer; /* Adiciona o ponteiro no hover */
+        transition: background-color 0.3s ease; /* Transição suave no hover */
+        line-height: 1.5rem; /* Ajusta a altura da linha para um bom espaçamento */
+    }
+    .btn a {
+        color: white; /* Mantém o texto do link branco */
+        text-decoration: none; /* Remove o sublinhado */
+        font-size: inherit; /* Usa o tamanho da fonte do botão */
+    }
+
+    .btn:hover {
+        background-color: #7cad10; /* hover:bg-[#7cad10] */
+        color: #edf0e9; /* hover:text-[#edf0e9] */
+    }
+
     @media (max-width: 768px) {
     .container {
         flex-direction: column; /* Em telas menores, as colunas se empilham */
@@ -179,19 +229,20 @@
 
 {% endblock %}
 
-{% block page_classes %}
-    bg-gray-300 h-screen p-4
-{% endblock %}
-
 {% block content %}
-<div class= "header">
-    <h1 class="mt-1 ml-5 text-xl font-semibold">
-        <a href="{% url 'area_manage' community.id %}" class="text-black-600 hover:underline">Áreas &gt;</a>
-        <a href="" class="text-black-600 hover:underline">{{ area.name }} &gt;</a>
-        <a href="" class="text-green-600 hover:underline">{{ seedbed.nome }} &gt;</a>
-    </h1>
-    <div class="flex justify-between items-center">
-        <h2 class="ml-5 mt-2 text-4xl font-bold">{{ seedbed.nome }}</h2>
+<div class="header flex items-center justify-between">
+    <div class="text-content">
+        <h1 class="mt-1 text-xl font-semibold">
+            <a href="{% url 'area_manage' community.id %}" style="font-size: 28px; color: black;">Áreas &gt;</a>
+            <a href="" style="font-size: 28px; color: black;">{{ area.name }} &gt;</a>
+            <a href="" style="font-size: 28px; color: green;">{{ seedbed.nome }} &gt;</a>
+        </h1>
+        <h2 class="mt-2 font-bold" style="font-size: 50px;">{{ seedbed.nome }}</h2>
+    </div>
+    <div class="btn">
+        <a href="{% url 'create_product' community.id area.pk seedbed.id %}">
+            + Adicionar
+        </a>
     </div>
 </div>
 <br>
@@ -211,17 +262,34 @@
                             <p class="text-lg">{{ product.type_product.name }}</p>
                         </a>
                     </li>
-                    {% endfor %}
-                <li class="flex flex-col items-center mb-4 mr-12 brown-box">  
-                    <a href="{% url 'create_product' community.id area.pk seedbed.id %}">
-                        <img src="{% static 'assets/add.png' %}" alt="Adicionar novo cultivo" class="w-16 h-16">
-                    </a>
-                    <p class="text-lg">Adicionar Cultivo</p>
-                </li>
+                {% empty %}
+                    <div class="empty_seedbed">
+                        <div class="text-center col-span-full mt-[15vh]">
+                            <div class="flex flex-col items-center justify-center">
+                                <img src="{% static 'assets/Ativo 324.png' %}" alt="Plantas" class="w-64 mb-4">
+                                <h1 class="font-bold text-[24px]">Nenhum cultivo adicionado em "{{ seedbed.nome }}"</h1>
+                                <p class="font-normal text-[16px]">Clique no botão acima para adicionar cultivos e visualizá-los</p>
+                            </div>
+                        </div>
+                    </div> 
+                {% endfor %}
+                
+                <!-- Verifica se há pelo menos um cultivo -->
+                {% if active_products %}
+                    <li class="flex flex-col items-center mb-4 mr-12 brown-box">  
+                        <a href="{% url 'create_product' community.id area.pk seedbed.id %}">
+                            <img src="{% static 'assets/add.png' %}" alt="Adicionar novo cultivo" class="w-16 h-16">
+                        </a>
+                        <p class="text-lg">Adicionar Cultivo</p>
+                    </li>  
+                {% endif %}
+
             </ul>
         </div>
     </div>
 </div>
+
+
 
 
 {% if seedbed.products_in_seedbed.all %}
@@ -244,19 +312,25 @@
                         </div>
                     </div>
                 </div>
+                <br>
                 <div class="white-box" style="width: 85%">
-                    <div class="sub-container">
-                        <div class="sub-coluna">
-                            <span class="text-lg font-semibold mr-12" style="color: #F76711;">Colheitas:</span><br>
+                    <ul style="max-height: 100px; overflow-y: auto; padding-right: 10px; list-style-type: none;">
+                        <div class="sub-container">
+                            <div class="sub-coluna">
+                                <span class="text-lg font-semibold mr-12" style="color: #F76711;">Colheitas:</span><br>
+                            </div>
+                            <div class="sub-coluna">
+                                <button type="button" class="bg-[#F77711] p-4 text-sm text-white py-1.5 rounded hover:bg-[#F76711] transition duration-200" onclick="openHarvestModal()">
+                                    Adicionar +
+                                </button>
+                            </div>
                         </div>
-                        <div class="sub-coluna">
-                            <button type="button" class="bg-[#F77711] p-4 text-sm text-white py-1.5 rounded hover:bg-[#F76711] transition duration-200" onclick="openHarvestModal()">
-                                Adicionar +
-                            </button>
-                        </div>
-                    </div>
-                    <ul>
-                        <span class="text-lg mr-12 font-semibold" style="color: #F76711; font-size: 15px">Tempo médio: {{ tempo_medio_colheita }} dias</span><br>
+                        {% if tempo_medio_colheita %}
+                            <span class="text-lg mr-12 font-semibold" style="color: #F76711; font-size: 15px">Tempo médio: {{ tempo_medio_colheita }} dias</span><br>
+                        {% else %}
+                            <span class="text-lg mr-12 font-semibold" style="color: #F76711; font-size: 15px">Sem registros de colheita</span><br>
+                        {% endif %}
+                        
                         {% for product in selected_product.type_product.products.all %}
                             {% if product.data_colheita and product.quantidade_colhida > 0 %}
                                 <li>{{ product.quantidade_colhida }} unidades | {{ product.data_colheita }}</li>
@@ -265,7 +339,7 @@
                             <li>Sem registros de colheita.</li>
                         {% endfor %}
                     </ul>
-                </div>
+                </div>               
                 <br>
                 <br>
                 <div class="sub-container">
@@ -284,41 +358,40 @@
                 </div>
             </div>
             <div class="coluna">
-                <div class="white-box">
-                    <div id="to-do-list">
-                        <ul class="list-disc ml-5">
-                            <span class="text-lg font-semibold mr-12" style="color: #5F8C1B">Tarefas previstas para {{ selected_product.type_product.name}}:</span>
-                            {% if next_actions_dates %}
-                                {% for action, date in next_actions_dates.items %}
-                                    <input type="checkbox" id="action_{{ forloop.counter }}" class="mr-2">
-                                        <label for="action_{{ forloop.counter }}">
-                                            {{ action }} | {{ date|date:"d \d\e F \d\e Y" }}
-                                        </label>
-                                {% endfor %}
-                            {% else %}
-                                <li>Sem atividades programadas.</li>
-                            {% endif %}
-                            
-                            <span class="text-lg font-semibold mr-12" style="color: #5F8C1B">Tarefas do canteiro {{ seedbed.nome }}:</span>
-                            {% if tasks %}
-                                <ul>
-                                    {% for task in tasks %}
-                                        <li>
-                                            <input type="checkbox" id="task_{{ task.id }}" class="mr-2">
-                                            <label for="task_{{ task.id }}">
-                                                {{ task.description }} |
-                                                {{ task.start_date|date:"d/m/Y" }}
-                                            </label>
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                            {% else %}
-                                <p>Não há tarefas associadas a este canteiro.</p>
-                            {% endif %}
-                        </ul>
-                    </div>
-                </div>
-            </div>
+                <div class="white-box" style="height: calc(100% - 20px); overflow-y: auto;">
+                   <div id="to-do-list">
+                       <ul class="list-disc ml-5" style="list-style-type: disc; padding-right: 10px;">
+                           <span class="text-lg font-semibold mr-12" style="color: #5F8C1B">Tarefas previstas para {{ selected_product.type_product.name}}:</span>
+                           {% if next_actions_dates %}
+                               {% for action, date in next_actions_dates.items %}
+                               <div style="margin-bottom: 10px;">
+                                   <input type="checkbox" id="action_{{ forloop.counter }}" class="mr-2">
+                                   <label for="action_{{ forloop.counter }}">
+                                       {{ action }} | {{ date|date:"d \d\e F \d\e Y" }}
+                                   </label>
+                               </div>
+                               {% endfor %}
+                           {% else %}
+                               <li>Sem atividades programadas.</li>
+                           {% endif %}
+               
+                           <span class="text-lg font-semibold mr-12" style="color: #5F8C1B">Tarefas do canteiro {{ seedbed.nome }}:</span>
+                           {% if tasks %}
+                               {% for task in tasks %}
+                               <div style="margin-bottom: 10px;">
+                                   <input type="checkbox" id="task_{{ task.id }}" class="mr-2">
+                                   <label for="task_{{ task.id }}">
+                                       {{ task.description }} | {{ task.start_date|date:"d/m/Y" }}
+                                   </label>
+                               </div>
+                               {% endfor %}
+                           {% else %}
+                               <p>Não há tarefas associadas a este canteiro.</p>
+                           {% endif %}
+                       </ul>
+                   </div>
+               </div>
+               </div>
               
             <div class="coluna">
                 <span class="text-lg font-semibold mr-2" id="harvest-estimate" style="color: white">Previsão para a próxima colheita: </span><br>
@@ -332,18 +405,18 @@
                 </span>
                 <br>
                 <span class="text-lg font-semibold mr-2" style="color: white">Comentários: </span>
-                <br>
-                    <div class="white-box">
-                        <span class="ml-1 text-base" id="comment"> {{ comment }}</span>
-                    </div>
-                <br>
+            <br>
+            <div class="white-box" style="word-wrap: break-word; overflow-wrap: break-word;">
+                <span class="ml-1 text-base" id="comment">{{ comment }}</span>
+            </div>
+            <br>
                 <form id="delete-product-form" method="POST" action="{% url 'product_delete' community.id area.id seedbed.id selected_product.id %}" style="display:none;">
                     {% csrf_token %}
                 </form>
-                <button type="button" class="mt-5 m-2 bg-[#F77711] p-7 text-white py-2 rounded hover:bg-[#F76711] transition duration-200" onclick="openModal()">
+                <button type="button" class="mt-5 m-2 bg-[#C80C0C] p-7 text-white py-2 rounded hover:bg-[#F76711] transition duration-200" onclick="openModal()">
                     Excluir
                 </button>
-                <button type="button" class="mt-5 m-2 bg-[#562A00] p-7 text-white py-2 rounded hover:bg-[#401F00] transition duration-200" onclick="openEditModal()">
+                <button type="button" class="mt-5 m-2 bg-[#8ABF17] p-7 text-white py-2 rounded hover:bg-[#401F00] transition duration-200" onclick="openEditModal()">
                     Editar
                 </button>              
             </div>
@@ -437,73 +510,58 @@
 
 <script>
     function moveAndScroll(element, productId, event) {
-        event.preventDefault(); // Prevent immediate redirection
-    
-        // Clear any previous scroll states
-        sessionStorage.removeItem('hasScrolled');
-    
-        // Add "selected" class to highlight the selected card
-        const cards = document.querySelectorAll('.brown-box');
-        cards.forEach(card => card.classList.remove('selected'));
-        element.classList.add('selected');
-    
-        // Save the product ID
-        sessionStorage.setItem("selectedProductId", productId);
-    
-        // Scroll and then redirect
-        element.scrollIntoView({
-            behavior: "smooth",
-            block: "nearest",
-            inline: "start"
-        });
-    
-        // Wait for scroll to complete before redirecting
-        setTimeout(() => {
-            const url = element.querySelector("a").href;
-            window.location.href = url;
-        }, 500);
-    }
-    
-    // Page load event listener
-    document.addEventListener("DOMContentLoaded", () => {
-        const selectedProductId = sessionStorage.getItem("selectedProductId");
-        const hasScrolled = sessionStorage.getItem('hasScrolled');
-    
-        if (selectedProductId && !hasScrolled) {
-            const selectedCard = document.querySelector(`[data-product-id="${selectedProductId}"]`);
-            
-            if (selectedCard) {
-                // Mark that we're about to scroll
-                sessionStorage.setItem('hasScrolled', 'true');
-    
-                selectedCard.classList.add("selected");
-                selectedCard.scrollIntoView({
-                    behavior: "auto", // Changed from smooth to instant
-                    block: "nearest",
-                    inline: "start"
-                });
-            }
-        }
-    
-        // Clean up after scrolling
-        sessionStorage.removeItem("selectedProductId");
+    event.preventDefault(); // Prevent immediate redirection
+
+    // Clear any previous scroll states
+    sessionStorage.removeItem('hasScrolled');
+
+    // Add "selected" class to highlight the selected card
+    const cards = document.querySelectorAll('.brown-box');
+    cards.forEach(card => {
+        card.classList.remove('selected');
+        card.style.transform = ''; // Reset any previous transformations
     });
-    
-    
-    
-    
-    {% comment %} function moveBox(selectedElement) {
-        // Obtém todas as caixas com a classe "brown-box"
-        const boxes = document.querySelectorAll('.brown-box');
+    element.classList.add('selected');
+
+    // Save the product ID
+    sessionStorage.setItem("selectedProductId", productId);
+
+    // Calculate the height to move down
+    const rowHeight = element.offsetHeight;
+
+    // Move down 
+    element.style.transform = `translateY(20px)`; // Added 10px for slight padding
+
+    // Wait before redirecting
+    setTimeout(() => {
+        const url = element.querySelector("a").href;
+        window.location.href = url;
+    }, 500);
+}
+
+// Page load event listener
+document.addEventListener("DOMContentLoaded", () => {
+    const selectedProductId = sessionStorage.getItem("selectedProductId");
+    const hasScrolled = sessionStorage.getItem('hasScrolled');
+
+    if (selectedProductId && !hasScrolled) {
+        const selectedCard = document.querySelector(`[data-product-id="${selectedProductId}"]`);
         
-        // Remove a classe "bg-green-box" de todas as caixas
-        boxes.forEach(box => {
-            box.classList.remove('bg-green-box');
-        });
-        
-        // Adiciona a classe "bg-green-box" à caixa clicada
-        selectedElement.classList.add('bg-green-box');
-    } {% endcomment %}
+        if (selectedCard) {
+            // Mark that we're about to scroll
+            sessionStorage.setItem('hasScrolled', 'true');
+            
+            selectedCard.classList.add("selected");
+            
+            // Calculate row height and move down
+            const rowHeight = selectedCard.offsetHeight;
+            selectedCard.style.transform = `translateY(20px)`;
+        }
+    }
+
+    // Clean up after scrolling
+    sessionStorage.removeItem("selectedProductId");
+});
     
     function openModal() {
         document.getElementById('deleteModal').style.display = 'block';
@@ -554,3 +612,4 @@
 </script>
 
 {% endblock content %}
+

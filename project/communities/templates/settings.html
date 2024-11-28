@@ -15,25 +15,53 @@
 
         <div class="flex items-center lg:ml-[250px] justify-center mt-4">
             <!-- Formulário -->
-            <form id="community-settings-form" method="POST" action="{% url 'settings' community.id %}" class="bg-white shadow-lg rounded-lg p-8 w-full max-w-4xl">
+            <form id="community-settings-form" method="POST" action="{% url 'settings' community.id %}" class="bg-white shadow-lg rounded-lg p-8 w-full max-w-4xl" enctype="multipart/form-data">
                 {% csrf_token %}
                 <h2 class="text-2xl font-bold text-[#5F8C1B] mb-6">Configurações da Comunidade</h2>
 
                 <!-- Capa -->
-                <div class="mb-6">
-                    <h3 class="text-lg font-semibold mb-4">Foto ou Cor para a Capa</h3>
-                    <div class="flex flex-row items-start space-x-4">
-                        <!-- Upload de Foto -->
-                        <label class="block border border-dashed border-gray-400 rounded-lg w-48 h-32 flex items-center justify-center cursor-pointer">
-                            <span class="material-icons text-[#8ABF17]">upload</span>
-                            <input type="file" name="cover_photo" class="hidden" />
+                <div class="flex flex-row items-start space-x-4">
+                    <!-- Upload de Foto -->
+                    <div 
+                        id="community-container" 
+                        class="relative w-80 h-42 rounded-lg overflow-hidden bg-gray-200" 
+                        style="background-image: url('{{ image_community_url }}'); background-size: cover; height: 168px; width: 320px; background-position: center;">
+                        
+                        <!-- Exibição da Imagem da Comunidade -->
+                        <img 
+                            id="community-image" 
+                            src="{% if image_community_url %}{{ image_community_url }}{% else %}{% static 'assets/vertcolorido.png' %}{% endif %}" 
+                            alt="Community Image" 
+                            class="w-full h-full object-cover">
+                        
+                        <!-- Botão de upload -->
+                        <label 
+                            for="file-upload-community" 
+                            class="absolute bottom-4 right-4 flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full shadow-lg cursor-pointer"
+                            title="Editar imagem da comunidade">
+                            <span class="material-icons text-[#8ABF17] text-lg sm:text-xl">photo_camera</span>
+                            <input id="file-upload-community" type="file" name="community_image" class="hidden" accept="image/*" />
+                            <input type="hidden" name="image_type_community" value="community" />
                         </label>
-                        <!-- Cores -->
-                        <div class="flex flex-col space-y-1">
-                            <div class="w-12 h-10 rounded-lg bg-[#8B4513] cursor-pointer"></div>
-                            <div class="w-12 h-10 rounded-lg bg-[#FF6F00] cursor-pointer"></div>
-                            <div class="w-12 h-10 rounded-lg bg-[#5F8C1B] cursor-pointer"></div>
+                    </div>
+                    
+                    <!-- Cores -->
+                    <div class="flex flex-col space-y-1">
+                        <!-- Inputs escondidos que serão atualizados ao clicar nas cores -->
+                        <div 
+                            class="w-12 h-10 rounded-lg bg-[#8B4513] cursor-pointer" 
+                            onclick="changeCommunityColor('marrom')">
+                            <input id="file-upload-community" type="file" name="community_image" class="hidden"/>
+                            <input type="hidden" id="community-image-url" name="community_image_url">
+                        
                         </div>
+
+                        <div 
+                            class="w-12 h-10 rounded-lg bg-[#FF6F00] cursor-pointer" 
+                            onclick="changeCommunityColor('laranja')"></div>
+                        <div 
+                            class="w-12 h-10 rounded-lg bg-[#5F8C1B] cursor-pointer" 
+                            onclick="changeCommunityColor('verde')"></div>
                     </div>
                 </div>
 
@@ -50,10 +78,9 @@
                 <!-- Botões -->
                 <div class="flex justify-between mt-6">
                     <!-- Botão Excluir -->
-                    <button type="submit" name="action" value="delete" class="bg-[#FF4D4D] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#cc3c3c]">
+                    <button type="button" onclick="openDeleteModal()" class="bg-[#FF4D4D] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#cc3c3c]">
                         Excluir
                     </button>
-                    
                     <div class="flex space-x-4">
                         <!-- Botão Cancelar -->
                         <button type="button" onclick="document.getElementById('community-settings-form').reset()" class="bg-white text-[#8ABF17] border border-[#8ABF17] px-6 py-2 rounded-lg font-semibold hover:bg-gray-100">
@@ -69,5 +96,114 @@
             </form>
         </div>
     </div>
+    
+<!-- Modal de deleção -->
+<div id="deleteModal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
+    <div class="bg-white px-14 py-12 rounded-[34px] w-full max-w-lg">
+        <h3 class="text-xl font-bold mb-4 text-red-600">Excluir Comunidade</h3>
+        <p class="text-gray-700 mb-6">Tem certeza de que deseja excluir a comunidade "{{ community.name }}"? Esta ação não pode ser desfeita.</p>
+        <form id="deleteForm" method="POST" action="{% url 'delete_community' community.id %}">
+            {% csrf_token %}
+            <div class="flex flex-row justify-between">
+                <button type="button" onclick="submitDeleteForm()" class="mr-2 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 w-full font-bold">Excluir</button>
+                <button type="button" onclick="closeDeleteModal()" class="bg-white border-2 border-[#8ABF17] hover:border-[#7aab0f] text-[#8ABF17] hover:text-[#7aab0f] font-bold px-6 py-3 rounded-[9px] w-full">Cancelar</button>
+            </div>
+        </form>
+    </div>
 </div>
+</div>
+
+<script>
+    function openDeleteModal() {
+        document.getElementById('deleteModal').classList.remove('hidden');
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('deleteModal').classList.add('hidden');
+    }
+
+    function submitDeleteForm() {
+        document.getElementById('deleteForm').submit();
+    }
+</script>
 {% endblock %}
+
+{% block extra_js %}
+<script>
+    // Seletores do DOM 
+    const fileInputCommunity = document.getElementById('file-upload-community');
+    const communityContainer = document.getElementById('community-container');
+    const communityImage = document.getElementById('community-image');
+
+    // Função para lidar com o upload de imagem
+    fileInputCommunity.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+                // Define a nova imagem como plano de fundo
+                communityContainer.style.backgroundImage = `url(${e.target.result})`;
+                communityContainer.style.backgroundSize = 'cover';
+                communityContainer.style.backgroundPosition = 'center';
+
+                // Oculta a imagem padrão
+                communityImage.style.display = 'none';
+                // Garante que o fundo colorido não interfira
+                communityContainer.style.backgroundColor = 'transparent';
+            };
+
+            reader.readAsDataURL(file);
+        }
+    });
+
+    function changeCommunityColor(color) {
+        // Variáveis para armazenar a URL das imagens
+        let imageUrl;
+    
+        // Definindo as URLs com base na cor escolhida
+        if (color == "laranja") {
+            imageUrl = '{% static "assets/fundo/laranja.jpg" %}';
+        } else if (color == "verde") {
+            imageUrl = '{% static "assets/fundo/verde.jpg" %}';
+        } else if (color == "marrom") {
+            imageUrl = '{% static "assets/fundo/marrom.jpg" %}';
+        } else {
+            imageUrl = '{% static "assets/fundo/vertcolorido.png" %}'; // Imagem padrão
+        }
+    
+        // Atualiza o input escondido com a nova URL da imagem
+        document.getElementById('community-image-url').value = imageUrl;
+    
+        // Atualiza a imagem exibida na página
+        const communityContainer = document.getElementById('community-container');
+        communityContainer.style.backgroundImage = `url(${imageUrl})`;
+        communityContainer.style.backgroundSize = 'cover';
+        communityContainer.style.backgroundPosition = 'center';
+    
+        // Atualiza o src da imagem da comunidade
+        const communityImage = document.getElementById('community-image');
+        communityImage.src = imageUrl;
+    }
+    
+
+    // Restaura a imagem original se o formulário for resetado
+    document.getElementById('community-settings-form').addEventListener('reset', () => {
+        // Verifica se há uma imagem URL para restaurar
+        const imageUrl = '{{ image_community_url }}';
+        if (imageUrl) {
+            communityContainer.style.backgroundImage = `url(${imageUrl})`;
+            communityContainer.style.backgroundSize = 'cover';
+            communityContainer.style.backgroundPosition = 'center';
+
+            // Mostra a imagem padrão novamente
+            communityImage.style.display = 'block';
+        } else {
+            // Caso não haja URL, volta ao fundo padrão
+            communityContainer.style.backgroundImage = 'none';
+            communityContainer.style.backgroundColor = '#FAFAFA';
+        }
+    });
+</script>
+
+{% endblock extra_js %}
