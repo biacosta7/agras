@@ -74,7 +74,7 @@ def create_product_view(request, seedbed_id, community_id, area_id):
             messages.success(request, f'Produto {product.type_product.name} cadastrado com sucesso no canteiro {seedbed.nome}.')
             print("Comentário: ", comment)
             request.session['formatted_date'] = formatted_date  # Adiciona a data formatada na sessão
-            request.session['comment'] = comment
+            request.session[f'comment'] = comment
             print("Data de plantio: ", formatted_date)
         except ValidationError as e:
             messages.error(request, f"Erro de validação: {e}")

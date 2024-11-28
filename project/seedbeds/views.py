@@ -111,7 +111,14 @@ def seedbed_detail_view(request, community_id, area_id, seedbed_id):
         selected_product = active_products.filter(id=selected_product_id).first()
     else:
         selected_product = active_products.first() if active_products else None
-    
+    formatted_date = None
+    comment = None
+    if selected_product:
+        # Formatar a data de plantio do produto selecionado
+        formatted_date = selected_product.data_plantio.strftime('%d de %b %Y')
+        selected_product.formatted_date = formatted_date  # Adiciona o atributo temporariamente
+        comment = request.session.get(f'comment_{selected_product.id}', selected_product.comentario)
+
     # Verifica o ciclo de vida do produto selecionado
     ciclo_de_vida = 3  # Valor padrão
     if selected_product and selected_product.type_product and selected_product.type_product.lifecycle is not None:

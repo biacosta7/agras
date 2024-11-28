@@ -160,6 +160,11 @@
         border: 1px solid #ccc;
         border-radius: 5px;
     }
+    .brown-box.selected {
+        background-color: #5F8C1B; /* Verde */
+        color: white; /* Cor do texto */
+    }
+    
     @media (max-width: 768px) {
     .container {
         flex-direction: column; /* Em telas menores, as colunas se empilham */
@@ -189,27 +194,33 @@
 <br>
 
 <div class="flex container mx-auto mt-5">
-    <div class="text-center flex-1 ml-36">  <!-- Aqui foi adicionada uma margem à esquerda (ml-48) -->
-        <ul class="flex flex-wrap list-none ml-8 mr-4">
-            {% for product in active_products %}
-                <li class="flex flex-col items-center mr-12 mb-4 brown-box" onclick="moveBox(this)">
-                    <a href="?product_id={{ product.id }}">
-                        <img src="{% static 'assets/small-plant.png' %}" alt="Área de plantio" class="w-16 h-16 mb-1">
-                        <p class="text-lg">{{ product.type_product.name }}</p>
+    <div class="text-center flex-1 ml-36">
+        <!-- Adicionando overflow horizontal -->
+        <div class="overflow-x-auto">
+            <!-- Forçando largura maior -->
+            <ul class="flex list-none ml-8 mr-4" style="min-width: 200%; display: flex;">
+                {% for product in active_products %}
+                    <li class="flex flex-col items-center mr-12 mb-4 brown-box" 
+                        data-product-id="{{ product.id }}" 
+                        onclick="moveAndScroll(this, '{{ product.id }}', event)">
+                        <a href="?product_id={{ product.id }}">
+                            <img src="{% static 'assets/small-plant.png' %}" alt="Área de plantio" class="w-16 h-16 mb-1">
+                            <p class="text-lg">{{ product.type_product.name }}</p>
+                        </a>
+                    </li>
+                    {% endfor %}
+                <li class="flex flex-col items-center mb-4 mr-12 brown-box">  
+                    <a href="{% url 'create_product' community.id area.pk seedbed.id %}">
+                        <img src="{% static 'assets/add.png' %}" alt="Adicionar novo cultivo" class="w-16 h-16">
                     </a>
-                </li>                    
-                {% empty %}
-                <li style="color: gray;">Nenhum cultivo cadastrado</li>
-                {% endfor %}
-            <li class="flex flex-col items-center mb-4 mr-12 brown-box">  
-                <a href="{% url 'create_product' community.id area.pk seedbed.id %}">
-                    <img src="{% static 'assets/add.png' %}" alt="Adicionar novo cultivo" class="w-16 h-16">
-                </a>
-                <p class="text-lg">Adicionar Cultivo</p>
-            </li>
-        </ul>
+                    <p class="text-lg">Adicionar Cultivo</p>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
+
+
 {% if seedbed.products_in_seedbed.all %}
 <div class="flex items-center justify-center"> 
     <!-- Detalhes do produto selecionado -->
@@ -226,7 +237,7 @@
                     <div class="sub-coluna">
                         <span class="font-semibold mr-12" style="font-size: 18px; color: white">Data de Plantio:</span><br>
                         <div class="white-box">
-                            <span class="text-lg" style="font-size: 15px" id="planting-date">{{ formatted_date }}</span>
+                            <span class="text-lg" style="font-size: 15px" id="planting-date">{{ selected_product.formatted_date }}</span>
                         </div>
                     </div>
                 </div>
@@ -319,7 +330,7 @@
                 <span class="text-lg font-semibold mr-2" style="color: white">Comentários: </span>
                 <br>
                     <div class="white-box">
-                        <span class="ml-1 text-base" id="comments"> {{ comment }}</span>
+                        <span class="ml-1 text-base" id="comment"> {{ comment }}</span>
                     </div>
                 <br>
                 <form id="delete-product-form" method="POST" action="{% url 'product_delete' community.id area.id seedbed.id selected_product.id %}" style="display:none;">
@@ -421,6 +432,62 @@
 {% endif %}
 
 <script>
+    function moveAndScroll(element, productId, event) {
+        event.preventDefault(); // Prevent immediate redirection
+    
+        // Clear any previous scroll states
+        sessionStorage.removeItem('hasScrolled');
+    
+        // Add "selected" class to highlight the selected card
+        const cards = document.querySelectorAll('.brown-box');
+        cards.forEach(card => card.classList.remove('selected'));
+        element.classList.add('selected');
+    
+        // Save the product ID
+        sessionStorage.setItem("selectedProductId", productId);
+    
+        // Scroll and then redirect
+        element.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest",
+            inline: "start"
+        });
+    
+        // Wait for scroll to complete before redirecting
+        setTimeout(() => {
+            const url = element.querySelector("a").href;
+            window.location.href = url;
+        }, 500);
+    }
+    
+    // Page load event listener
+    document.addEventListener("DOMContentLoaded", () => {
+        const selectedProductId = sessionStorage.getItem("selectedProductId");
+        const hasScrolled = sessionStorage.getItem('hasScrolled');
+    
+        if (selectedProductId && !hasScrolled) {
+            const selectedCard = document.querySelector(`[data-product-id="${selectedProductId}"]`);
+            
+            if (selectedCard) {
+                // Mark that we're about to scroll
+                sessionStorage.setItem('hasScrolled', 'true');
+    
+                selectedCard.classList.add("selected");
+                selectedCard.scrollIntoView({
+                    behavior: "auto", // Changed from smooth to instant
+                    block: "nearest",
+                    inline: "start"
+                });
+            }
+        }
+    
+        // Clean up after scrolling
+        sessionStorage.removeItem("selectedProductId");
+    });
+    
+    
+    
+    
     {% comment %} function moveBox(selectedElement) {
         // Obtém todas as caixas com a classe "brown-box"
         const boxes = document.querySelectorAll('.brown-box');
