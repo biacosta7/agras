@@ -4,6 +4,56 @@
 {% block title %}{{ seedbed.nome }}{% endblock %}
 
 {% block styles %}
+    .header{
+        padding-top: 90px;
+        padding-left: 225px;
+    }
+    input[type="checkbox"] {
+        display: none;
+    }
+
+    /* Estilizando o container do checkbox personalizado */
+    input[type="checkbox"] + label {
+        position: relative;
+        padding-left: 30px;
+        cursor: pointer;
+        display: inline-block;
+        line-height: 20px;
+        font-size: 16px;
+    }
+
+    /* Criando o "quadrado" que será o checkbox */
+    input[type="checkbox"] + label::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 20px;
+        height: 20px;
+        border: 2px solid #5F8C1B;
+        background-color: white;
+        border-radius: 4px;
+        transition: background-color 0.3s, border-color 0.3s;
+    }
+
+    /* Estilo quando o checkbox está marcado */
+    input[type="checkbox"]:checked + label::before {
+        background-color: #5F8C1B;
+        border-color: #5F8C1B;
+    }
+
+    /* Estilo para o "check" dentro do quadrado */
+    input[type="checkbox"]:checked + label::after {
+        content: '';
+        position: absolute;
+        left: 6px;
+        top: 2px;
+        width: 7px;
+        height: 12px;
+        border: solid white;
+        border-width: 0 4px 4px 0;
+        transform: rotate(45deg);
+    }
     .shift-down {
         transform: translateY(90px); /* Altere conforme a distância desejada */
     }
@@ -32,6 +82,7 @@
         max-width: 100%; /* Evita que a caixa exceda o espaço disponível */
         box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1); /* Adiciona um leve sombreamento */
         word-wrap: break-word; /* Garante que o texto quebre em várias linhas se necessário */
+        margin-top: 10px;
     }
     .button {
         padding: 10px 20px;
@@ -64,14 +115,14 @@
 
     .sub-container {
         display: flex; /* Ativa o Flexbox dentro da subcoluna */
-        gap: 20px; /* Espaçamento entre as subcolunas */
-        margin-top: 20px; /* Distância para separar a flexbox interna do conteúdo acima */
+        gap: 10px; /* Espaçamento entre as subcolunas */
+        margin-top: 10px; /* Distância para separar a flexbox interna do conteúdo acima */
     }
 
     .sub-coluna {
         flex: 1; /* As subcolunas vão ocupar uma quantidade igual de espaço */
         border: 1px solid #ccc; /* Bordas para demarcar as subcolunas */
-        padding: 10px; /* Padding para as subcolunas */
+        padding: 5px; /* Padding para as subcolunas */
     }
 
     
@@ -125,20 +176,21 @@
 {% endblock %}
 
 {% block content %}
-<h1 class="mt-1 ml-5 text-xl font-semibold">
-    <a href="{% url 'dashboard' community.id %}" class="text-green-600 hover:underline">Dashboard &gt;</a>
-    <a href="{% url 'area_manage' community.id %}" class="text-green-600 hover:underline">Áreas &gt;</a>
-    <a href="" class="text-green-600 hover:underline">{{ area.name }} &gt;</a>
-</h1>
-<div class="flex justify-between items-center">
-    <h2 class="ml-5 mt-2 text-4xl font-bold">{{ seedbed.nome }}</h2>
+<div class= "header">
+    <h1 class="mt-1 ml-5 text-xl font-semibold">
+        <a href="{% url 'area_manage' community.id %}" class="text-black-600 hover:underline">Áreas &gt;</a>
+        <a href="" class="text-black-600 hover:underline">{{ area.name }} &gt;</a>
+        <a href="" class="text-green-600 hover:underline">{{ seedbed.nome }} &gt;</a>
+    </h1>
+    <div class="flex justify-between items-center">
+        <h2 class="ml-5 mt-2 text-4xl font-bold">{{ seedbed.nome }}</h2>
+    </div>
 </div>
-
 <br>
 
-<div class="flex-1 container mx-auto mt-5 ml-100">
-    <div class="text-center flex-1">
-        <ul class="flex flex-wrap list-none">
+<div class="flex container mx-auto mt-5">
+    <div class="text-center flex-1 ml-36">  <!-- Aqui foi adicionada uma margem à esquerda (ml-48) -->
+        <ul class="flex flex-wrap list-none ml-8 mr-4">
             {% for product in active_products %}
                 <li class="flex flex-col items-center mr-12 mb-4 brown-box" onclick="moveBox(this)">
                     <a href="?product_id={{ product.id }}">
@@ -147,7 +199,7 @@
                     </a>
                 </li>                    
                 {% empty %}
-                    <li>Nenhum cultivo cadastrado</li>
+                <li style="color: gray;">Nenhum cultivo cadastrado</li>
                 {% endfor %}
             <li class="flex flex-col items-center mb-4 mr-12 brown-box">  
                 <a href="{% url 'create_product' community.id area.pk seedbed.id %}">
@@ -168,39 +220,50 @@
             <div class="coluna mb-4">
                 <div class="sub-container">
                     <div class="sub-coluna">
-                        <span class="text-lg font-semibold mr-12">Plantados:</span><br>
+                        <span class="font-semibold mr-12" style="font-size: 18px; color: white">Qtd. plantada:</span><br>
                         <div class="white-box">
-                            <span class="text-lg" id="quantidade">{{ selected_product.quantidade }} unidades</span>
+                            <span class="text-lg" style="font-size: 15px" id="quantidade">{{ selected_product.quantidade }} unidades</span>
                         </div>
                     </div>
                     <div class="sub-coluna">
-                        <span class="text-lg font-semibold mr-12">Data de Plantio:</span><br>
+                        <span class="font-semibold mr-12" style="font-size: 18px; color: white">Data de Plantio:</span><br>
                         <div class="white-box">
-                            <span class="text-lg" id="planting-date">{{ formatted_date }}</span>
+                            <span class="text-lg" style="font-size: 15px" id="planting-date">{{ formatted_date }}</span>
                         </div>
                     </div>
                 </div>
-                <span class="text-lg font-semibold mr-12">Histórico de colheitas:</span><br>
-                <ul>
-                    <div class="white-box">
+                <div class="white-box">
+                    <div class="sub-container">
+                        <div class="sub-coluna">
+                            <span class="text-lg font-semibold mr-12" style="color: #F76711;">Colheitas:</span><br>
+                        </div>
+                        <div class="sub-coluna">
+                            <button type="button" class="bg-[#F77711] p-4 text-sm text-white py-1.5 rounded hover:bg-[#F76711] transition duration-200" onclick="openHarvestModal()">
+                                Adicionar +
+                            </button>
+                        </div>
+                    </div>
+                    <ul>
+                        
                         {% for product in selected_product.type_product.products.all %}
                             {% if product.data_colheita and product.quantidade_colhida > 0 %}
-                                <li>{{ product.data_colheita }}: {{ product.quantidade_colhida }} unidades colhidas</li>
+                                <li>{{ product.quantidade_colhida }} unidades | {{ product.data_colheita }}</li>
                             {% endif %}
                         {% empty %}
                             <li>Sem registros de colheita.</li>
                         {% endfor %}
-                    </div>
-                </ul>
+                    </ul>
+                </div>
+                <br>
                 <div class="sub-container">
                     <div class="sub-coluna">
-                        <span class="text-lg font-semibold mr-12">Colheitas total:</span><br>
+                        <span class="text-lg font-semibold mr-12" style="color: white">Total de colheitas:</span><br>
                         <div class="white-box">
                             <span class="text-lg" id="total-quantity">{{ total_quantidade_colhida_produto }} unidades</span>
                         </div>
                     </div>
                     <div class="sub-coluna">
-                        <span class="text-lg font-semibold mr-12">Ciclo de Vida:</span><br>
+                        <span class="text-lg font-semibold mr-12" style="color: white">Ciclo de Vida:</span><br>
                         <div class="white-box">
                             <span class="text-lg" id="life-cycle">{{ ciclo_de_vida }} meses</span>
                         </div>
@@ -208,29 +271,54 @@
                 </div>
             </div>
             <div class="coluna">
-                <span class="text-lg font-semibold mr-12">Tarefas:</span>
-                <div id="to-do-list">
-                    <ul class="list-disc ml-5">
-                        {% if next_actions_dates %}
-                            {% for action, date in next_actions_dates.items %}
-                                <li>{{ action }} - Próxima atividade: {{ date|date:"d \d\e F \d\e Y" }}</li>
-                            {% endfor %}
-                        {% else %}
-                            <li>Sem atividades programadas.</li>
-                        {% endif %}
-                    </ul>
+                <div class="white-box">
+                    <div id="to-do-list">
+                        <ul class="list-disc ml-5">
+                            <span class="text-lg font-semibold mr-12" style="color: #5F8C1B">Tarefas previstas para {{ selected_product.type_product.name}}:</span>
+                            {% if next_actions_dates %}
+                                {% for action, date in next_actions_dates.items %}
+                                    <input type="checkbox" id="action_{{ forloop.counter }}" class="mr-2">
+                                        <label for="action_{{ forloop.counter }}">
+                                            {{ action }} | {{ date|date:"d \d\e F \d\e Y" }}
+                                        </label>
+                                {% endfor %}
+                            {% else %}
+                                <li>Sem atividades programadas.</li>
+                            {% endif %}
+                            
+                            <span class="text-lg font-semibold mr-12" style="color: #5F8C1B">Tarefas do canteiro {{ seedbed.nome }}:</span>
+                            {% if tasks %}
+                                <ul>
+                                    {% for task in tasks %}
+                                        <li>
+                                            <input type="checkbox" id="task_{{ task.id }}" class="mr-2">
+                                            <label for="task_{{ task.id }}">
+                                                {{ task.description }} |
+                                                {{ task.start_date|date:"d/m/Y" }}
+                                            </label>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p>Não há tarefas associadas a este canteiro.</p>
+                            {% endif %}
+                        </ul>
+                    </div>
                 </div>
-            </div>    
+            </div>
+              
             <div class="coluna">
-                <span class="text-lg" id="harvest-estimate">Previsão de colheita: </span>
+                <span class="text-lg font-semibold mr-2" id="harvest-estimate" style="color: white">Previsão para a próxima colheita: </span><br>
+                <div class="white-box">
                     {% if estimativa_colheita %}
                         {{ estimativa_colheita }}
                     {% else %}
                         Data de colheita indisponível
                     {% endif %}
+                </div>
                 </span>
                 <br>
-                <span class="text-lg font-semibold mr-2">Comentários: </span>
+                <span class="text-lg font-semibold mr-2" style="color: white">Comentários: </span>
                 <br>
                     <div class="white-box">
                         <span class="ml-1 text-base" id="comments"> {{ comment }}</span>
@@ -244,10 +332,7 @@
                 </button>
                 <button type="button" class="mt-5 m-2 bg-[#562A00] p-7 text-white py-2 rounded hover:bg-[#401F00] transition duration-200" onclick="openEditModal()">
                     Editar
-                </button>
-                <button type="button" class="mt-5 m-2 bg-[#F77711] p-7 text-white py-2 rounded hover:bg-[#F76711] transition duration-200" onclick="openHarvestModal()">
-                    Colher
-                </button>                
+                </button>              
             </div>
         </div>
 
@@ -289,6 +374,11 @@
                             value="{{ selected_product.data_plantio }}" required>
                     </div>
                     
+                    <div class="mt-4">
+                        <label for="comentario" class="block font-semibold">Comentário:</label>
+                        <input type="text" id="comentario" name="comentario" class="w-full border border-gray-300 p-2 rounded" 
+                            value="{{ selected_product.comentario }}" required>
+                    </div>
 
                     <!-- Botões de ação -->
                     <div class="mt-6 flex justify-end">

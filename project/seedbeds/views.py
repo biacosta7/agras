@@ -13,6 +13,7 @@ from dateutil.relativedelta import relativedelta
 from django.utils.dateformat import DateFormat
 from datetime import timedelta, datetime
 from django.db.models import Sum, F
+from tasks.models import Task
 
 @login_required
 def list_seedbeds(request, community_id, area_id):
@@ -101,7 +102,8 @@ def seedbed_detail_view(request, community_id, area_id, seedbed_id):
     active_products = seedbed.products_in_seedbed.filter(
         data_colheita__isnull=True,
     )
-    
+    tasks = Task.objects.filter(seedbed_id=seedbed.id)
+
     # Acumulador para somar a quantidade colhida de todos os produtos
     # Se um produto foi selecionado a partir do dropdown
     selected_product_id = request.GET.get('product_id')
@@ -186,6 +188,7 @@ def seedbed_detail_view(request, community_id, area_id, seedbed_id):
         'formatted_date': formatted_date,
         'ciclo_de_vida': ciclo_de_vida,
         'comment': comment,
+        'tasks': tasks,
     }
     return render(request, 'seedbed_detail.html', context)
 

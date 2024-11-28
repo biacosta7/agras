@@ -199,7 +199,7 @@ def product_update_view(request, community_id, area_id, seedbed_id, product_id):
 
         product.save()
         messages.success(request, 'Cultivo editado com sucesso.')
-
+        print(comentario)
         return redirect('seedbed_detail', community_id=community.id, area_id=area.id, seedbed_id=seedbed.id)
 
 
