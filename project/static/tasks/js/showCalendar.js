@@ -148,7 +148,7 @@ function listSelectedDaysEvents() {
                 dayDiv.setAttribute('data-day', day);
 
                 // Cria o header com o número do dia e o nome do dia da semana
-                const date = new Date(calendarState.year, calendarState.month, day);
+                const date = new Date(calendarState.year, calendarState.month - 1, day);
                 const dayOfWeekName = getDayOfWeekName(date.getDay());
                 const header = document.createElement('h3');
                 header.textContent = `Dia ${day}, ${dayOfWeekName}`;
