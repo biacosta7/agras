@@ -160,8 +160,8 @@ def promote_member(request, community_id, user_id):
     community = get_object_or_404(Community, id=community_id)
     user_to_be_admin = get_object_or_404(User, id=user_id)
 
-    if community.admins.filter(id=request.user.id).exists():
-        messages.error(request, f'O usuário {user_to_be_admin.username} já é administrador da comunidade.')
+    if not community.admins.filter(id=request.user.id).exists():
+        messages.error(request, 'Você não tem permissão para se dar o cargo administrador.')
         return redirect('manage_community', community.id)
     
     if community.admins.filter(id=user_to_be_admin.id).exists():
@@ -333,7 +333,7 @@ def settings(request, community_id):
     # Verificar permissões
     if request.user != community.creator and not community.admins.filter(id=request.user.id).exists():
         messages.error(request, 'Você não tem permissão para acessar as configurações dessa comunidade.')
-        return redirect('community_hub')
+        return redirect('dashboard', community_id)
 
     if request.method == "POST":
         action = request.POST.get('action')
