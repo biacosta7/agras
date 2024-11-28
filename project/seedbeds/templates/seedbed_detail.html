@@ -109,21 +109,24 @@
     }
     .coluna {
         flex: 1; /* Cada coluna vai ocupar uma quantidade igual de espaço */
-        padding: 10px; /* Um pouco de padding para o conteúdo não colar nas bordas */
-        border: 1px solid #ccc; /* Bordas para demarcar as colunas */
+        padding: 0; /* Remove o padding da coluna maior */
+        /*border: 1px solid #ccc;*/ /* Bordas para demarcar as colunas */
     }
-
+    
     .sub-container {
         display: flex; /* Ativa o Flexbox dentro da subcoluna */
-        gap: 10px; /* Espaçamento entre as subcolunas */
-        margin-top: 10px; /* Distância para separar a flexbox interna do conteúdo acima */
+        gap: 5px; /* Espaçamento entre as subcolunas */
+        margin: 0; /* Remove o espaço extra acima do sub-container */
+        white-space: nowrap;
     }
-
+    
     .sub-coluna {
         flex: 1; /* As subcolunas vão ocupar uma quantidade igual de espaço */
-        border: 1px solid #ccc; /* Bordas para demarcar as subcolunas */
-        padding: 5px; /* Padding para as subcolunas */
+        /*border: 1px solid #ccc;*/ /* Bordas para demarcar as subcolunas */
+        padding: 0; /* Remove o padding das subcolunas */
+        white-space: nowrap;
     }
+    
 
     
     #product-select {
@@ -241,7 +244,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="white-box">
+                <div class="white-box" style="width: 85%">
                     <div class="sub-container">
                         <div class="sub-coluna">
                             <span class="text-lg font-semibold mr-12" style="color: #F76711;">Colheitas:</span><br>
@@ -263,6 +266,7 @@
                         {% endfor %}
                     </ul>
                 </div>
+                <br>
                 <br>
                 <div class="sub-container">
                     <div class="sub-coluna">
