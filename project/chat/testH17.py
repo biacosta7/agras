@@ -8,7 +8,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import TimeoutException
 import time
 
-# Criar produto com erro
+# Usar o chat bot
 
 class UserRegistrationAndLoginTest(LiveServerTestCase):
     def setUp(self):
@@ -39,9 +39,7 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
         time.sleep(1)
         self.browser.find_element(By.ID, "state").click()
         time.sleep(1)
-        WebDriverWait(self.browser, 10).until(
-    EC.element_to_be_clickable((By.XPATH, "//option[contains(text(), 'Pernambuco')]"))
-).click()
+        WebDriverWait(self.browser, 10).until(EC.element_to_be_clickable((By.XPATH, "//option[contains(text(), 'Pernambuco')]"))).click()
         time.sleep(1)
         self.browser.find_element(By.ID, "city").send_keys("Cidade")
         time.sleep(1)
@@ -56,9 +54,7 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
         self.browser.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
         time.sleep(1)
         # Espera até que a mensagem de sucesso seja visível ou até ser redirecionado
-        WebDriverWait(self.browser, 10).until(
-    EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'OK')]"))
-).click()
+        WebDriverWait(self.browser, 10).until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'OK')]"))).click()
         time.sleep(1)
         # Preenche o formulário de login
         self.browser.find_element(By.ID, "login_input").send_keys("fulano2024")
@@ -73,20 +69,14 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
 
         # Verifica se o login foi bem-sucedido, checando a presença de um elemento específico da página de usuário logado
         time.sleep(1)
-        WebDriverWait(self.browser, 10).until(
-    EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'OK')]"))
-).click()
+        WebDriverWait(self.browser, 10).until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'OK')]"))).click()
        
         time.sleep(1)
-        WebDriverWait(self.browser, 10).until(
-    EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Criar comunidade')]"))
-).click()
+        WebDriverWait(self.browser, 10).until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Criar comunidade')]"))).click()
        
         time.sleep(1)
         # Espera até que a página de criação de comunidade seja carregada
-        WebDriverWait(self.browser, 10).until(
-            EC.presence_of_element_located((By.XPATH, "//h2[contains(text(), 'Nova comunidade')]"))
-        )
+        WebDriverWait(self.browser, 10).until(EC.presence_of_element_located((By.XPATH, "//h2[contains(text(), 'Nova comunidade')]")))
         time.sleep(1)
 
 
@@ -110,77 +100,23 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
         EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'OK')]"))).click()
         time.sleep(1)
 
-
         # Espera até que o botão "Entrar" esteja visível e clicável
         botao_entrar = WebDriverWait(self.browser, 10).until(
             EC.element_to_be_clickable((By.XPATH, "//a[contains(@class, 'text-white') and contains(text(), 'Entrar')]"))
         )
-
-
         # Realiza o clique no botão "Entrar"
         botao_entrar.click()
+
+        # Clicar em CHAT/IA
+        self.browser.find_element(By.XPATH, '//*[@id="help-button"]').click()
         time.sleep(1)
 
-        # Clicar em Areas de Plantio
-        self.browser.find_element(By.XPATH, '/html/body/div/div[2]/div[2]/a[2]/span[2]').click()
+        # Digitar Duvida
+        self.browser.find_element(By.XPATH, '//*[@id="helpModal"]/div[7]/input').send_keys("Como plantar tomate?")
         time.sleep(1)
 
-        # Clicar em Criar Area de Plantio
-        self.browser.find_element(By.XPATH, '//*[@id="addCommunityBtn"]').click()
-        time.sleep(1)
-
-        # Preencher Nome e Descrição
-        self.browser.find_element(By.ID, "name").send_keys("Area Exemplo")
-        time.sleep(1)
-
-
-        # Preenche o campo abaixo de "Descrição"
-        self.browser.find_element(By.ID, "description").send_keys("Area Exemplo 1")
-        time.sleep(1)
-        # Clicar em Criar
-        self.browser.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
-        time.sleep(1)
-
-        # Clicar em OK
-        WebDriverWait(self.browser, 10).until(
-        EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'OK')]"))).click()
-        time.sleep(1)
-
-        # Clicar em Visualizar
-        self.browser.find_element(By.XPATH, '/html/body/div/div[1]/div[3]/div/div[1]/div/div[3]/a').click()
-        time.sleep(1)
-
-        # Clicar em Criar Canteiro
-        self.browser.find_element(By.XPATH, '//*[@id="addCommunityBtn"]').click()
-        time.sleep(1)
-
-        # Preencher Nome
-        self.browser.find_element(By.ID, "seedbed_name").send_keys("Canteiro Exemplo")
-        time.sleep(1)
-
-        # Clicar em Criar
-        self.browser.find_element(By.XPATH, '//*[@id="areaForm"]/div[2]/button[2]').click()
-        time.sleep(1)
-
-        # Clicar em Ok
-        WebDriverWait(self.browser, 10).until(
-        EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'OK')]"))).click()
-        time.sleep(1)
-
-        # Visualizar Canteiro
-        self.browser.find_element(By.XPATH, '/html/body/div/div[1]/div[2]/div[2]/div/div/div/div[2]/div/a').click()
-        time.sleep(1)
-
-        # Adicionar Cultivo
-        self.browser.find_element(By.XPATH, '/html/body/div/div[2]/div/div/ul/li/a/img').click()
-        time.sleep(1)
-       # Adicionar Produto
-        self.browser.find_element(By.XPATH, '/html/body/div/div[1]/form/button').click()
-        time.sleep(1)
-       # Erro pois nao colocou o nome
-
-
-
-
+        # Enter na duvida
+        self.browser.find_element(By.XPATH, '//*[@id="helpModal"]/div[7]/button').click()
+        time.sleep(10)
 
 

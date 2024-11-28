@@ -8,7 +8,8 @@ from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import TimeoutException
 import time
 
-# Criar produto com erro
+
+# H1 - Criar canteiro
 
 class UserRegistrationAndLoginTest(LiveServerTestCase):
     def setUp(self):
@@ -18,8 +19,12 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
         self.browser.implicitly_wait(10)
 
 
+
+
     def tearDown(self):
         self.browser.quit()
+
+
 
 
     def test_user_registration_and_login(self):
@@ -27,6 +32,8 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
         self.browser.get("http://127.0.0.1:8000/")
         time.sleep(1)
         self.browser.find_element(By.LINK_TEXT, "Cadastre-se").click()
+
+
 
 
         # Preenche o formulário de cadastro
@@ -50,6 +57,8 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
         self.browser.find_element(By.ID, "confirm_password").send_keys("senha_segura")
 
 
+
+
         time.sleep(1)
        
         # Clica no botão de cadastrar
@@ -66,9 +75,13 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
         self.browser.find_element(By.ID, "password").send_keys("senha_segura")
 
 
+
+
         # Clica no botão de login
         time.sleep(1)
         self.browser.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
+
+
 
 
         # Verifica se o login foi bem-sucedido, checando a presença de um elemento específico da página de usuário logado
@@ -90,9 +103,13 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
         time.sleep(1)
 
 
+
+
         # Preenche o campo abaixo de "Nome"
         self.browser.find_element(By.ID, "name").send_keys("Comunidade Exemplo")
         time.sleep(1)
+
+
 
 
         # Preenche o campo abaixo de "Descrição"
@@ -100,9 +117,13 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
         time.sleep(1)
 
 
+
+
         # Clica no botão "Criar"
         self.browser.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
         time.sleep(1)
+
+
 
 
         # Espera até que a mensagem de sucesso seja visível ou até ser redirecionado
@@ -111,76 +132,98 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
         time.sleep(1)
 
 
+
+
         # Espera até que o botão "Entrar" esteja visível e clicável
         botao_entrar = WebDriverWait(self.browser, 10).until(
             EC.element_to_be_clickable((By.XPATH, "//a[contains(@class, 'text-white') and contains(text(), 'Entrar')]"))
         )
-
-
         # Realiza o clique no botão "Entrar"
         botao_entrar.click()
         time.sleep(1)
 
-        # Clicar em Areas de Plantio
-        self.browser.find_element(By.XPATH, '/html/body/div/div[2]/div[2]/a[2]/span[2]').click()
+
+        # Espera até que o botão "Áreas de Plantio" esteja visível e clicável
+        botao_areas_plantio = WebDriverWait(self.browser, 10).until(
+            EC.element_to_be_clickable((By.XPATH, "//a[contains(@class, 'flex-grow') and contains(text(), 'Áreas de Plantio')]"))
+        )
+        # Realiza o clique no botão "Áreas de Plantio"
+        botao_areas_plantio.click()
         time.sleep(1)
 
-        # Clicar em Criar Area de Plantio
-        self.browser.find_element(By.XPATH, '//*[@id="addCommunityBtn"]').click()
+
+        # Espera até que o botão "Criar Área de Plantio" seja visível e clicável
+        criar_area_plantio_btn = WebDriverWait(self.browser, 10).until(
+            EC.element_to_be_clickable((By.ID, "addCommunityBtn"))
+        )
+        # Clica no botão
+        criar_area_plantio_btn.click()
         time.sleep(1)
 
-        # Preencher Nome e Descrição
-        self.browser.find_element(By.ID, "name").send_keys("Area Exemplo")
+
+       
+
+
+        # Aguarda que o modal de criação seja carregado (se houver um modal ou nova página)
+        WebDriverWait(self.browser, 10).until(
+            EC.presence_of_element_located((By.XPATH, "//h2[contains(text(), 'Nova Área de Plantio')]"))
+        )
         time.sleep(1)
+
+
+
+
+        # Preenche o campo abaixo de "Nome"
+        self.browser.find_element(By.ID, "name").send_keys("Área 1")
+        time.sleep(1)
+
+
 
 
         # Preenche o campo abaixo de "Descrição"
-        self.browser.find_element(By.ID, "description").send_keys("Area Exemplo 1")
+        self.browser.find_element(By.ID, "description").send_keys("área de plantio 1")
         time.sleep(1)
-        # Clicar em Criar
+
+
+
+
+        # Clica no botão "Criar"
         self.browser.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
         time.sleep(1)
 
-        # Clicar em OK
+
+
+
+        # Espera até que a mensagem de sucesso seja visível ou até ser redirecionado
         WebDriverWait(self.browser, 10).until(
         EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'OK')]"))).click()
         time.sleep(1)
 
-        # Clicar em Visualizar
-        self.browser.find_element(By.XPATH, '/html/body/div/div[1]/div[3]/div/div[1]/div/div[3]/a').click()
+
+        # Espera até que o botão "Visualizar" seja visível e clicável
+        visualizar_area_plantio_btn = WebDriverWait(self.browser, 10).until(
+            EC.element_to_be_clickable((By.XPATH, "//a[contains(@class, 'text-white') and contains(text(), 'Visualizar')]"))
+        )
+        # Clica no botão
+        visualizar_area_plantio_btn.click()
         time.sleep(1)
 
-        # Clicar em Criar Canteiro
-        self.browser.find_element(By.XPATH, '//*[@id="addCommunityBtn"]').click()
+
+        # Espera até que o botão "Visualizar" seja visível e clicável
+        criar_canteiro_btn = WebDriverWait(self.browser, 10).until(
+            EC.element_to_be_clickable((By.XPATH, "//a[contains(@class, 'text-white') and contains(text(), 'Criar Canteiro')]"))
+        )
+        # Clica no botão
+        criar_canteiro_btn.click()
         time.sleep(1)
 
-        # Preencher Nome
-        self.browser.find_element(By.ID, "seedbed_name").send_keys("Canteiro Exemplo")
+
+        # Para funcionar, preenche o campo abaixo de "Nome"
+    #   self.browser.find_element(By.ID, "seedbed_name").send_keys("Canteiro 1")
+    #   time.sleep(1)
+
+
+        #Para dar o erro necessário para a história
+        # Clica no botão "Criar"
+        self.browser.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
         time.sleep(1)
-
-        # Clicar em Criar
-        self.browser.find_element(By.XPATH, '//*[@id="areaForm"]/div[2]/button[2]').click()
-        time.sleep(1)
-
-        # Clicar em Ok
-        WebDriverWait(self.browser, 10).until(
-        EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'OK')]"))).click()
-        time.sleep(1)
-
-        # Visualizar Canteiro
-        self.browser.find_element(By.XPATH, '/html/body/div/div[1]/div[2]/div[2]/div/div/div/div[2]/div/a').click()
-        time.sleep(1)
-
-        # Adicionar Cultivo
-        self.browser.find_element(By.XPATH, '/html/body/div/div[2]/div/div/ul/li/a/img').click()
-        time.sleep(1)
-       # Adicionar Produto
-        self.browser.find_element(By.XPATH, '/html/body/div/div[1]/form/button').click()
-        time.sleep(1)
-       # Erro pois nao colocou o nome
-
-
-
-
-
-
