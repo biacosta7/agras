@@ -13,6 +13,9 @@ from dateutil.relativedelta import relativedelta
 from django.utils.dateformat import DateFormat
 from datetime import timedelta, datetime
 from django.db.models import Sum, F
+from tasks.models import Task
+from django.db.models import Avg, F, ExpressionWrapper, DurationField
+from datetime import timedelta
 
 @login_required
 def list_seedbeds(request, community_id, area_id):
@@ -95,25 +98,31 @@ def seedbed_detail_view(request, community_id, area_id, seedbed_id):
     community = get_object_or_404(Community, id=community_id)
     area = get_object_or_404(Area, id=area_id, community=community)
     seedbed = get_object_or_404(Seedbed, id=seedbed_id, area=area)
-
+    formatted_date = request.session.get('formatted_date', None)
+    comment = request.session.get('comment', None)
     # Obtém a lista de produtos associados ao canteiro
     active_products = seedbed.products_in_seedbed.filter(
         data_colheita__isnull=True,
     )
-    print("All products in seedbed:", seedbed.products_in_seedbed.all().values('id', 'type_product__name', 'data_colheita', 'quantidade_colhida'))
-    print("Active products:", active_products)
-    # If you also want to track harvested products separately
+    tasks = Task.objects.filter(seedbed_id=seedbed.id)
 
-    # Verifica se um produto foi selecionado a partir do dropdown
-    # Handle product selection from dropdown (only from active products)
+    # Acumulador para somar a quantidade colhida de todos os produtos
+    # Se um produto foi selecionado a partir do dropdown
     selected_product_id = request.GET.get('product_id')
     if selected_product_id:
         selected_product = active_products.filter(id=selected_product_id).first()
     else:
         selected_product = active_products.first() if active_products else None
-    
-    # Verifica se o produto selecionado tem um ciclo de vida válido
-    ciclo_de_vida = 3  # Valor padrão caso o ciclo de vida não esteja definido
+    formatted_date = None
+    comment = None
+    if selected_product:
+        # Formatar a data de plantio do produto selecionado
+        formatted_date = selected_product.data_plantio.strftime('%d de %b %Y')
+        selected_product.formatted_date = formatted_date  # Adiciona o atributo temporariamente
+        comment = request.session.get(f'comment_{selected_product.id}', selected_product.comentario)
+
+    # Verifica o ciclo de vida do produto selecionado
+    ciclo_de_vida = 3  # Valor padrão
     if selected_product and selected_product.type_product and selected_product.type_product.lifecycle is not None:
         ciclo_de_vida = selected_product.type_product.lifecycle
 
@@ -121,10 +130,11 @@ def seedbed_detail_view(request, community_id, area_id, seedbed_id):
     if selected_product and selected_product.data_plantio and ciclo_de_vida:
         estimativa_colheita = selected_product.data_plantio + relativedelta(months=ciclo_de_vida)
 
-    # Formatar a data antes de enviar para o template
     estimativa_colheita_formatada = (
         DateFormat(estimativa_colheita).format('d \d\e F \d\e Y') if estimativa_colheita else None
     )
+    
+    # Lógica para ações futuras (se houver)
     actions_interval = None
     next_actions_dates = {}
     if selected_product and selected_product.type_product and selected_product.type_product.actions_interval:
@@ -139,15 +149,12 @@ def seedbed_detail_view(request, community_id, area_id, seedbed_id):
     previsao_colheita = None
     if selected_product and selected_product.type_product:
         tipo_produto = selected_product.type_product
-        # Obtém o último produto colhido do mesmo tipo
         ultima_colheita = Product.objects.filter(
             type_product=tipo_produto, quantidade_colhida__isnull=False
         ).order_by('-data_colheita').first()
 
         if ultima_colheita and ultima_colheita.quantidade and ultima_colheita.quantidade_colhida:
-            # Calcula a taxa com base na última colheita
             ultima_taxa = ultima_colheita.quantidade_colhida / ultima_colheita.quantidade
-            # Previsão com base na quantidade plantada atual
             previsao_colheita = round(ultima_taxa * selected_product.quantidade)
 
     if request.method == 'POST' and 'quantidade_colhida' in request.POST:
@@ -158,30 +165,62 @@ def seedbed_detail_view(request, community_id, area_id, seedbed_id):
             if selected_product.quantidade_colhida is None:
                 selected_product.quantidade_colhida = 0
             
-            # Atualizar quantidade colhida
             selected_product.quantidade_colhida += quantidade_colhida
 
             if data_colheita_input:
                 data_colheita = datetime.strptime(data_colheita_input, "%Y-%m-%d").date()
                 selected_product.data_colheita = data_colheita
-            #selected_product.is_harvested = True
             selected_product.save()
 
-            # Atualizar taxa de colheita do tipo de produto
+            # Atualizar a taxa de colheita do tipo de produto
             messages.success(request, f'{quantidade_colhida} unidades colhidas registradas para o tipo {tipo_produto.name}.')
+    
+    total_quantidade_colhida_produto = None
+    if selected_product and selected_product.type_product:
+        total_quantidade_colhida_produto = Product.objects.filter(
+            type_product=selected_product.type_product, 
+            quantidade_colhida__isnull=False
+        ).aggregate(total_harvest=Sum('quantidade_colhida'))['total_harvest'] or 0
+    print("Total quantidade colhida do produto: ", total_quantidade_colhida_produto)
+    
+    tempo_medio_colheita = None
+    if selected_product and selected_product.type_product:
+        tipo_produto = selected_product.type_product
+        # Calcula o tempo médio entre data_plantio e data_colheita para o tipo de produto
+        tempo_medio_colheita = Product.objects.filter(
+            type_product=tipo_produto,
+            data_plantio__isnull=False,
+            data_colheita__isnull=False
+        ).annotate(
+            tempo_colheita=ExpressionWrapper(
+                F('data_colheita') - F('data_plantio'),
+                output_field=DurationField()
+            )
+        ).aggregate(media_tempo=Avg('tempo_colheita'))['media_tempo']
+
+        # Converte o valor em dias, se existir
+        if tempo_medio_colheita:
+            tempo_medio_colheita = tempo_medio_colheita.days
 
     context = {
         'community': community,
         'area': area,
         'seedbed': seedbed,
-        'products': active_products,  # This will show only non-harvested products
+        'products': active_products,  # Produtos não colhidos
         'selected_product': selected_product,
         'estimativa_colheita': estimativa_colheita_formatada,
         'previsao_colheita': previsao_colheita,
         'active_products': active_products,
         'next_actions_dates': next_actions_dates,
+        'total_quantidade_colhida_produto': total_quantidade_colhida_produto,  # Passando o total de colheita
+        'formatted_date': formatted_date,
+        'ciclo_de_vida': ciclo_de_vida,
+        'comment': comment,
+        'tasks': tasks,
+        'tempo_medio_colheita': tempo_medio_colheita,
     }
     return render(request, 'seedbed_detail.html', context)
+
 
 # def harvest_product_view(request, community_id, area_id, seedbed_id, product_id):
 #     # Carrega as instâncias da comunidade, área, canteiro e produto

@@ -8,6 +8,7 @@ from communities.models import Community
 from seedbeds.models import Seedbed
 from areas.models import Area
 from django.http import JsonResponse
+from datetime import datetime
 
 @login_required  
 def create_product_view(request, seedbed_id, community_id, area_id):
@@ -31,7 +32,13 @@ def create_product_view(request, seedbed_id, community_id, area_id):
         type_name = request.POST.get('type_name')
         quantity = request.POST.get('quantity')
         planting_date = request.POST.get('planting_date')
+        comment = request.POST.get('comment')
 
+        try:
+            # Converte para o formato "15 de Nov 2024"
+            formatted_date = datetime.strptime(planting_date, '%Y-%m-%d').strftime('%d de %b %Y')
+        except ValueError:
+            messages.error(request, "Data de plantio inválida. Use o formato DD/MM/AAAA.")
         # Verificar se o tipo de produto existe na comunidade
         type_product = get_object_or_404(TypeProduct, name=type_name, community=community)
 
@@ -61,9 +68,14 @@ def create_product_view(request, seedbed_id, community_id, area_id):
                 type_product=type_product,
                 seedbed=seedbed, 
                 quantidade=int(quantity),
-                data_plantio=planting_date
+                data_plantio=planting_date,
+                comentario=comment,
             )
             messages.success(request, f'Produto {product.type_product.name} cadastrado com sucesso no canteiro {seedbed.nome}.')
+            print("Comentário: ", comment)
+            request.session['formatted_date'] = formatted_date  # Adiciona a data formatada na sessão
+            request.session[f'comment'] = comment
+            print("Data de plantio: ", formatted_date)
         except ValidationError as e:
             messages.error(request, f"Erro de validação: {e}")
 
@@ -166,7 +178,8 @@ def product_update_view(request, community_id, area_id, seedbed_id, product_id):
 
     else:
         quantidade = request.POST.get('quantidade')
-
+        data_plantio = request.POST.get('data_plantio')
+        comentario = request.POST.get('comentario')
         # Verificação de campos obrigatórios
         errors = []
         if not quantidade:
@@ -181,9 +194,12 @@ def product_update_view(request, community_id, area_id, seedbed_id, product_id):
 
         # Atualizar os dados do produto mantendo o tipo de produto original
         product.quantidade = int(quantidade)  # Converte para int
+        product.data_plantio = data_plantio
+        product.comentario = comentario
+
         product.save()
         messages.success(request, 'Cultivo editado com sucesso.')
-
+        print(comentario)
         return redirect('seedbed_detail', community_id=community.id, area_id=area.id, seedbed_id=seedbed.id)
 
 
