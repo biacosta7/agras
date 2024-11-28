@@ -44,19 +44,27 @@ def task_page(request, community_id):
         description = request.POST.get('description')
         local = request.POST.get('local')
         recurrence = request.POST.get('recurrence')
-        start_date = request.POST.get('start_date')
-        start_date = timezone.datetime.strptime(start_date, "%Y-%m-%d").date()
-        final_date = calculate_final_date(start_date, recurrence)
+        start_date_str = request.POST.get('start_date')
+        final_date_str = request.POST.get('final_date')
         materials = request.POST.get('materials')
         status = request.POST.get('status')
         responsible_users_raw = request.POST.get('responsible_users[]', '')
         responsible_users_ids = responsible_users_raw.split(',') if responsible_users_raw else []
         
-        if start_date > final_date:
+        # Converter start_date para objeto date
+        start_date = timezone.datetime.strptime(start_date_str, "%Y-%m-%d").date()
+        
+        # Converter final_date para objeto date, se fornecido
+        if final_date_str:
+            final_date = timezone.datetime.strptime(final_date_str, "%Y-%m-%d").date()
+        else:
+            final_date = calculate_final_date(start_date, recurrence)
+        
+        # Validar que final_date não é antes de start_date
+        if final_date < start_date:
             messages.error(request, "A data final não pode ser antes da data inicial.")
             return redirect('task_page', community_id=community_id)
-
-    
+        
         responsible_users_ids = [int(id.strip()) for id in responsible_users_ids]
         
         if not description or not local or not start_date or not status or not responsible_users_ids:
@@ -77,7 +85,7 @@ def task_page(request, community_id):
                     description=description,
                     local=local_type,
                     start_date=start_date,
-                    final_date= final_date,
+                    final_date=final_date,  # Usando final_date fornecido ou calculado
                     status=status,
                     recurrence=recurrence
                 )
@@ -98,7 +106,6 @@ def task_page(request, community_id):
             except Exception as e:
                 messages.error(request, f'Erro ao criar tarefa: {e}')
 
-
     tasks = Task.objects.filter(community=community) 
     membership_requests = MembershipRequest.objects.filter(community=community, status='pending')
 
@@ -108,11 +115,8 @@ def task_page(request, community_id):
             days_left = (task.final_date - today).days
             task.days_left = days_left  
     
-    # Serialização das tarefas
-    # Serialização das tarefas
     tasks_list = []
     for task in tasks:
-        # Obter os nomes da área e do canteiro, se existirem
         area_name = ''
         seedbed_name = ''
         try:
@@ -153,6 +157,7 @@ def task_page(request, community_id):
     return render(request, 'tasks.html', context)
 
 
+
 def delete_task(request, community_id, task_id):
     task = get_object_or_404(Task, id=task_id)
     task.delete()
@@ -179,18 +184,17 @@ def edit_only_status(request, community_id, task_id):
 def edit_task(request, community_id, task_id):
     task = get_object_or_404(Task, pk=task_id)
 
-    # Verifica se a requisição é POST para atualizar a tarefa
     if request.method == 'POST':
         description = request.POST.get('description')
         materials = request.POST.get('materials')
         local = request.POST.get('local')
-        start_date = request.POST.get('start_date')
-        final_date = request.POST.get('final_date')
+        start_date_str = request.POST.get('start_date')
+        final_date_str = request.POST.get('final_date')
         status = request.POST.get('status')
         recurrence = request.POST.get('recurrence')
         responsible_users_raw = request.POST.getlist('responsible_users[]') 
 
-        if not description or not local or not start_date or not status or not responsible_users_raw:
+        if not description or not local or not start_date_str or not status or not responsible_users_raw:
             messages.error(request, 'Todos os campos são obrigatórios.')
             return redirect('task_page', community_id=community_id)
 
@@ -211,23 +215,33 @@ def edit_task(request, community_id, task_id):
             elif local.startswith('seedbed_'):
                 local_type = 'seedbed'
                 local_id = local.replace('seedbed_', '')
-            # Convertendo a start_date para formato de data
-            start_date = timezone.datetime.strptime(start_date, "%Y-%m-%d").date()
 
-            # Calculando a final_date com base na recorrência
-            final_date = calculate_final_date(start_date, recurrence)
+            # Convertendo start_date para objeto date
+            start_date = timezone.datetime.strptime(start_date_str, "%Y-%m-%d").date()
 
+            # Convertendo final_date para objeto date, se fornecido
+            if final_date_str:
+                final_date = timezone.datetime.strptime(final_date_str, "%Y-%m-%d").date()
+            else:
+                final_date = calculate_final_date(start_date, recurrence)
 
+            # Validação de que final_date não é antes de start_date
+            if final_date < start_date:
+                messages.error(request, "A data final não pode ser antes da data inicial.")
+                return redirect('task_page', community_id=community_id)
+
+            # Atualizando os atributos da tarefa
             task.materials = materials
             task.description = description
             task.local = local_type
             task.start_date = start_date
-            task.final_date = final_date
+            task.final_date = final_date  # Usando final_date fornecido ou calculado
             task.status = status
             task.recurrence = recurrence
 
             if local_type == 'area':
                 task.area_id = int(local_id)
+                task.seedbed_id = None  # Limpar seedbed se for área
             elif local_type == 'seedbed':
                 task.seedbed_id = int(local_id)
                 seedbed = Seedbed.objects.get(id=int(local_id))
@@ -245,7 +259,7 @@ def edit_task(request, community_id, task_id):
         except Exception as e:
             messages.error(request, f'Erro ao atualizar tarefa: {e}')
 
-        context = {
+    context = {
         'task': task,
         'community': Community.objects.get(id=community_id),
         'status_choices': Task.STATUS_CHOICES,
@@ -256,4 +270,5 @@ def edit_task(request, community_id, task_id):
     }
 
     return render(request, 'modal_edit_task.html', context)
+
 
