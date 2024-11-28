@@ -11,10 +11,6 @@ const YEAR = currentDate.getFullYear();
 const MONTH = currentDate.getMonth() + 1; // getMonth() retorna o mês de 0 a 11, então é adicionado 1
 const DAY = currentDate.getDate();
 
-// Captura os dados das tarefas do script no HTML
-//const tasksDataElement = document.getElementById('tasks-data');
-//const tasksData = JSON.parse(tasksDataElement.textContent);
-
 function parseDateString(dateString) {
     if (!dateString) return null;
     const [year, month, day] = dateString.split('-').map(Number);
@@ -22,19 +18,39 @@ function parseDateString(dateString) {
 }
 
 
+// Função para mapear status para cor
+function getTaskColor(status) {
+    status = status.toLowerCase();
+    if (status === 'pendente') {
+        return 'var(--dar-red-color)';
+    } 
+    else if (status === 'progresso') {
+        return 'var(--dark-brown-color)';
+    } 
+    else if (status === 'concluída') {
+        return 'var(--dark-green-color)';
+    } 
+    else {
+        return 'var(--dark-gray-color)';
+    }
+}
+
 // Processa os dados das tarefas
 const processedTasks = tasksData.map(task => ({
+    id: task.id,  // Incluímos o ID da tarefa
     title: task.title,
     description: task.description,
     start_date: parseDateString(task.start_date),
     end_date: task.end_date ? parseDateString(task.end_date) : parseDateString(task.start_date),
     recurrence: task.recurrence.toLowerCase(),
     priority: task.priority,
-    color: task.color,
-    area_id: task.area_id,
-    seedbed_id: task.seedbed_id,
-    responsible_users: task.responsible_users,  // Lista de usuários responsáveis
+    status: task.status,  // Inclui o status
+    color: getTaskColor(task.status),  // Obtém a cor com base no status
+    area_name: task.area_name,
+    seedbed_name: task.seedbed_name,
+    responsible_users: task.responsible_users,
 }));
+
 
 // Objeto constante global para armazenar o estado do calendário
 export const calendarState = {
@@ -79,29 +95,27 @@ function handleDayClick(event) {
 
 // Função para alternar a seleção de um dia
 function toggleDaySelection(dayElement) {
+    const dayNumber = parseInt(dayElement.textContent);
+
     // Verifica se o dia já está selecionado
     const isSelected = dayElement.classList.contains('selected-day');
 
-    // Altera a cor de fundo e o estado com base na seleção
     if (isSelected) {
+        // Desmarca o dia
         dayElement.style.backgroundColor = 'var(--days-bg-color)';
         dayElement.classList.remove('selected-day');
 
-        // Remove o dia do estado apenas se ele está em `calendarState.selectedDays`
-        const dayNumber = parseInt(dayElement.textContent);
-        if (calendarState.selectedDays.includes(dayNumber)) {
-            calendarState.selectedDays = calendarState.selectedDays.filter(
-                (selectedDay) => selectedDay !== dayNumber
-            );
-        }
+        // Remove o dia do estado
+        calendarState.selectedDays = calendarState.selectedDays.filter(
+            (selectedDay) => selectedDay !== dayNumber
+        );
     } else {
+        // Marca o dia
         dayElement.style.backgroundColor = 'var(--green-agras-color)';
         dayElement.classList.add('selected-day');
 
-        // Adiciona ao estado apenas se for um dia marcado com eventos
-        if (dayElement.classList.contains('marked-day')) {
-            calendarState.selectedDays.push(parseInt(dayElement.textContent));
-        }
+        // Adiciona o dia ao estado
+        calendarState.selectedDays.push(dayNumber);
     }
 }
 
@@ -121,7 +135,8 @@ function listSelectedDaysEvents() {
     if (calendarState.selectedDays.length === 0) {
         // Mostra a mensagem de aviso se não houver dias selecionados
         warningDiv.style.display = 'block';
-    } else {
+    } 
+    else {
         // Esconde a mensagem de aviso
         warningDiv.style.display = 'none';
 
@@ -135,7 +150,7 @@ function listSelectedDaysEvents() {
                 dayDiv.setAttribute('data-day', day);
 
                 // Cria o header com o número do dia e o nome do dia da semana
-                const date = new Date(calendarState.year, calendarState.month, day);
+                const date = new Date(calendarState.year, calendarState.month - 1, day);
                 const dayOfWeekName = getDayOfWeekName(date.getDay());
                 const header = document.createElement('h3');
                 header.textContent = `Dia ${day}, ${dayOfWeekName}`;
@@ -149,49 +164,47 @@ function listSelectedDaysEvents() {
                     // Cria o cartão da tarefa
                     const taskCard = document.createElement('div');
                     taskCard.classList.add('task-card');
-                    taskCard.style.display = 'flex';
-                    taskCard.style.flexDirection = 'column';
 
                     // Metade do cartão: descrição
                     const descriptionDiv = document.createElement('div');
                     descriptionDiv.classList.add('task-description');
-                    descriptionDiv.style.flex = '1';
                     descriptionDiv.textContent = event.description;
                     taskCard.appendChild(descriptionDiv);
 
                     // Outra metade: informações adicionais
                     const infoDiv = document.createElement('div');
                     infoDiv.classList.add('task-info');
-                    infoDiv.style.flex = '1';
-                    infoDiv.style.display = 'flex';
-                    infoDiv.style.flexDirection = 'column';
 
                     // Cor
                     const colorDiv = document.createElement('div');
                     colorDiv.classList.add('task-color');
                     colorDiv.style.backgroundColor = event.color;
-                    colorDiv.style.width = '20px';
-                    colorDiv.style.height = '20px';
-                    colorDiv.style.borderRadius = '50%';
+                    colorDiv.textContent = `${event.status}`;
                     infoDiv.appendChild(colorDiv);
 
                     // Área e Canteiro
                     const areaSeedbedDiv = document.createElement('div');
                     areaSeedbedDiv.classList.add('task-area-seedbed');
-                    areaSeedbedDiv.textContent = `Área: ${event.area_id || '-'}, Canteiro: ${event.seedbed_id || '-'}`;
+                    areaSeedbedDiv.innerHTML = `<strong>${event.area_name || '-'}</strong><br>${event.seedbed_name || '-'}`;
                     infoDiv.appendChild(areaSeedbedDiv);
+
 
                     // Botão "Consultar"
                     const consultButton = document.createElement('button');
                     consultButton.classList.add('task-consult-button');
                     consultButton.textContent = 'Consultar';
+                    // Adiciona um event listener
+                    consultButton.addEventListener('click', () => {
+                        toggleEditTaskModal(event.id);
+                    });
                     // Adicione um event listener se necessário
                     infoDiv.appendChild(consultButton);
 
                     // Usuários Responsáveis
                     const usersDiv = document.createElement('div');
                     usersDiv.classList.add('task-users');
-                    usersDiv.textContent = `Responsáveis: ${event.responsible_users.join(', ')}`;
+                    //usersDiv.textContent = `${event.responsible_users.join(', ')}`;
+                    usersDiv.textContent = `${event.responsible_users[0][0]}`; // Só a 1ª letra do 1º responsável
                     infoDiv.appendChild(usersDiv);
 
                     // Adiciona o infoDiv ao taskCard
@@ -208,7 +221,18 @@ function listSelectedDaysEvents() {
     }
 }
 
+// Função para limpar as seleções
 function clearSelections() {
+    // Limpa os dias selecionados no estado
+    calendarState.selectedDays = [];
+
+    // Remove a classe 'selected-day' e redefine os estilos de todos os dias
+    const daysCells = document.querySelectorAll('.days');
+    daysCells.forEach(cell => {
+        cell.classList.remove('selected-day');
+        cell.style.backgroundColor = ''; // Reseta a cor de fundo
+    });
+
     // Reseta a seção de listagem de eventos
     const asideSection = document.querySelector('.list-tasks-aside-section');
     asideSection.innerHTML = '';
@@ -217,8 +241,6 @@ function clearSelections() {
     warningDiv.textContent = 'Selecione um ou mais dias para visualizar as tarefas previstas para cada.';
     asideSection.appendChild(warningDiv);
 }
-
-
 
 export function showCalendar(month, year) {
     const calendarTitle = document.querySelector('.calendar-title');
@@ -286,13 +308,6 @@ export function showCalendar(month, year) {
         daysCells[i].style.backgroundColor = 'var(--days-bg-color)';
         daysCells[i].style.cursor = 'pointer';
 
-        /*
-        // Verifica se é o dia de hoje e aplica estilo
-        if (dayCounter === DAY && month === MONTH && year === YEAR) {
-            daysCells[i].style.backgroundColor = 'var(--days-clicked-bg-color)';
-        }
-        */
-
         // Obtém eventos para o dia
         const eventsForDay = getEventsForDay(dayCounter, month, year);
         if (eventsForDay.length > 0) {
@@ -319,8 +334,6 @@ export function showCalendar(month, year) {
         dayCounter++;
     }
 
-
-
     // Preenche as células restantes com os primeiros dias próximo mês
     let nextDayCounter = 1;
     for (let i = dayOfWeek + daysInMonth; i < daysCells.length; i++) {
@@ -336,15 +349,6 @@ function updateCalendar(newMonth, newYear) {
     clearSelections();
     showCalendar(newMonth, newYear);    // Atualiza o calendário com os novos valores de mês e ano
 }
-
-/*
-// Função para criar uma data local a partir de uma string no formato 'yyyy-mm-dd'
-function parseDateWithoutTimezone(dateString) {
-    if (!dateString) return null; // Retorna null se a string for inválida
-    const [year, month, day] = dateString.split('-').map(Number);
-    return new Date(year, month - 1, day); // Mês no JavaScript é 0-indexado
-}
-*/
 
 function main() {
     console.log(calendarState.dayEvents);
@@ -370,31 +374,6 @@ function main() {
         }
         updateCalendar(calendarState.month, calendarState.year); // Atualiza o calendário
     });
-
-    /*
-    // Pega todas as tarefas do banco de dados e inicializa o calendário
-    fetch('/comunidades/get_tasks/')
-    .then(response => response.json())
-    .then(data => {
-        // Atualiza o dayEvents com as tarefas do servidor
-        calendarState.dayEvents = data.tasks
-        .filter(task => task.start_date) // Filtra as tarefas com start_date não nulo
-        .map(task => ({
-            title: task.title,
-            description: task.description,
-            start_date: parseDateWithoutTimezone(task.start_date),
-            end_date: task.end_date ? parseDateWithoutTimezone(task.end_date) : null,
-            recurrence: task.recurrence,
-            priority: task.priority,
-            color: task.color
-        }));
-
-        console.log(calendarState.dayEvents)
-        // Inicializa o calendário na primeira chamada com o mês e o ano atuais
-        showCalendar(calendarState.month, calendarState.year);
-    })
-    .catch(error => console.error('Erro ao carregar as tarefas:', error));
-    */
 
     showCalendar(calendarState.month, calendarState.year);
 }

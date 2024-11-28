@@ -3,27 +3,34 @@
 ## Bem vindo(a) ao **AGRAS**
 Bem-vindo ao Agras! Este projeto foi desenvolvido para auxiliar famílias que praticam agricultura familiar no acompanhamento das suas plantações e no planejamento das atividades agrícolas.
 
-## 🧑‍🌾 Sobre o Projeto  
-### A aplicação permite que os usuários/agricultores:
-
-- Realizem o cadastro das plantas cultivadas.
-- Acompanhem o ciclo de produção (desde o plantio até a colheita).
-- Organizem atividades diárias como irrigação e fertilização.
-- Gerenciem o estoque de insumos agrícolas.
-- Gerem relatórios sobre a produção e o desempenho das culturas.
-
-
 ## 🌍 Visão Geral
 A agricultura familiar é essencial para o sustento de muitas famílias ao redor do mundo, e ter uma ferramenta para gerenciar esse processo de forma organizada pode fazer toda a diferença. Este sistema foi criado para otimizar o controle de plantações, organizar atividades diárias, e monitorar o desempenho da produção, proporcionando um apoio digital para agricultores familiares.
 
-## 🛠️ Funcionalidades
-- **🌾 Cadastro de Plantas:** Adicionar e gerenciar informações sobre as culturas plantadas.  
-- **📅 Ciclo de Produção:** Acompanhar o ciclo de vida das plantas, desde o plantio até a colheita.  
-- **📋 Agenda de Atividades:** Registrar e organizar as atividades agrícolas como irrigação, adubação e colheita.  
-- **📊 Estoque e Produção:** Gerenciar o estoque de insumos e monitorar a produção agrícola.  
-- **📦 Relatórios:** Gerar relatórios detalhados sobre o desempenho das culturas e o histórico de produção.  
+# 🌱 Funcionalidades do Projeto
+
+### 👥 Comunidades
+* Crie comunidades, convide membros e gerencie permissões.
+* Usuários podem solicitar acesso à sua comunidade.
+### 🌐 Áreas e Canteiros
+* Organize o terreno criando áreas e canteiros para gerenciar plantios.
+###🌾 Cadastro de Plantas
+* Adicione e gerencie informações sobre culturas, como necessidades, plantas amigas/inimigas e pragas.
+### 🛠️ Tarefas
+* Crie tarefas para áreas ou canteiros e atribua a membros da comunidade.
+### 📆 Calendário
+* Visualize tarefas por data e receba lembretes de atividades planejadas.
+### 📅 Ciclo de Produção
+* Acompanhe o ciclo de vida das plantas, com lembretes para atividades importantes.
+### 📦 Relatórios
+* Gere relatórios e gráficos sobre o desempenho das culturas e histórico de produção.
+
+
+
 
 ## 🧷 Links
+<a href="https://agras.azurewebsites.net/">
+  <img src="https://img.shields.io/badge/SITE DO PROJETO-8abf17?style=for-the-badge&logo=google&logoColor=white" height="30px"/></a>
+
 <a href="https://sites.google.com/cesar.school/agras">
     <img src="https://img.shields.io/badge/GOOGLE SITES-8abf17?style=for-the-badge&logo=google&logoColor=white" height="30px"/></a>
     
@@ -35,9 +42,6 @@ A agricultura familiar é essencial para o sustento de muitas famílias ao redor
   
 <a href="https://www.youtube.com/@AGRAS2024/videos" target="_blank">
   <img src="https://img.shields.io/badge/YOUTUBE-183219?style=for-the-badge&logo=youtube&logoColor=white" height="30px"/></a>
-  
-<a href="https://agras.azurewebsites.net/">
-  <img src="https://img.shields.io/badge/SITE DO PROJETO-8abf17?style=for-the-badge&logo=google&logoColor=white" height="30px"/></a>
   
 <a href="https://agras.atlassian.net/jira/software/projects/KAN/boards/1">
   <img src="https://img.shields.io/badge/JIRA-183219?style=for-the-badge&logo=jira&logoColor=white" height="30px"/></a>
@@ -59,9 +63,20 @@ A agricultura familiar é essencial para o sustento de muitas famílias ao redor
 
 ## 🤝 Relatos de Pair Programming
 
-Nas últimas três semanas, a equipe aplicou intensivamente o Pair Programming como uma prática central no desenvolvimento do projeto. Essa abordagem envolve dois programadores trabalhando juntos em uma única tarefa, onde um atua como "driver", escrevendo o código, e o outro como "navigator", revisando e sugerindo melhorias em tempo real. Essa dinâmica permite uma maior troca de ideias e colaboração, com foco na qualidade do código e na detecção rápida de erros. Durante o projeto, a equipe promoveu um rodízio frequente de papéis, garantindo que todos pudessem tanto programar quanto revisar, ampliando o conhecimento coletivo e a familiaridade com o código.
+O principal objetivo foi otimizar o tempo de desenvolvimento e facilitar a resolução de problemas, com a meta de finalizar as tasks/histórias do projeto com alta qualidade. A ideia central foi dividir as tarefas de forma eficiente e garantir que cada parte do projeto fosse concluída de acordo com os padrões estabelecidos.
 
-Essa metodologia foi fundamental para a aceleração do desenvolvimento e a melhoria contínua do código, permitindo que os membros da equipe colaborassem de forma mais eficiente. Além de otimizar o tempo e a qualidade das entregas, o Pair Programming também serviu como uma ferramenta de aprendizado colaborativo, onde todos os envolvidos puderam trocar experiências, discutir soluções e aplicar as melhores práticas de programação, tanto no back-end quanto no front-end. Colocar essa metodologia em prática contribuiu para uma maior coesão do grupo e para a entrega de um produto com código mais sólido e bem estruturado.
+Divisão de Tarefas:
+Durante uma reunião inicial, decidimos nos dividir em duplas para cada conjunto de tarefas. Cada dupla ficou responsável por 3 a 4 histórias para implementar, o que possibilitou uma maior distribuição do trabalho e aceleração no progresso do projeto. As tarefas foram organizadas em um documento colaborativo, onde cada membro indicava seu nome nas atividades nas quais tinha mais interesse, garantindo uma distribuição equilibrada e eficiente.
+
+Além disso, parte das duplas ficou responsável pela realização dos testes, enquanto outras ficaram encarregadas do processo de deploy. Todos os membros participaram ativamente do desenvolvimento das funcionalidades.
+
+Metodologia de Trabalho:
+Utilizamos o Live Share durante as sessões de pair programming, o que facilitou muito a integração entre as duplas e possibilitou uma colaboração contínua em tempo real. Isso nos permitiu discutir e ajustar o código de maneira imediata, modelar melhor as histórias e tomar decisões coletivas sobre a implementação das funcionalidades. A troca constante de feedbacks entre os membros foi fundamental para atingir a qualidade desejada e otimizar o tempo de entrega.
+
+Adicionalmente, utilizamos branches no GitHub para organizar o trabalho de cada dupla, realizando merges para combinar os códigos desenvolvidos por cada equipe. Esse processo garantiu que as implementações de cada dupla fossem integradas de forma eficiente, sem causar conflitos no código final.
+
+Resultados:
+Então, com essa divisão eficiente e com o uso de ferramentas como o Live Share e o GitHub, conseguimos cumprir as tarefas planejadas, sempre com foco na qualidade do código e na entrega das funcionalidades conforme o esperado. A experiência foi enriquecedora e demonstrou como a colaboração eficaz pode melhorar a produtividade e a qualidade final do projeto.
 
 
 ## 🔄 Diagrama de atividades do sistema

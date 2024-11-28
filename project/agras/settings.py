@@ -134,6 +134,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'chat.context_processors.chat_messages',
+                'users.context_processors.images',
             ],
         },
     },
