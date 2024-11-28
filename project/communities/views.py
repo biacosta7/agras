@@ -161,7 +161,7 @@ def promote_member(request, community_id, user_id):
     user_to_be_admin = get_object_or_404(User, id=user_id)
 
     if not community.admins.filter(id=request.user.id).exists():
-        messages.error(request, 'Você não tem permissão para expulsar membros da comunidade.')
+        messages.error(request, 'Você não tem permissão para se dar o cargo administrador.')
         return redirect('manage_community', community.id)
     
     if community.admins.filter(id=user_to_be_admin.id).exists():
@@ -304,7 +304,7 @@ def list_members(request, community_id):
     return render(request, 'list_members.html', context)
 
 def image_upload_view(request, user_id):
-    image_url = None  # Variável para armazenar a URL da imagem
+    image_banner_url = None  # Variável para armazenar a URL da imagem
     user = get_object_or_404(User, id=user_id)
     
     if request.method == 'POST' and request.FILES.get('image'):
@@ -315,10 +315,10 @@ def image_upload_view(request, user_id):
         new_image.save()
 
         # Obter a URL da imagem para exibir
-        image_url = new_image.image.url
-        print(image_url)
+        image_banner_url = new_image.image.url
+        print(image_banner_url)
 
-    return render(request, 'upload.html', {'image_url': image_url})
+    return render(request, 'upload.html', {'image_banner_url': image_banner_url})
 
 
 from django.shortcuts import render, get_object_or_404, redirect
@@ -333,7 +333,7 @@ def settings(request, community_id):
     # Verificar permissões
     if request.user != community.creator and not community.admins.filter(id=request.user.id).exists():
         messages.error(request, 'Você não tem permissão para acessar as configurações dessa comunidade.')
-        return redirect('community_hub')
+        return redirect('dashboard', community_id)
 
     if request.method == "POST":
         action = request.POST.get('action')
@@ -362,6 +362,7 @@ def settings(request, community_id):
 
 @login_required
 def profile(request, community_id):
+    
     # Obtém a comunidade pelo ID, ou retorna 404 se não existir
     community = get_object_or_404(Community, id=community_id)
 
@@ -374,7 +375,8 @@ def profile(request, community_id):
     user = request.user
 
     if request.method == "POST":
-        # Processa a atualização de informações do perfil
+
+        # Processa os outros dados do formulário
         first_name = request.POST.get('first_name')
         username = request.POST.get('username')
         email = request.POST.get('email')
@@ -382,7 +384,7 @@ def profile(request, community_id):
         city = request.POST.get('city')
         state = request.POST.get('state')
 
-        # Validação de dados
+        # Validações
         valid_chars = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_")
         if not set(username).issubset(valid_chars):
             messages.error(request, 'O nome de usuário deve conter apenas letras, números ou underlines.')
@@ -405,13 +407,29 @@ def profile(request, community_id):
             messages.error(request, 'Já existe um usuário com este email.')
             return redirect('profile', community_id=community.id)
 
-        # Atualiza as informações do usuário
+        # Atualiza os dados do usuário
         user.first_name = first_name
         user.username = username
         user.email = email
         user.phone = phone
         user.city = city
         user.state = state
+
+        # Upload de imagem de perfil
+        if request.FILES.get('profile_image'):
+            profile_image = request.FILES['profile_image']
+            image_type_profile = request.POST.get('image_type_profile')  # Recupera o tipo de imagem
+
+            if image_type_profile:
+                FileUpload.objects.create(user=user, image=profile_image, image_type=image_type_profile)
+
+        if request.FILES.get('banner_image'):
+            banner_image = request.FILES['banner_image']
+            image_type_banner = request.POST.get('image_type_banner')  # Recupera o tipo de imagem
+
+            if image_type_banner:
+                FileUpload.objects.create(user=user, image=banner_image, image_type=image_type_banner)
+
 
         try:
             user.save()
@@ -420,5 +438,20 @@ def profile(request, community_id):
             messages.error(request, 'Erro ao atualizar as credenciais. Tente novamente.')
             return redirect('profile', community_id=community.id)
 
-    # Renderiza o template com as informações do usuário e da comunidade
-    return render(request, 'myprofile.html', {'user': user, 'community': community})
+        return redirect('profile', community_id=community.id)
+    
+    last_profile_image = None
+    last_profile_image = FileUpload.objects.filter(user=user, image_type='profile').last()
+    image_profile_url = last_profile_image.image.url if last_profile_image else None
+    
+    last_banner_image = None
+    last_banner_image = FileUpload.objects.filter(user=user, image_type='banner').last()
+    image_banner_url = last_banner_image.image.url if last_banner_image else None
+
+    # Renderiza a página com o formulário e os dados do usuário
+    return render(request, 'myprofile.html', {
+        'user': user,
+        'community': community,
+        'image_banner_url': image_banner_url,
+        'image_profile_url': image_profile_url,
+    })

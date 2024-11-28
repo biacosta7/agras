@@ -144,6 +144,8 @@
             console.log(`editTaskModal-${taskId}`)
         }
     }
+    // Torna a função acessível globalmente
+    window.toggleEditTaskModal = toggleEditTaskModal;
 
     function openDeleteModal(taskId) {
         document.getElementById(`deleteModal-${taskId}`).classList.remove('hidden');

@@ -26,7 +26,7 @@ export function getDayOfWeek(year, month, day) {
 // Função que recebe um dia da semana (0, 1, ..., 6) e retorna o nome desse dia da semana (Dom., Seg., ..., Sáb.)
 export function getDayOfWeekName(dayOfWeek) {
     const dayOfWeekNames = [
-        "Domingo", "Segegunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"
+        "Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"
     ];
     return dayOfWeekNames[dayOfWeek];
 }

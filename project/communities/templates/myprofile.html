@@ -12,52 +12,61 @@
 
         <!-- Modal branco -->
         <div class="lg:ml-[250px] px-4 sm:px-8 lg:px-16 pb-8">
-            <div class="bg-white shadow-lg rounded-lg p-8">
-                <!-- Banner com imagem de fundo -->
-        <div class="relative h-32 sm:h-40 md:h-52 w-full rounded-lg overflow-hidden">
-            <img 
-                src="{% static 'assets/retangulo.png' %}" 
-                alt="Banner" 
-                class="w-full h-full object-cover">
-            
-            <label 
-                for="file-upload-banner" 
-                class="absolute bottom-4 right-4 flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full shadow-lg cursor-pointer"
-                title="Editar imagem do banner">
-                <span class="material-icons text-[#8ABF17] text-lg sm:text-xl">
-                    photo_camera
-                </span>
-                <input id="file-upload-banner" type="file" name="banner_image" class="hidden" />
-            </label>
-        </div>
-        <!-- Foto do perfil e texto -->
-        <div class="relative flex items-center flex-wrap">
-            <div class="absolute -top-14 sm:-top-16 left-4 flex items-center">
-                <div class="w-24 h-24 sm:w-32 sm:h-32 bg-[#8ABF17] text-white text-3xl sm:text-4xl font-bold rounded-full flex items-center justify-center border-4 border-white shadow-lg relative">
-                    {{ user.first_name|default:"U"|slice:":1"|upper }}
-                    
-                    <label 
-                        for="file-upload-profile" 
-                        class="absolute -right-4 bottom-2 flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full shadow-md border border-gray-200 cursor-pointer"
-                        title="Editar foto de perfil">
-                        <span class="material-icons text-[#8ABF17] text-sm sm:text-lg">
-                            photo_camera
+            <div class="bg-white shadow-lg rounded-lg p-8">        
+
+        <!-- Formulário para editar as informações -->
+        <form id="form" method="POST" action="{% url 'profile' community.id %}" class="mt-20 sm:mt-24" enctype="multipart/form-data">
+            {% csrf_token %}
+            <!-- Banner com imagem de fundo -->
+            <div id="banner-container" class="relative h-32 sm:h-40 md:h-52 w-full rounded-lg overflow-hidden bg-gray-200" style="background-image: url('{{ image_banner_url }}'); background-size: cover; background-position: center; top: -6rem;">
+                
+                <img src="{% if image_banner_url %}{{ image_banner_url }}{% else %}{% static 'assets/retangulo.png' %}{% endif %}" alt="Banner" class="w-full h-full object-cover">
+
+                <label 
+                    for="file-upload-banner" 
+                    class="absolute bottom-4 right-4 flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full shadow-lg cursor-pointer"
+                    title="Editar imagem do banner">
+                    <span class="material-icons text-[#8ABF17] text-lg sm:text-xl">
+                        photo_camera
+                    </span>
+                    <input id="file-upload-banner" type="file" name="banner_image" class="hidden" accept="image/*" />
+                    <input type="hidden" name="image_type_banner" value="banner" />
+                </label>
+            </div>
+            <!-- Foto do perfil e texto -->
+            <div class="relative flex items-center flex-wrap">
+                <!-- Foto de perfil com a posição ajustada -->
+                <div class="absolute left-4 flex items-center" style="top: -10rem;">
+                    <div id="profile-container" class="w-24 h-24 sm:w-32 sm:h-32 bg-[#8ABF17] text-white text-3xl sm:text-4xl font-bold rounded-full flex items-center justify-center border-4 border-white shadow-lg relative overflow-visible" {% if image_profile_url %}style="background-image: url('{{ image_profile_url }}');{% endif %} background-size: cover; background-position: center;">
+                        <!-- Inicialmente exibe a letra do nome -->
+                        <span id="profile-initial" {% if image_profile_url %}style="display: none;"{% endif %}>
+                            {{ user.first_name|default:"U"|slice:":1"|upper }}
                         </span>
-                        <input id="file-upload-profile" type="file" name="profile_image" class="hidden" />
-                    </label>
-                </div>
-                <div class="ml-4 sm:ml-6 mt-12">
-                    <div class="flex items-center">
-                        <span class="material-icons text-[#8ABF17] text-lg sm:text-xl mr-2">edit</span>
-                        <h2 class="text-base sm:text-lg font-bold">Editar perfil</h2>
+                    
+                        <!-- Label para editar a imagem -->
+                        <label 
+                            for="file-upload-profile" 
+                            class="absolute z-10 -right-4 bottom-2 flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full shadow-md border border-gray-200 cursor-pointer"
+                            title="Editar foto de perfil">
+                            <span class="material-icons text-[#8ABF17] text-sm sm:text-lg">
+                                photo_camera
+                            </span>
+                        </label>
+                    
+                        <!-- Input de upload de imagem -->
+                        <input id="file-upload-profile" type="file" name="profile_image" class="hidden" accept="image/*" />
+                        <input type="hidden" name="image_type_profile" value="profile" />
+                    </div>                             
+                    <div class="ml-4 sm:ml-6 mt-12">
+                        <div class="flex items-center">
+                            <span class="material-icons text-[#8ABF17] text-lg sm:text-xl mr-2">edit</span>
+                            <h2 class="text-base sm:text-lg font-bold">Editar perfil</h2>
+                        </div>
+                        <p class="text-xs sm:text-sm text-gray-600">Carregue sua foto e edite suas informações pessoais</p>
                     </div>
-                    <p class="text-xs sm:text-sm text-gray-600">Carregue sua foto e edite suas informações pessoais</p>
                 </div>
             </div>
-        </div>
-        <!-- Formulário para editar as informações -->
-        <form method="POST" action="{% url 'profile' community.id %}" class="mt-20 sm:mt-24">
-            {% csrf_token %}
+
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-6">
                 <div>
                     <label for="first_name" class="block text-sm font-medium text-gray-700">Nome completo*</label>
@@ -122,4 +131,55 @@
         </form>
     </div>
 </div>
+{% endblock %}
+{% block extra_js %}
+<script>
+    // Manipulação de imagem de perfil
+    const fileInputProfile = document.getElementById('file-upload-profile');
+    const profileContainer = document.getElementById('profile-container');
+    const profileInitial = document.getElementById('profile-initial');
+
+    fileInputProfile.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+                profileInitial.style.display = 'none';
+                profileContainer.style.backgroundImage = `url(${e.target.result})`;
+                profileContainer.style.backgroundSize = 'cover';
+                profileContainer.style.backgroundPosition = 'center';
+            };
+
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Manipulação de imagem de banner
+    const fileInputBanner = document.getElementById('file-upload-banner');
+    const bannerContainer = document.getElementById('banner-container');
+
+    fileInputBanner.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+                // Adiciona a imagem ao fundo do banner
+                bannerContainer.style.backgroundImage = `url(${e.target.result})`;
+                bannerContainer.style.backgroundSize = 'cover';
+                bannerContainer.style.backgroundPosition = 'center';
+
+                // Oculta qualquer imagem padrão
+                const imgElement = bannerContainer.querySelector('img');
+                if (imgElement) {
+                    imgElement.style.display = 'none';
+                }
+            };
+
+            reader.readAsDataURL(file);
+        }
+    });
+    
+</script>
 {% endblock %}
