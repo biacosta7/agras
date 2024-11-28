@@ -8,6 +8,7 @@ from communities.models import Community
 from seedbeds.models import Seedbed
 from areas.models import Area
 from django.http import JsonResponse
+from datetime import datetime
 
 @login_required  
 def create_product_view(request, seedbed_id, community_id, area_id):
@@ -31,7 +32,11 @@ def create_product_view(request, seedbed_id, community_id, area_id):
         type_name = request.POST.get('type_name')
         quantity = request.POST.get('quantity')
         planting_date = request.POST.get('planting_date')
-
+        try:
+            # Converte para o formato "15 de Nov 2024"
+            formatted_date = datetime.strptime(planting_date, '%Y-%m-%d').strftime('%d de %b %Y')
+        except ValueError:
+            messages.error(request, "Data de plantio inválida. Use o formato DD/MM/AAAA.")
         # Verificar se o tipo de produto existe na comunidade
         type_product = get_object_or_404(TypeProduct, name=type_name, community=community)
 
@@ -64,6 +69,8 @@ def create_product_view(request, seedbed_id, community_id, area_id):
                 data_plantio=planting_date
             )
             messages.success(request, f'Produto {product.type_product.name} cadastrado com sucesso no canteiro {seedbed.nome}.')
+            request.session['formatted_date'] = formatted_date  # Adiciona a data formatada na sessão
+            print("Data de plantio: ", formatted_date)
         except ValidationError as e:
             messages.error(request, f"Erro de validação: {e}")
 
@@ -166,7 +173,8 @@ def product_update_view(request, community_id, area_id, seedbed_id, product_id):
 
     else:
         quantidade = request.POST.get('quantidade')
-
+        data_plantio = request.POST.get('data_plantio')
+        print("Nova data de plantio: ", data_plantio)
         # Verificação de campos obrigatórios
         errors = []
         if not quantidade:
@@ -181,6 +189,7 @@ def product_update_view(request, community_id, area_id, seedbed_id, product_id):
 
         # Atualizar os dados do produto mantendo o tipo de produto original
         product.quantidade = int(quantidade)  # Converte para int
+        product.data_plantio = data_plantio
         product.save()
         messages.success(request, 'Cultivo editado com sucesso.')
 
