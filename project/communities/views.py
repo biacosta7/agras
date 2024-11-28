@@ -160,8 +160,8 @@ def promote_member(request, community_id, user_id):
     community = get_object_or_404(Community, id=community_id)
     user_to_be_admin = get_object_or_404(User, id=user_id)
 
-    if not community.admins.filter(id=request.user.id).exists():
-        messages.error(request, 'Você não tem permissão para expulsar membros da comunidade.')
+    if community.admins.filter(id=request.user.id).exists():
+        messages.error(request, f'O usuário {user_to_be_admin.username} já é administrador da comunidade.')
         return redirect('manage_community', community.id)
     
     if community.admins.filter(id=user_to_be_admin.id).exists():
