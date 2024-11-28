@@ -1,0 +1,173 @@
+@import url("variables.32f688329196.css");
+
+.calendar {
+    /*position: relative; /* O pop-up de adicionar evento no calendário é posicionado em relação a ele */
+    display: flex;
+    /*align-items: center;*/
+    /*justify-content: center;*/
+    width: 100%;
+    height: 100%;
+    overflow-y: hidden; /* Impede rolagem vertical */
+    overflow-x: hidden; /* Impede rolagem lateral */
+}
+
+.calendar-controls {
+    /*position: absolute; /* Relativo ao .calendar-header */
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 4px;
+}
+
+.previous-month, .next-month {
+    width: 2.5vw;
+    color: white;
+    background-color: var(--calendar-controls-bg-color);
+    border: none;
+    border-radius: 20%;
+    font-size: 2vw;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease; /* Suaviza a transição da sombra */
+}
+
+.previous-month:active, .next-month:active {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Adiciona a sombra quando clicado */
+}
+
+.month {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    border-collapse: collapse;
+}
+
+.calendar-header {
+    position: relative;
+    padding-bottom: 16px;
+    background-color: white;
+}
+
+.calendar-title {
+    font-family: var(--calendar-title-font);
+    font-size: 1.5vw;
+    font-weight: bold;
+    /*text-transform: uppercase;*/
+    color: white;
+}
+
+.days-of-the-week-columns {
+    display: flex;
+}
+
+.days-of-the-week, .days {
+    flex: 1; /* Divide igualmente as colunas */
+}
+
+.days-of-the-week {
+    padding: 0.8vw;
+    font-family: var(--days-font);
+    font-weight: bold;
+    font-size: 1.2vw;
+    color: var(--dark-green-color);
+    background-color: white;
+}
+
+.days {
+    width: 7vw;
+    height: 7vw;
+    padding: 5px;
+    border: 1px solid var(--matrix-border-color); /* Borda para um efeito de matriz */
+    font-size: 1.5vw;
+    color: #b9babb;
+    background-color: var(--days-bg-color);
+}
+
+.claendar-body {
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Garante que o tbody ocupe a altura restante */
+}
+
+.days-line {
+    display: flex;
+    flex: 1; /* Divide igualmente as linhas do calendário */
+}
+
+.marked-day {
+    display: flex;
+    flex-direction: column;
+    /*justify-content: space-between;*/
+}
+
+.day-number, .markers-container {
+    pointer-events: none;   /* Evita que esses elementos "roubem" o evento de clique do seu pai */
+}
+
+.day-number {
+    margin-right: auto;
+    color: gray;
+}
+
+.markers-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(1, 1fr);
+    row-gap: 3px;
+    column-gap: 6px;
+    padding-left: 5%;
+    grid-auto-flow: column dense; /* Preenche colunas da esquerda para a direita */
+    /*margin-left: auto;*/
+    margin-right: auto;
+}
+
+.marker {
+    width: 1.5vw;
+    height: 1.5vw;
+    border-radius: 50%;
+    background-color: var(--yellow-marker-bg-color);
+}
+
+.extra-tasks {
+    margin-top: auto;
+    padding-left: 5%;
+    font-size: 0.8vw;
+    font-weight: bold;
+    color: black;
+    pointer-events: none;
+}
+
+/* Regra para aplicar estilos quando a altura é maior que a largura */
+@media (max-aspect-ratio: 1/1) {
+    .calendar {
+        flex-direction: column;
+    }
+    
+    .previous-month, .next-month {
+        width: 5vh;
+        font-size: 4vh;
+    }
+    
+    .calendar-title {
+        font-size: 3vh;
+    }
+    
+    .days-of-the-week {
+        font-size: 1.2vh;
+    }
+    
+    .days {
+        width: 7vh;
+        height: 7vh;
+        font-size: 1.5vh;
+    }
+    
+    .marker {
+        width: 1.5vh;
+        height: 1.5vh;
+    }
+    
+    .extra-tasks {
+        font-size: 0.8vh;
+    }
+}
