@@ -194,11 +194,11 @@
 <br>
 
 <div class="flex container mx-auto mt-5">
-    <div class="text-center flex-1 ml-36">
+    <div class="text-center flex-1 ml-48">
         <!-- Adicionando overflow horizontal -->
         <div class="overflow-x-auto">
             <!-- Forçando largura maior -->
-            <ul class="flex list-none ml-8 mr-4" style="min-width: 200%; display: flex;">
+            <ul class="flex list-none ml-8 mr-4" style="min-width: 300%; display: flex;">
                 {% for product in active_products %}
                     <li class="flex flex-col items-center mr-12 mb-4 brown-box" 
                         data-product-id="{{ product.id }}" 
@@ -245,6 +245,7 @@
                     <div class="sub-container">
                         <div class="sub-coluna">
                             <span class="text-lg font-semibold mr-12" style="color: #F76711;">Colheitas:</span><br>
+                            <span class="text-lg font-semibold mr-12" style="color: #F76711;">Tempo médio:</span><br>
                         </div>
                         <div class="sub-coluna">
                             <button type="button" class="bg-[#F77711] p-4 text-sm text-white py-1.5 rounded hover:bg-[#F76711] transition duration-200" onclick="openHarvestModal()">
