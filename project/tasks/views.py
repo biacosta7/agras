@@ -130,6 +130,7 @@ def task_page(request, community_id):
             pass
 
         task_data = {
+            'id': task.id,  # Incluímos o ID da tarefa
             'title': task.description,
             'description': task.description,
             'start_date': task.start_date.isoformat() if task.start_date else '',

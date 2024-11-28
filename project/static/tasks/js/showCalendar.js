@@ -37,6 +37,7 @@ function getTaskColor(status) {
 
 // Processa os dados das tarefas
 const processedTasks = tasksData.map(task => ({
+    id: task.id,  // Incluímos o ID da tarefa
     title: task.title,
     description: task.description,
     start_date: parseDateString(task.start_date),
@@ -49,6 +50,7 @@ const processedTasks = tasksData.map(task => ({
     seedbed_name: task.seedbed_name,
     responsible_users: task.responsible_users,
 }));
+
 
 // Objeto constante global para armazenar o estado do calendário
 export const calendarState = {
@@ -191,6 +193,10 @@ function listSelectedDaysEvents() {
                     const consultButton = document.createElement('button');
                     consultButton.classList.add('task-consult-button');
                     consultButton.textContent = 'Consultar';
+                    // Adiciona um event listener
+                    consultButton.addEventListener('click', () => {
+                        toggleEditTaskModal(event.id);
+                    });
                     // Adicione um event listener se necessário
                     infoDiv.appendChild(consultButton);
 
