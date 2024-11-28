@@ -9,7 +9,6 @@ Bem-vindo ao Agras! Este projeto foi desenvolvido para auxiliar famílias que pr
 - Realizem o cadastro das plantas cultivadas.
 - Acompanhem o ciclo de produção (desde o plantio até a colheita).
 - Organizem atividades diárias como irrigação e fertilização.
-- Gerenciem o estoque de insumos agrícolas.
 - Gerem relatórios sobre a produção e o desempenho das culturas.
 
 
@@ -20,7 +19,6 @@ A agricultura familiar é essencial para o sustento de muitas famílias ao redor
 - **🌾 Cadastro de Plantas:** Adicionar e gerenciar informações sobre as culturas plantadas.  
 - **📅 Ciclo de Produção:** Acompanhar o ciclo de vida das plantas, desde o plantio até a colheita.  
 - **📋 Agenda de Atividades:** Registrar e organizar as atividades agrícolas como irrigação, adubação e colheita.  
-- **📊 Estoque e Produção:** Gerenciar o estoque de insumos e monitorar a produção agrícola.  
 - **📦 Relatórios:** Gerar relatórios detalhados sobre o desempenho das culturas e o histórico de produção.  
 
 ## 🧷 Links
