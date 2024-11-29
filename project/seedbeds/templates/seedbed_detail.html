@@ -5,6 +5,33 @@
 {% block title %}{{ seedbed.nome }}{% endblock %}
 
 {% block styles %}
+
+    /* Scrollbar for Webkit browsers (Chrome, Safari) */
+    ::-webkit-scrollbar {
+        width: 3px; /* Largura da scrollbar */
+        height: 3px; /* Altura da scrollbar (para scroll horizontal) */
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: #8ABF17; /* Cor da parte que arrasta */
+        border-radius: 3px; /* Bordas arredondadas */
+    }
+
+    ::-webkit-scrollbar-track {
+        background: transparent; /* Cor do fundo da scrollbar */
+    }
+
+    /* Scrollbar for Firefox */
+    .scrollbar {
+        scrollbar-width: thin; /* Define a largura como fina */
+        scrollbar-color: #8ABF17 transparent; /* Cor do thumb e do track */
+    }
+
+    ::selection {
+        background-color: #8ABF17;
+        color: white;
+    }
+    
     .header {
         padding-top: 90px;
         padding-left: 260px;
@@ -231,20 +258,18 @@
 {% endblock %}
 
 {% block content %}
-<div class="header flex items-center justify-between">
-    <div class="text-content">
-        <h1 class="mt-1 text-xl font-semibold">
-            <a href="{% url 'area_manage' community.id %}" style="font-size: 28px; color: black;">Áreas &gt;</a>
-            <a href="" style="font-size: 28px; color: black;">{{ area.name }} &gt;</a>
-            <a href="" style="font-size: 28px; color: green;">{{ seedbed.nome }} &gt;</a>
-        </h1>
-        <h2 class="mt-2 font-bold" style="font-size: 50px;">{{ seedbed.nome }}</h2>
-    </div>
-    <div class="btn">
-        <a href="{% url 'create_product' community.id area.pk seedbed.id %}">
-            + Adicionar
-        </a>
-    </div>
+<div class="flex-1 p-6 fade-down lg:p-10 ml:0 lg:ml-[250px] mt-12 lg:mt-[60px]">
+    <div class="flex md:flex-row flex-col justify-between mt-4">
+        <header class="mb-6">
+            <h1 class="text-[44px] lg:text-[48px] font-semibold mt-2 text-balance">Cultivos em<span class="font-medium"> {{seedbed.nome}}</span></h1>
+        </header>
+    
+        <div class="bg-[#8ABF17] text-white font-semibold flex items-center justify-center rounded-[9px] hover:bg-[#7cad10] hover:text-[#edf0e9] h-[50px] px-4">
+            <a href="{% url 'create_product' community.id area.pk seedbed.id %}" class="text-[18px]">
+                + Adicionar
+            </a>
+        </div>
+        </div>
 </div>
 <br>
 
