@@ -92,8 +92,6 @@
                         </div>
                     </div>
                     
-                    
-                    
                     <div class="flex justify-end">
                         <button type="button" class="mr-2 bg-white border-2 border-[#8ABF17] hover:border-[#7aab0f] text-[#8ABF17] hover:text-[#7aab0f] font-bold px-6 py-3 rounded-[9px] w-full" onclick="toggleModal('close')">Cancelar</button>
                         <button type="submit" class="mr-2 bg-[#8ABF17] text-white font-bold px-6 py-3 hover:bg-[#7aab0f] text-[#f3f7f0] rounded-[9px] w-full">Criar</button>
@@ -132,22 +130,69 @@
                                 </div>
                                 <!-- Modal de edição -->
                                 <div id="editModal-{{ area.id }}" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
-                                    <div class="bg-white px-14 py-12 rounded-[34px] w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] max-w-[596px] max-h-[663px] overflow-y-auto rounded-[32px]">
-                                        <h2 id="modalTitle" class="text-[24px] font-bold mb-4 text-[#8ABF17]">Editar área de plantio</h2>
-                                        <p class="font-medium text-[16px]">Altere as informações abaixo para editar sua área de plantio</p>
+                                    <div class="bg-white px-14 py-12 rounded-[34px] w-[95%] sm:w-[85%] md:w-[75%] lg:w-[65%] xl:w-[50%] max-w-[650px] max-h-[663px] overflow-y-auto rounded-[32px] ml-4">
+                                        <h2 id="modalTitle" class="text-[24px] font-bold mb-2 text-[#8ABF17]">Editar {{ area.name }}</h2>
+                                        <p class="font-medium text-[16px]">Preencha as informações abaixo para editar {{ area.name }}</p>
                                         <form method="POST" action="{% url 'update_area' community.id area.id %}">
                                             {% csrf_token %}
                                             <div class="mb-4 mt-6">
                                                 <label for="name" class="block text-sm font-medium text-gray-700">Nome*</label>
-                                                <input type="text" name="name" id="name" value="{{ area.name }}" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] h-[55px] py-2 px-3">
+                                                <input type="text" name="name" id="name" value="{{ area.name }}" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] h-[55px] py-2 px-3">
                                             </div>
-                                            <div class="mb-4">
-                                                <label for="description" class="block text-sm font-medium text-gray-700">Descrição</label>
-                                                <textarea name="description" id="description" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] h-[120px] py-2 px-3">{{ area.description }}</textarea>
+                                            <div class="flex items-stretch">
+                                                <!-- Descrição -->
+                                                <div class="w-3/5 pr-4 flex flex-col">
+                                                    <div class="mb-4">
+                                                        <label for="description" class="block text-sm font-medium text-gray-700">Descrição</label>
+                                                        <textarea name="description" id="description" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] h-full py-2 px-3">{{ area.description }}</textarea>
+                                                    </div>
+                                                </div>
+                                            
+                                                <!-- Imagem -->
+                                                <div class="w-2/5 flex flex-col">
+                                                    <p class="block text-sm font-medium text-gray-700 ml-1">Foto ou Cor para Capa</p>
+                                                    <div 
+                                                        id="area-container" 
+                                                        class="w-full h-full rounded-lg overflow-hidden bg-gray-200 mt-1" 
+                                                        style="background-image: url('url('{{ image_area_url }}')'); background-size: cover; background-position: center; height: 138px; width: 215px; ">
+                                                        
+                                                        <!-- Exibição da Imagem da Comunidade -->
+                                                        <img 
+                                                            id="area-image" 
+                                                            src="{% if image_area_url %}{{ image_area_url }}{% else %}{% static 'assets/seedbed-pic.jpg' %}{% endif %}" 
+                                                            alt="Area Image" 
+                                                            class="w-full h-full object-cover">
+                        
+                                                        <!-- Botão de upload -->
+                                                        <label 
+                                                            for="file-upload-area" 
+                                                            class="absolute bottom-4 right-4 flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full shadow-lg cursor-pointer"
+                                                            title="Editar imagem da Área">
+                                                            <span class="material-icons text-[#8ABF17] text-lg sm:text-xl">photo_camera</span>
+                                                            <input id="file-upload-area" type="file" name="area_image" class="hidden" accept="image/*" />
+                                                            {% comment %} <input type="hidden" name="image_type_community" value="community" /> {% endcomment %}
+                                                        </label>
+                                                    </div>
+                                            
+                                                    <!-- Cores -->
+                                                    <div class="flex flex-row space-y-1 mt-5 mb-7">
+                                                        <!-- Inputs escondidos que serão atualizados ao clicar nas cores -->
+                                                        <div 
+                                                            class="w-12 h-10 mr-2 ml-4 mt-1 rounded-lg bg-[#8B4513] cursor-pointer" 
+                                                            onclick="changeAreaColor('marrom')">      
+                                                        </div>
+                                                        <div 
+                                                            class="w-12 h-10 mr-2 ml-2 rounded-lg bg-[#FF6F00] cursor-pointer" 
+                                                            onclick="changeAreaColor('laranja')"></div>
+                                                        <div 
+                                                            class="w-12 h-10 mr-2 ml-2 rounded-lg bg-[#5F8C1B] cursor-pointer" 
+                                                            onclick="changeAreaColor('verde')"></div>
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div class="flex justify-end">
                                                 <button type="button" onclick="closeEditModal({{area.id}})" class="mr-2 bg-white border-2 border-[#8ABF17] hover:border-[#7aab0f] text-[#8ABF17] hover:text-[#7aab0f] font-bold px-6 py-3 rounded-[9px] w-full">Cancelar</button>
-                                                <button type="submit" class="mr-2 bg-[#8ABF17] text-white font-bold px-6 py-3 rounded-[9px] hover:bg-[#7aab0f] text-[#f3f7f0] w-full">Salvar Alterações</button>
+                                                <button type="submit" class="mr-2 bg-[#8ABF17] text-white font-bold px-6 py-3 rounded-[9px] hover:bg-[#7aab0f] text-[#f3f7f0] w-full">Salvar</button>
                                             </div>
                                         </form>
                                     </div>
