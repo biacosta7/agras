@@ -162,18 +162,28 @@ Tarefas {{ community.name }}{% endblock %}
               <td class="px-6 py-4 text-black">
                 <div class="flex items-center gap-1">
                   {% for user in task.responsible_users.all|slice:":3" %}
-                  <div
-                    class="w-8 h-8 bg-[#8ABF17] text-[#FFFFFF] flex items-center justify-center rounded-md mr-2 font-bold relative"
-                    data-name="{{ user.username }}"
-                    title="{{ user.first_name }}"
-                    style="z-index: 1; margin-left: -4px"
-                  >
-                    {{ user.username|slice:":1"|upper }}
-                  </div>
-                  {% endfor %} {% if task.responsible_users.count > 3 %}
-                  <span class="text-sm font-medium text-blue-500"
-                    >+ {{ task.responsible_users.count|add:"-3" }} outros</span
-                  >
+                    <div
+                        class="w-8 h-8 bg-[#8ABF17] text-[#FFFFFF] flex items-center justify-center rounded-md mr-2 font-bold relative"
+                        data-name="{{ user.username }}"
+                        title="{{ user.first_name }}"
+                        style="
+                            z-index: 1; 
+                            margin-left: -4px;
+                            {% if image_profile_url %}
+                                background-image: url('{{ image_profile_url }}');
+                                background-size: cover;
+                                background-position: center;
+                            {% endif %}">
+                        <span id="profile-initial" {% if image_profile_url %}style="display: none;"{% endif %}>
+                            {{ user.first_name|slice:":1"|upper }}
+                        </span>
+                    </div>
+                  {% endfor %}
+
+                  {% if task.responsible_users.count > 3 %}
+                    <span class="text-sm font-medium text-blue-500">
+                        + {{ task.responsible_users.count|add:"-3" }} outros
+                    </span>
                   {% endif %}
                 </div>
               </td>

@@ -8,6 +8,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import TimeoutException
 import time
 
+# Criar produto com erro
 
 class UserRegistrationAndLoginTest(LiveServerTestCase):
     def setUp(self):
@@ -32,9 +33,9 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
         time.sleep(1)
         self.browser.find_element(By.ID, "first_name").send_keys("Fulano de Tal")
         time.sleep(1)
-        self.browser.find_element(By.ID, "username").send_keys("fulano2024")
+        self.browser.find_element(By.ID, "username").send_keys("fulano2")
         time.sleep(1)
-        self.browser.find_element(By.ID, "email").send_keys("fulano2024@example.com")
+        self.browser.find_element(By.ID, "email").send_keys("fulano2@example.com")
         time.sleep(1)
         self.browser.find_element(By.ID, "state").click()
         time.sleep(1)
@@ -60,7 +61,7 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
 ).click()
         time.sleep(1)
         # Preenche o formulário de login
-        self.browser.find_element(By.ID, "login_input").send_keys("fulano2024")
+        self.browser.find_element(By.ID, "login_input").send_keys("fulano2")
         time.sleep(1)
         self.browser.find_element(By.ID, "password").send_keys("senha_segura")
 
@@ -90,7 +91,7 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
 
 
         # Preenche o campo abaixo de "Nome"
-        self.browser.find_element(By.ID, "name").send_keys("Comunidade Exemplo")
+        self.browser.find_element(By.ID, "name").send_keys("Comunidade Exemplo2")
         time.sleep(1)
 
 
@@ -114,14 +115,12 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
         botao_entrar = WebDriverWait(self.browser, 10).until(
             EC.element_to_be_clickable((By.XPATH, "//a[contains(@class, 'text-white') and contains(text(), 'Entrar')]"))
         )
-
-
         # Realiza o clique no botão "Entrar"
         botao_entrar.click()
         time.sleep(1)
 
         # Clicar em Areas de Plantio
-        self.browser.find_element(By.XPATH, '/html/body/div/div[2]/div[2]/a[2]/span[2]').click()
+        self.browser.find_element(By.XPATH, '/html/body/div[2]/div[2]/a[2]/span[2]').click()
         time.sleep(1)
 
         # Clicar em Criar Area de Plantio
@@ -171,12 +170,12 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
         time.sleep(1)
 
         # Adicionar Cultivo
-        self.browser.find_element(By.XPATH, '/html/body/div/div[2]/div/div/ul/li/a/img').click()
+        self.browser.find_element(By.XPATH, '/html/body/div/div[1]/div[2]/a').click()
         time.sleep(1)
+
        # Adicionar Produto
         self.browser.find_element(By.XPATH, '/html/body/div/div[1]/form/button').click()
         time.sleep(1)
-       # Erro pois nao colocou o nome
 
 
 

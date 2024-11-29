@@ -87,6 +87,14 @@ Então, com essa divisão eficiente e com o uso de ferramentas como o Live Share
 
 ![image](https://github.com/user-attachments/assets/064f223a-c9b8-449d-9f1d-9e9fecfa284a)
 
+# 🚚 Status Report 2
+
+## [🎬 Screencast Protótipo](https://www.youtube.com/watch?v=i34DN3N1n_Y)
+
+<a href="https://www.youtube.com/watch?v=rZvdmyKTAjA" target="_blank">
+    <img src="https://github.com/user-attachments/assets/8604c9da-aa65-42a5-97c1-ef5479af12bd" alt="Clique para assistir o vídeo (abrirá em uma nova aba)">
+</a>
+
 
 ## 💻 Tecnologias Utilizadas
 - **Backend:** Django (Python) 🐍

@@ -6,20 +6,20 @@
 <!-- Título principal fora do modal -->
 <div class="flex-1 lg:p-8 ml:0 lg:ml-[250px] mt-12 lg:mt-[60px]">
     <header class="mb-2">
-        <h1 class="text-[32px] sm:text-[36px] md:text-[44px] lg:text-[48px] font-semibold mt-2">Minha Conta</h1>
+        <h1 class="text-[32px] sm:text-[36px] md:text-[44px] lg:text-[48px] font-semibold p-6">Minha Conta</h1>
     </header>
 </div>
 
         <!-- Modal branco -->
         <div class="lg:ml-[250px] px-4 sm:px-8 lg:px-16 pb-8">
-            <div class="bg-white shadow-lg rounded-lg p-8">        
+            <div class="bg-white shadow-2xl -mt-10 rounded-lg p-8">        
 
         <!-- Formulário para editar as informações -->
         <form id="form" method="POST" action="{% url 'profile' community.id %}" class="mt-20 sm:mt-24" enctype="multipart/form-data">
             {% csrf_token %}
             <!-- Banner com imagem de fundo -->
             <div id="banner-container" class="relative h-32 sm:h-40 md:h-52 w-full rounded-lg overflow-hidden bg-gray-200" style="background-image: url('{{ image_banner_url }}'); background-size: cover; background-position: center; top: -6rem;">
-                
+
                 <img src="{% if image_banner_url %}{{ image_banner_url }}{% else %}{% static 'assets/retangulo.png' %}{% endif %}" alt="Banner" class="w-full h-full object-cover">
 
                 <label 
@@ -32,12 +32,12 @@
                     <input id="file-upload-banner" type="file" name="banner_image" class="hidden" accept="image/*" />
                     <input type="hidden" name="image_type_banner" value="banner" />
                 </label>
-            </div>
+            </div> 
             <!-- Foto do perfil e texto -->
             <div class="relative flex items-center flex-wrap">
                 <!-- Foto de perfil com a posição ajustada -->
                 <div class="absolute left-4 flex items-center" style="top: -10rem;">
-                    <div id="profile-container" class="w-24 h-24 sm:w-32 sm:h-32 bg-[#8ABF17] text-white text-3xl sm:text-4xl font-bold rounded-full flex items-center justify-center border-4 border-white shadow-lg relative overflow-visible" {% if image_profile_url %}style="background-image: url('{{ image_profile_url }}');{% endif %} background-size: cover; background-position: center;">
+                    <div id="profile-container" class="w-24 h-24 sm:w-32 sm:h-32 aspect-square rounded-full bg-[#8ABF17] text-white text-3xl sm:text-4xl font-bold flex items-center justify-center border-4 border-white shadow-lg relative overflow-visible" {% if image_profile_url %}style="background-image: url('{{ image_profile_url }}');{% endif %} background-size: cover; background-position: center;">
                         <!-- Inicialmente exibe a letra do nome -->
                         <span id="profile-initial" {% if image_profile_url %}style="display: none;"{% endif %}>
                             {{ user.first_name|default:"U"|slice:":1"|upper }}
@@ -58,7 +58,7 @@
                         <input type="hidden" name="image_type_profile" value="profile" />
                     </div>                             
                     <div class="ml-4 sm:ml-6 mt-12">
-                        <div class="flex items-center">
+                        <div class="flex items-center mt-4">
                             <span class="material-icons text-[#8ABF17] text-lg sm:text-xl mr-2">edit</span>
                             <h2 class="text-base sm:text-lg font-bold">Editar perfil</h2>
                         </div>
@@ -182,4 +182,15 @@
     });
     
 </script>
+<style>
+    @media (min-width: 536px) and (max-width: 639px) {
+        .redondo {
+            width: 100px;
+            height: 100px;
+        }
+    }
+
+</style>
+
+
 {% endblock %}

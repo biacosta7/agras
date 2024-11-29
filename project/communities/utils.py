@@ -15,6 +15,9 @@ def get_weather_data(city):
                 'temperature': int(data['main']['temp']),
                 'weather_description': data['weather'][0]['description'],
                 'icon': data['weather'][0]['icon'],
+                'humidity': data['main']['humidity'], 
+                'feels_like': int(data['main']['feels_like']),  
+                'wind_speed': data['wind']['speed'], 
             }
         else:
             return {'error': 'Dados meteorológicos não encontrados.'}

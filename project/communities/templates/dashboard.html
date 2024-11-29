@@ -5,104 +5,55 @@
 {% block content %}
 <!-- Main Content -->
 <div class="lg:ml-[250px] mt-12 lg:mt-[90px] fade-down w-full lg:w-auto p-8 bg-[#FAFAFA]">
-    <div class="flex-1 h-screen -mt-2">  
-        <div class="">
-            <h1 class="font-semibold text-[40px]"> Olá, {{user.first_name}}! </h1>
-            <p class="font-medium text-[20px]">Seja bem vindo(a) ao AGRAS!</p>
+    <div class="flex-1 flex-col -mt-2">
+        <div>
+            <h1 class="font-semibold text-[32px] sm:text-[40px]">Olá, {{user.first_name}}!</h1>
+            <p class="font-medium text-[16px] sm:text-[20px] mb-6 -mt-2">Seja bem-vindo(a) ao AGRAS!</p>
         </div>
-        <div class= "mt-[20px] relative flex flex-row space-x-4">
-            <div class="cursor-pointer max-w-[520px]">
-                <img src="{% static 'assets/freepik.jpg' %}" alt="Fazendeira" class="rounded-[14px] max-w-[520px] h-[300px] object-cover"/>
-                <p class="font-bold text-[20px] max-w-[200px] text-white absolute top-[100px] drop-shadow-lg left-[20px] sm:left-10">Impulsione a sua produtividade com o AGRAS!</p>
-            </div>
-            {% comment %} CARD DE TEMPERATURA {% endcomment %}
-            <div>
-                <div class="w-[520px] h-[300px] bg-white drop-shadow-xl rounded-[14px] border p-6">
-                    {% if weather_data.error %}
-                        <p class="text-red-500">{{ weather_data.error }}</p>
-                    {% else %}
-                        <div class="flex justify-between">
-                            <div id="seedbed-dropdown" class="bg-[#F76711] rounded-[14px] p-[6px] text-white flex flex-row justify-between items-center cursor-pointer"><p class="text-white font-medium mr-4"> Canteiro 01 </p> <svg width="16" height="22" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M10 8.27267C10 9.41488 9.10457 10.3408 8 10.3408C6.89543 10.3408 6 9.41488 6 8.27267C6 7.13045 6.89543 6.2045 8 6.2045C9.10457 6.2045 10 7.13045 10 8.27267Z" fill="white"/>
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M8 0C14 0 16 4.13634 16 6.89389C16 11.7412 11.1171 18.6924 8.98091 21.5015C8.47548 22.1662 7.52453 22.1662 7.0191 21.5015C4.88289 18.6924 0 11.7412 0 6.89389C0 4.13634 2 0 8 0ZM8 12.409C10.2091 12.409 12 10.5571 12 8.27267C12 5.98823 10.2091 4.13633 8 4.13633C5.79086 4.13633 4 5.98823 4 8.27267C4 10.5571 5.79086 12.409 8 12.409Z" fill="white"/>
-                                </svg>
-                                
 
-                            </div>
-                            <p class="font-bold text-[22px]">
-                                {% if day_of_week == 0 %}
-                                    Segunda
-                                {% elif day_of_week == 1 %}
-                                    Terça
-                                {% elif day_of_week == 2 %}
-                                    Quarta
-                                {% elif day_of_week == 3 %}
-                                    Quinta
-                                {% elif day_of_week == 4 %}
-                                    Sexta
-                                {% elif day_of_week == 5 %}
-                                    Sábado
-                                {% elif day_of_week == 6 %}
-                                    Domingo
-                                {% else %}
-                                    Dia inválido  <!-- Ou alguma outra mensagem de erro -->
-                                {% endif %}
-                            </p>   
-                        </div>
-
-                        <p class="text-xl font-bold">Cidade: {{ user.city }}</p>
-                        <p class="text-lg">Temperatura: {{ weather_data.temperature }}°C</p>
-                        <p class="text-lg">Clima: {{ weather_data.weather_description }}</p>
-                    {% endif %}
-                </div>
+        <!-- CARD IMPULSIONAR -->
+        <div class="w-full relative flex flex-col sm:flex-row sm:space-x-4 mb-8">
+            <div class="cursor-pointer sm:w-[75%] w-full sm:mb-0 mb-6">
+                <!-- Aumentando a altura da imagem em telas maiores -->
+                <img src="{% static 'assets/freepik.jpg' %}" alt="Fazendeira" class="rounded-[14px] min-h-[300px] sm:min-h-[400px] object-cover"/>
+                <p class="font-bold max-w-[200px] sm:max-w-[300px] socorro text-white absolute sm:top-[110px] top-[100px] drop-shadow-lg left-[30px] sm:left-[60px] text-[20px] text-left sm:text-[24px]">
+                    Impulsione a sua produtividade com o AGRAS!
+                </p>
             </div>
-            {% comment %} CARD DE COLHEITAS {% endcomment %}
-            <div>
-                <div class="w-[520px] h-[300px] bg-white drop-shadow-xl rounded-[14px] border p-6">
-                   <div class="flex flex-row justify-between"> 
-                    <h1 class="font-bold text-black text-[20px]" >Colheitas</h1>
-                    <div class="relative"> 
-                        <div id="seedbed-dropdown" onclick='toggleSeedbedOption()' class="bg-[#F76711] rounded-[14px] p-[6px] text-white flex flex-row justify-between items-center cursor-pointer"><p class="text-white font-medium mr-4"> Canteiro 01 </p> <svg width="18" height="16" viewBox="0 0 18 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" clip-rule="evenodd" d="M2.19399 5.21967C1.86763 5.51256 1.86763 5.98744 2.19399 6.28033L8.1256 11.6035C8.56076 11.9941 9.26628 11.9941 9.70144 11.6035L15.633 6.28033C15.9594 5.98744 15.9594 5.51257 15.633 5.21967C15.3067 4.92678 14.7775 4.92678 14.4511 5.21967L8.91352 10.1893L3.37587 5.21967C3.0495 4.92678 2.52036 4.92678 2.19399 5.21967Z" fill="white" stroke="white" stroke-width="2" stroke-linecap="round"/>
-                            </svg> 
-                        </div>
-                        {% comment %} MODAL OPCOES DE CANTEIRO {% endcomment %}
-                        <div id="seedbed-modal" class="absolute hidden top-10 w-full bg-[#F76711] rounded-[14px] p-[6px] text-white flex flex-col">
-                            <p class="hover:bg-white hover:text-[#F76711] hover:font-semibold hover:rounded-[7px] hover:p-1 cursor-pointer">Opcao 1</p>
-                            <div class="border-t border-black mt-1 ml-1 mb-1 w-[95%]"></div>
-                            <p class="hover:bg-white hover:text-[#F76711] hover:font-semibold hover:rounded-[7px] hover:p-1 cursor-pointer">Opcao 2</p>
-                        </div>
+
+            <!-- CARD DE TEMPERATURA (incluindo arquivo weather.html) -->
+            {% include "weather.html" %}
+        </div>
+
+        <!-- CARD DE COLHEITAS -->
+        <div class="w-full h-auto mx-auto bg-white drop-shadow-xl rounded-[14px] border mb-4 p-6">
+            <div class="flex flex-row justify-between items-center mb-4">
+                <h1 class="font-bold text-black text-[18px] sm:text-[20px]">Cultivos populares</h1>
+                <a href="{% url 'area_manage' community.id %}" 
+                class="bg-[#5F8C1B] text-white p-2 rounded-lg text-sm sm:text-base hover:bg-[#4a7c13] hover:shadow-lg transition duration-200 ease-in-out">
+                Ver Áreas
+             </a>
+            </div>
+            {% for crop_in_community in crops_in_community %}
+            <a href="{% url 'seedbed_detail' community.id crop_in_community.seedbed.area.id crop_in_community.seedbed.id  %}" id="crop-{{crop_in_community.seedbed.area.id}}-{{crop_in_community.seedbed.id}}" class="flex flex-col sm:flex-row items-center justify-between py-4 border-b last:border-0 hover:bg-[#F1F8E4] transition-all duration-200 rounded-lg">
+                <div class="flex items-center space-x-4 mb-4 sm:mb-0">
+                    <div class="bg-[#D4E8A1] text-[#5F8C1B] p-3 rounded-full hover:bg-[#8ABF17] transition-all duration-300">
+                        <span class="material-icons-outlined flex items-center justify-center">grass</span>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800 hover:text-[#5F8C1B] transition-all duration-300 flex">{{ crop_in_community.type_product.name }} - <span class="text-[12px] items-center ml-1 text-center"> {{ crop_in_community.quantidade }} plantados </span> </h3>
+                        <p class="text-sm text-gray-500"> Área: {{ crop_in_community.seedbed.area }} - Canteiro: {{ crop_in_community.seedbed }}  </p>
                     </div>
                 </div>
-                if not forloop.last 
-                <div class="border-t border-[#CECECE] mt-2"></div>
-                aqui vai ter a porra de um loop for para pegar os cultivos de cada canteiro
-                endif 
+                <div class="text-right">
+                    <p class="text-sm text-gray-400">Data de plantio:</p>
+                    <p class="text-sm font-semibold text-gray-700">{{ crop_in_community.data_plantio }}</p>
                 </div>
-            </div>
+            </a>
+            {% empty %}
+            <p class="text-center text-gray-500 py-4">Não existem cultivos cadastrados na comunidade {{ community.name }}</p>
+            {% endfor %}
         </div>
     </div>
 </div>
-
-
- </div>
- <script>
-    function toggleSeedbedOption() {
-        const seedbed = document.getElementById('seedbed-dropdown');
-        const modal = document.getElementById('seedbed-modal');
-        if (seedbed) {
-            modal.classList.toggle('hidden');
-        }
-    }
-    
-    // Add event listener to close the modal when clicking outside
-    window.addEventListener('click', function(event) {
-        const modal = document.getElementById('seedbed-modal');
-        if (modal && event.target !== modal && !modal.contains(event.target) && !event.target.closest('#seedbed-dropdown')) { 
-            modal.classList.add('hidden');
-        }
-    });
- </script>
 {% endblock %}
-
-

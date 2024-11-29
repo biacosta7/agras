@@ -13,7 +13,7 @@
             {% if areas %}
             <div class="flex md:flex-row flex-col justify-between mt-4">
                 <header class="mb-6">
-                    <h1 class="text-[44px] lg:text-[48px] font-semibold mt-2 ">Áreas <span class="font-medium">de Plantio</span></h1>
+                    <h1 class="text-[44px] lg:text-[48px] font-semibold mt-2 "><span class="font-medium">Áreas de Plantio</span></h1>
                 </header>
             
                 <div class="flex flex-row items-center space-x-6">
@@ -30,24 +30,73 @@
 
 
         <!-- Modal para criar area -->
-        <div id="areaModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50">
-            <div class="bg-white px-14 py-12 rounded-[34px] w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] max-w-[596px] max-h-[663px] overflow-y-auto rounded-[32px]">
-                <h2 id="modalTitle" class="text-[24px] font-bold mb-4 text-[#8ABF17]">Nova área de plantio</h2>
-                <p class="font-medium text-[16px]">Preencha as informações abaixo para criar uma nova área</p>
+        <div id="areaModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+            <div class="bg-white px-14 py-12 rounded-[34px] w-[95%] sm:w-[85%] md:w-[75%] lg:w-[65%] xl:w-[50%] max-w-[650px] max-h-[663px] overflow-y-auto rounded-[32px] ml-4">
+                <h2 id="modalTitle" class="text-[24px] font-bold mb-4 text-[#8ABF17]">Criar nova Área de Plantio</h2>
+                <p class="font-medium text-[16px]">Preencha as informações abaixo para criar uma nova Área de Plantio</p>
                 <form id="areaForm" method="post" action="{% url 'areas:area_create' community.id %}">
                     {% csrf_token %}
                     <div class="mb-4 mt-6">
                         <label for="name" class="block text-sm font-medium text-gray-700">Nome*</label>
                         <input type="text" name="name" id="name" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] h-[55px] py-2 px-3">
                     </div>
-                    <div class="mb-4">
-                        <label for="description" class="block text-sm font-medium text-gray-700">Descrição</label>
-                        <textarea name="description" id="description" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] h-[120px] py-2 px-3"></textarea>
+                    <div class="flex items-stretch">
+                        <!-- Descrição -->
+                        <div class="w-3/5 pr-4 flex flex-col">
+                            <div class="mb-4 h-[200px]">
+                                <label for="description" class="block text-sm font-medium text-gray-700">Descrição</label>
+                                <textarea name="description" id="description" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] h-full py-2 px-3"></textarea>
+                            </div>
+                        </div>
+                    
+                        <!-- Imagem -->
+                        <div class="w-2/5 flex flex-col">
+                            <p class="block text-sm font-medium text-gray-700 ml-1">Foto ou Cor para Capa</p>
+                            <div 
+                                id="area-container" 
+                                class="w-full h-full rounded-lg overflow-hidden bg-gray-200 mt-1" 
+                                style="background-image: url('url('{{ image_area_url }}')'); background-size: cover; background-position: center; height: 138px; width: 215px; ">
+                                
+                                <!-- Exibição da Imagem da Comunidade -->
+                                <img 
+                                    id="area-image" 
+                                    src="{% if image_area_url %}{{ image_area_url }}{% else %}{% static 'assets/seedbed-pic.jpg' %}{% endif %}" 
+                                    alt="Area Image" 
+                                    class="w-full h-full object-cover">
+
+                                <!-- Botão de upload -->
+                                <label 
+                                    for="file-upload-area" 
+                                    class="absolute bottom-4 right-4 flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full shadow-lg cursor-pointer"
+                                    title="Editar imagem da Área">
+                                    <span class="material-icons text-[#8ABF17] text-lg sm:text-xl">photo_camera</span>
+                                    <input id="file-upload-area" type="file" name="area_image" class="hidden" accept="image/*" />
+                                    {% comment %} <input type="hidden" name="image_type_community" value="community" /> {% endcomment %}
+                                </label>
+                            </div>
+                    
+                            <!-- Cores -->
+                            <div class="flex flex-row space-y-1 mt-5 mb-7">
+                                <!-- Inputs escondidos que serão atualizados ao clicar nas cores -->
+                                <div 
+                                    class="w-12 h-10 mr-2 ml-4 mt-1 rounded-lg bg-[#8B4513] cursor-pointer" 
+                                    onclick="changeAreaColor('marrom')">      
+                                </div>
+                                <div 
+                                    class="w-12 h-10 mr-2 ml-2 rounded-lg bg-[#FF6F00] cursor-pointer" 
+                                    onclick="changeAreaColor('laranja')"></div>
+                                <div 
+                                    class="w-12 h-10 mr-2 ml-2 rounded-lg bg-[#5F8C1B] cursor-pointer" 
+                                    onclick="changeAreaColor('verde')"></div>
+                            </div>
+                        </div>
                     </div>
+                    
                     <div class="flex justify-end">
                         <button type="button" class="mr-2 bg-white border-2 border-[#8ABF17] hover:border-[#7aab0f] text-[#8ABF17] hover:text-[#7aab0f] font-bold px-6 py-3 rounded-[9px] w-full" onclick="toggleModal('close')">Cancelar</button>
                         <button type="submit" class="mr-2 bg-[#8ABF17] text-white font-bold px-6 py-3 hover:bg-[#7aab0f] text-[#f3f7f0] rounded-[9px] w-full">Criar</button>
                     </div>
+                    
                 </form>
             </div>
         </div>
@@ -68,42 +117,102 @@
                             <div class="relative-wrapper relative"> {% if is_admin_of_community %}
                                 <span class="material-icons mt-3 cursor-pointer" onclick="toggleManageModal('manage', {{area.id}})">more_vert</span>
                                 <!-- Modal de gerenciamento -->
-                                <div id="manageModal-{{ area.id }}" class="hidden absolute top-8 right-0 bg-white border border-gray-300 mt-2 shadow-lg px-4 py-2 rounded-lg z-10 w-auto">
-                                    <button onclick="toggleManageModal('close-manage', {{ area.id }}), {}" class="absolute top-2 right-2 text-[#F76711] material-icons-outlined">close</button>
-                                    <div class="flex flex-row items-center gap-x-2"> 
-                                        <button onclick="openEditModal({{area.id}})" class="bg-yellow-500 text-white p-1 rounded-full hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 flex">
-                                            <span class="material-icons-outlined">edit</span>
+                                <div id="manageModal-{{ area.id }}" class="hidden absolute top-8 right-0 bg-white border border-gray-300 shadow-lg px-6 py-4 rounded-lg z-10 w-64">
+                                    <button onclick="toggleManageModal('close-manage', {{ area.id }})" class="absolute top-2 right-2 text-[#F76711] material-icons-outlined">close</button>
+                                    <div class="flex flex-col items-center gap-y-2"> <!-- Diminuí o gap para 2 -->
+                                        <!-- Botão Editar (Ícone verde) -->
+                                        <button onclick="openEditModal({{ area.id }})" class="text-gray-600 p-2 hover:text-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 flex items-center justify-start w-full space-x-2">
+                                            <span class="material-icons-outlined text-lg text-green-600">edit</span> <!-- Ícone verde -->
+                                            <span class="text-sm">Editar</span> <!-- Texto à esquerda do ícone -->
                                         </button>
-                                        <button onclick="openDeleteModal({{area.id}})" class="bg-red-500 mr-5 text-white p-1 rounded-full hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 flex">
-                                            <span class="material-icons-outlined">delete</span>
+                                
+                                        <!-- Botão Gerar Relatório (Ícone azul) -->
+                                        <button onclick="" class="text-gray-600 p-2 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 flex items-center justify-start w-full space-x-2">
+                                            <span class="material-icons-outlined text-lg text-blue-600 ">description</span> <!-- Ícone de documento azul -->
+                                            <span class="text-sm">Gerar Relatório</span> 
+                                        </button>
+                                
+                                        <!-- Linha divisória -->
+                                        <hr class="w-full border-t border-gray-300 my-1" />
+                                
+                                        <!-- Botão Excluir (Ícone vermelho) -->
+                                        <button onclick="openDeleteModal({{ area.id }})" class="text-gray-600 p-2 hover:text-gray-900 p-1 hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 flex items-center justify-start w-full space-x-2">
+                                            <span class="material-icons-outlined text-lg text-red-500">delete</span> <!-- Ícone vermelho -->
+                                            <span class="text-sm">Excluir</span> <!-- Texto à esquerda do ícone -->
                                         </button>
                                     </div>
-                                </div>
+                                </div> 
                                 <!-- Modal de edição -->
-                                <div id="editModal-{{ area.id }}" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
-                                    <div class="bg-white px-14 py-12 rounded-[34px] w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] max-w-[596px] max-h-[663px] overflow-y-auto rounded-[32px]">
-                                        <h2 id="modalTitle" class="text-[24px] font-bold mb-4 text-[#8ABF17]">Editar área de plantio</h2>
-                                        <p class="font-medium text-[16px]">Altere as informações abaixo para editar sua área de plantio</p>
+                                <div id="editModal-{{ area.id }}" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                                    <div class="bg-white px-14 py-12 rounded-[34px] w-[95%] sm:w-[85%] md:w-[75%] lg:w-[65%] xl:w-[50%] max-w-[650px] max-h-[663px] overflow-y-auto rounded-[32px] ml-4">
+                                        <h2 id="modalTitle" class="text-[24px] font-bold mb-2 text-[#8ABF17]">Editar {{ area.name }}</h2>
+                                        <p class="font-medium text-[16px]">Preencha as informações abaixo para editar {{ area.name }}</p>
                                         <form method="POST" action="{% url 'update_area' community.id area.id %}">
                                             {% csrf_token %}
                                             <div class="mb-4 mt-6">
                                                 <label for="name" class="block text-sm font-medium text-gray-700">Nome*</label>
-                                                <input type="text" name="name" id="name" value="{{ area.name }}" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] h-[55px] py-2 px-3">
+                                                <input type="text" name="name" id="name" value="{{ area.name }}" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] h-[55px] py-2 px-3">
                                             </div>
-                                            <div class="mb-4">
-                                                <label for="description" class="block text-sm font-medium text-gray-700">Descrição</label>
-                                                <textarea name="description" id="description" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] h-[120px] py-2 px-3">{{ area.description }}</textarea>
+                                            <div class="flex items-stretch">
+                                                <!-- Descrição -->
+                                                <div class="w-3/5 pr-4 flex flex-col">
+                                                    <div class="mb-4 h-[200px]">
+                                                        <label for="description" class="block text-sm font-medium text-gray-700">Descrição</label>
+                                                        <textarea name="description" id="description" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] h-full py-2 px-3">{{ area.description }}</textarea>
+                                                    </div>
+                                                </div>
+                                                <!-- Imagem -->
+                                                <div class="w-2/5 flex flex-col">
+                                                    <p class="block text-sm font-medium text-gray-700 ml-1">Foto ou Cor para Capa</p>
+                                                    <div 
+                                                        id="area-container" 
+                                                        class="w-full h-full rounded-lg overflow-hidden bg-gray-200 mt-1" 
+                                                        style="background-image: url('url('{{ image_area_url }}')'); background-size: cover; background-position: center; height: 138px; width: 215px; ">
+                                                        
+                                                        <!-- Exibição da Imagem da Comunidade -->
+                                                        <img 
+                                                            id="area-image" 
+                                                            src="{% if image_area_url %}{{ image_area_url }}{% else %}{% static 'assets/seedbed-pic.jpg' %}{% endif %}" 
+                                                            alt="Area Image" 
+                                                            class="w-full h-full object-cover">
+                        
+                                                        <!-- Botão de upload -->
+                                                        <label 
+                                                            for="file-upload-area" 
+                                                            class="absolute bottom-4 right-4 flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full shadow-lg cursor-pointer"
+                                                            title="Editar imagem da Área">
+                                                            <span class="material-icons text-[#8ABF17] text-lg sm:text-xl">photo_camera</span>
+                                                            <input id="file-upload-area" type="file" name="area_image" class="hidden" accept="image/*" />
+                                                            {% comment %} <input type="hidden" name="image_type_community" value="community" /> {% endcomment %}
+                                                        </label>
+                                                    </div>
+                                            
+                                                    <!-- Cores -->
+                                                    <div class="flex flex-row space-y-1 mt-5 mb-7">
+                                                        <!-- Inputs escondidos que serão atualizados ao clicar nas cores -->
+                                                        <div 
+                                                            class="w-12 h-10 mr-2 ml-4 mt-1 rounded-lg bg-[#8B4513] cursor-pointer" 
+                                                            onclick="changeAreaColor('marrom')">      
+                                                        </div>
+                                                        <div 
+                                                            class="w-12 h-10 mr-2 ml-2 rounded-lg bg-[#FF6F00] cursor-pointer" 
+                                                            onclick="changeAreaColor('laranja')"></div>
+                                                        <div 
+                                                            class="w-12 h-10 mr-2 ml-2 rounded-lg bg-[#5F8C1B] cursor-pointer" 
+                                                            onclick="changeAreaColor('verde')"></div>
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div class="flex justify-end">
                                                 <button type="button" onclick="closeEditModal({{area.id}})" class="mr-2 bg-white border-2 border-[#8ABF17] hover:border-[#7aab0f] text-[#8ABF17] hover:text-[#7aab0f] font-bold px-6 py-3 rounded-[9px] w-full">Cancelar</button>
-                                                <button type="submit" class="mr-2 bg-[#8ABF17] text-white font-bold px-6 py-3 rounded-[9px] hover:bg-[#7aab0f] text-[#f3f7f0] w-full">Salvar Alterações</button>
+                                                <button type="submit" class="mr-2 bg-[#8ABF17] text-white font-bold px-6 py-3 rounded-[9px] hover:bg-[#7aab0f] text-[#f3f7f0] w-full">Salvar</button>
                                             </div>
                                         </form>
                                     </div>
                                 </div>
 
                                 <!-- Modal de deleção -->
-                                <div id="deleteModal-{{ area.id }}" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
+                                <div id="deleteModal-{{ area.id }}" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                                     <div class="bg-white px-14 py-12 rounded-[34px] w-full max-w-lg">
                                         <h3 class="text-xl font-bold mb-4 text-red-600">Excluir Área de plantio</h3>
                                         <p class="text-gray-700 mb-6">Tem certeza de que deseja excluir a área de plantio "{{ area.name }}"? Esta ação não pode ser desfeita.</p>
@@ -119,27 +228,15 @@
                             {% endif %}
                             </div>
                         </div>
-                        <!-- Dropdown para os canteiros -->
-                        <div class="mt-2">
-                            <button class="w-full text-left bg-[#f7f7f7] p-3 rounded-[9px] text-sm lg:text-base font-medium border-2 border-[#8ABF17] focus:outline-none flex justify-between items-center transition-all transform hover:shadow-lg" onclick="toggleDropdown('seedbed-list-{{ area.id }}')">
-                                Mostrar Canteiros
-                                <span id="arrow-{{ area.id }}" class="transition-transform transform rotate-0 material-icons">arrow_drop_down</span>
-                            </button>
-                            <ul id="seedbed-list-{{ area.id }}" class="list-disc list-inside mt-2 hidden">
-                                {% for seedbed in area.seedbeds.all %}
-                                <li class="text-sm lg:text-base">
-                                    {{ seedbed.nome }}
-                                    {% for product in seedbed.products_in_seedbed.all %}
-                                        🌱
-                                    {% endfor %}
-                                </li>
-                                {% empty %}
-                                <li class="text-sm lg:text-base">Nenhum canteiro cadastrado</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-        
-                        <div class="flex mt-5 justify-center">
+                    
+                        <!-- Exibe apenas a primeira tarefa pendente para cada área -->
+                        {% for item in areas_with_pending_tasks %}
+                             {% if item.area.id == area.id %}
+                                <p>{{ item.pending_tasks }} tasks pendentes</p>
+                            {% endif %}
+                        {% endfor %}
+
+                    <div class="flex mt-5 justify-center">
                             <a href="{% url 'area_detail' community.id area.id %}" class="inline-block bg-[#8ABF17] text-white py-2 px-4 rounded-md hover:bg-[#7cad10] font-bold focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 w-2/4 text-center w-full">
                                 Visualizar
                             </a>
@@ -224,6 +321,36 @@ function toggleDropdown(id) {
             arrow.classList.add('rotate-180');
         }
     }
+
+    function changeAreaColor(color) {
+        // Variáveis para armazenar a URL das imagens
+        let imageUrl;
+    
+        // Definindo as URLs com base na cor escolhida
+        if (color == "laranja") {
+            imageUrl = '{% static "assets/fundo/laranja.jpg" %}';
+        } else if (color == "verde") {
+            imageUrl = '{% static "assets/fundo/verde.jpg" %}';
+        } else if (color == "marrom") {
+            imageUrl = '{% static "assets/fundo/marrom.jpg" %}';
+        } else {
+            imageUrl = '{% static "assets/fundo/vertcolorido.png" %}'; // Imagem padrão
+        }
+    
+        // Atualiza o input escondido com a nova URL da imagem
+        //document.getElementById('area-image-url').value = imageUrl;
+    
+        // Atualiza a imagem exibida na página
+        const communityContainer = document.getElementById('area-container');
+        communityContainer.style.backgroundImage = `url(${imageUrl})`;
+        communityContainer.style.backgroundSize = 'cover';
+        communityContainer.style.backgroundPosition = 'center';
+    
+        // Atualiza o src da imagem da comunidade
+        const communityImage = document.getElementById('area-image');
+        communityImage.src = imageUrl;
+    }
+    
 </script>
 {% endblock %}
 

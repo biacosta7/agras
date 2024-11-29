@@ -13,7 +13,7 @@
     {% if area.seedbeds.all %}
     <div class="flex md:flex-row flex-col justify-between mt-4">
         <header class="mb-6">
-            <h1 class="text-[44px] lg:text-[48px] font-semibold mt-2 text-balance">Canteiros <span class="font-medium">de {{area.name}}</span></h1>
+            <h1 class="text-[44px] lg:text-[48px] font-semibold mt-2 text-balance"><span class="font-medium">Canteiros de {{area.name}}</span></h1>
         </header>
     
         <div class="flex flex-row items-center space-x-6">
@@ -28,139 +28,242 @@
     </div>
     {% endif %}
         
-    <div class="container mt-5">
-        <!-- Modal para criar canteiro -->
-        <div id="areaModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50">
-            <div class="bg-white px-14 py-12 rounded-[34px] w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] max-w-[596px] max-h-[663px] overflow-y-auto">
-                <h2 id="modalTitle" class="text-[24px] font-bold mb-4 text-[#8ABF17]">Novo canteiro</h2>
-                <p class="font-medium text-[16px]">Preencha a informação abaixo para criar um novo canteiro</p>
-                <form id="areaForm" method="post" action="{% url 'create_seedbed' community.id area.id %}">
-                    {% csrf_token %}
-                    <div class="mb-4 mt-6">
-                        <label for="name" class="block text-sm font-medium text-gray-700">Nome*</label>
-                        <input type="text" name="seedbed_name" id="seedbed_name" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] h-[55px] py-2 px-3">
+    <!-- Modal para criar canteiro -->
+    <div id="areaModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+        <div class="bg-white px-14 py-12 rounded-[34px] w-[95%] sm:w-[85%] md:w-[75%] lg:w-[65%] xl:w-[50%] max-w-[650px] max-h-[663px] overflow-y-auto rounded-[32px] ml-4">
+            <h2 id="modalTitle" class="text-[24px] font-bold mb-4 text-[#8ABF17]">Criar novo Canteiro</h2>
+            <p class="font-medium text-[16px]">Preencha as informações abaixo para criar uma novo Canteiro</p>
+            <form id="areaForm" method="post" action="{% url 'create_seedbed' community.id area.id %}">
+                {% csrf_token %}
+                <div class="mb-4 mt-6">
+                    <label for="name" class="block text-sm font-medium text-gray-700">Nome*</label>
+                    <input type="text" name="seedbed_name" id="seedbed_name" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] h-[55px] py-2 px-3">
+                </div>
+                <div class="flex items-stretch">
+                    <!-- Descrição -->
+                    <div class="w-3/5 pr-4 flex flex-col">
+                        <div class="mb-4 h-[200px]">
+                            <label for="description" class="block text-sm font-medium text-gray-700">Descrição</label>
+                            <textarea name="description" id="description" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] h-full py-2 px-3"></textarea>
+                        </div>
                     </div>
-                    <div class="flex justify-end">
-                        <button type="button" class="mr-2 bg-white border-2 border-[#8ABF17] hover:border-[#7aab0f] text-[#8ABF17] hover:text-[#7aab0f] font-bold px-6 py-3 rounded-[9px] w-full" onclick="toggleModal('close')">Cancelar</button>
-                        <button type="submit" class="mr-2 bg-[#8ABF17] text-white font-bold px-6 py-3 hover:bg-[#7aab0f] text-[#f3f7f0] rounded-[9px] w-full">Criar</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+                
+                    <!-- Imagem -->
+                    <div class="w-2/5 flex flex-col">
+                        <p class="block text-sm font-medium text-gray-700 ml-1">Foto ou Cor para Capa</p>
+                        <div 
+                            id="area-container" 
+                            class="w-full h-full rounded-lg overflow-hidden bg-gray-200 mt-1" 
+                            style="background-image: url('url('{{ image_area_url }}')'); background-size: cover; background-position: center; height: 138px; width: 215px; ">
+                            
+                            <!-- Exibição da Imagem da Comunidade -->
+                            <img 
+                                id="area-image" 
+                                src="{% if image_area_url %}{{ image_area_url }}{% else %}{% static 'assets/seedbed.jpg' %}{% endif %}" 
+                                alt="Area Image" 
+                                class="w-full h-full object-cover">
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
-            {% for seedbed in area.seedbeds.all %}
-            <div class="bg-white border border-gray-300 rounded-[12px] shadow-sm flex flex-col justify-between">
-                <div class="flex-grow">
-                    <img src="{% static 'assets/seedbed.jpg' %}" alt="Área de plantio" class="w-full h-auto rounded-t-[12px]">
-                    <div class="p-4">
-                        <div class="flex justify-between mb-4">
-                            <h3 class="text-2xl font-semibold">
-                                <a href="{% url 'seedbed_detail' community.id area.pk seedbed.id %}" class="text-[#8ABF17] hover:underline">{{ seedbed.nome }}</a>
-                            </h3>
-                            <div class="relative-wrapper relative"> {% if is_admin_of_community %}
-                                <span class="material-icons cursor-pointer" onclick="toggleManageModal('manage', {{seedbed.id}})">more_vert</span>
-                                <!-- Modal de manage -->
-                                <div id="manageModal-{{ seedbed.id }}" class="hidden absolute top-8 right-0 bg-white border border-gray-300 shadow-lg px-4 py-2 rounded-lg z-10 w-auto">
-                                    <button onclick="toggleManageModal('close-manage', {{ seedbed.id }})" class="absolute top-2 right-2 text-[#F76711] material-icons-outlined">close</button>
-                                    <div class="flex flex-row items-center gap-x-2"> 
-                                        <button onclick="openEditModal({{ seedbed.id }})" class="bg-yellow-500 text-white p-1 rounded-full hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 flex">
-                                            <span class="material-icons-outlined">edit</span>
-                                        </button>
-                                        <button onclick="openDeleteModal({{ seedbed.id }})" class="bg-red-500 mr-5 text-white p-1 rounded-full hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 flex">
-                                            <span class="material-icons-outlined">delete</span>
-                                        </button>
-                                    </div>
-                                </div>
-                                <!-- Modal de edição -->
-                                <div id="editModal-{{ seedbed.id }}" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
-                                    <div class="bg-white px-14 py-12 rounded-[34px] w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] max-w-[596px] max-h-[663px] overflow-y-auto rounded-[32px]">
-                                        <h2 id="modalTitle" class="text-[24px] font-bold mb-4 text-[#8ABF17]">Editar canteiro</h2>
-                                        <p class="font-medium text-[16px]">Altere as informações abaixo para editar seu canteiro</p>
-                                        <form method="POST" action="{% url 'update_seedbed' community.id area.id seedbed.id %}">
-                                            {% csrf_token %}
-                                            <div class="mb-4 mt-6">
-                                                <label for="name" class="block text-sm font-medium text-gray-700">Nome*</label>
-                                                <input type="text" name="nome" id="nome" value="{{ seedbed.nome }}" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] h-[55px] py-2 px-3">
-                                            </div>
-                                            <div class="flex justify-end">
-                                                <button type="button" onclick="closeEditModal({{ seedbed.id }})" class="mr-2 bg-white border-2 border-[#8ABF17] hover:border-[#7aab0f] text-[#8ABF17] hover:text-[#7aab0f] font-bold px-6 py-3 rounded-[9px] w-full">Cancelar</button>
-                                                <button type="submit" class="mr-2 bg-[#8ABF17] text-white font-bold px-6 py-3 rounded-[9px] hover:bg-[#7aab0f] text-[#f3f7f0] w-full">Salvar Alterações</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-    
-                                <!-- Modal de deleção -->
-                                <div id="deleteModal-{{ seedbed.id }}" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
-                                    <div class="bg-white px-14 py-12 rounded-[34px] w-full max-w-lg">
-                                        <h3 class="text-xl font-bold mb-4 text-red-600">Excluir Canteiro</h3>
-                                        <p class="text-gray-700 mb-6">Tem certeza de que deseja excluir canteiro "{{ seedbed.nome }}"? Esta ação não pode ser desfeita.</p>
-                                        <form method="POST" action="{% url 'delete_seedbed' community.id area.id seedbed.id %}">
-                                            {% csrf_token %}
-                                            <div class="flex flex-row justify-between">
-                                                <button type="submit" class="mr-2 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 w-full font-bold">Excluir</button>
-                                                <button type="button" onclick="closeDeleteModal({{ seedbed.id }})" class="bg-white border-2 border-[#8ABF17] hover:border-[#7aab0f] text-[#8ABF17] hover:text-[#7aab0f] font-bold px-6 py-3 rounded-[9px] w-full">Cancelar</button>
-                                            </div>
-                                        </form>
-                                    </div> 
-                                </div>
-                            {% endif %}
-                            </div>   
+                            <!-- Botão de upload -->
+                            <label 
+                                for="file-upload-area" 
+                                class="absolute bottom-4 right-4 flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full shadow-lg cursor-pointer"
+                                title="Editar imagem da Área">
+                                <span class="material-icons text-[#8ABF17] text-lg sm:text-xl">photo_camera</span>
+                                <input id="file-upload-area" type="file" name="area_image" class="hidden" accept="image/*" />
+                                {% comment %} <input type="hidden" name="image_type_community" value="community" /> {% endcomment %}
+                            </label>
                         </div>
-    
-                        <!-- Listando os cultivos associados ao canteiro -->
-                        <div class="mt-2">
-                            <button class="w-full text-left bg-[#f7f7f7] p-3 rounded-[9px] text-sm lg:text-base font-medium border-2 border-[#8ABF17] focus:outline-none flex justify-between items-center transition-all transform hover:shadow-lg" onclick="toggleDropdown('seedbed-list-{{ seedbed.id }}')">
-                                Mostrar Cultivos
-                                <span id="arrow-{{ seedbed.id }}" class="transition-transform transform rotate-0 material-icons">arrow_drop_down</span>
-                            </button>
-                            <ul id="seedbed-list-{{ seedbed.id }}" class="list-disc list-inside mt-4 hidden">
-                                {% for product in seedbed.products_in_seedbed.all %}
-                                    <li>{{ product.type_product.name }}</li>
-                                {% empty %}
-                                    <p class="flex justify-center items-center">Nenhum cultivo cadastrado</p>
-                                {% endfor %}
-                            </ul>
-                            <!-- Botão fixo ao fim do card -->
-                            <div class="flex mt-5 justify-center">
-                                <a href="{% url 'seedbed_detail' community.id area.pk seedbed.id %}" class="inline-block bg-[#8ABF17] text-white py-2 px-4 rounded-md hover:bg-[#7cad10] font-bold focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 w-2/4 text-center w-full">
-                                    Visualizar
-                                </a>
+                
+                        <!-- Cores -->
+                        <div class="flex flex-row space-y-1 mt-5 mb-7">
+                            <!-- Inputs escondidos que serão atualizados ao clicar nas cores -->
+                            <div 
+                                class="w-12 h-10 mr-2 ml-4 mt-1 rounded-lg bg-[#8B4513] cursor-pointer" 
+                                onclick="changeAreaColor('marrom')">      
                             </div>
+                            <div 
+                                class="w-12 h-10 mr-2 ml-2 rounded-lg bg-[#FF6F00] cursor-pointer" 
+                                onclick="changeAreaColor('laranja')"></div>
+                            <div 
+                                class="w-12 h-10 mr-2 ml-2 rounded-lg bg-[#5F8C1B] cursor-pointer" 
+                                onclick="changeAreaColor('verde')"></div>
                         </div>
                     </div>
                 </div>
-            </div> 
-            {% empty %}
-            <div class="text-center col-span-full mt-[15vh]">
-                <div class="flex flex-col items-center justify-center">
-                    <img src="{% static 'assets/Ativo 324.png' %}" alt="Plantas" class="w-64 mb-4">
-                    <h1 class="font-bold text-[24px]">Nenhum canteiro criado em "{{area.name}}"</h1>
-                    <p class="font-normal text-[16px]">Clique no botão abaixo para criar canteiros e visualizá-los</p>
-                    <button id="addCommunityBtn" class="mt-4 bg-[#8ABF17] text-white px-6 py-3 rounded-[9px] mb-6 hover:bg-[#7cad10] font-semibold hover:text-[#edf0e9]" onclick="toggleModal('create')">
-                        Criar Canteiro
-                    </button>
+                
+                <div class="flex justify-end">
+                    <button type="button" class="mr-2 bg-white border-2 border-[#8ABF17] hover:border-[#7aab0f] text-[#8ABF17] hover:text-[#7aab0f] font-bold px-6 py-3 rounded-[9px] w-full" onclick="toggleModal('close')">Cancelar</button> 
+                    <button type="submit" class="mr-2 bg-[#8ABF17] text-white font-bold px-6 py-3 hover:bg-[#7aab0f] text-[#f3f7f0] rounded-[9px] w-full">Criar</button>
                 </div>
-            </div> 
-            {% endfor %}
+            </form>
         </div>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+        {% for seedbed in area.seedbeds.all %}
+        <div class="bg-white border border-gray-300 rounded-[12px] shadow-sm flex flex-col justify-between">
+            <div class="flex-grow">
+                <img src="{% static 'assets/seedbed.jpg' %}" alt="Área de plantio" class="w-full h-auto rounded-t-[12px]">
+                <div class="p-4">
+                    <div class="flex justify-between mb-4">
+                        <h3 class="text-2xl font-semibold">
+                            <a href="{% url 'seedbed_detail' community.id area.pk seedbed.id %}" class="text-[#8ABF17] hover:underline">{{ seedbed.nome }}</a>
+                        </h3>
+                        <div class="relative-wrapper relative"> {% if is_admin_of_community %}
+                            <span class="material-icons cursor-pointer" onclick="toggleManageModal('manage', {{seedbed.id}})">more_vert</span>
+                            <!-- Modal de manage -->
+                            <div id="manageModal-{{ seedbed.id }}" class="hidden absolute top-8 right-0 bg-white border border-gray-300 shadow-lg px-6 py-4 rounded-lg z-10 w-64">
+                                <button onclick="toggleManageModal('close-manage', {{ seedbed.id }})" class="absolute top-2 right-2 text-[#F76711] material-icons-outlined">close</button>
+                                <div class="flex flex-col items-center gap-y-2"> <!-- Diminuí o gap para 2 -->
+                                    <!-- Botão Editar (Ícone verde) -->
+                                    <button onclick="openEditModal({{ seedbed.id }})" class="text-gray-600 p-2 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500 flex items-center justify-start w-full space-x-2">
+                                        <span class="material-icons-outlined text-lg text-green-600">edit</span> <!-- Ícone verde -->
+                                        <span class="text-sm">Editar</span> <!-- Texto à esquerda do ícone -->
+                                    </button>
+                            
+                                    <!-- Botão Gerar Relatório (Ícone azul) -->
+                                    <button onclick="" class="text-gray-600 p-2 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-400 flex items-center justify-start w-full space-x-2">
+                                        <span class="material-icons-outlined text-lg text-blue-600 ">description</span> <!-- Ícone de documento azul -->
+                                        <span class="text-sm">Gerar Relatório</span> 
+                                    </button>
+                            
+                                    <!-- Linha divisória -->
+                                    <hr class="w-full border-t border-gray-300 my-1" />
+                            
+                                    <!-- Botão Excluir (Ícone vermelho) -->
+                                    <button onclick="openDeleteModal({{ seedbed.id }})" class="text-gray-600 p-2 hover:text-gray-900 p-1 hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 flex items-center justify-start w-full space-x-2">
+                                        <span class="material-icons-outlined text-lg text-red-500">delete</span> <!-- Ícone vermelho -->
+                                        <span class="text-sm">Excluir</span> <!-- Texto à esquerda do ícone -->
+                                    </button>
+                                </div>
+                            </div>                                              
+                            
+                            <!-- Modal de edição -->
+                            <div id="editModal-{{ seedbed.id }}" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                                <div class="bg-white px-14 py-12 rounded-[34px] w-[95%] sm:w-[85%] md:w-[75%] lg:w-[65%] xl:w-[50%] max-w-[650px] max-h-[663px] overflow-y-auto rounded-[32px] ml-4">
+                                    <h2 id="modalTitle" class="text-[24px] font-bold mb-2 text-[#8ABF17]">Editar {{ seedbed.nome }}</h2>
+                                    <p class="font-medium text-[16px]">Preencha as informações abaixo para editar {{ seedbed.nome }}</p>
+                                    <form method="POST" action="{% url 'update_seedbed' community.id area.id seedbed.id %}">
+                                        {% csrf_token %}
+                                        <div class="mb-4 mt-6">
+                                            <label for="name" class="block text-sm font-medium text-gray-700">Nome*</label>
+                                            <input type="text" name="name" id="name" value="{{ area.name }}" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] h-[55px] py-2 px-3">
+                                        </div>
+                                        <div class="flex items-stretch">
+                                            <!-- Descrição -->
+                                            <div class="w-3/5 pr-4 flex flex-col">
+                                                <div class="mb-4 h-[200px]">
+                                                    <label for="description" class="block text-sm font-medium text-gray-700">Descrição</label>
+                                                    <textarea name="description" id="description" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] h-full py-2 px-3">{{ area.description }}</textarea>
+                                                </div>
+                                            </div>
+                                            <!-- Imagem -->
+                                            <div class="w-2/5 flex flex-col">
+                                                <p class="block text-sm font-medium text-gray-700 ml-1">Foto ou Cor para Capa</p>
+                                                <div 
+                                                    id="area-container" 
+                                                    class="w-full h-full rounded-lg overflow-hidden bg-gray-200 mt-1" 
+                                                    style="background-image: url('url('{{ image_area_url }}')'); background-size: cover; background-position: center; height: 138px; width: 215px; ">
+                                                    
+                                                    <!-- Exibição da Imagem -->
+                                                    <img 
+                                                        id="area-image" 
+                                                        src="{% if image_area_url %}{{ image_area_url }}{% else %}{% static 'assets/seedbed.jpg' %}{% endif %}" 
+                                                        alt="Area Image" 
+                                                        class="w-full h-full object-cover">
+                        
+                                                    <!-- Botão de upload -->
+                                                    <label 
+                                                        for="file-upload-area" 
+                                                        class="absolute bottom-4 right-4 flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full shadow-lg cursor-pointer"
+                                                        title="Editar imagem da Área">
+                                                        <span class="material-icons text-[#8ABF17] text-lg sm:text-xl">photo_camera</span>
+                                                        <input id="file-upload-area" type="file" name="area_image" class="hidden" accept="image/*" />
+                                                        {% comment %} <input type="hidden" name="image_type_community" value="community" /> {% endcomment %}
+                                                    </label>
+                                                </div>
+                                        
+                                                <!-- Cores -->
+                                                <div class="flex flex-row space-y-1 mt-5 mb-7">
+                                                    <!-- Inputs escondidos que serão atualizados ao clicar nas cores -->
+                                                    <div 
+                                                        class="w-12 h-10 mr-2 ml-4 mt-1 rounded-lg bg-[#8B4513] cursor-pointer" 
+                                                        onclick="changeAreaColor('marrom')">      
+                                                    </div>
+                                                    <div 
+                                                        class="w-12 h-10 mr-2 ml-2 rounded-lg bg-[#FF6F00] cursor-pointer" 
+                                                        onclick="changeAreaColor('laranja')"></div>
+                                                    <div 
+                                                        class="w-12 h-10 mr-2 ml-2 rounded-lg bg-[#5F8C1B] cursor-pointer" 
+                                                        onclick="changeAreaColor('verde')"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="flex justify-end">
+                                            <button type="button" onclick="closeEditModal({{seedbed.id}})" class="mr-2 bg-white border-2 border-[#8ABF17] hover:border-[#7aab0f] text-[#8ABF17] hover:text-[#7aab0f] font-bold px-6 py-3 rounded-[9px] w-full">Cancelar</button>
+                                            <button type="submit" class="mr-2 bg-[#8ABF17] text-white font-bold px-6 py-3 rounded-[9px] hover:bg-[#7aab0f] text-[#f3f7f0] w-full">Salvar</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Modal de deleção -->
+                            <div id="deleteModal-{{ seedbed.id }}" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                                <div class="bg-white px-14 py-12 rounded-[34px] w-full max-w-lg">
+                                    <h3 class="text-xl font-bold mb-4 text-red-600">Excluir Canteiro</h3>
+                                    <p class="text-gray-700 mb-6">Tem certeza de que deseja excluir o canteiro "{{ seedbed.nome }}"? Esta ação não pode ser desfeita.</p>
+                                    <form method="POST" action="{% url 'delete_seedbed' community.id area.id seedbed.id %}">
+                                        {% csrf_token %}
+                                        <div class="flex flex-row justify-between">
+                                            <button type="submit" class="mr-2 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 w-full font-bold">Excluir</button>
+                                            <button type="button" onclick="closeDeleteModal({{seedbed.id}})" class="bg-white border-2 border-[#8ABF17] hover:border-[#7aab0f] text-[#8ABF17] hover:text-[#7aab0f] font-bold px-6 py-3 rounded-[9px] w-full">Cancelar</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        {% endif %}
+                        </div>
+                    </div>
+                    <div class="flex-row mt-5 justify-center">
+                        {% for item in seedbeds_with_pending_tasks %}
+                            {% if item.seedbed.id == seedbed.id %}
+                                <p>{{ item.pending_tasks }} tasks pendentes</p>
+                            {% endif %}
+                        {% endfor %}
+                        <br>
+                        <a href="{% url 'seedbed_detail' community.id area.pk seedbed.id %}" class="inline-block bg-[#8ABF17] text-white py-2 px-4 rounded-md hover:bg-[#7cad10] font-bold focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 w-2/4 text-center w-full">
+                            Visualizar
+                        </a>
+                    </div>   
+                </div>
+            </div>
+        </div> 
+        {% empty %}
+        <div class="text-center col-span-full mt-[15vh]">
+            <div class="flex flex-col items-center justify-center">
+                <img src="{% static 'assets/Ativo 324.png' %}" alt="Plantas" class="w-64 mb-4">
+                <h1 class="font-bold text-[24px]">Nenhum canteiro criado em "{{area.name}}"</h1>
+                <p class="font-normal text-[16px]">Clique no botão abaixo para criar canteiros e visualizá-los</p>
+                <button id="addCommunityBtn" class="mt-4 bg-[#8ABF17] text-white px-6 py-3 rounded-[9px] mb-6 hover:bg-[#7cad10] font-semibold hover:text-[#edf0e9]" onclick="toggleModal('create')">
+                    Criar Canteiro
+                </button>
+            </div>
+        </div> 
+        {% endfor %} 
     </div>
 </div>
 
-
 <script>
 
-function toggleModal(action, seedbedId) {
+function toggleModal(action) {
     const areaModal = document.getElementById('areaModal'); 
-    const manageModal = document.getElementById(`manageModal-${seedbedId}`);
 
     if (action === 'create') {
         areaModal.classList.remove('hidden'); // Mostra o modal de criar área
         document.getElementById('areaForm').reset(); // Limpa o formulário (opcional)
-    }
+    } 
     else if (action === 'close') {
         areaModal.classList.add('hidden'); // Esconde o modal de criar área
+        manageModal.classList.add('hidden'); 
     } 
 }
 
