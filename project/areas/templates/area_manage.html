@@ -13,7 +13,7 @@
             {% if areas %}
             <div class="flex md:flex-row flex-col justify-between mt-4">
                 <header class="mb-6">
-                    <h1 class="text-[44px] lg:text-[48px] font-semibold mt-2 ">Áreas <span class="font-medium">de Plantio</span></h1>
+                    <h1 class="text-[44px] lg:text-[48px] font-semibold mt-2 "><span class="font-medium">Áreas de Plantio</span></h1>
                 </header>
             
                 <div class="flex flex-row items-center space-x-6">
@@ -229,9 +229,13 @@
                             </div>
                         </div>
                     
+                        <!-- Exibe apenas a primeira tarefa pendente para cada área -->
                         {% for item in areas_with_pending_tasks %}
-                        <p>{{ item.pending_tasks }} tasks pendentes</p>
+                             {% if item.area.id == area.id %}
+                                <p>{{ item.pending_tasks }} tasks pendentes</p>
+                            {% endif %}
                         {% endfor %}
+
                     <div class="flex mt-5 justify-center">
                             <a href="{% url 'area_detail' community.id area.id %}" class="inline-block bg-[#8ABF17] text-white py-2 px-4 rounded-md hover:bg-[#7cad10] font-bold focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 w-2/4 text-center w-full">
                                 Visualizar

@@ -13,7 +13,7 @@
     {% if area.seedbeds.all %}
     <div class="flex md:flex-row flex-col justify-between mt-4">
         <header class="mb-6">
-            <h1 class="text-[44px] lg:text-[48px] font-semibold mt-2 text-balance">Canteiros <span class="font-medium">de {{area.name}}</span></h1>
+            <h1 class="text-[44px] lg:text-[48px] font-semibold mt-2 text-balance"><span class="font-medium">Canteiros de {{area.name}}</span></h1>
         </header>
     
         <div class="flex flex-row items-center space-x-6">
@@ -59,7 +59,7 @@
                             <!-- Exibição da Imagem da Comunidade -->
                             <img 
                                 id="area-image" 
-                                src="{% if image_area_url %}{{ image_area_url }}{% else %}{% static 'assets/seedbed-pic.jpg' %}{% endif %}" 
+                                src="{% if image_area_url %}{{ image_area_url }}{% else %}{% static 'assets/seedbed.jpg' %}{% endif %}" 
                                 alt="Area Image" 
                                 class="w-full h-full object-cover">
 
@@ -140,8 +140,8 @@
                             <!-- Modal de edição -->
                             <div id="editModal-{{ seedbed.id }}" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
                                 <div class="bg-white px-14 py-12 rounded-[34px] w-[95%] sm:w-[85%] md:w-[75%] lg:w-[65%] xl:w-[50%] max-w-[650px] max-h-[663px] overflow-y-auto rounded-[32px] ml-4">
-                                    <h2 id="modalTitle" class="text-[24px] font-bold mb-2 text-[#8ABF17]">Editar {{ seedbed.name }}</h2>
-                                    <p class="font-medium text-[16px]">Preencha as informações abaixo para editar {{ seedbed.name }}</p>
+                                    <h2 id="modalTitle" class="text-[24px] font-bold mb-2 text-[#8ABF17]">Editar {{ seedbed.nome }}</h2>
+                                    <p class="font-medium text-[16px]">Preencha as informações abaixo para editar {{ seedbed.nome }}</p>
                                     <form method="POST" action="{% url 'update_seedbed' community.id area.id seedbed.id %}">
                                         {% csrf_token %}
                                         <div class="mb-4 mt-6">
@@ -164,10 +164,10 @@
                                                     class="w-full h-full rounded-lg overflow-hidden bg-gray-200 mt-1" 
                                                     style="background-image: url('url('{{ image_area_url }}')'); background-size: cover; background-position: center; height: 138px; width: 215px; ">
                                                     
-                                                    <!-- Exibição da Imagem da Comunidade -->
+                                                    <!-- Exibição da Imagem -->
                                                     <img 
                                                         id="area-image" 
-                                                        src="{% if image_area_url %}{{ image_area_url }}{% else %}{% static 'assets/seedbed-pic.jpg' %}{% endif %}" 
+                                                        src="{% if image_area_url %}{{ image_area_url }}{% else %}{% static 'assets/seedbed.jpg' %}{% endif %}" 
                                                         alt="Area Image" 
                                                         class="w-full h-full object-cover">
                         
@@ -199,7 +199,7 @@
                                             </div>
                                         </div>
                                         <div class="flex justify-end">
-                                            <button type="button" onclick="closeEditModal({{area.id}})" class="mr-2 bg-white border-2 border-[#8ABF17] hover:border-[#7aab0f] text-[#8ABF17] hover:text-[#7aab0f] font-bold px-6 py-3 rounded-[9px] w-full">Cancelar</button>
+                                            <button type="button" onclick="closeEditModal({{seedbed.id}})" class="mr-2 bg-white border-2 border-[#8ABF17] hover:border-[#7aab0f] text-[#8ABF17] hover:text-[#7aab0f] font-bold px-6 py-3 rounded-[9px] w-full">Cancelar</button>
                                             <button type="submit" class="mr-2 bg-[#8ABF17] text-white font-bold px-6 py-3 rounded-[9px] hover:bg-[#7aab0f] text-[#f3f7f0] w-full">Salvar</button>
                                         </div>
                                     </form>
@@ -209,32 +209,31 @@
                             <!-- Modal de deleção -->
                             <div id="deleteModal-{{ seedbed.id }}" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
                                 <div class="bg-white px-14 py-12 rounded-[34px] w-full max-w-lg">
-                                    <h3 class="text-xl font-bold mb-4 text-red-600">Excluir Área de plantio</h3>
-                                    <p class="text-gray-700 mb-6">Tem certeza de que deseja excluir a área de plantio "{{ area.name }}"? Esta ação não pode ser desfeita.</p>
+                                    <h3 class="text-xl font-bold mb-4 text-red-600">Excluir Canteiro</h3>
+                                    <p class="text-gray-700 mb-6">Tem certeza de que deseja excluir o canteiro "{{ seedbed.nome }}"? Esta ação não pode ser desfeita.</p>
                                     <form method="POST" action="{% url 'delete_seedbed' community.id area.id seedbed.id %}">
                                         {% csrf_token %}
                                         <div class="flex flex-row justify-between">
                                             <button type="submit" class="mr-2 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 w-full font-bold">Excluir</button>
-                                            <button type="button" onclick="closeDeleteModal({{area.id}})" class="bg-white border-2 border-[#8ABF17] hover:border-[#7aab0f] text-[#8ABF17] hover:text-[#7aab0f] font-bold px-6 py-3 rounded-[9px] w-full">Cancelar</button>
+                                            <button type="button" onclick="closeDeleteModal({{seedbed.id}})" class="bg-white border-2 border-[#8ABF17] hover:border-[#7aab0f] text-[#8ABF17] hover:text-[#7aab0f] font-bold px-6 py-3 rounded-[9px] w-full">Cancelar</button>
                                         </div>
                                     </form>
                                 </div>
                             </div>
-                        </div>
                         {% endif %}
                         </div>
-                            <!-- Botão fixo ao fim do card -->
-                        <div class="flex-row mt-5 justify-center">
-                            {% for item in seedbeds_with_pending_tasks %}
-                            <p>{{ item.pending_tasks }} tasks pendentes</p>
-                            {% endfor %}
-                            <br>
-                            <a href="{% url 'seedbed_detail' community.id area.pk seedbed.id %}" class="inline-block bg-[#8ABF17] text-white py-2 px-4 rounded-md hover:bg-[#7cad10] font-bold focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 w-2/4 text-center w-full">
-                                Visualizar
-                            </a>
-                        </div>   
                     </div>
-                    
+                    <div class="flex-row mt-5 justify-center">
+                        {% for item in seedbeds_with_pending_tasks %}
+                            {% if item.seedbed.id == seedbed.id %}
+                                <p>{{ item.pending_tasks }} tasks pendentes</p>
+                            {% endif %}
+                        {% endfor %}
+                        <br>
+                        <a href="{% url 'seedbed_detail' community.id area.pk seedbed.id %}" class="inline-block bg-[#8ABF17] text-white py-2 px-4 rounded-md hover:bg-[#7cad10] font-bold focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 w-2/4 text-center w-full">
+                            Visualizar
+                        </a>
+                    </div>   
                 </div>
             </div>
         </div> 
@@ -255,16 +254,16 @@
 
 <script>
 
-function toggleModal(action, seedbedId) {
+function toggleModal(action) {
     const areaModal = document.getElementById('areaModal'); 
-    const manageModal = document.getElementById(`manageModal-${seedbedId}`);
 
     if (action === 'create') {
         areaModal.classList.remove('hidden'); // Mostra o modal de criar área
         document.getElementById('areaForm').reset(); // Limpa o formulário (opcional)
-    }
+    } 
     else if (action === 'close') {
         areaModal.classList.add('hidden'); // Esconde o modal de criar área
+        manageModal.classList.add('hidden'); 
     } 
 }
 

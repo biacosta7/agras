@@ -123,7 +123,7 @@ def area_detail(request, community_id, area_id):
     for seedbed in seedbeds:
         pending_tasks_count = Task.objects.filter(status="Pendente", seedbed=seedbed, local="seedbed").count()
         seedbeds_with_pending_tasks.append({
-            'seedbed': area,
+            'seedbed': seedbed,
             'pending_tasks': pending_tasks_count
         })
 
