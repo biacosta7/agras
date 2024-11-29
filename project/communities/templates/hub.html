@@ -266,7 +266,7 @@
             {% if communities %} 
             <div class="flex md:flex-row flex-col justify-between mt-4 fade-down">
                 <header class="mb-6">
-                    <h1 class="text-[44px] lg:text-[48px] font-semibold mt-2 ">Comunidades</h1>
+                    <h1 class="text-[44px] lg:text-[48px] font-semibold mt-2 ">Comunidades<button class="material-icons talk-button">volume_up</button></h1>
                 </header>
             
                 <div class="flex flex-row items-center space-x-6">
@@ -327,11 +327,13 @@
                             {% for community in communities %}
                                 {% if community in user.communities_members.all or community in user.admin_communities.all %}
                                 <div class="bg-white shadow-lg rounded-[20px] overflow-hidden flex flex-col h-[420px] w-full">
-                                    <div class="bg-[#EFF1F3] py-12 flex items-center justify-center h-full">
-                                        <img class="w-[150px]" src="{% static 'assets/vertcolorido.png' %}" alt="">
+                                    <div class="bg-[#EFF1F3] py-12 flex items-center justify-center h-full"  {% if image_community_url %} 
+                                    style="background-image: url('{{ image_community_url }}'); background-size: cover; background-position: center;"
+                                    {% endif %}>
+                                        <img class="w-[150px]" {% if image_community_url %}style="display: none;"{% endif %}src="{% static 'assets/vertcolorido.png' %}" alt="">
                                     </div>
                                     <div class="flex-1 p-4 py-6 bg-white text-center text-black">
-                                        <h3 class="font-bold text-lg">{{ community.name }}</h3>
+                                        <h3 class="font-bold text-lg community-name">{{ community.name }}</h3>
                                         <p class="text-sm break-words">{{ community.description }}</p>
                                     </div>
                                     <div class="p-4 flex justify-between">
@@ -359,7 +361,7 @@
                                         <img class="w-[150px]" src="{% static 'assets/vertcolorido.png' %}" alt="">
                                     </div>
                                     <div class="flex-1 p-4 py-6 bg-white text-center text-black">
-                                        <h3 class="font-bold text-lg">{{ community.name }}</h3>
+                                        <h3 class="font-bold text-lg community-name">{{ community.name }}</h3>
                                         <p class="text-sm break-words">{{ community.description }}</p>
                                     </div>
                                     <div class="p-4 flex justify-between">
@@ -454,7 +456,7 @@
     
         });
     </script>
-    
+    <script src="{% static 'communities/js/talkCommunities.js' %}"></script>
     {% endblock %}
 </div>
-        
+<link rel="stylesheet" href="{% static 'tasks/css/talkAnimation.css' %}" />        
