@@ -29,7 +29,7 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
 
     def test_user_registration_and_login(self):
         # Navega até a página de cadastro
-        self.browser.get(f"{self.live_server_url}")
+        self.browser.get("http://127.0.0.1:8000/")
         time.sleep(1)
         self.browser.find_element(By.LINK_TEXT, "Cadastre-se").click()
 
@@ -40,9 +40,9 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
         time.sleep(1)
         self.browser.find_element(By.ID, "first_name").send_keys("Fulano de Tal")
         time.sleep(1)
-        self.browser.find_element(By.ID, "username").send_keys("fulano2024")
+        self.browser.find_element(By.ID, "username").send_keys("fulano6")
         time.sleep(1)
-        self.browser.find_element(By.ID, "email").send_keys("fulano2024@example.com")
+        self.browser.find_element(By.ID, "email").send_keys("fulano6@example.com")
         time.sleep(1)
         self.browser.find_element(By.ID, "state").click()
         time.sleep(1)
@@ -70,7 +70,7 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
 ).click()
         time.sleep(1)
         # Preenche o formulário de login
-        self.browser.find_element(By.ID, "login_input").send_keys("fulano2024")
+        self.browser.find_element(By.ID, "login_input").send_keys("fulano6")
         time.sleep(1)
         self.browser.find_element(By.ID, "password").send_keys("senha_segura")
 
@@ -106,7 +106,7 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
 
 
         # Preenche o campo abaixo de "Nome"
-        self.browser.find_element(By.ID, "name").send_keys("Comunidade Exemplo")
+        self.browser.find_element(By.ID, "name").send_keys("Comunidade Exemplo6")
         time.sleep(1)
 
 
@@ -145,7 +145,7 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
 
         # Espera até que o botão "Áreas de Plantio" esteja visível e clicável
         botao_areas_plantio = WebDriverWait(self.browser, 10).until(
-            EC.element_to_be_clickable((By.XPATH, "//a[contains(@class, 'flex-grow') and contains(text(), 'Áreas de Plantio')]"))
+            EC.element_to_be_clickable((By.XPATH, '/html/body/div[2]/div[2]/a[2]/span[2]'))
         )
         # Realiza o clique no botão "Áreas de Plantio"
         botao_areas_plantio.click()
@@ -160,39 +160,17 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
         criar_area_plantio_btn.click()
         time.sleep(1)
 
-
-       
-
-
-        # Aguarda que o modal de criação seja carregado (se houver um modal ou nova página)
-        WebDriverWait(self.browser, 10).until(
-            EC.presence_of_element_located((By.XPATH, "//h2[contains(text(), 'Nova Área de Plantio')]"))
-        )
-        time.sleep(1)
-
-
-
-
         # Preenche o campo abaixo de "Nome"
         self.browser.find_element(By.ID, "name").send_keys("Área 1")
         time.sleep(1)
-
-
-
 
         # Preenche o campo abaixo de "Descrição"
         self.browser.find_element(By.ID, "description").send_keys("área de plantio 1")
         time.sleep(1)
 
-
-
-
         # Clica no botão "Criar"
         self.browser.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
         time.sleep(1)
-
-
-
 
         # Espera até que a mensagem de sucesso seja visível ou até ser redirecionado
         WebDriverWait(self.browser, 10).until(

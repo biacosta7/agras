@@ -25,69 +25,69 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
     def test_user_registration_and_login(self):
         # Navega até a página de cadastro
         self.browser.get("http://127.0.0.1:8000/")
-        time.sleep(1)
+          
         self.browser.find_element(By.LINK_TEXT, "Cadastre-se").click()
 
 
         # Preenche o formulário de cadastro
-        time.sleep(1)
+          
         self.browser.find_element(By.ID, "first_name").send_keys("Fulano de Tal")
-        time.sleep(1)
-        self.browser.find_element(By.ID, "username").send_keys("fulano2024")
-        time.sleep(1)
-        self.browser.find_element(By.ID, "email").send_keys("fulano2024@example.com")
-        time.sleep(1)
+          
+        self.browser.find_element(By.ID, "username").send_keys("fulano3")
+          
+        self.browser.find_element(By.ID, "email").send_keys("fulano3@example.com")
+          
         self.browser.find_element(By.ID, "state").click()
-        time.sleep(1)
+          
         WebDriverWait(self.browser, 10).until(EC.element_to_be_clickable((By.XPATH, "//option[contains(text(), 'Pernambuco')]"))).click()
-        time.sleep(1)
+          
         self.browser.find_element(By.ID, "city").send_keys("Cidade")
-        time.sleep(1)
+          
         self.browser.find_element(By.ID, "password").send_keys("senha_segura")
-        time.sleep(1)
+          
         self.browser.find_element(By.ID, "confirm_password").send_keys("senha_segura")
 
 
-        time.sleep(1)
+          
        
         # Clica no botão de cadastrar
         self.browser.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
-        time.sleep(1)
+          
         # Espera até que a mensagem de sucesso seja visível ou até ser redirecionado
         WebDriverWait(self.browser, 10).until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'OK')]"))).click()
-        time.sleep(1)
+          
         # Preenche o formulário de login
-        self.browser.find_element(By.ID, "login_input").send_keys("fulano2024")
-        time.sleep(1)
+        self.browser.find_element(By.ID, "login_input").send_keys("fulano3")
+          
         self.browser.find_element(By.ID, "password").send_keys("senha_segura")
 
 
         # Clica no botão de login
-        time.sleep(1)
+          
         self.browser.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
 
 
         # Verifica se o login foi bem-sucedido, checando a presença de um elemento específico da página de usuário logado
-        time.sleep(1)
+          
         WebDriverWait(self.browser, 10).until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'OK')]"))).click()
        
-        time.sleep(1)
+          
         WebDriverWait(self.browser, 10).until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Criar comunidade')]"))).click()
        
-        time.sleep(1)
+          
         # Espera até que a página de criação de comunidade seja carregada
         WebDriverWait(self.browser, 10).until(EC.presence_of_element_located((By.XPATH, "//h2[contains(text(), 'Nova comunidade')]")))
-        time.sleep(1)
+          
 
 
         # Preenche o campo abaixo de "Nome"
-        self.browser.find_element(By.ID, "name").send_keys("Comunidade Exemplo")
-        time.sleep(1)
+        self.browser.find_element(By.ID, "name").send_keys("Comunidade Exemplo3")
+          
 
 
         # Preenche o campo abaixo de "Descrição"
         self.browser.find_element(By.ID, "description").send_keys("Comunidade exemplo 1")
-        time.sleep(1)
+          
 
 
         # Clica no botão "Criar"

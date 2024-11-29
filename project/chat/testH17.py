@@ -33,9 +33,9 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
         time.sleep(1)
         self.browser.find_element(By.ID, "first_name").send_keys("Fulano de Tal")
         time.sleep(1)
-        self.browser.find_element(By.ID, "username").send_keys("fulano2024")
+        self.browser.find_element(By.ID, "username").send_keys("fulano17")
         time.sleep(1)
-        self.browser.find_element(By.ID, "email").send_keys("fulano2024@example.com")
+        self.browser.find_element(By.ID, "email").send_keys("fulano17@example.com")
         time.sleep(1)
         self.browser.find_element(By.ID, "state").click()
         time.sleep(1)
@@ -57,7 +57,7 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
         WebDriverWait(self.browser, 10).until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'OK')]"))).click()
         time.sleep(1)
         # Preenche o formulário de login
-        self.browser.find_element(By.ID, "login_input").send_keys("fulano2024")
+        self.browser.find_element(By.ID, "login_input").send_keys("fulano17")
         time.sleep(1)
         self.browser.find_element(By.ID, "password").send_keys("senha_segura")
 
@@ -81,7 +81,7 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
 
 
         # Preenche o campo abaixo de "Nome"
-        self.browser.find_element(By.ID, "name").send_keys("Comunidade Exemplo")
+        self.browser.find_element(By.ID, "name").send_keys("Comunidade Exemplo17")
         time.sleep(1)
 
 

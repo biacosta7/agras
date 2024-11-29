@@ -29,123 +29,103 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
 
     def test_user_registration_and_login(self):
         # Navega até a página de cadastro
-        self.browser.get(f"{self.live_server_url}")
-        time.sleep(1)
+        self.browser.get("http://127.0.0.1:8000/")
+         
         self.browser.find_element(By.LINK_TEXT, "Cadastre-se").click()
 
 
 
 
         # Preenche o formulário de cadastro
-        time.sleep(1)
+         
         self.browser.find_element(By.ID, "first_name").send_keys("Fulano de Tal")
-        time.sleep(1)
-        self.browser.find_element(By.ID, "username").send_keys("fulano2024")
-        time.sleep(1)
-        self.browser.find_element(By.ID, "email").send_keys("fulano2024@example.com")
-        time.sleep(1)
+         
+        self.browser.find_element(By.ID, "username").send_keys("fulano5")
+         
+        self.browser.find_element(By.ID, "email").send_keys("fulano5@example.com")
+         
         self.browser.find_element(By.ID, "state").click()
-        time.sleep(1)
+         
         WebDriverWait(self.browser, 10).until(
     EC.element_to_be_clickable((By.XPATH, "//option[contains(text(), 'Pernambuco')]"))
 ).click()
-        time.sleep(1)
+         
         self.browser.find_element(By.ID, "city").send_keys("Cidade")
-        time.sleep(1)
+         
         self.browser.find_element(By.ID, "password").send_keys("senha_segura")
-        time.sleep(1)
+         
         self.browser.find_element(By.ID, "confirm_password").send_keys("senha_segura")
 
 
 
 
-        time.sleep(1)
+         
        
         # Clica no botão de cadastrar
         self.browser.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
-        time.sleep(1)
+         
         # Espera até que a mensagem de sucesso seja visível ou até ser redirecionado
         WebDriverWait(self.browser, 10).until(
     EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'OK')]"))
 ).click()
-        time.sleep(1)
+         
         # Preenche o formulário de login
-        self.browser.find_element(By.ID, "login_input").send_keys("fulano2024")
-        time.sleep(1)
+        self.browser.find_element(By.ID, "login_input").send_keys("fulano5")
+         
         self.browser.find_element(By.ID, "password").send_keys("senha_segura")
 
 
 
 
         # Clica no botão de login
-        time.sleep(1)
+         
         self.browser.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
 
 
 
 
         # Verifica se o login foi bem-sucedido, checando a presença de um elemento específico da página de usuário logado
-        time.sleep(1)
+         
         WebDriverWait(self.browser, 10).until(
     EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'OK')]"))
 ).click()
        
-        time.sleep(1)
+         
         WebDriverWait(self.browser, 10).until(
     EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Criar comunidade')]"))
 ).click()
        
-        time.sleep(1)
+         
         # Espera até que a página de criação de comunidade seja carregada
         WebDriverWait(self.browser, 10).until(
             EC.presence_of_element_located((By.XPATH, "//h2[contains(text(), 'Nova comunidade')]"))
         )
-        time.sleep(1)
-
-
-
-
+         
         # Preenche o campo abaixo de "Nome"
-        self.browser.find_element(By.ID, "name").send_keys("Comunidade Exemplo")
-        time.sleep(1)
-
-
-
-
+        self.browser.find_element(By.ID, "name").send_keys("Comunidade Exemplo5")
+         
         # Preenche o campo abaixo de "Descrição"
         self.browser.find_element(By.ID, "description").send_keys("Comunidade exemplo 1")
-        time.sleep(1)
-
-
-
-
+         
         # Clica no botão "Criar"
         self.browser.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
-        time.sleep(1)
-
-
-
-
+         
         # Espera até que a mensagem de sucesso seja visível ou até ser redirecionado
         WebDriverWait(self.browser, 10).until(
         EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'OK')]"))).click()
-        time.sleep(1)
-
-
-
-
+         
         # Espera até que o botão "Entrar" esteja visível e clicável
         botao_entrar = WebDriverWait(self.browser, 10).until(
             EC.element_to_be_clickable((By.XPATH, "//a[contains(@class, 'text-white') and contains(text(), 'Entrar')]"))
         )
         # Realiza o clique no botão "Entrar"
         botao_entrar.click()
-        time.sleep(1)
+         
 
 
         # Espera até que o botão "Áreas de Plantio" esteja visível e clicável
         botao_areas_plantio = WebDriverWait(self.browser, 10).until(
-            EC.element_to_be_clickable((By.XPATH, "//a[contains(@class, 'flex-grow') and contains(text(), 'Áreas de Plantio')]"))
+            EC.element_to_be_clickable((By.XPATH, '/html/body/div[2]/div[2]/a[2]/span[2]'))
         )
         # Realiza o clique no botão "Áreas de Plantio"
         botao_areas_plantio.click()
@@ -160,79 +140,51 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
         criar_area_plantio_btn.click()
         time.sleep(1)
 
-
-       
-
-
-        # Aguarda que o modal de criação seja carregado (se houver um modal ou nova página)
-        WebDriverWait(self.browser, 10).until(
-            EC.presence_of_element_located((By.XPATH, "//h2[contains(text(), 'Nova Área de Plantio')]"))
-        )
-        time.sleep(1)
-
-
-
-
         # Preenche o campo abaixo de "Nome"
         self.browser.find_element(By.ID, "name").send_keys("Área 1")
         time.sleep(1)
-
-
-
 
         # Preenche o campo abaixo de "Descrição"
         self.browser.find_element(By.ID, "description").send_keys("área de plantio 1")
         time.sleep(1)
 
-
-
-
         # Clica no botão "Criar"
         self.browser.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
         time.sleep(1)
-
-
-
 
         # Espera até que a mensagem de sucesso seja visível ou até ser redirecionado
         WebDriverWait(self.browser, 10).until(
         EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'OK')]"))).click()
         time.sleep(1)
 
-
         # Espera até que o botão "Visualizar" seja visível e clicável
         visualizar_area_plantio_btn = WebDriverWait(self.browser, 10).until(
-            EC.element_to_be_clickable((By.XPATH, "//a[contains(@class, 'text-white') and contains(text(), 'Visualizar')]"))
+            EC.element_to_be_clickable((By.XPATH, '/html/body/div/div[1]/div[3]/div/div/div/div[3]/a'))
         )
         # Clica no botão
         visualizar_area_plantio_btn.click()
         time.sleep(1)
 
-
         # Espera até que o botão "Criar Canteiro" seja visível e clicável
         criar_canteiro_btn = WebDriverWait(self.browser, 10).until(
-            EC.element_to_be_clickable((By.XPATH, "//a[contains(@class, 'text-white') and contains(text(), 'Criar Canteiro')]"))
+            EC.element_to_be_clickable((By.XPATH, '//*[@id="addCommunityBtn"]'))
         )
         # Clica no botão
         criar_canteiro_btn.click()
         time.sleep(1)
 
-
         # Para funcionar, preenche o campo abaixo de "Nome"
         self.browser.find_element(By.ID, "seedbed_name").send_keys("Canteiro 1")
         time.sleep(1)
-
 
         #Para dar o erro necessário para a história
         # Clica no botão "Criar"
         self.browser.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
         time.sleep(1)
 
-
         # Espera até que a mensagem de sucesso seja visível ou até ser redirecionado
         WebDriverWait(self.browser, 10).until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'OK')]"))).click()
         time.sleep(1)
-
 
         # Espera até que o botão "Visualizar" seja visível e clicável
         visualizar_canteiro_btn = WebDriverWait(self.browser, 10).until(
@@ -242,66 +194,42 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
         visualizar_canteiro_btn.click()
         time.sleep(1)
 
-
         # Espera até que o botão de "Adicionar Cultivo" seja clicável
         adicionar_cultivo_btn = WebDriverWait(self.browser, 10).until(
-            EC.element_to_be_clickable((By.XPATH, "//li[contains(@class, 'brown-box')]//a")))
-
+            EC.element_to_be_clickable((By.XPATH, '/html/body/div/div[1]/div[2]/a')))
 
         # Clica no botão
         adicionar_cultivo_btn.click()
         time.sleep(1)
 
 
-        # Aguarda que a próxima página ou modal de adicionar cultivo seja carregado
-        WebDriverWait(self.browser, 10).until(
-            EC.presence_of_element_located((By.XPATH, "//h2[contains(text(), 'Adicionar Cultivo')]"))
-        )
-
-
         # Clicar em "Criar Novo Cultivo"
-        WebDriverWait(self.browser, 10).until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Criar Novo Cultivo')]"))).click()
+        WebDriverWait(self.browser, 10).until(EC.element_to_be_clickable((By.XPATH, '/html/body/div/div[1]/form/a'))).click()
         time.sleep(1)
-
-
-        # Espera até que a página de cadastrar cultivo seja carregada
-        WebDriverWait(self.browser, 10).until(EC.presence_of_element_located((By.XPATH, "//h1[contains(text(), 'Cadastrar Cultivo')]")))
-        time.sleep(1)
-
 
         # Preenche o campo abaixo de "Nome"
-        self.browser.find_element(By.ID, "name").send_keys("Tomate")
+        self.browser.find_element(By.XPATH, '//*[@id="nome"]').send_keys("Tomate")
         time.sleep(1)
-
-
-
 
         # Preenche o campo abaixo de "Ciclo de vida (em meses)"
-        self.browser.find_element(By.ID, "lifecycle").send_keys("6")
+        self.browser.find_element(By.XPATH, '//*[@id="lifecycle"]').send_keys("6")
         time.sleep(1)
-
 
         # Preenche o campo abaixo de "Intervalo de irrigação (em dias)"
-        self.browser.find_element(By.ID, "irrigacao").send_keys("3")
+        self.browser.find_element(By.XPATH, '//*[@id="irrigacao"]').send_keys("3")
         time.sleep(1)
-
 
         # Preenche o campo abaixo de "Intervalo de Poda (em dias):"
-        self.browser.find_element(By.ID, "poda").send_keys("10")
+        self.browser.find_element(By.XPATH, '//*[@id="poda"]').send_keys("10")
         time.sleep(1)
-
 
         # Preenche o campo abaixo de "Intervalo de Manejo (em dias):"
-        self.browser.find_element(By.ID, "manejo").send_keys("3")
+        self.browser.find_element(By.XPATH, '//*[@id="manejo"]').send_keys("3")
         time.sleep(1)
-
-
-
 
         # Clica no botão "Cadastrar"
         self.browser.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
         time.sleep(1)
-
 
         # Espera até que a mensagem de sucesso seja visível ou até ser redirecionado
         WebDriverWait(self.browser, 10).until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'OK')]"))).click()
@@ -309,13 +237,10 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
        
         # Espera até que o botão de "Adicionar Cultivo" seja clicável
         adicionar_cultivo_btn = WebDriverWait(self.browser, 10).until(
-            EC.element_to_be_clickable((By.XPATH, "//li[contains(@class, 'brown-box')]//a")))
-
-
+            EC.element_to_be_clickable((By.XPATH, '/html/body/div/div[1]/div[2]/a')))
         # Clica no botão
         adicionar_cultivo_btn.click()
         time.sleep(1)
-
 
         # Preencher Adicionar Cultivo no canteiro 1
         self.browser.find_element(By.ID, "type_name").click()
@@ -323,30 +248,12 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
         WebDriverWait(self.browser, 10).until(EC.element_to_be_clickable((By.XPATH, "//option[contains(text(), 'Tomate')]"))).click()
         time.sleep(1)
 
+        self.browser.find_element(By.XPATH, '//*[@id="quantity"]').send_keys("12")
 
-        canteiro_qnt = self.browser.find_element(By.ID, "quantity").click()
-        # Apaga o valor existente
-        canteiro_qnt.send_keys(Keys.CONTROL + "a")  # Seleciona todo o texto no campo
-        canteiro_qnt.send_keys(Keys.BACKSPACE)  # Apaga o texto selecionado
-        time.sleep(0.5)
+        data_plantio = self.browser.find_element(By.XPATH, '//*[@id="planting_date"]').send_keys("29112024")
 
 
-        # Insere o novo valor
-        canteiro_qnt.send_keys("2")  # Digita o número 2
-        time.sleep(0.5)
-
-
-        data_plantio = self.browser.find_element(By.ID, "planting_date").click()
-
-
-        #substituir dd/mm/aaa por uma data
-        data_plantio.send_keys("29112024")
-        time.sleep(0.5)
-
-
-        comentario = self.browser.find_element(By.ID, "comment").click()
-        comentario.send_keys("Tomate plantado com muito amor")
-
+        self.browser.find_element(By.XPATH, '//*[@id="comment"]').send_keys("Tomate plantado com muito amor")
 
         # Clica no botão de Adicionar produto
         self.browser.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
@@ -356,7 +263,6 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
     EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'OK')]"))
 ).click()
         time.sleep(1)
-
 
         # Localiza o elemento correspondente ao "Tomate" pelo atributo único
         WebDriverWait(self.browser, 10).until(

@@ -40,9 +40,9 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
         
         self.browser.find_element(By.ID, "first_name").send_keys("Fulano de Tal")
         
-        self.browser.find_element(By.ID, "username").send_keys("fulano2024")
+        self.browser.find_element(By.ID, "username").send_keys("fulano14")
         
-        self.browser.find_element(By.ID, "email").send_keys("fulano2024@example.com")
+        self.browser.find_element(By.ID, "email").send_keys("fulano14@example.com")
         
         self.browser.find_element(By.ID, "state").click()
         
@@ -70,7 +70,7 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
 ).click()
         
         # Preenche o formulário de login
-        self.browser.find_element(By.ID, "login_input").send_keys("fulano2024")
+        self.browser.find_element(By.ID, "login_input").send_keys("fulano14")
         
         self.browser.find_element(By.ID, "password").send_keys("senha_segura")
 
@@ -106,7 +106,7 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
 
 
         # Preenche o campo abaixo de "Nome"
-        self.browser.find_element(By.ID, "name").send_keys("Comunidade Exemplo")
+        self.browser.find_element(By.ID, "name").send_keys("Comunidade Exemplo14")
         time.sleep(1)
 
 

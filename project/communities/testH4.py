@@ -34,9 +34,9 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
         
         self.browser.find_element(By.ID, "first_name").send_keys("Fulano de Tal")
         
-        self.browser.find_element(By.ID, "username").send_keys("fulano2024")
+        self.browser.find_element(By.ID, "username").send_keys("fulano4")
         
-        self.browser.find_element(By.ID, "email").send_keys("fulano2024@example.com")
+        self.browser.find_element(By.ID, "email").send_keys("fulano4@example.com")
         
         self.browser.find_element(By.ID, "state").click()
         
@@ -58,7 +58,7 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
         WebDriverWait(self.browser, 10).until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'OK')]"))).click()
         
         # Preenche o formulário de login
-        self.browser.find_element(By.ID, "login_input").send_keys("fulano2024")
+        self.browser.find_element(By.ID, "login_input").send_keys("fulano4")
         
         self.browser.find_element(By.ID, "password").send_keys("senha_segura")
 
@@ -82,7 +82,7 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
 
 
         # Preenche o campo abaixo de "Nome"
-        self.browser.find_element(By.ID, "name").send_keys("Comunidade Exemplo")
+        self.browser.find_element(By.ID, "name").send_keys("Comunidade Exemplo4")
         
 
 
@@ -114,11 +114,11 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
 
         # Clicar em Excluir
         self.browser.find_element(By.XPATH, '//*[@id="community-settings-form"]/div[4]/button').click()
-        
+        time.sleep(1)
 
          # Confirmar em Excluir
         self.browser.find_element(By.XPATH, '//*[@id="deleteForm"]/div/button[1]').click()
-        
+        time.sleep(1)
 
         # OK
         WebDriverWait(self.browser, 10).until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'OK')]"))).click()
