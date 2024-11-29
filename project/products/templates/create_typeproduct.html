@@ -2,10 +2,10 @@
 {% load static %}
 {% block title %}Criar Cultivo{% endblock %}
 {% block styles %}
-    body{
+    body {
         padding-top: 100px;
     }
-    .everything{
+    .everything {
         padding-left: 250px;
     }
 {% endblock %}
@@ -13,38 +13,27 @@
 <body class="font-sans bg-gray-100">
     <div class="everything">
         <div class="container mx-auto p-6">
-            <h1 class="text-3xl font-bold mb-6">Cadastrar Cultivo</h1>
-            <form method="POST" class="bg-white p-6 rounded-lg shadow-md">
+            <h1 class="text-3xl font-semibold text-gray-900 mb-6">Cadastrar Cultivo</h1>
+            <form method="POST" class="bg-white p-8 rounded-lg shadow-lg w-full">
                 {% csrf_token %}
                 <input type="hidden" name="area_id" value="{{ area_id }}">
                 <input type="hidden" name="seedbed_id" value="{{ seedbed_id }}">
-                
+
                 <!-- Campo para o nome do cultivo -->
-                <label for="nome" class="block text-gray-700">Nome do Cultivo:</label>
-                <input type="text" id="nome" name="nome" required 
-                    class="mt-2 block w-full p-2 border border-gray-300 rounded-md">
-                
+                <label for="nome" class="block text-lg font-medium text-gray-800">Nome do Cultivo:</label>
+                <input type="text" id="nome" name="nome" required class="mt-2 block w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8ABF17] transition duration-200">
+
                 <!-- Novo campo para o ciclo de vida em meses -->
-                <label for="lifecycle" class="block text-gray-700 mt-4">Ciclo de Vida (em meses):</label>
-                <input type="number" id="lifecycle" name="lifecycle" min="1" 
-                        class="mt-2 block w-full p-2 border border-gray-300 rounded-md"
-                    placeholder="Informe o ciclo de vida do produto em meses">
-                
-                <label for="irrigacao" class="block text-gray-700 mt-4">Intervalo de Irrigação (em dias):</label>
-                <input type="number" id="irrigacao" name="irrigacao" min="1" 
-                        class="mt-2 block w-full p-2 border border-gray-300 rounded-md">
-                    
-                <label for="poda" class="block text-gray-700 mt-4">Intervalo de Poda (em dias):</label>
-                <input type="number" id="poda" name="poda" min="1" 
-                        class="mt-2 block w-full p-2 border border-gray-300 rounded-md">
-                    
-                <label for="manejo" class="block text-gray-700 mt-4">Intervalo de Manejo (em dias):</label>
-                <input type="number" id="manejo" name="manejo" min="1" 
-                        class="mt-2 block w-full p-2 border border-gray-300 rounded-md">
-        
-                
-                <button type="submit" class="mt-4 bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600">
-                    Cadastrar
+                <label for="lifecycle" class="block text-lg font-medium text-gray-800 mt-4">Ciclo de Vida (em meses):</label>
+                <input type="number" id="lifecycle" name="lifecycle" min="1" class="mt-2 block w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8ABF17] transition duration-200" placeholder="Informe o ciclo de vida do produto em meses">
+
+                <!-- Campo de irrigação -->
+                <label for="irrigacao" class="block text-lg font-medium text-gray-800 mt-4">Intervalo de Irrigação (em dias):</label>
+                <input type="number" id="irrigacao" name="irrigacao" min="1" class="mt-2 block w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8ABF17] transition duration-200" placeholder="Intervalo entre as irrigações">
+
+                <!-- Botão de envio -->
+                <button type="submit" class="bg-[#8ABF17] mt-8 text-lg text-white font-semibold py-3 px-6 rounded-lg hover:bg-[#7cad10] w-full focus:ring-4 focus:ring-[#7cad10] transition duration-200">
+                    Criar Cultivo
                 </button>
             </form>
         </div>
