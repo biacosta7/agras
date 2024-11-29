@@ -187,12 +187,7 @@ class UserRegistrationAndLoginTest(LiveServerTestCase):
         mais_opcoes.click()
         time.sleep(1)
 
-
-        # Localiza o botão "Editar" pelo seletor único
-        botao_editar = WebDriverWait(self.browser, 10).until(
-            EC.element_to_be_clickable((By.XPATH, '//*[@id="manageModal-4"]/div/button[1]/span')))
-        # Clica no botão "Editar"
-        botao_editar.click()
+        self.browser.find_element(By.XPATH, '//*[@id="manageModal-6"]/div/button[1]').click
         time.sleep(1)
 
         self.browser.find_element(By.ID, "name").send_keys("Área 1 editado")
