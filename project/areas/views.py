@@ -1,18 +1,29 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db import IntegrityError
 from .models import Area
+from tasks.models import Task
 from communities.models import Community, MembershipRequest
 from seedbeds.models import Seedbed
 from products.models import Product, TypeProduct
 from django.contrib import messages
+from collections import defaultdict
+from django.shortcuts import render
 
 # View para listar as áreas
 def area_manage(request, community_id):
     community = get_object_or_404(Community, id=community_id)
-    
     # áreas que pertencem à comunidade
     areas = community.areas.all()
-    
+
+    # Cria uma lista com áreas e suas respectivas tarefas pendentes
+    areas_with_pending_tasks = []
+    for area in areas:
+        pending_tasks_count = Task.objects.filter(status="Pendente", area=area, local='area').count()
+        areas_with_pending_tasks.append({
+            'area': area,
+            'pending_tasks': pending_tasks_count
+        })
+
     # Recupera as solicitações pendentes para a comunidade
     membership_requests = MembershipRequest.objects.filter(community=community, status='pending')
 
@@ -24,6 +35,7 @@ def area_manage(request, community_id):
         'community': community,
         'membership_requests': membership_requests,
         'is_admin_of_community': is_admin_of_community,
+        'areas_with_pending_tasks': areas_with_pending_tasks
     })
 
 
@@ -105,11 +117,22 @@ def area_detail(request, community_id, area_id):
 
     membership_requests = MembershipRequest.objects.filter(community=community, status='pending')
 
+
+    # Cria uma lista com áreas e suas respectivas tarefas pendentes
+    seedbeds_with_pending_tasks = []
+    for seedbed in seedbeds:
+        pending_tasks_count = Task.objects.filter(status="Pendente", seedbed=seedbed, local="seedbed").count()
+        seedbeds_with_pending_tasks.append({
+            'seedbed': area,
+            'pending_tasks': pending_tasks_count
+        })
+
     context = {
         'community': community,
         'area': area,
         'seedbeds': seedbeds,
         'membership_requests': membership_requests,
-        'is_admin_of_community': is_admin_of_community
+        'is_admin_of_community': is_admin_of_community,
+        'seedbeds_with_pending_tasks': seedbeds_with_pending_tasks
     }
     return render(request, 'area_detail.html', context)

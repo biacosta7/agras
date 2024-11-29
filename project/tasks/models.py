@@ -45,4 +45,4 @@ class Task(models.Model):
     responsible_users = models.ManyToManyField('users.User', blank=False)
     
     def __str__(self):
-        return f"{self.title} ({self.get_type_display()}) - {'Finalizada' if self.is_completed else 'Pendente'}"
+        return f"{self.description} ({self.get_type_display()}) - Local: {self.local} -  {'Finalizada' if self.is_completed else 'Pendente'}"

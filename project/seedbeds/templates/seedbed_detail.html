@@ -181,12 +181,13 @@
     .brown-box.selected {
         background-color: #5F8C1B; /* Verde */
         color: white; /* Cor do texto */
-        transform: translateY(-10px); /* Adjust to overlap precisely */
+        transform: translateY(-20px); /* Adjust to overlap precisely */
         position: relative; /* Ensure it stays above other elements */
     }
     
     .empty_seedbed{
         padding-left: 300px;
+        padding-bottom: 100px;
     }
     .btn {
         background-color: #8ABF17;
@@ -247,8 +248,8 @@
 </div>
 <br>
 
-<div class="flex container mx-auto mt-5">
-    <div class="text-center flex-1 ml-48">
+<div class="flex container mx-auto mt-4">
+    <div class="text-center flex-1 ml-52">
         <!-- Adicionando overflow horizontal -->
         <div class="overflow-x-auto">
             <!-- Forçando largura maior -->
@@ -264,13 +265,13 @@
                     </li>
                 {% empty %}
                     <div class="empty_seedbed">
-                        <div class="text-center col-span-full mt-[15vh]">
+                        <div class="text-center col-span-full mt-[5vh]">
                             <div class="flex flex-col items-center justify-center">
                                 <img src="{% static 'assets/Ativo 324.png' %}" alt="Plantas" class="w-64 mb-4">
                                 <h1 class="font-bold text-[24px]">Nenhum cultivo adicionado em "{{ seedbed.nome }}"</h1>
                                 <p class="font-normal text-[16px]">Clique no botão acima para adicionar cultivos e visualizá-los</p>
                             </div>
-                        </div>
+                        </div>                        
                     </div> 
                 {% endfor %}
                 
@@ -296,7 +297,7 @@
 <div class="flex items-center justify-center"> 
     <!-- Detalhes do produto selecionado -->
     {% if selected_product %}
-        <div class="product-info mt-6 green-box">
+        <div class="product-info mt-4 green-box">
             <div class="coluna mb-4">
                 <div class="sub-container">
                     <div class="sub-coluna">
@@ -357,7 +358,7 @@
                     </div>
                 </div>
             </div>
-            <div class="coluna">
+            <div class="coluna" style="flex: 0 0 35%; margin-left: -40px;">
                 <div class="white-box" style="height: calc(100% - 20px); overflow-y: auto;">
                    <div id="to-do-list">
                        <ul class="list-disc ml-5" style="list-style-type: disc; padding-right: 10px;">
@@ -391,7 +392,7 @@
                        </ul>
                    </div>
                </div>
-               </div>
+            </div>
               
             <div class="coluna">
                 <span class="text-lg font-semibold mr-2" id="harvest-estimate" style="color: white">Previsão para a próxima colheita: </span><br>
@@ -406,7 +407,7 @@
                 <br>
                 <span class="text-lg font-semibold mr-2" style="color: white">Comentários: </span>
             <br>
-            <div class="white-box" style="word-wrap: break-word; overflow-wrap: break-word;">
+            <div class="white-box" style="word-wrap: break-word; overflow-wrap: break-word; height: 167px;">
                 <span class="ml-1 text-base" id="comment">{{ comment }}</span>
             </div>
             <br>
@@ -530,7 +531,7 @@
     const rowHeight = element.offsetHeight;
 
     // Move down 
-    element.style.transform = `translateY(20px)`; // Added 10px for slight padding
+    element.style.transform = `translateY(30px)`; // Added 10px for slight padding
 
     // Wait before redirecting
     setTimeout(() => {
@@ -555,7 +556,7 @@ document.addEventListener("DOMContentLoaded", () => {
             
             // Calculate row height and move down
             const rowHeight = selectedCard.offsetHeight;
-            selectedCard.style.transform = `translateY(20px)`;
+            selectedCard.style.transform = `translateY(30px)`;
         }
     }
 

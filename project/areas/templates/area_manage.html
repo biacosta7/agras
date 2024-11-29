@@ -117,17 +117,31 @@
                             <div class="relative-wrapper relative"> {% if is_admin_of_community %}
                                 <span class="material-icons mt-3 cursor-pointer" onclick="toggleManageModal('manage', {{area.id}})">more_vert</span>
                                 <!-- Modal de gerenciamento -->
-                                <div id="manageModal-{{ area.id }}" class="hidden absolute top-8 right-0 bg-white border border-gray-300 mt-2 shadow-lg px-4 py-2 rounded-lg z-10 w-auto">
-                                    <button onclick="toggleManageModal('close-manage', {{ area.id }}), {}" class="absolute top-2 right-2 text-[#F76711] material-icons-outlined">close</button>
-                                    <div class="flex flex-row items-center gap-x-2"> 
-                                        <button onclick="openEditModal({{area.id}})" class="bg-yellow-500 text-white p-1 rounded-full hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 flex">
-                                            <span class="material-icons-outlined">edit</span>
+                                <div id="manageModal-{{ area.id }}" class="hidden absolute top-8 right-0 bg-white border border-gray-300 shadow-lg px-6 py-4 rounded-lg z-10 w-64">
+                                    <button onclick="toggleManageModal('close-manage', {{ area.id }})" class="absolute top-2 right-2 text-[#F76711] material-icons-outlined">close</button>
+                                    <div class="flex flex-col items-center gap-y-2"> <!-- Diminuí o gap para 2 -->
+                                        <!-- Botão Editar (Ícone verde) -->
+                                        <button onclick="openEditModal({{ area.id }})" class="text-gray-600 p-2 hover:text-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 flex items-center justify-start w-full space-x-2">
+                                            <span class="material-icons-outlined text-lg text-green-600">edit</span> <!-- Ícone verde -->
+                                            <span class="text-sm">Editar</span> <!-- Texto à esquerda do ícone -->
                                         </button>
-                                        <button onclick="openDeleteModal({{area.id}})" class="bg-red-500 mr-5 text-white p-1 rounded-full hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 flex">
-                                            <span class="material-icons-outlined">delete</span>
+                                
+                                        <!-- Botão Gerar Relatório (Ícone azul) -->
+                                        <button onclick="" class="text-gray-600 p-2 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 flex items-center justify-start w-full space-x-2">
+                                            <span class="material-icons-outlined text-lg text-blue-600 ">description</span> <!-- Ícone de documento azul -->
+                                            <span class="text-sm">Gerar Relatório</span> 
+                                        </button>
+                                
+                                        <!-- Linha divisória -->
+                                        <hr class="w-full border-t border-gray-300 my-1" />
+                                
+                                        <!-- Botão Excluir (Ícone vermelho) -->
+                                        <button onclick="openDeleteModal({{ area.id }})" class="text-gray-600 p-2 hover:text-gray-900 p-1 hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 flex items-center justify-start w-full space-x-2">
+                                            <span class="material-icons-outlined text-lg text-red-500">delete</span> <!-- Ícone vermelho -->
+                                            <span class="text-sm">Excluir</span> <!-- Texto à esquerda do ícone -->
                                         </button>
                                     </div>
-                                </div>
+                                </div> 
                                 <!-- Modal de edição -->
                                 <div id="editModal-{{ area.id }}" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
                                     <div class="bg-white px-14 py-12 rounded-[34px] w-[95%] sm:w-[85%] md:w-[75%] lg:w-[65%] xl:w-[50%] max-w-[650px] max-h-[663px] overflow-y-auto rounded-[32px] ml-4">
@@ -142,12 +156,11 @@
                                             <div class="flex items-stretch">
                                                 <!-- Descrição -->
                                                 <div class="w-3/5 pr-4 flex flex-col">
-                                                    <div class="mb-4">
+                                                    <div class="mb-4 h-[200px]">
                                                         <label for="description" class="block text-sm font-medium text-gray-700">Descrição</label>
                                                         <textarea name="description" id="description" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-[#8ABF17] focus:border-[#8ABF17] h-full py-2 px-3">{{ area.description }}</textarea>
                                                     </div>
                                                 </div>
-                                            
                                                 <!-- Imagem -->
                                                 <div class="w-2/5 flex flex-col">
                                                     <p class="block text-sm font-medium text-gray-700 ml-1">Foto ou Cor para Capa</p>
@@ -215,27 +228,11 @@
                             {% endif %}
                             </div>
                         </div>
-                        <!-- Dropdown para os canteiros -->
-                        <div class="mt-2">
-                            <button class="w-full text-left bg-[#f7f7f7] p-3 rounded-[9px] text-sm lg:text-base font-medium border-2 border-[#8ABF17] focus:outline-none flex justify-between items-center transition-all transform hover:shadow-lg" onclick="toggleDropdown('seedbed-list-{{ area.id }}')">
-                                Mostrar Canteiros
-                                <span id="arrow-{{ area.id }}" class="transition-transform transform rotate-0 material-icons">arrow_drop_down</span>
-                            </button>
-                            <ul id="seedbed-list-{{ area.id }}" class="list-disc list-inside mt-2 hidden">
-                                {% for seedbed in area.seedbeds.all %}
-                                <li class="text-sm lg:text-base">
-                                    {{ seedbed.nome }}
-                                    {% for products in seedbed.products_in_seedbed.all %}
-                                        🌱
-                                    {% endfor %}
-                                </li>
-                                {% empty %}
-                                <li class="text-sm lg:text-base">Nenhum canteiro cadastrado</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-        
-                        <div class="flex mt-5 justify-center">
+                    
+                        {% for item in areas_with_pending_tasks %}
+                        <p>{{ item.pending_tasks }} tasks pendentes</p>
+                        {% endfor %}
+                    <div class="flex mt-5 justify-center">
                             <a href="{% url 'area_detail' community.id area.id %}" class="inline-block bg-[#8ABF17] text-white py-2 px-4 rounded-md hover:bg-[#7cad10] font-bold focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 w-2/4 text-center w-full">
                                 Visualizar
                             </a>
