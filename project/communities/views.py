@@ -1,15 +1,17 @@
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from products.models import Product
 from areas.models import Area
 from communities.models import Community, MembershipRequest, SendCommunityInvite
+from products.models import Product
 from users.models import User, FileUpload
 from seedbeds.models import Seedbed
 from django.utils import timezone
 from .utils import get_weather_data
 from django.db import IntegrityError
 from django.utils import timezone
+from tasks.models import Task
+from django.db import models
 
 @login_required
 def home_view(request):
@@ -48,9 +50,13 @@ def dashboard_view(request, community_id):
     now = timezone.now()
     city = request.user.city
     weather_data = None  # Inicializando a variável
-
+    tasks = Task.objects.filter(community=community) 
+    crops_in_community = (
+        Product.objects.filter(seedbed__area__community=community)
+        .annotate(total_quantity=models.F('quantidade'))
+        .order_by('-total_quantity')  # Ordenar por quantidade de forma decrescente
+    )
     day_of_week = now.weekday()  # 0 = segunda-feira, 6 = domingo
-
 
     if city:
         try:
@@ -68,7 +74,9 @@ def dashboard_view(request, community_id):
         'users': users,
         'weather_data': weather_data,
         'now': now, 
-        'day_of_week': day_of_week
+        'day_of_week': day_of_week,
+        'tasks': tasks,
+        'crops_in_community': crops_in_community
     }
 
     return render(request, 'dashboard.html', context)
