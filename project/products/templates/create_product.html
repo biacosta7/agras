@@ -1,40 +1,42 @@
-{% extends 'base.html' %} 
-{% load static %}  
+{% extends 'base.html' %}
+{% load static %}
 {% block title %}Adicionar Cultivo{% endblock %}
 
 {% block content %}
-<body class="">
-    <div class="flex-1 p-6 fade-down lg:p-10 ml:0 lg:ml-[250px] mt-12 lg:mt-[60px]">
-        <h1 class="text-2xl font-bold mb-4">Adicionar Cultivo no Canteiro {{ seedbed.nome }}</h1>
+<body class="bg-gray-50">
+    <div class="flex-1 p-6 lg:p-10 ml:0 lg:ml-[250px] mt-12 lg:mt-[60px]">
+        <h1 class="text-3xl font-semibold text-gray-900 mb-6">Adicionar Cultivo no Canteiro {{ seedbed.nome }}</h1>
         
-        <form method="post" class="bg-white p-6 rounded-lg shadow-md">
+        <form method="post" class="bg-white p-8 rounded-lg shadow-lg w-full">
             {% csrf_token %}
             
-            <label for="type_name" class="block text-gray-700">Selecione o cultivo:</label>
-            <select name="type_name" id="type_name" required class="mt-2 block w-full p-2 border border-gray-300 rounded-md">
+            <!-- Selecione o cultivo -->
+            <label for="type_name" class="text-lg font-medium text-gray-800">Selecione o cultivo:</label>
+            <select name="type_name" id="type_name" required class="mt-2 block w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8ABF17] transition duration-200">
                 <option value="" disabled selected>Escolha um cultivo</option>
                 {% for tipo in tipos_produtos %}
                     <option value="{{ tipo.name }}">{{ tipo.name }}</option>  
                 {% endfor %}
             </select>
-            <a href="{% url 'create_typeproduct' community.id area.id seedbed.id %}" class="button mt-2 inline-block text-blue-500">Criar Novo Cultivo</a>
+            <a href="{% url 'create_typeproduct' community.id area.id seedbed.id %}" class="inline-block mt-2 text-[#8ABF17] hover:text-green-600 transition duration-200">Criar Novo Cultivo</a>
             <br>
 
+            <!-- Quantidade -->
             <label for="quantity" class="block text-gray-700 mt-4">Quantidade:</label>
-            <input type="number" name="quantity" id="quantity" required min="1" value="1" class="mt-2 block w-full p-2 border border-gray-300 rounded-md">
+            <input type="number" name="quantity" id="quantity" required min="1" value="1" class="mt-2 block w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8ABF17] transition duration-200">
             <br>
 
+            <!-- Data de plantio -->
             <label for="planting_date" class="block text-gray-700 mt-4">Data de plantio:</label>
-            <input type="date" id="planting_date" name="planting_date" class="mt-2 block w-full p-2 border border-gray-300 rounded-md" required>
-            <br>
-            
-            <label for="comment" class="block text-gray-700 mt-4">Comentário:</label>
-            <input type="text" id="comment" name="comment" class="mt-2 block w-full p-2 border border-gray-300 rounded-md" maxlength="500" placeholder="Digite seu comentário aqui" required>
+            <input type="date" name="planting_date" id="planting_date" required class="mt-2 block w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8ABF17] transition duration-200">
             <br>
 
-            <button type="submit" class="mt-4 bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600">
-                Adicionar Produto
-            </button>
+            <!-- Botão de envio -->
+            <div class="mt-6 flex justify-center">
+                <button type="submit" class="bg-[#8ABF17] text-white font-semibold py-3 px-6 rounded-lg hover:bg-[#7cad10] w-full focus:ring-4 focus:ring-[#7cad10] transition duration-200">
+                    Adicionar Cultivo
+                </button>
+            </div>
         </form>
     </div>
 </body>
