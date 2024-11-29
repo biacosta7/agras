@@ -29,7 +29,10 @@
         <div class="w-full h-auto mx-auto bg-white drop-shadow-xl rounded-[14px] border mb-4 p-6">
             <div class="flex flex-row justify-between items-center mb-4">
                 <h1 class="font-bold text-black text-[18px] sm:text-[20px]">Cultivos populares</h1>
-                <a href="{% url 'area_manage' community.id %}" class="bg-[#5F8C1B] text-white p-2 rounded-lg text-sm sm:text-base">Ver Áreas</a>
+                <a href="{% url 'area_manage' community.id %}" 
+                class="bg-[#5F8C1B] text-white p-2 rounded-lg text-sm sm:text-base hover:bg-[#4a7c13] hover:shadow-lg transition duration-200 ease-in-out">
+                Ver Áreas
+             </a>
             </div>
             {% for crop_in_community in crops_in_community %}
             <a href="{% url 'seedbed_detail' community.id crop_in_community.seedbed.area.id crop_in_community.seedbed.id  %}" id="crop-{{crop_in_community.seedbed.area.id}}-{{crop_in_community.seedbed.id}}" class="flex flex-col sm:flex-row items-center justify-between py-4 border-b last:border-0 hover:bg-[#F1F8E4] transition-all duration-200 rounded-lg">

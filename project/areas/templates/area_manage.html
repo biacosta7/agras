@@ -15,7 +15,7 @@
             {% if areas %}
             <div class="flex md:flex-row flex-col justify-between mt-4">
                 <header class="mb-6">
-                    <h1 class="text-[44px] lg:text-[48px] font-semibold mt-2 ">Áreas<button class="material-icons talk-button">volume_up</button></h1>
+                    <h1 class="text-[44px] lg:text-[48px] font-semibold mt-2 flex items-center">Áreas<button class="material-icons talk-button">volume_up</button></h1>
                 </header>
             
                 <div class="flex flex-row items-center space-x-6">
@@ -82,7 +82,7 @@
                                     </div>
                                 </div>
                                 <!-- Modal de edição -->
-                                <div id="editModal-{{ area.id }}" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
+                                <div id="editModal-{{ area.id }}" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
                                     <div class="bg-white px-14 py-12 rounded-[34px] w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] max-w-[596px] max-h-[663px] overflow-y-auto rounded-[32px]">
                                         <h2 id="modalTitle" class="text-[24px] font-bold mb-4 text-[#8ABF17]">Editar área de plantio</h2>
                                         <p class="font-medium text-[16px]">Altere as informações abaixo para editar sua área de plantio</p>
@@ -105,7 +105,7 @@
                                 </div>
 
                                 <!-- Modal de deleção -->
-                                <div id="deleteModal-{{ area.id }}" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
+                                <div id="deleteModal-{{ area.id }}" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
                                     <div class="bg-white px-14 py-12 rounded-[34px] w-full max-w-lg">
                                         <h3 class="text-xl font-bold mb-4 text-red-600">Excluir Área de plantio</h3>
                                         <p class="text-gray-700 mb-6">Tem certeza de que deseja excluir a área de plantio "{{ area.name }}"? Esta ação não pode ser desfeita.</p>

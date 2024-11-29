@@ -12,93 +12,119 @@
                 <h1 class="text-[44px] lg:text-[48px] lg:ml-[250px] font-semibold mt-2">Configurações</h1>
             </header>
         </div>
-
-        <div class="flex items-center lg:ml-[250px] justify-center mt-4">
-            <!-- Formulário -->
-            <form id="community-settings-form" method="POST" action="{% url 'settings' community.id %}" class="bg-white shadow-lg rounded-lg p-8 w-full max-w-4xl" enctype="multipart/form-data">
-                {% csrf_token %}
-                <h2 class="text-2xl font-bold text-[#5F8C1B] mb-6">Configurações da Comunidade</h2>
-
-                <!-- Capa -->
-                <div class="flex flex-row items-start space-x-4">
-                    <!-- Upload de Foto -->
-                    <div 
-                        id="community-container" 
-                        class="relative w-80 h-42 rounded-lg overflow-hidden bg-gray-200" 
-                        style="background-image: url('{{ image_community_url }}'); background-size: cover; height: 168px; width: 320px; background-position: center;">
-                        
-                        <!-- Exibição da Imagem da Comunidade -->
-                        <img 
-                            id="community-image" 
-                            src="{% if image_community_url %}{{ image_community_url }}{% else %}{% static 'assets/vertcolorido.png' %}{% endif %}" 
-                            alt="Community Image" 
-                            class="w-full h-full object-cover">
-                        
-                        <!-- Botão de upload -->
-                        <label 
-                            for="file-upload-community" 
-                            class="absolute bottom-4 right-4 flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full shadow-lg cursor-pointer"
-                            title="Editar imagem da comunidade">
-                            <span class="material-icons text-[#8ABF17] text-lg sm:text-xl">photo_camera</span>
-                            <input id="file-upload-community" type="file" name="community_image" class="hidden" accept="image/*" />
-                            <input type="hidden" name="image_type_community" value="community" />
-                        </label>
-                    </div>
-                    
-                    <!-- Cores -->
-                    <div class="flex flex-col space-y-1">
-                        <!-- Inputs escondidos que serão atualizados ao clicar nas cores -->
+        {% comment %} DIV CONFIGS {% endcomment %}
+        <div class="lg:ml-[250px] mt-4">
+            <div class="flex sm:flex-row ajeiando flex-col">
+                <!-- Formulário -->
+                <form id="community-settings-form" method="POST" action="{% url 'settings' community.id %}" class="bg-white mr-8 mb-6 shadow-lg rounded-lg p-8 w-full max-w-4xl" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <h2 class="text-2xl font-bold text-[#5F8C1B] mb-6">Configurações da Comunidade</h2>
+    
+                    <!-- Capa -->
+                    <div class="flex flex-row items-start space-x-4">
+                        <!-- Upload de Foto -->
                         <div 
-                            class="w-12 h-10 rounded-lg bg-[#8B4513] cursor-pointer" 
-                            onclick="changeCommunityColor('marrom')">
-                            <input id="file-upload-community" type="file" name="community_image" class="hidden"/>
-                            <input type="hidden" id="community-image-url" name="community_image_url">
-                        
+                            id="community-container" 
+                            class="relative w-80 h-42 rounded-lg overflow-hidden bg-gray-200" 
+                            style="background-image: url('{{ image_community_url }}'); background-size: cover; height: 168px; width: 320px; background-position: center;">
+                            
+                            <!-- Exibição da Imagem da Comunidade -->
+                            <img 
+                                id="community-image" 
+                                src="{% if image_community_url %}{{ image_community_url }}{% else %}{% static 'assets/vertcolorido.png' %}{% endif %}" 
+                                alt="Community Image" 
+                                class="w-full h-full object-contain">
+                            
+                            <!-- Botão de upload -->
+                            <label 
+                                for="file-upload-community" 
+                                class="absolute bottom-4 right-4 flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full shadow-lg cursor-pointer"
+                                title="Editar imagem da comunidade">
+                                <span class="material-icons text-[#8ABF17] text-lg sm:text-xl">photo_camera</span>
+                                <input id="file-upload-community" type="file" name="community_image" class="hidden" accept="image/*" />
+                                <input type="hidden" name="image_type_community" value="community" />
+                            </label>
                         </div>
-
-                        <div 
-                            class="w-12 h-10 rounded-lg bg-[#FF6F00] cursor-pointer" 
-                            onclick="changeCommunityColor('laranja')"></div>
-                        <div 
-                            class="w-12 h-10 rounded-lg bg-[#5F8C1B] cursor-pointer" 
-                            onclick="changeCommunityColor('verde')"></div>
-                    </div>
-                </div>
-
-                <!-- Nome e Descrição -->
-                <div class="mb-6">
-                    <label class="block text-lg font-semibold mb-2" for="name">Nome da Comunidade</label>
-                    <input type="text" id="name" name="name" class="block w-full border border-black rounded-lg p-2" value="{{ community.name }}" />
-                </div>
-                <div class="mb-6">
-                    <label class="block text-lg font-semibold mb-2" for="description">Descrição da Comunidade</label>
-                    <textarea id="description" name="description" class="block w-full border border-black rounded-lg p-2" rows="3">{{ community.description }}</textarea>
-                </div>
-
-                <!-- Botões -->
-                <div class="flex justify-between mt-6">
-                    <!-- Botão Excluir -->
-                    <button type="button" onclick="openDeleteModal()" class="bg-[#FF4D4D] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#cc3c3c]">
-                        Excluir
-                    </button>
-                    <div class="flex space-x-4">
-                        <!-- Botão Cancelar -->
-                        <button type="button" onclick="document.getElementById('community-settings-form').reset()" class="bg-white text-[#8ABF17] border border-[#8ABF17] px-6 py-2 rounded-lg font-semibold hover:bg-gray-100">
-                            Cancelar
-                        </button>
                         
-                        <!-- Botão Salvar -->
-                        <button type="submit" name="action" value="update" class="bg-[#5F8C1B] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#4a7c13]">
-                            Salvar
+                        <!-- Cores -->
+                        <div class="flex flex-col space-y-1">
+                            <!-- Inputs escondidos que serão atualizados ao clicar nas cores -->
+                            <div 
+                                class="w-12 h-10 rounded-lg bg-[#8B4513] cursor-pointer" 
+                                onclick="changeCommunityColor('marrom')">
+                                <input id="file-upload-community" type="file" name="community_image" class="hidden"/>
+                                <input type="hidden" id="community-image-url" name="community_image_url">
+                            
+                            </div>
+    
+                            <div 
+                                class="w-12 h-10 rounded-lg bg-[#FF6F00] cursor-pointer" 
+                                onclick="changeCommunityColor('laranja')"></div>
+                            <div 
+                                class="w-12 h-10 rounded-lg bg-[#5F8C1B] cursor-pointer" 
+                                onclick="changeCommunityColor('verde')"></div>
+                        </div>
+                    </div>
+    
+                    <!-- Nome e Descrição -->
+                    <div class="mb-6">
+                        <label class="block text-lg font-semibold mb-2" for="name">Nome da Comunidade</label>
+                        <input type="text" id="name" name="name" class="block w-full border border-black rounded-lg p-2" value="{{ community.name }}" />
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-lg font-semibold mb-2" for="description">Descrição da Comunidade</label>
+                        <textarea id="description" name="description" class="block w-full border border-black rounded-lg p-2" rows="3">{{ community.description }}</textarea>
+                    </div>
+    
+                    <!-- Botões -->
+                    {%if user in community.admins.all %}
+                    <div class="flex justify-between mt-6">
+                        <!-- Botão Excluir -->
+                        <button type="button" onclick="openDeleteModal()" class="bg-[#FF4D4D] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#cc3c3c]">
+                            Excluir
+                        </button>
+                        <div class="flex space-x-4">
+                            <!-- Botão Cancelar -->
+                            <button type="button" onclick="document.getElementById('community-settings-form').reset()" class="bg-white text-[#8ABF17] border border-[#8ABF17] px-6 py-2 rounded-lg font-semibold hover:bg-gray-100">
+                                Cancelar
+                            </button>
+                            
+                            <!-- Botão Salvar -->
+                            <button type="submit" name="action" value="update" class="bg-[#5F8C1B] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#4a7c13]">
+                                Salvar
+                            </button>
+                        </div>
+                    </div>
+                    {%endif%}
+                </form>
+                <div class="bg-white drop-shadow-md rounded-lg p-8 max-h-[580px] w-full mx-auto">
+                    <!-- Título e descrição -->
+                    <h1 class="font-bold text-[22px] mb-4 text-gray-900">Data de Criação</h1>
+                    <p class="text-gray-700 text-[16px] mb-6">
+                        A comunidade foi criada em <span class="font-semibold">{{ community.created_at|date:"d F Y" }}</span>. Desde então, temos crescido juntos, compartilhando conhecimento e experiências valiosas.
+                    </p>
+                
+                    <!-- Seção explicativa sobre sair da comunidade -->
+                    <div class="bg-gray-100 p-4 rounded-lg mb-6">
+                        <p class="text-gray-800 text-[14px] leading-relaxed mb-4">
+                            Sentimos muito em vê-lo partir! Se você realmente deseja sair da comunidade, clique no botão abaixo. Tenha certeza de que pode voltar a qualquer momento, caso queira se reconectar.
+                        </p>
+                        <p class="text-sm text-gray-600 italic">A saída da comunidade não afetará seu acesso a outros conteúdos ou serviços da plataforma.</p>
+                    </div>
+                
+                    <!-- Botão de sair -->
+                    <div class="flex items-center justify-center">
+                        <button onclick='openLeaveModal()' class="bg-[#FF4C4C] hover:bg-[#FF1F1F] text-white font-semibold py-2 px-8 rounded-lg shadow-lg transition duration-200 ease-in-out transform hover:scale-105 focus:outline-none">
+                            Sair da Comunidade
                         </button>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
     
 <!-- Modal de deleção -->
-<div id="deleteModal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
+<div id="deleteModal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
     <div class="bg-white px-14 py-12 rounded-[34px] w-full max-w-lg">
         <h3 class="text-xl font-bold mb-4 text-red-600">Excluir Comunidade</h3>
         <p class="text-gray-700 mb-6">Tem certeza de que deseja excluir a comunidade "{{ community.name }}"? Esta ação não pode ser desfeita.</p>
@@ -113,6 +139,31 @@
 </div>
 </div>
 
+<!-- Modal de sair -->
+<div id="leaveModal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+    <div class="bg-white px-14 py-12 rounded-[34px] w-full max-w-lg">
+        <h3 class="text-xl font-bold mb-4 text-red-600">Sair da Comunidade</h3>
+        <p class="text-gray-700 mb-6">Tem certeza de que deseja sair da comunidade "{{ community.name }}"? Esta ação não pode ser desfeita.</p>
+        <form id="leaveForm" method="POST" action="{% url 'leave_community' community.id user.id %}">
+            {% csrf_token %}
+            <div class="flex flex-row justify-between">
+                <button type="button" onclick="submitLeaveForm()" class="mr-2 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 w-full font-bold">Sair</button>
+                <button type="button" onclick="closeLeaveModal()" class="bg-white border-2 border-[#8ABF17] hover:border-[#7aab0f] text-[#8ABF17] hover:text-[#7aab0f] font-bold px-6 py-3 rounded-[9px] w-full">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+
+<style>
+    @media (min-width: 640px) and (max-width: 1250px) {
+        .ajeiando {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+</style>
+
 <script>
     function openDeleteModal() {
         document.getElementById('deleteModal').classList.remove('hidden');
@@ -124,6 +175,18 @@
 
     function submitDeleteForm() {
         document.getElementById('deleteForm').submit();
+    }
+
+    function openLeaveModal() {
+        document.getElementById('leaveModal').classList.remove('hidden');
+    }
+
+    function closeLeaveModal() {
+        document.getElementById('leaveModal').classList.add('hidden');
+    }
+
+    function submitLeaveForm() {
+        document.getElementById('leaveForm').submit();
     }
 </script>
 {% endblock %}
