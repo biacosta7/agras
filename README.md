@@ -89,11 +89,198 @@ Então, com essa divisão eficiente e com o uso de ferramentas como o Live Share
 
 # 🚚 Status Report 2
 
-## [🎬 Screencast Protótipo](https://www.youtube.com/watch?v=i34DN3N1n_Y)
+## [🎬 Screencast Azure](https://youtu.be/HUgD-PkBOR0)
+
+<a href="https://youtu.be/HUgD-PkBOR0" target="_blank">
+    <img src="https://github.com/user-attachments/assets/8604c9da-aa65-42a5-97c1-ef5479af12bd" alt="Clique para assistir o vídeo (abrirá em uma nova aba)">
+</a>
+
+## [🎬 Screencast Testes](https://www.youtube.com/watch?v=rZvdmyKTAjA)
 
 <a href="https://www.youtube.com/watch?v=rZvdmyKTAjA" target="_blank">
     <img src="https://github.com/user-attachments/assets/8604c9da-aa65-42a5-97c1-ef5479af12bd" alt="Clique para assistir o vídeo (abrirá em uma nova aba)">
 </a>
+
+## Histórias AGRAS
+
+## H1 - Criar Canteiros (Adicionar e Visualizar)
+
+**Descrição:** Como usuário, eu gostaria de adicionar e visualizar as informações dos canteiros de forma prática e eficiente para que eu possa ter a representação do meu canteiro real no site.
+
+**Validações:**
+
+* **V1:** Dado que o usuário está em canteiros, ao clicar no botão “+ criar”, abre um pop-up com o campo de preencher o nome do canteiro e com um botão “criar”, que ao preencher o campo e clicar no botão, é criado um canteiro e exibido uma mensagem de confirmação.
+* **V2:** Dado que o usuário está em canteiros, ao clicar no botão “+ criar”, abre um pop-up com o campo de preencher o nome do canteiro e com um botão “criar”, que ao clicar no botão sem preencher o campo, é exibido uma mensagem avisando que o campo deve ser preenchido.
+* **V3:** Se o usuário tentar adicionar um canteiro com um nome duplicado, o sistema exibe uma mensagem de erro informando que já existe um canteiro com esse nome.
+
+
+## H2 - Gerenciar Canteiros (Editar e Excluir)
+
+**Descrição:** Como usuário, eu gostaria de gerenciar meus canteiros diretamente pela plataforma, para editar e excluir as informações dos canteiros de forma prática e eficiente.
+
+**Validações:**
+
+* **V1:** Se o usuário clicar no ícone de três pontinhos no card do canteiro, é aberto um pop-up com botões de editar (ícone de lápis) e excluir (ícone de lixeira), que ao clicar em editar abre um pop-up para editar a informações do canteiro, com um botão “salvar alterações” que ao ser clicado atualiza as informações do canteiro e exibe uma mensagem de confirmação.
+* **V2:** Se o usuário clicar no ícone de três pontinhos no card do canteiro, é aberto um pop-up com botões de editar (ícone de lápis) e excluir (ícone de lixeira), que ao clicar em excluir abre um pop-up de confirmar a exclusão com o botão excluir, que ao ser clicado exclui o canteiro e exibe uma mensagem de confirmação.
+
+
+## H3 - Criar Produtos/Cultivos (Adicionar e Visualizar)
+
+**Descrição:** Como usuário, eu gostaria de adicionar novos produtos/cultivos e visualizar suas informações diretamente na plataforma, para ter um acompanhamento eficiente e organizado do meu trabalho.
+
+**Validações:**
+
+* **V1:** Se o usuário tentar adicionar um cultivo com informações incompletas ou inválidas, o sistema deve exibir uma mensagem de erro clara, indicando os campos que precisam ser corrigidos.
+
+
+## H4 - Gerenciar Produtos/Cultivos (Editar e Excluir)
+
+**Descrição:** Como usuário, eu gostaria de editar e excluir informações dos produtos/cultivos diretamente pela plataforma, para corrigir erros ou remover itens desnecessários de forma eficiente.
+
+**Validações:**
+
+* **V1:** Se o usuário tentar editar informações com dados inválidos, o sistema deve exibir uma mensagem de erro indicando o problema.
+* **V2:** Antes de excluir um cultivo, o sistema deve solicitar confirmação e alertar sobre a perda definitiva de informações.
+
+
+## H5 - Criar Comunidades
+
+**Descrição:** Como usuário, gostaria de criar uma nova comunidade para segmentar minha organização e facilitar a colaboração em torno de temas específicos.
+
+**Validações:**
+
+* **V1:** O sistema deve permitir que o usuário crie uma comunidade e o usuário deve fornecer as informações necessárias e o sistema deve confirmar o sucesso da criação.
+* **V2:** O sistema deve verificar se já existe uma comunidade com o mesmo nome, fornecendo uma mensagem de erro que já existe uma comunidade com esse nome.
+* **V3:** Se o usuário não preencher os campos obrigatórios, o sistema deve fornecer uma mensagem de aviso informando que o campo é obrigatório.
+
+
+## H6 - Gerenciar Comunidades
+
+**Descrição:** Como administrador de uma comunidade, gostaria de gerenciá-la, incluindo editar informações, excluir ou adicionar membros, para manter a organização da comunidade.
+
+**Validações:**
+
+* **V1:** Se o usuário tentar criar uma comunidade sem nome, o sistema deve exibir uma mensagem de erro informando que o nome da comunidade é obrigatório. Exemplo de mensagem de erro: "Erro: O nome da comunidade é obrigatório. Por favor, insira um nome para continuar."
+* **V2:** Se o usuário tentar deletar uma comunidade, o sistema deve solicitar confirmação e alertar sobre a perda de informações.
+
+
+## H7 - Informações Úteis sobre Cultivos
+
+**Descrição:** Como usuário, quero acessar informações úteis sobre meus cultivos, incluindo saberes populares e dicas práticas, por meio de um fluxo guiado que me permita selecionar o cultivo específico sobre o qual desejo aprender mais.
+
+**Validações:**
+
+* **V1:** Se o usuário enviar informações incompletas, o sistema deve informar que não foram selecionados os dados necessários para receber as informações.
+* **V2:** O usuário seleciona um cultivo específico, como "tomate", e o sistema fornece informações detalhadas sobre como cultivar, cuidados necessários e saberes populares relacionados a essa planta.
+
+
+## H8 - Criar Áreas
+
+**Descrição:** Como usuário, gostaria de poder criar novas áreas dentro das comunidades às quais pertenço, para que eu possa organizar os canteiros e cultivos em diferentes espaços.
+
+**Validações:**
+
+* **V1:** Se o usuário preencher todos os campos obrigatórios para criar uma área (como nome da área, descrição e localização), o sistema deverá permitir a criação e exibir uma mensagem de confirmação.
+* **V2:** Se o usuário deixar algum campo obrigatório em branco, o sistema deverá exibir uma mensagem de erro, indicando quais campos precisam ser preenchidos antes de criar a área.
+* **V3:** Após a criação de uma nova área, ela deverá ser exibida na lista de áreas da comunidade a qual pertence, permitindo fácil acesso para o usuário.
+
+
+## H9 - Gerenciar Áreas
+
+**Descrição:** Como administrador, gostaria de gerenciar as áreas existentes, podendo editar informações, excluir áreas e atribuir canteiros específicos a cada área, para manter a organização dentro das comunidades.
+
+**Validações:**
+
+* **V1:** Se o administrador editar as informações de uma área, as mudanças deverão ser salvas e refletidas na visualização das áreas após a confirmação.
+* **V2:** Se o administrador optar por excluir uma área, o sistema deverá solicitar uma confirmação para evitar exclusões acidentais. Após a confirmação, a área deverá ser removida da listagem e uma mensagem de sucesso exibida.
+* **V3:** Se o administrador tentar atribuir canteiros a uma área, o sistema deverá permitir a seleção de canteiros e atualizar a relação assim que a alteração for salva, exibindo os canteiros corretamente atribuídos na visualização da área.
+
+
+## H10 - Organismos Indesejados
+
+**Descrição:** Como usuário, quero receber instruções detalhadas sobre como lidar com organismos indesejados (pragas) que afetam os meus cultivos, utilizando um fluxo guiado que me permita selecionar tanto o organismo quanto os cultivos específicos em questão, para protegê-los de forma eficaz.
+
+**Validações:**
+
+* **V1:** Se o sistema não tiver informações disponíveis sobre pragas específicas para o cultivo selecionado, deve exibir uma mensagem informando que não há dados disponíveis no momento para essa categoria de pragas.
+* **V2:** O usuário seleciona o tipo de praga (por exemplo, pulgões) e o cultivo afetado (por exemplo, tomate), e o sistema fornece um conjunto de instruções detalhadas sobre como lidar com a praga, incluindo métodos de controle orgânico ou químico.
+
+
+## H11 - Criar Tarefas
+
+**Descrição:** Como usuário, quero adicionar tarefas relacionadas ao meu cultivo, com a opção de definir uma frequência de repetição, para planejar e acompanhar as atividades necessárias ao bom desenvolvimento dos cultivos.
+
+**Validações:**
+
+* **V1:** O usuário adiciona uma tarefa, como "regar plantas", e pode definir uma frequência de repetição (única, diária, semanal, mensal e anual). A tarefa é salva corretamente, e o sistema a exibe na lista de tarefas com a frequência definida.
+* **V2:** O usuário adiciona uma tarefa com uma frequência de repetição e, após o tempo especificado, a tarefa é automaticamente gerada novamente, conforme esperado (por exemplo, "regar plantas" sendo criada novamente no próximo dia).
+* **V3:** O usuário tenta adicionar uma tarefa sem preencher um campo obrigatório, o sistema exibe uma mensagem de erro informando que o campo é obrigatório para adicionar a tarefa.
+
+
+## H12 - Gerenciar Tarefas (Editar e Excluir)
+
+**Descrição:** Como usuário, quero poder editar ou excluir tarefas relacionadas aos canteiros, para manter minhas atividades organizadas e atualizadas.
+
+**Validações:**
+
+* **V1:** O usuário exclui uma tarefa com sucesso, e a tarefa desaparece da lista de tarefas.
+* **V2:** O usuário edita uma tarefa e o sistema atualiza os detalhes corretamente, exibindo o feedback da ação.
+* **V3:** Se o usuário tentar deletar uma tarefa, o sistema deve solicitar confirmação e alertar sobre a perda de informações.
+
+
+## H13 - Atribuir Responsáveis às Tarefas
+
+**Descrição:** Como usuário, quero atribuir tarefas a membros específicos, para distribuir as responsabilidades de maneira clara.
+
+**Validações:**
+
+* **V1:** O usuário atribui corretamente uma tarefa a um membro específico, e a tarefa aparece no painel do membro designado.
+* **V2:** O usuário pode atribuir uma tarefa a diferentes membros, e o sistema exibe todas as atribuições corretamente.
+
+
+## H14 - Modificar Status das Tarefas
+
+**Descrição:** Como usuário, quero modificar o status das tarefas, para acompanhar seu progresso de forma eficiente.
+
+
+**Validações:**
+
+* **V1:** O usuário altera o status de uma tarefa de "pendente" para "concluída", e o status é refletido imediatamente no sistema.
+* **V2:** O usuário tenta modificar o status de uma tarefa que não está na lista de tarefas disponíveis, e o sistema retorna uma mensagem de erro.
+
+
+## H15 - Modos de Visualização
+
+**Descrição:** Como usuário, quero visualizar as tarefas em dois formatos, lista ou calendário, para acompanhar as atividades da forma que eu preferir.
+
+**Validações:**
+
+* **V1:** O usuário alterna entre os modos de visualização (lista e calendário) e as tarefas são exibidas corretamente em cada formato.
+* **V2:** Se não houver tarefas para exibir, o sistema deve mostrar uma mensagem informando que não há tarefas existentes naquela comunidade tanto no formato de lista quanto no calendário e sugerir que o usuário crie uma nova tarefa.
+
+
+## H16 - Inteligência Artificial
+
+**Descrição:** Como usuário, quero usar um chat com IA generativa para tirar dúvidas gerais e obter informações sobre agricultura, de forma interativa e direta.
+
+**Validações:**
+
+* **V1:** O usuário envia uma pergunta sobre um tema agrícola, como "Como faço para cultivar tomates?", e a IA responde de forma clara e precisa com informações úteis.
+* **V2:** O usuário pergunta sobre algo irrelevante ou fora do escopo da agricultura, como "Qual é o melhor tipo de carro?", e a IA responde com uma mensagem de erro ou sugere uma nova pergunta dentro do escopo correto.
+
+
+## H17 - Solicitar Entrada em uma Comunidade
+
+**Descrição:** Como usuário comum, quero solicitar entrada em uma comunidade, para que eu possa participar dos processos de manutenção de áreas, canteiros e cultivos e visualizar previsões e tarefas.
+
+**Validações:**
+
+* **V1:** O usuário clica no botão de solicitação de entrada em uma comunidade, a solicitação é enviada corretamente para os administradores da comunidade.
+* **V2:** O usuário consegue acessar uma comunidade após sua solicitação de entrada ser aprovada.
+
+
+
+
 
 
 ## 💻 Tecnologias Utilizadas

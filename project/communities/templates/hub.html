@@ -154,56 +154,7 @@
                 </div>
             </div>
         </div> 
-<<<<<<< HEAD
                 <a href="#">
-=======
-                <!-- Dropdown Menu de Notificação -->
-                <div id="mobileNotificationMenu" class="hidden absolute right-10 top-[75px] border-[#CECECE] border w-80 z-50 bg-white shadow-lg rounded-lg">
-                    <div class="p-4">
-                        <h3 class="font-semibold text-gray-700 mb-3">Notificações</h3>
-                        <div class="border-t border-[#8ABF17] mt-2">
-                            {% for invite in invite_request %}
-                                <!-- Notificação Individual com Link -->
-                                <div class="block">
-                                    <div class="flex items-center py-3 px-4 hover:bg-gray-200 rounded-lg transition-all duration-200 ease-in-out">
-                                        <!-- Ícone da Comunidade -->
-                                        <div class="w-10 h-10 bg-[#f76711] text-[#FFFFFF] flex items-center justify-center rounded-lg mr-4 text-xl font-bold">
-                                            {{ invite.community.name|slice:":1"|upper }}
-                                        </div>
-                                        
-                                        <!-- Texto da Notificação -->
-                                        <div class="flex-1">
-                                            <p class="font-semibold text-gray-800 text-sm">
-                                                {{ invite.requested_by.first_name }} convidou você para a comunidade <span class="font-bold text-[#f76711]">{{ invite.community.name }}</span>
-                                            </p>
-                                            <p class="text-sm text-gray-500">{{ invite.user.email }}</p>
-                                        </div>
-                                        
-                                        <form action="{% url 'accept_invite' invite.id %}" method="POST">
-                                            {% csrf_token %}
-                                            <button onclick="openEditModal()" class="ml-2 bg-[#8ABF17] text-white p-1 rounded-full hover:bg-[#7cad10] hover:text-[#edf0e9] focus:outline-none focus:ring-2 focus:ring-yellow-400 flex">
-                                                <span class="material-icons-outlined">check</span>
-                                            </button>
-                                        </form>
-                                        <form action="{% url 'decline_community_invite' invite.id %}" method="POST">
-                                            {% csrf_token %}
-                                            <button onclick="openDeleteModal()" class="ml-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 flex">
-                                                <span class="material-icons-outlined">close</span>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-                        {% if not forloop.last %}
-                        <div class="border-t border-[#8ABF17] mt-2"></div>
-                        {% endif %}
-                    {% empty %}
-                        <p class="py-4 text-center text-gray-600">Não há novos convites.</p>
-                    {% endfor %}
-                </div>
-            </div>
-        </div> 
-                <a href="#">
->>>>>>> 1ffe91dda0a37f635e61aca40d5cbd05901420ca
                     <div class="w-8 h-8 bg-[#8ABF17] text-[#FFFFFF] flex items-center justify-center rounded-md mr-2 font-bold">
                         {{ user.username|slice:":1"|upper }}
                     </div>
@@ -266,7 +217,7 @@
             {% if communities %} 
             <div class="flex md:flex-row flex-col justify-between mt-4 fade-down">
                 <header class="mb-6">
-                    <h1 class="text-[44px] lg:text-[48px] font-semibold mt-2 ">Comunidades<button class="material-icons talk-button">volume_up</button></h1>
+                    <h1 class="text-[44px] lg:text-[48px] font-semibold mt-2 mr-1 ">Comunidades<button class="material-icons text-[#8ABF17] text-[35px] talk-button">volume_up</button></h1>
                 </header>
             
                 <div class="flex flex-row items-center space-x-6">
