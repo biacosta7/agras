@@ -130,6 +130,23 @@ def accept_community_invite(request, invite_id):
     messages.success(request, 'Solicitação aceita com sucesso!')
     return redirect('community_hub')
 
+@login_required
+def leave_community(request, community_id, user_id):
+    community = get_object_or_404(Community, id=community_id)
+    user_to_leave = get_object_or_404(User, id=user_id)
+    
+    # Verifica se o usuário é administrador ou dono da comunidade
+    if user_to_leave == community.creator:
+        messages.error(request, "Como dono da comunidade, você precisa excluí-la caso deseje sair")
+        return redirect('settings', community.id)
+    if community.admins.filter(id=user_to_leave.id).exists():
+        messages.error(request, "Você é um administrador, peça para o dono para removê-lo(a).")
+        return redirect('settings', community.id)
+
+    # Remove o usuário como membro da comunidade (para usuários não administradores)
+    community.members.remove(user_to_leave)
+    messages.success(request, "Você saiu da comunidade com sucesso.")
+    return redirect('community_hub')
 
 @login_required
 def decline_community_invite(request, invite_id):
@@ -338,17 +355,14 @@ from .models import Community
 def settings(request, community_id):
     community = get_object_or_404(Community, id=community_id)
     user = request.user
+    membership_requests = MembershipRequest.objects.filter(community=community, status='pending')
 
-    # Verificar permissões
-    if request.user != community.creator and not community.admins.filter(id=request.user.id).exists():
-        messages.error(request, 'Você não tem permissão para acessar as configurações dessa comunidade.')
-        return redirect('dashboard', community_id)
-
+    # Verifica se o usuário tem permissão para acessar as configurações
     if request.method == "POST":
         action = request.POST.get('action')
-        
-        if action == "update":
-            # Lógica para atualização da comunidade
+
+        # Permissões para edição (dono ou administrador)
+        if action == "update" and (user == community.creator or community.admins.filter(id=user.id).exists()):
             name = request.POST.get('name')
             description = request.POST.get('description')
 
@@ -360,6 +374,7 @@ def settings(request, community_id):
                 if image_type_community:
                     FileUpload.objects.create(user=user, image=community_image, image_type=image_type_community)
 
+            # Verifica se o nome da comunidade já existe
             if Community.objects.filter(name=name).exclude(pk=community_id).exists():
                 messages.error(request, 'Já existe uma comunidade com esse nome.')
                 return render(request, 'settings.html', {'community': community})
@@ -369,25 +384,28 @@ def settings(request, community_id):
             community.save()
             messages.success(request, 'Comunidade editada com sucesso.')
 
-        elif action == "delete":
-            # Lógica para exclusão da comunidade
+        # Permissões para exclusão (somente o dono)
+        elif action == "delete" and user == community.creator:
             community.delete()
             messages.success(request, 'Comunidade deletada com sucesso.')
             return redirect('community_hub')
 
-    last_community_image = FileUpload.objects.filter(user=user, image_type='community').last()
-    image_community_url = last_community_image.image.url if last_community_image else None
+        else:
+            # Caso o usuário não tenha permissão para a ação
+            messages.error(request, 'Você não tem permissão para realizar esta ação nesta comunidade.')
+            return redirect('settings.html', community.id)
 
-    return render(request, 'settings.html', {'community': community, 'image_community_url': image_community_url})
+    # Caso o método não seja POST, apenas renderiza a página de configurações
+    return render(request, 'settings.html', {'community': community, 'membership_requests': membership_requests})
 
 @login_required
 def profile(request, community_id):
-    
     # Obtém a comunidade pelo ID, ou retorna 404 se não existir
     community = get_object_or_404(Community, id=community_id)
-
+    membership_requests = MembershipRequest.objects.filter(community=community, status='pending')
+    
     # Verifica se o usuário é membro da comunidade
-    if not community.members.filter(id=request.user.id).exists():
+    if not community.members.filter(id=request.user.id).exists() or not community.admins.filter(id=request.user.id).exists():
         messages.error(request, 'Você não tem acesso a esta comunidade.')
         return redirect('community_hub')
 
@@ -473,6 +491,7 @@ def profile(request, community_id):
         'community': community,
         'image_banner_url': image_banner_url,
         'image_profile_url': image_profile_url,
+        'membership_requests': membership_requests,
     })
 
 @login_required
