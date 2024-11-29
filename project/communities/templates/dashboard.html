@@ -3,47 +3,11 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<style>
-    h1 {
-        display: flex;
-        align-items: center;
-        gap: 2%;
-    }
-    
-    .talk-button {
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        color: #8ABF17;
-        border: none;
-        font-size: 48px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-    
-    .talk-button:active {
-        background-color: #8ABF17;
-    }
-    
-    /* Animação de pulsação */
-    .talking {
-        animation: pulse 1s infinite;
-    }
-    
-    @keyframes pulse {
-        0%, 100% {
-            box-shadow: 0 0 0 0 #8abf17a2;
-        }
-        50% {
-            box-shadow: 0 0 20px 10px #8abf175e;
-        }
-    }
-</style>
 <!-- Main Content -->
 <div class="lg:ml-[250px] mt-12 lg:mt-[90px] fade-down w-full lg:w-auto p-8 bg-[#FAFAFA]">
     <div class="flex-1 flex-col -mt-2">
         <div>
-            <h1 class="font-semibold text-[32px] sm:text-[40px] welcome">Olá, {{user.first_name}}!<button class="material-icons talk-button">volume_up</button></h1>
+            <h1 class="font-semibold text-[32px] sm:text-[40px]">Olá, {{user.first_name}}!</h1>
             <p class="font-medium text-[16px] sm:text-[20px] mb-6 -mt-2">Seja bem-vindo(a) ao AGRAS!</p>
         </div>
 
@@ -92,5 +56,4 @@
         </div>
     </div>
 </div>
-<script src="{% static 'communities/js/talkDashboard.js' %}"></script>
 {% endblock %}

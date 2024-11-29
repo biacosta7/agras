@@ -1,7 +1,9 @@
 .
 {% extends "base.html" %} 
 {% load static %}
+<link rel="stylesheet" href="{% static 'tasks/css/talkAnimation.css' %}" />
 {% block title %}{{ seedbed.nome }}{% endblock %}
+
 {% block styles %}
 
     /* Scrollbar for Webkit browsers (Chrome, Safari) */
@@ -256,7 +258,6 @@
 {% endblock %}
 
 {% block content %}
-<<<<<<< Updated upstream
 <div class="flex-1 p-6 fade-down lg:p-10 ml:0 lg:ml-[250px] mt-12 lg:mt-[60px]">
     <div class="flex md:flex-row flex-col justify-between">
         <header class="mb-6">
@@ -269,58 +270,6 @@
             </a>
         </div>
         </div>
-=======
-<style>
-    h2 {
-        display: flex;
-        align-items: center;
-        gap: 2%;
-    }
-    
-    .talk-button {
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        color: #8ABF17;
-        border: none;
-        font-size: 48px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-    
-    .talk-button:active {
-        background-color: #8ABF17;
-    }
-    
-    /* Animação de pulsação */
-    .talking {
-        animation: pulse 1s infinite;
-    }
-    
-    @keyframes pulse {
-        0%, 100% {
-            box-shadow: 0 0 0 0 #8abf17a2;
-        }
-        50% {
-            box-shadow: 0 0 20px 10px #8abf175e;
-        }
-    }
-</style>
-<div class="header flex items-center justify-between">
-    <div class="text-content">
-        <h1 class="mt-1 text-xl font-semibold">
-            <a href="{% url 'area_manage' community.id %}" style="font-size: 28px; color: black;">Áreas &gt;</a>
-            <a href="" style="font-size: 28px; color: black;">{{ area.name }} &gt;</a>
-            <a href="" style="font-size: 28px; color: green;">{{ seedbed.nome }} &gt;</a>
-        </h1>
-        <h2 class="mt-2 font-bold" style="font-size: 50px;">{{ seedbed.nome }}<button class="material-icons talk-button">volume_up</button></h2>
-    </div>
-    <div class="btn">
-        <a href="{% url 'create_product' community.id area.pk seedbed.id %}">
-            + Adicionar
-        </a>
-    </div>
->>>>>>> Stashed changes
 </div>
 <br>
 
@@ -336,7 +285,7 @@
                         onclick="moveAndScroll(this, '{{ product.id }}', event)">
                         <a href="?product_id={{ product.id }}">
                             <img src="{% static 'assets/small-plant.png' %}" alt="Área de plantio" class="w-16 h-16 mb-1">
-                            <p class="text-lg product-name">{{ product.type_product.name }}</p>
+                            <p class="text-lg">{{ product.type_product.name }}</p>
                         </a>
                     </li>
                 {% empty %}
@@ -687,6 +636,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 </script>
-<script src="{% static 'product/js/talkProducts.js' %}"></script>
+
 {% endblock content %}
 

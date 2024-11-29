@@ -20,16 +20,16 @@ function talk() {
         return;
     }
 
-    const areasTexts = Array.from(document.querySelectorAll('.seedbed-name')).map(el => el.textContent.trim());
+    const areasTexts = Array.from(document.querySelectorAll('.community-name')).map(el => el.textContent.trim());
 
-    let text = "Canteiros. "; // Texto inicial fixo
+    let text = "Comunidades. "; // Texto inicial fixo
 
     if (areasTexts.length > 0) {
         // Concatena todos os textos das áreas
         text += areasTexts.join('. ') + ".";
     } else {
         // Mensagem padrão caso não haja elementos
-        text += "Nenhum canteiro criado. Aperte o botão criar para criar um canteiro.";
+        text += "Nenhuma comunidade criada. Aperte o botão abaixo para criar uma comunidade e começar a gerenciar seus plantios.";
     }
 
     let voices = synth.getVoices();
