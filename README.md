@@ -26,8 +26,8 @@ A agricultura familiar é essencial para o sustento de muitas famílias ao redor
 
 
 # Usuario Padrão
-### *Usuário: adrian*
-### *Senha: adrian123*
+### 👤 *Usuário: adrian*
+### 🔑 *Senha: adrian123*
 
 ## 🧷 Links
 <a href="https://agras.azurewebsites.net/">
